@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GlassKit Elements — Showcase</title>
+  <meta name="description" content="Interaktive Vorschau aller 24 GlassKit Elements Web Components. Buttons, Toggles, Karten, Modals und mehr im Glassmorphism-Stil.">
+  <meta name="author" content="Jungherz GmbH">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://glasskit-elements.jungherz.com/de/showcase.html">
+  <link rel="alternate" hreflang="de" href="https://glasskit-elements.jungherz.com/de/showcase.html">
+  <link rel="alternate" hreflang="en" href="https://glasskit-elements.jungherz.com/showcase.html">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="GlassKit Elements — Showcase">
+  <meta property="og:description" content="Interaktive Vorschau aller 24 GlassKit Elements Web Components im Glassmorphism-Stil.">
+  <meta property="og:url" content="https://glasskit-elements.jungherz.com/de/showcase.html">
+  <meta property="og:site_name" content="GlassKit Elements">
+  <meta property="og:locale" content="de_DE">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="GlassKit Elements — Showcase">
+  <meta name="twitter:description" content="Interaktive Vorschau aller 24 GlassKit Elements Web Components im Glassmorphism-Stil.">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.3/glasskit.min.css">
+  <script src="/dist/glasskit-elements.min.js"></script>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      background: #1a1a2e;
+      display: flex;
+      justify-content: center;
+    }
+    .preview-frame {
+      width: 375px;
+      min-height: 100vh;
+      box-shadow: 0 0 60px rgba(0,0,0,0.15);
+      position: relative;
+    }
+    .demo-section {
+      padding: 50px 20px 16px;
+    }
+    .demo-section h2 {
+      color: rgba(255,255,255,0.6);
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin: 24px 0 12px;
+    }
+    [data-theme="light"] .demo-section h2 {
+      color: rgba(0,0,0,0.5);
+    }
+    .demo-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .demo-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="preview-frame">
+  <div class="glass-bg">
+  <div class="demo-section">
+    <glk-title>GlassKit Elements</glk-title>
+    <p style="text-align:center;opacity:0.6;margin-top:8px;">Web Components für GlassKit CSS</p>
+
+    <!-- Theme Toggle -->
+    <div class="demo-row" style="justify-content:center;margin:16px 0;">
+      <glk-button variant="secondary" size="auto" onclick="toggleTheme()">Theme wechseln</glk-button>
+    </div>
+
+    <!-- Badges -->
+    <h2>Badges</h2>
+    <div class="demo-row">
+      <glk-badge>Default</glk-badge>
+      <glk-badge variant="primary">Primary</glk-badge>
+      <glk-badge variant="success">Success</glk-badge>
+      <glk-badge variant="error">Error</glk-badge>
+    </div>
+
+    <!-- Avatars -->
+    <h2>Avatars</h2>
+    <div class="demo-row">
+      <glk-avatar size="sm">S</glk-avatar>
+      <glk-avatar>MD</glk-avatar>
+      <glk-avatar size="lg">LG</glk-avatar>
+    </div>
+
+    <glk-divider></glk-divider>
+
+    <!-- Buttons -->
+    <h2>Buttons</h2>
+    <div class="demo-stack">
+      <glk-button variant="primary">Primär</glk-button>
+      <glk-button variant="secondary">Sekundär</glk-button>
+      <glk-button variant="tertiary">Tertiär</glk-button>
+    </div>
+    <div class="demo-row">
+      <glk-button variant="primary" size="sm">Klein</glk-button>
+      <glk-button variant="secondary" size="auto">Auto-Breite</glk-button>
+      <glk-button variant="primary" size="auto" disabled>Deaktiviert</glk-button>
+    </div>
+
+    <glk-divider></glk-divider>
+
+    <!-- Card -->
+    <h2>Karten</h2>
+    <glk-card>
+      <p>Eine einfache Glass-Karte mit Slot-Inhalt.</p>
+    </glk-card>
+    <div style="margin-top:12px;">
+      <glk-card glow>
+        <p>Eine leuchtende Glass-Karten-Variante.</p>
+      </glk-card>
+    </div>
+
+    <glk-divider></glk-divider>
+
+    <!-- Form Elements -->
+    <h2>Eingabe</h2>
+    <div class="demo-stack">
+      <glk-input label="Username" placeholder="Enter your name"></glk-input>
+      <glk-input label="Email" type="email" placeholder="you@example.com" hint="We won't share your email." ></glk-input>
+      <glk-input label="Error State" placeholder="Something wrong" error hint="This field is required."></glk-input>
+    </div>
+
+    <h2>Textfeld</h2>
+    <glk-textarea label="Message" placeholder="Type your message..." rows="3"></glk-textarea>
+
+    <h2>Auswahl</h2>
+    <glk-select label="Choose an option">
+      <option value="">Select...</option>
+      <option value="1">Option 1</option>
+      <option value="2">Option 2</option>
+      <option value="3">Option 3</option>
+    </glk-select>
+
+    <h2>Suche</h2>
+    <glk-search placeholder="Search components..."></glk-search>
+
+    <glk-divider></glk-divider>
+
+    <!-- Toggles & Checkboxes -->
+    <h2>Toggle</h2>
+    <div class="demo-stack">
+      <glk-toggle label="Benachrichtigungen aktivieren" checked></glk-toggle>
+      <glk-toggle label="Dunkelmodus"></glk-toggle>
+      <glk-toggle label="Deaktivierter Toggle" disabled></glk-toggle>
+    </div>
+
+    <h2>Checkbox</h2>
+    <div class="demo-stack">
+      <glk-checkbox label="Ich stimme den Bedingungen zu" checked></glk-checkbox>
+      <glk-checkbox label="Newsletter abonnieren"></glk-checkbox>
+    </div>
+
+    <h2>Radio</h2>
+    <div class="demo-stack">
+      <glk-radio name="plan" label="Kostenlos" value="free" checked></glk-radio>
+      <glk-radio name="plan" label="Pro Plan" value="pro"></glk-radio>
+      <glk-radio name="plan" label="Enterprise" value="enterprise"></glk-radio>
+    </div>
+
+    <h2>Schieberegler</h2>
+    <glk-range label="Volume" min="0" max="100" value="65"></glk-range>
+
+    <glk-divider></glk-divider>
+
+    <!-- Progress -->
+    <h2>Fortschritt</h2>
+    <div class="demo-stack">
+      <glk-progress label="Upload" value="75" variant="success"></glk-progress>
+      <glk-progress label="Storage" value="90" variant="error" size="lg"></glk-progress>
+      <glk-progress label="CPU" value="45" size="sm"></glk-progress>
+    </div>
+
+    <glk-divider></glk-divider>
+
+    <!-- Accordion -->
+    <h2>Accordion</h2>
+    <glk-accordion>
+      <glk-accordion-item title="Was ist GlassKit Elements?" open>
+        Eine Sammlung von Web Components, die GlassKit-CSS-Komponenten kapseln und deren Nutzung mit einfachen HTML-Tags erleichtern.
+      </glk-accordion-item>
+      <glk-accordion-item title="Brauche ich JavaScript-Frameworks?">
+        Nein! GlassKit Elements wurde mit reinem JavaScript entwickelt und funktioniert überall — React, Vue, Svelte oder einfaches HTML.
+      </glk-accordion-item>
+      <glk-accordion-item title="Wie funktioniert das Theming?">
+        Setze <code>data-theme="dark"</code> oder <code>data-theme="light"</code> auf das <code>&lt;html&gt;</code>-Element. Alle Komponenten synchronisieren sich automatisch.
+      </glk-accordion-item>
+    </glk-accordion>
+
+    <glk-divider></glk-divider>
+
+    <!-- Modal -->
+    <h2>Modal</h2>
+    <glk-button variant="secondary" size="auto" onclick="document.querySelector('glk-modal').show()">
+      Modal öffnen
+    </glk-button>
+
+    <glk-modal title="Aktion bestätigen">
+      <p>Sind Sie sicher, dass Sie fortfahren möchten?</p>
+      <div slot="actions">
+        <button class="glass-modal__action" onclick="document.querySelector('glk-modal').close()">Abbrechen</button>
+        <button class="glass-modal__action glass-modal__action--primary" onclick="document.querySelector('glk-modal').close()">Bestätigen</button>
+      </div>
+    </glk-modal>
+
+    <!-- Toast -->
+    <h2>Toast</h2>
+    <div class="demo-row">
+      <glk-button variant="secondary" size="auto" onclick="document.getElementById('toast-success').show('Action completed!', 'success')">
+        Erfolgs-Toast
+      </glk-button>
+      <glk-button variant="secondary" size="auto" onclick="document.getElementById('toast-error').show('Something went wrong', 'error')">
+        Fehler-Toast
+      </glk-button>
+    </div>
+
+    <glk-toast id="toast-success"></glk-toast>
+    <glk-toast id="toast-error"></glk-toast>
+
+    <glk-divider></glk-divider>
+
+    <!-- Status -->
+    <h2>Status</h2>
+    <glk-status message="Keine Ergebnisse gefunden"></glk-status>
+
+    <div style="height:80px;"></div>
+  </div>
+  </div>
+  </div>
+
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement;
+      const current = html.getAttribute('data-theme') || 'dark';
+      html.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+name: Release & Publish
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-publish:
+    name: Build, Release & Publish to npm
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build all artifacts
+        run: npm run build
+
+      - name: Log file sizes
+        run: |
+          echo "📦 IIFE Bundle:"
+          ls -lh dist/glasskit-elements.js
+          echo ""
+          echo "📦 IIFE Minified:"
+          ls -lh dist/glasskit-elements.min.js
+          echo ""
+          echo "📦 ESM Bundle:"
+          ls -lh dist/glasskit-elements.esm.js
+
+      - name: Create GitHub Release & upload assets
+        uses: softprops/action-gh-release@v2
+        with:
+          name: ${{ github.ref_name }} – GlassKit Elements Release
+          generate_release_notes: true
+          files: |
+            dist/glasskit-elements.min.js
+            dist/glasskit-elements.js
+            dist/glasskit-elements.esm.js
+
+      - name: Publish to npm
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

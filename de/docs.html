@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GlassKit Elements — Dokumentation</title>
+  <meta name="description" content="Vollständige Dokumentation aller 24 GlassKit Elements Web Components. Installation, API-Referenz, Attribute, Events und Live-Beispiele.">
+  <meta name="keywords" content="glasskit elements, dokumentation, web components, api referenz, glassmorphism, custom elements">
+  <meta name="author" content="Jungherz GmbH">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://glasskit-elements.jungherz.com/de/docs.html">
+  <link rel="alternate" hreflang="de" href="https://glasskit-elements.jungherz.com/de/docs.html">
+  <link rel="alternate" hreflang="en" href="https://glasskit-elements.jungherz.com/docs.html">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="GlassKit Elements — Dokumentation">
+  <meta property="og:description" content="Vollständige Dokumentation aller 24 GlassKit Elements Web Components mit Live-Beispielen.">
+  <meta property="og:url" content="https://glasskit-elements.jungherz.com/de/docs.html">
+  <meta property="og:site_name" content="GlassKit Elements">
+  <meta property="og:locale" content="de_DE">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="GlassKit Elements — Dokumentation">
+  <meta name="twitter:description" content="Vollständige Dokumentation aller 24 GlassKit Elements Web Components mit Live-Beispielen.">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.3/glasskit.min.css">
+  <script src="/dist/glasskit-elements.min.js"></script>
+  <style>
+    html { scroll-behavior: smooth; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+      background: #0c1a24; color: #e0e8ef; line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      transition: background 0.3s, color 0.3s;
+    }
+    [data-theme="light"] body { background: #f0f4f8; color: #1a2a36; }
+
+    /* ── Layout ── */
+    .docs-wrapper { display: flex; min-height: 100vh; }
+
+    /* ── Sidebar ── */
+    .docs-sidebar {
+      position: fixed; top: 0; left: 0; width: 260px; height: 100vh;
+      padding: 24px 16px; overflow-y: auto; z-index: 100;
+      background: rgba(255,255,255,0.04);
+      border-right: 1px solid rgba(255,255,255,0.08);
+      transition: background 0.3s, border 0.3s;
+    }
+    [data-theme="light"] .docs-sidebar {
+      background: rgba(255,255,255,0.7);
+      border-right: 1px solid rgba(0,0,0,0.08);
+    }
+    .docs-sidebar__title {
+      font-size: 18px; font-weight: 700; color: var(--gl-color-primary);
+      margin-bottom: 2px; display: flex; align-items: center; gap: 8px;
+      letter-spacing: -0.3px;
+    }
+    .docs-sidebar__title a { color: inherit; text-decoration: none; }
+    .docs-sidebar__subtitle {
+      font-size: 12px; color: var(--gl-color-text-muted); margin-bottom: 6px;
+      letter-spacing: 0.2px;
+    }
+    .docs-sidebar__version {
+      font-size: 11px; color: var(--gl-color-text-muted); margin-bottom: 24px;
+      padding: 4px 10px; background: rgba(245,166,35,0.08);
+      border: 1px solid rgba(245,166,35,0.15); border-radius: 9999px;
+      display: inline-block;
+    }
+    .docs-sidebar__group { margin-bottom: 20px; }
+    .docs-sidebar__group-title {
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1.5px; color: var(--gl-color-text-muted);
+      margin-bottom: 8px; padding-left: 8px;
+    }
+    .docs-sidebar__link {
+      display: block; padding: 6px 12px; font-size: 13px;
+      color: var(--gl-color-text-muted); text-decoration: none;
+      border-radius: 8px; transition: all 0.15s;
+    }
+    .docs-sidebar__link:hover {
+      color: var(--gl-color-text); background: rgba(255,255,255,0.06);
+    }
+    [data-theme="light"] .docs-sidebar__link:hover { background: rgba(0,0,0,0.04); }
+    .docs-sidebar__link.is-active {
+      color: var(--gl-color-primary); background: rgba(245,166,35,0.12);
+    }
+    .docs-sidebar__footer {
+      margin-top: 24px; padding-top: 16px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    .docs-sidebar__footer a {
+      display: block; padding: 4px 12px; font-size: 12px;
+      color: var(--gl-color-text-muted); text-decoration: none;
+    }
+    .docs-sidebar__footer a:hover { color: var(--gl-color-primary); }
+
+    /* ── Fixed Buttons ── */
+    .docs-lang-switch {
+      position: fixed; top: 16px; right: 64px;
+      display: flex; align-items: center; gap: 4px;
+      font-size: 12px; font-weight: 600;
+      color: var(--gl-color-text-muted); text-decoration: none;
+      padding: 8px 14px; height: 40px; border-radius: 9999px;
+      background: var(--gl-surface-3); backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--gl-border-medium); z-index: 200;
+      transition: all 0.2s;
+    }
+    .docs-lang-switch:hover {
+      color: var(--gl-color-primary); background: var(--gl-surface-5);
+      transform: scale(1.05);
+    }
+    .docs-theme-btn {
+      position: fixed; top: 16px; right: 16px; width: 40px; height: 40px;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      background: var(--gl-surface-3); backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px); border: 1px solid var(--gl-border-medium);
+      cursor: pointer; z-index: 200; transition: all 0.2s; color: var(--gl-color-text);
+    }
+    .docs-theme-btn:hover { background: var(--gl-surface-5); transform: scale(1.05); }
+    .docs-theme-btn svg {
+      width: 18px; height: 18px; fill: none; stroke: currentColor;
+      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+    }
+    .docs-theme-btn .icon-sun { display: none; }
+    [data-theme="light"] .docs-theme-btn .icon-sun { display: block; }
+    [data-theme="light"] .docs-theme-btn .icon-moon { display: none; }
+
+    /* ── Main Content ── */
+    .docs-main {
+      margin-left: 260px; padding: 40px 48px 80px;
+      max-width: 920px; width: 100%;
+    }
+
+    /* ── Hero ── */
+    .docs-hero { margin-bottom: 48px; }
+    .docs-hero h1 {
+      font-size: 42px; font-weight: 800; margin-bottom: 12px;
+      color: var(--gl-color-text);
+    }
+    .docs-hero p {
+      color: var(--gl-color-text-muted); font-size: 18px; line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    .docs-hero__badges { display: flex; gap: 8px; margin-bottom: 0; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.06); }
+    [data-theme="light"] .docs-hero__badges { border-color: rgba(0,0,0,0.06); }
+    .docs-hero__badge {
+      font-size: 13px; padding: 6px 16px; border-radius: 9999px;
+      background: rgba(245,166,35,0.08); border: 1px solid rgba(245,166,35,0.15);
+      color: var(--gl-color-primary); font-weight: 600;
+    }
+
+    /* ── Sections ── */
+    .docs-section { margin-bottom: 64px; scroll-margin-top: 32px; }
+    .docs-section h2 {
+      font-size: 28px; font-weight: 800; margin-bottom: 16px;
+      padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    [data-theme="light"] .docs-section h2 { border-color: rgba(0,0,0,0.06); }
+    .docs-section h3 {
+      font-size: 19px; font-weight: 600; margin: 28px 0 12px;
+      color: var(--gl-color-primary);
+    }
+    .docs-section p {
+      font-size: 16px; line-height: 1.7; color: var(--gl-color-text-muted);
+      margin-bottom: 16px;
+    }
+    .docs-section code {
+      font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.88em;
+      background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px;
+    }
+    [data-theme="light"] .docs-section code { background: rgba(0,0,0,0.05); }
+
+    /* ── Code Blocks ── */
+    .docs-code {
+      background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px; padding: 20px 24px; overflow-x: auto;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 14px; line-height: 1.7; color: #b8c9d8;
+      white-space: pre; tab-size: 2; margin-bottom: 20px;
+    }
+    [data-theme="light"] .docs-code {
+      background: rgba(0,0,0,0.04); border-color: rgba(0,0,0,0.08); color: #3a5060;
+    }
+    .docs-code .tag { color: #7ec8e3; }
+    .docs-code .attr { color: #c9a0dc; }
+    .docs-code .val { color: #a8d4a0; }
+    .docs-code .cls { color: #f5c76e; }
+    .docs-code .cmt { color: #607080; font-style: italic; }
+
+    /* ── Preview ── */
+    .docs-preview {
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px; padding: 24px; margin-bottom: 16px;
+    }
+    [data-theme="light"] .docs-preview {
+      background: rgba(0,0,0,0.02); border-color: rgba(0,0,0,0.06);
+    }
+
+    /* ── Tables ── */
+    .docs-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 14px; }
+    .docs-table th {
+      text-align: left; padding: 10px 12px; font-size: 11px; text-transform: uppercase;
+      letter-spacing: 0.5px; color: var(--gl-color-text-muted);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .docs-table td {
+      padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    [data-theme="light"] .docs-table th { border-color: rgba(0,0,0,0.08); }
+    [data-theme="light"] .docs-table td { border-color: rgba(0,0,0,0.04); }
+    .docs-table td code { font-size: 13px; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; }
+    [data-theme="light"] .docs-table td code { background: rgba(0,0,0,0.05); }
+
+    /* ── Component Block ── */
+    .docs-component { margin-bottom: 48px; }
+    .docs-component h3 {
+      font-size: 20px; display: flex; align-items: center; gap: 8px;
+    }
+    .docs-component h3 code {
+      font-size: 19px; color: var(--gl-color-primary);
+      background: none; padding: 0;
+    }
+    .docs-component > p { margin-bottom: 12px; }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .docs-sidebar { display: none; }
+      .docs-main { margin-left: 0; padding: 24px 16px 80px; }
+      .docs-hero h1 { font-size: 28px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Language Switcher -->
+  <a href="../docs.html" class="docs-lang-switch" title="English Version">&#127468;&#127463; EN</a>
+
+  <!-- Theme Toggle -->
+  <button class="docs-theme-btn" onclick="toggleTheme()" aria-label="Design wechseln">
+    <svg class="icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <svg class="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+  </button>
+
+  <div class="docs-wrapper">
+
+    <!-- Sidebar -->
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar__title">&#129482; <a href="../de/">GlassKit Elements</a></div>
+      <div class="docs-sidebar__subtitle">Web Components f&uuml;r GlassKit CSS.</div>
+      <div class="docs-sidebar__version">v0.8.0 &ndash; Jungherz GmbH</div>
+
+      <div class="docs-sidebar__group">
+        <div class="docs-sidebar__group-title">Grundlagen</div>
+        <a class="docs-sidebar__link" href="#installation">Installation</a>
+        <a class="docs-sidebar__link" href="#theming">Theming</a>
+        <a class="docs-sidebar__link" href="#forms">Formular-Integration</a>
+      </div>
+
+      <div class="docs-sidebar__group">
+        <div class="docs-sidebar__group-title">Inhalt</div>
+        <a class="docs-sidebar__link" href="#glk-title">glk-title</a>
+        <a class="docs-sidebar__link" href="#glk-badge">glk-badge</a>
+        <a class="docs-sidebar__link" href="#glk-avatar">glk-avatar</a>
+        <a class="docs-sidebar__link" href="#glk-card">glk-card</a>
+        <a class="docs-sidebar__link" href="#glk-divider">glk-divider</a>
+        <a class="docs-sidebar__link" href="#glk-status">glk-status</a>
+      </div>
+
+      <div class="docs-sidebar__group">
+        <div class="docs-sidebar__group-title">Buttons</div>
+        <a class="docs-sidebar__link" href="#glk-button">glk-button</a>
+        <a class="docs-sidebar__link" href="#glk-pill">glk-pill</a>
+      </div>
+
+      <div class="docs-sidebar__group">
+        <div class="docs-sidebar__group-title">Formulare</div>
+        <a class="docs-sidebar__link" href="#glk-input">glk-input</a>
+        <a class="docs-sidebar__link" href="#glk-textarea">glk-textarea</a>
+        <a class="docs-sidebar__link" href="#glk-select">glk-select</a>
+        <a class="docs-sidebar__link" href="#glk-search">glk-search</a>
+        <a class="docs-sidebar__link" href="#glk-toggle">glk-toggle</a>
+        <a class="docs-sidebar__link" href="#glk-checkbox">glk-checkbox</a>
+        <a class="docs-sidebar__link" href="#glk-radio">glk-radio</a>
+        <a class="docs-sidebar__link" href="#glk-range">glk-range</a>
+      </div>
+
+      <div class="docs-sidebar__group">
+        <div class="docs-sidebar__group-title">Navigation</div>
+        <a class="docs-sidebar__link" href="#glk-nav">glk-nav</a>
+        <a class="docs-sidebar__link" href="#glk-tab-bar">glk-tab-bar</a>
+      </div>
+
+      <div class="docs-sidebar__group">
+        <div class="docs-sidebar__group-title">Feedback</div>
+        <a class="docs-sidebar__link" href="#glk-progress">glk-progress</a>
+        <a class="docs-sidebar__link" href="#glk-modal">glk-modal</a>
+        <a class="docs-sidebar__link" href="#glk-toast">glk-toast</a>
+      </div>
+
+      <div class="docs-sidebar__group">
+        <div class="docs-sidebar__group-title">Container</div>
+        <a class="docs-sidebar__link" href="#glk-accordion">glk-accordion</a>
+      </div>
+
+      <div class="docs-sidebar__footer">
+        <a href="../de/">&#8592; Startseite</a>
+        <a href="/de/showcase.html">Live Showcase</a>
+        <a href="https://github.com/JUNGHERZ/GlassKit" target="_blank">GitHub</a>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="docs-main">
+
+      <!-- Hero -->
+      <div class="docs-hero">
+        <h1>GlassKit Elements</h1>
+        <p>Vollst&auml;ndige Referenz f&uuml;r alle 24 Web Components &ndash; entwickelt von Jungherz GmbH. Vanilla JS, Shadow DOM, native Formular-Teilnahme.</p>
+        <div class="docs-hero__badges">
+          <span class="docs-hero__badge">v0.8.0</span>
+          <span class="docs-hero__badge">Shadow DOM</span>
+          <span class="docs-hero__badge">24 Komponenten</span>
+          <span class="docs-hero__badge">Vanilla JS</span>
+        </div>
+      </div>
+
+      <!-- ═══ Installation ═══ -->
+      <section class="docs-section" id="installation">
+        <h2>Installation</h2>
+
+        <h3>CDN (schnellste Variante)</h3>
+        <div class="docs-code"><span class="cmt">&lt;!-- 1. GlassKit CSS --&gt;</span>
+<span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span> <span class="attr">href</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.3/glasskit.min.css"</span><span class="tag">&gt;</span>
+
+<span class="cmt">&lt;!-- 2. GlassKit Elements --&gt;</span>
+<span class="tag">&lt;script</span> <span class="attr">src</span>=<span class="val">"https://cdn.jsdelivr.net/npm/glasskit-elements/dist/glasskit-elements.min.js"</span><span class="tag">&gt;&lt;/script&gt;</span></div>
+
+        <h3>npm</h3>
+        <div class="docs-code">npm install glasskit-elements @jungherz-de/glasskit</div>
+        <div class="docs-code"><span class="tag">import</span> <span class="val">'@jungherz-de/glasskit/glasskit.css'</span>;
+<span class="tag">import</span> <span class="val">'glasskit-elements'</span>;</div>
+
+        <h3>Selektiver Import</h3>
+        <p>Importieren Sie nur, was Sie ben&ouml;tigen, f&uuml;r kleinere Bundles:</p>
+        <div class="docs-code"><span class="tag">import</span> <span class="val">'glasskit-elements/components/glk-button.js'</span>;
+<span class="tag">import</span> <span class="val">'glasskit-elements/components/glk-toggle.js'</span>;</div>
+      </section>
+
+      <!-- ═══ Theming ═══ -->
+      <section class="docs-section" id="theming">
+        <h2>Theming</h2>
+        <p>Setzen Sie <code>data-theme</code> auf dem <code>&lt;html&gt;</code>-Element. Alle Komponenten synchronisieren sich automatisch &uuml;ber einen gemeinsamen MutationObserver.</p>
+        <div class="docs-code"><span class="tag">&lt;html</span> <span class="attr">data-theme</span>=<span class="val">"dark"</span><span class="tag">&gt;</span>  <span class="cmt">&lt;!-- or "light" --&gt;</span>
+
+<span class="tag">&lt;script&gt;</span>
+  <span class="cmt">// Toggle theme</span>
+  <span class="tag">const</span> theme = document.documentElement.getAttribute(<span class="val">'data-theme'</span>);
+  document.documentElement.setAttribute(<span class="val">'data-theme'</span>,
+    theme === <span class="val">'dark'</span> ? <span class="val">'light'</span> : <span class="val">'dark'</span>);
+<span class="tag">&lt;/script&gt;</span></div>
+      </section>
+
+      <!-- ═══ Forms ═══ -->
+      <section class="docs-section" id="forms">
+        <h2>Formular-Integration</h2>
+        <p>Alle Formular-Komponenten nehmen &uuml;ber <code>ElementInternals</code> an nativen Formularen teil.</p>
+        <div class="docs-code"><span class="tag">&lt;form</span> <span class="attr">id</span>=<span class="val">"settings"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;glk-input</span> <span class="attr">name</span>=<span class="val">"username"</span> <span class="attr">label</span>=<span class="val">"Username"</span><span class="tag">&gt;&lt;/glk-input&gt;</span>
+  <span class="tag">&lt;glk-toggle</span> <span class="attr">name</span>=<span class="val">"notify"</span> <span class="attr">label</span>=<span class="val">"Notifications"</span> <span class="attr">checked</span><span class="tag">&gt;&lt;/glk-toggle&gt;</span>
+  <span class="tag">&lt;glk-button</span> <span class="attr">variant</span>=<span class="val">"primary"</span> <span class="attr">type</span>=<span class="val">"submit"</span><span class="tag">&gt;</span>Save<span class="tag">&lt;/glk-button&gt;</span>
+<span class="tag">&lt;/form&gt;</span>
+
+<span class="tag">&lt;script&gt;</span>
+  document.getElementById(<span class="val">'settings'</span>).addEventListener(<span class="val">'submit'</span>, (e) =&gt; {
+    e.preventDefault();
+    <span class="tag">const</span> data = <span class="tag">new</span> FormData(e.target);
+    console.log(Object.fromEntries(data));
+    <span class="cmt">// { username: "...", notify: "on" }</span>
+  });
+<span class="tag">&lt;/script&gt;</span></div>
+      </section>
+
+      <!-- ═══ Content Components ═══ -->
+      <section class="docs-section" id="glk-title">
+        <h2>Inhalts-Komponenten</h2>
+
+        <div class="docs-component">
+          <h3><code>&lt;glk-title&gt;</code></h3>
+          <p>Gestaltete &Uuml;berschrift mit Textschatten.</p>
+          <div class="docs-preview"><glk-title>Page Heading</glk-title></div>
+          <div class="docs-code"><span class="tag">&lt;glk-title&gt;</span>Page Heading<span class="tag">&lt;/glk-title&gt;</span></div>
+        </div>
+
+        <div class="docs-component" id="glk-badge">
+          <h3><code>&lt;glk-badge&gt;</code></h3>
+          <p>Inline-Status-Badge mit Farbvarianten.</p>
+          <div class="docs-preview" style="display:flex;gap:8px;">
+            <glk-badge>Default</glk-badge>
+            <glk-badge variant="primary">Primary</glk-badge>
+            <glk-badge variant="success">Success</glk-badge>
+            <glk-badge variant="error">Error</glk-badge>
+          </div>
+          <div class="docs-code"><span class="tag">&lt;glk-badge</span> <span class="attr">variant</span>=<span class="val">"success"</span><span class="tag">&gt;</span>Active<span class="tag">&lt;/glk-badge&gt;</span></div>
+          <table class="docs-table">
+            <tr><th>Attribute</th><th>Type</th><th>Values</th></tr>
+            <tr><td><code>variant</code></td><td>String</td><td><code>primary</code> | <code>success</code> | <code>error</code></td></tr>
+          </table>
+        </div>
+
+        <div class="docs-component" id="glk-avatar">
+          <h3><code>&lt;glk-avatar&gt;</code></h3>
+          <p>Kreisf&ouml;rmiger Avatar mit Initialen oder Bild.</p>
+          <div class="docs-preview" style="display:flex;gap:12px;align-items:center;">
+            <glk-avatar size="sm">S</glk-avatar>
+            <glk-avatar>MD</glk-avatar>
+            <glk-avatar size="lg">LG</glk-avatar>
+          </div>
+          <div class="docs-code"><span class="tag">&lt;glk-avatar</span> <span class="attr">size</span>=<span class="val">"lg"</span><span class="tag">&gt;</span>JD<span class="tag">&lt;/glk-avatar&gt;</span>
+<span class="tag">&lt;glk-avatar</span> <span class="attr">src</span>=<span class="val">"photo.jpg"</span><span class="tag">&gt;&lt;/glk-avatar&gt;</span></div>
+          <table class="docs-table">
+            <tr><th>Attribute</th><th>Type</th><th>Values</th></tr>
+            <tr><td><code>size</code></td><td>String</td><td><code>sm</code> | (default) | <code>lg</code></td></tr>
+            <tr><td><code>src</code></td><td>String</td><td>Image URL</td></tr>
+          </table>
+        </div>
+
+        <div class="docs-component" id="glk-card">
+          <h3><code>&lt;glk-card&gt;</code></h3>
+          <p>Inhaltskarte mit Glaseffekt.</p>
+          <div class="docs-preview"><glk-card>Card content here.</glk-card></div>
+          <div class="docs-code"><span class="tag">&lt;glk-card</span> <span class="attr">glow</span><span class="tag">&gt;</span>Highlighted content<span class="tag">&lt;/glk-card&gt;</span></div>
+          <table class="docs-table">
+            <tr><th>Attribute</th><th>Type</th><th>Description</th></tr>
+            <tr><td><code>glow</code></td><td>Boolean</td><td>Adds gradient glow effect</td></tr>
+          </table>
+        </div>
+
+        <div class="docs-component" id="glk-divider">
+          <h3><code>&lt;glk-divider&gt;</code></h3>
+          <div class="docs-preview"><glk-divider></glk-divider></div>
+          <div class="docs-code"><span class="tag">&lt;glk-divider&gt;&lt;/glk-divider&gt;</span></div>
+        </div>
+
+        <div class="docs-component" id="glk-status">
+          <h3><code>&lt;glk-status&gt;</code></h3>
+          <p>Statushinweis mit Nachricht.</p>
+          <div class="docs-preview"><glk-status message="No results found"></glk-status></div>
+          <div class="docs-code"><span class="tag">&lt;glk-status</span> <span class="attr">message</span>=<span class="val">"No results found"</span><span class="tag">&gt;&lt;/glk-status&gt;</span></div>
+        </div>
+      </section>
+
+      <!-- ═══ Buttons ═══ -->
+      <section class="docs-section" id="glk-button">
+        <h2>Buttons</h2>
+
+        <div class="docs-component">
+          <h3><code>&lt;glk-button&gt;</code></h3>
+          <p>Glas-gestalteter Button mit drei Varianten und Gr&ouml;&szlig;enoptionen.</p>
+          <div class="docs-preview" style="display:flex;flex-direction:column;gap:12px;">
+            <glk-button variant="primary">Primary</glk-button>
+            <glk-button variant="secondary">Secondary</glk-button>
+            <glk-button variant="tertiary">Tertiary</glk-button>
+          </div>
+          <div class="docs-code"><span class="tag">&lt;glk-button</span> <span class="attr">variant</span>=<span class="val">"primary"</span> <span class="attr">size</span>=<span class="val">"auto"</span><span class="tag">&gt;</span>Save<span class="tag">&lt;/glk-button&gt;</span></div>
+          <table class="docs-table">
+            <tr><th>Attribute</th><th>Type</th><th>Values</th></tr>
+            <tr><td><code>variant</code></td><td>String</td><td><code>primary</code> | <code>secondary</code> | <code>tertiary</code></td></tr>
+            <tr><td><code>size</code></td><td>String</td><td><code>sm</code> | <code>md</code> | <code>lg</code> | <code>auto</code></td></tr>
+            <tr><td><code>disabled</code></td><td>Boolean</td><td>Disables the button</td></tr>
+            <tr><td><code>type</code></td><td>String</td><td><code>button</code> | <code>submit</code> | <code>reset</code></td></tr>
+          </table>
+          <p><strong>Events:</strong> <code>glk-click</code></p>
+        </div>
+
+        <div class="docs-component" id="glk-pill">
+          <h3><code>&lt;glk-pill&gt;</code></h3>
+          <p>Kleiner kreisf&ouml;rmiger Icon-Button (46x46px).</p>
+          <div class="docs-code"><span class="tag">&lt;glk-pill</span> <span class="attr">label</span>=<span class="val">"Menu"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;svg</span> <span class="attr">viewBox</span>=<span class="val">"0 0 24 24"</span><span class="tag">&gt;</span>...<span class="tag">&lt;/svg&gt;</span>
+<span class="tag">&lt;/glk-pill&gt;</span></div>
+          <table class="docs-table">
+            <tr><th>Attribute</th><th>Type</th><th>Description</th></tr>
+            <tr><td><code>label</code></td><td>String</td><td>Accessible aria-label</td></tr>
+            <tr><td><code>disabled</code></td><td>Boolean</td><td>Disables the button</td></tr>
+          </table>
+        </div>
+      </section>
+
+      <!-- ═══ Forms ═══ -->
+      <section class="docs-section" id="glk-input">
+        <h2>Formular-Komponenten</h2>
+        <p>Alle Formular-Komponenten unterst&uuml;tzen <code>name</code>, <code>value</code>, <code>disabled</code> und nehmen an der nativen <code>&lt;form&gt;</code>-&Uuml;bermittlung teil.</p>
+
+        <div class="docs-component">
+          <h3><code>&lt;glk-input&gt;</code></h3>
+          <p>Textfeld mit Label, Hinweis und Fehlerzustand.</p>
+          <div class="docs-preview" style="display:flex;flex-direction:column;gap:12px;">
+            <glk-input label="Username" placeholder="Enter name"></glk-input>
+            <glk-input label="Email" type="email" hint="Required" error></glk-input>
+          </div>
+          <div class="docs-code"><span class="tag">&lt;glk-input</span> <span class="attr">label</span>=<span class="val">"Email"</span> <span class="attr">type</span>=<span class="val">"email"</span>
+  <span class="attr">placeholder</span>=<span class="val">"you@example.com"</span>
+  <span class="attr">hint</span>=<span class="val">"Required"</span> <span class="attr">error</span>
+  <span class="attr">name</span>=<span class="val">"email"</span><span class="tag">&gt;&lt;/glk-input&gt;</span></div>
+          <table class="docs-table">
+            <tr><th>Attribute</th><th>Type</th><th>Description</th></tr>
+            <tr><td><code>label</code></td><td>String</td><td>Input label</td></tr>
+            <tr><td><code>type</code></td><td>String</td><td>text, email, password, ...</td></tr>
+            <tr><td><code>placeholder</code></td><td>String</td><td>Placeholder text</td></tr>
+            <tr><td><code>hint</code></td><td>String</td><td>Helper text</td></tr>
+            <tr><td><code>error</code></td><td>Boolean</td><td>Error styling</td></tr>
+            <tr><td><code>required</code></td><td>Boolean</td><td>Required field</td></tr>
+          </table>
+          <p><strong>Events:</strong> <code>glk-input</code>, <code>glk-change</code></p>
+        </div>
+
+        <div class="docs-component" id="glk-textarea">
+          <h3><code>&lt;glk-textarea&gt;</code></h3>
+          <div class="docs-preview"><glk-textarea label="Message" placeholder="Type here..." rows="3"></glk-textarea></div>
+          <div class="docs-code"><span class="tag">&lt;glk-textarea</span> <span class="attr">label</span>=<span class="val">"Message"</span> <span class="attr">rows</span>=<span class="val">"4"</span><span class="tag">&gt;&lt;/glk-textarea&gt;</span></div>
+        </div>
+
+        <div class="docs-component" id="glk-select">
+          <h3><code>&lt;glk-select&gt;</code></h3>
+          <div class="docs-preview">
+            <glk-select label="Plan">
+              <option value="">Select...</option>
+              <option value="free">Free</option>
+              <option value="pro">Pro</option>
+            </glk-select>
+          </div>
+          <div class="docs-code"><span class="tag">&lt;glk-select</span> <span class="attr">label</span>=<span class="val">"Plan"</span> <span class="attr">name</span>=<span class="val">"plan"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;option</span> <span class="attr">value</span>=<span class="val">"free"</span><span class="tag">&gt;</span>Free<span class="tag">&lt;/option&gt;</span>
+  <span class="tag">&lt;option</span> <span class="attr">value</span>=<span class="val">"pro"</span><span class="tag">&gt;</span>Pro<span class="tag">&lt;/option&gt;</span>
+<span class="tag">&lt;/glk-select&gt;</span></div>
+        </div>
+
+        <div class="docs-component" id="glk-search">
+          <h3><code>&lt;glk-search&gt;</code></h3>
+          <div class="docs-preview"><glk-search placeholder="Search..."></glk-search></div>
+          <div class="docs-code"><span class="tag">&lt;glk-search</span> <span class="attr">placeholder</span>=<span class="val">"Search..."</span><span class="tag">&gt;&lt;/glk-search&gt;</span></div>
+        </div>
+
+        <div class="docs-component" id="glk-toggle">
+          <h3><code>&lt;glk-toggle&gt;</code></h3>
+          <p>Schalter-Toggle mit Formular-Teilnahme.</p>
+          <div class="docs-preview" style="display:flex;flex-direction:column;gap:12px;">
+            <glk-toggle label="Notifications" checked></glk-toggle>
+            <glk-toggle label="Disabled" disabled></glk-toggle>
+          </div>
+          <div class="docs-code"><span class="tag">&lt;glk-toggle</span> <span class="attr">label</span>=<span class="val">"Notifications"</span> <span class="attr">name</span>=<span class="val">"notify"</span> <span class="attr">checked</span><span class="tag">&gt;&lt;/glk-toggle&gt;</span></div>
+          <table class="docs-table">
+            <tr><th>Attribute</th><th>Type</th><th>Description</th></tr>
+            <tr><td><code>label</code></td><td>String</td><td>Toggle label</td></tr>
+            <tr><td><code>checked</code></td><td>Boolean</td><td>Checked state</td></tr>
+            <tr><td><code>disabled</code></td><td>Boolean</td><td>Disabled state</td></tr>
+          </table>
+          <p><strong>Events:</strong> <code>glk-change</code> &rarr; <code>{ checked: boolean }</code></p>
+        </div>
+
+        <div class="docs-component" id="glk-checkbox">
+          <h3><code>&lt;glk-checkbox&gt;</code></h3>
+          <div class="docs-preview" style="display:flex;flex-direction:column;gap:12px;">
+            <glk-checkbox label="I agree to the terms" checked></glk-checkbox>
+            <glk-checkbox label="Subscribe"></glk-checkbox>
+          </div>
+          <div class="docs-code"><span class="tag">&lt;glk-checkbox</span> <span class="attr">label</span>=<span class="val">"I agree"</span> <span class="attr">name</span>=<span class="val">"terms"</span> <span class="attr">checked</span><span class="tag">&gt;&lt;/glk-checkbox&gt;</span></div>
+        </div>
+
+        <div class="docs-component" id="glk-radio">
+          <h3><code>&lt;glk-radio&gt;</code></h3>
+          <div class="docs-preview" style="display:flex;flex-direction:column;gap:12px;">
+            <glk-radio name="doc-plan" label="Free" value="free" checked></glk-radio>
+            <glk-radio name="doc-plan" label="Pro" value="pro"></glk-radio>
+          </div>
+          <div class="docs-code"><span class="tag">&lt;glk-radio</span> <span class="attr">name</span>=<span class="val">"plan"</span> <span class="attr">label</span>=<span class="val">"Free"</span> <span class="attr">value</span>=<span class="val">"free"</span> <span class="attr">checked</span><span class="tag">&gt;&lt;/glk-radio&gt;</span>
+<span class="tag">&lt;glk-radio</span> <span class="attr">name</span>=<span class="val">"plan"</span> <span class="attr">label</span>=<span class="val">"Pro"</span> <span class="attr">value</span>=<span class="val">"pro"</span><span class="tag">&gt;&lt;/glk-radio&gt;</span></div>
+        </div>
+
+        <div class="docs-component" id="glk-range">
+          <h3><code>&lt;glk-range&gt;</code></h3>
+          <div class="docs-preview"><glk-range label="Volume" min="0" max="100" value="65"></glk-range></div>
+          <div class="docs-code"><span class="tag">&lt;glk-range</span> <span class="attr">label</span>=<span class="val">"Volume"</span> <span class="attr">min</span>=<span class="val">"0"</span> <span class="attr">max</span>=<span class="val">"100"</span> <span class="attr">value</span>=<span class="val">"65"</span><span class="tag">&gt;&lt;/glk-range&gt;</span></div>
+          <table class="docs-table">
+            <tr><th>Attribute</th><th>Type</th><th>Description</th></tr>
+            <tr><td><code>min</code></td><td>Number</td><td>Minimum (default: 0)</td></tr>
+            <tr><td><code>max</code></td><td>Number</td><td>Maximum (default: 100)</td></tr>
+            <tr><td><code>value</code></td><td>Number</td><td>Current value</td></tr>
+            <tr><td><code>step</code></td><td>Number</td><td>Step increment</td></tr>
+          </table>
+        </div>
+      </section>
+
+      <!-- ═══ Navigation ═══ -->
+      <section class="docs-section" id="glk-nav">
+        <h2>Navigation</h2>
+
+        <div class="docs-component">
+          <h3><code>&lt;glk-nav&gt;</code></h3>
+          <p>Horizontaler Navigationsleisten-Container f&uuml;r Pill-Buttons.</p>
+          <div class="docs-code"><span class="tag">&lt;glk-nav&gt;</span>
+  <span class="tag">&lt;glk-pill</span> <span class="attr">label</span>=<span class="val">"Back"</span><span class="tag">&gt;</span><span class="tag">&lt;svg&gt;</span>...<span class="tag">&lt;/svg&gt;&lt;/glk-pill&gt;</span>
+  <span class="tag">&lt;glk-pill</span> <span class="attr">label</span>=<span class="val">"Settings"</span><span class="tag">&gt;</span><span class="tag">&lt;svg&gt;</span>...<span class="tag">&lt;/svg&gt;&lt;/glk-pill&gt;</span>
+<span class="tag">&lt;/glk-nav&gt;</span></div>
+        </div>
+
+        <div class="docs-component" id="glk-tab-bar">
+          <h3><code>&lt;glk-tab-bar&gt;</code> + <code>&lt;glk-tab-item&gt;</code></h3>
+          <p>Tab-Leiste f&uuml;r die Navigation am unteren Bildschirmrand.</p>
+          <div class="docs-code"><span class="tag">&lt;glk-tab-bar&gt;</span>
+  <span class="tag">&lt;glk-tab-item</span> <span class="attr">label</span>=<span class="val">"Home"</span> <span class="attr">active</span><span class="tag">&gt;</span><span class="tag">&lt;svg&gt;</span>...<span class="tag">&lt;/svg&gt;&lt;/glk-tab-item&gt;</span>
+  <span class="tag">&lt;glk-tab-item</span> <span class="attr">label</span>=<span class="val">"Profile"</span> <span class="attr">badge</span>=<span class="val">"3"</span><span class="tag">&gt;</span><span class="tag">&lt;svg&gt;</span>...<span class="tag">&lt;/svg&gt;&lt;/glk-tab-item&gt;</span>
+<span class="tag">&lt;/glk-tab-bar&gt;</span></div>
+          <table class="docs-table">
+            <tr><th>Attribute</th><th>Component</th><th>Description</th></tr>
+            <tr><td><code>label</code></td><td>glk-tab-item</td><td>Tab label</td></tr>
+            <tr><td><code>active</code></td><td>glk-tab-item</td><td>Active state</td></tr>
+            <tr><td><code>badge</code></td><td>glk-tab-item</td><td>Badge count</td></tr>
+          </table>
+          <p><strong>Events:</strong> <code>glk-tab-change</code> &rarr; <code>{ tab: Element }</code></p>
+        </div>
+      </section>
+
+      <!-- ═══ Feedback ═══ -->
+      <section class="docs-section" id="glk-progress">
+        <h2>Feedback</h2>
+
+        <div class="docs-component">
+          <h3><code>&lt;glk-progress&gt;</code></h3>
+          <div class="docs-preview" style="display:flex;flex-direction:column;gap:12px;">
+            <glk-progress label="Upload" value="75" variant="success"></glk-progress>
+            <glk-progress label="Storage" value="90" variant="error" size="lg"></glk-progress>
+          </div>
+          <div class="docs-code"><span class="tag">&lt;glk-progress</span> <span class="attr">label</span>=<span class="val">"Upload"</span> <span class="attr">value</span>=<span class="val">"75"</span> <span class="attr">variant</span>=<span class="val">"success"</span><span class="tag">&gt;&lt;/glk-progress&gt;</span></div>
+          <table class="docs-table">
+            <tr><th>Attribute</th><th>Type</th><th>Values</th></tr>
+            <tr><td><code>value</code></td><td>Number</td><td>0 &ndash; 100</td></tr>
+            <tr><td><code>variant</code></td><td>String</td><td><code>success</code> | <code>error</code></td></tr>
+            <tr><td><code>size</code></td><td>String</td><td><code>sm</code> | (default) | <code>lg</code></td></tr>
+          </table>
+        </div>
+
+        <div class="docs-component" id="glk-modal">
+          <h3><code>&lt;glk-modal&gt;</code></h3>
+          <p>Modaler Dialog mit Titel, Inhalt und Aktions-Buttons.</p>
+          <div class="docs-code"><span class="tag">&lt;glk-modal</span> <span class="attr">title</span>=<span class="val">"Confirm"</span> <span class="attr">id</span>=<span class="val">"my-modal"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;p&gt;</span>Are you sure?<span class="tag">&lt;/p&gt;</span>
+  <span class="tag">&lt;div</span> <span class="attr">slot</span>=<span class="val">"actions"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;button</span> <span class="cls">class</span>=<span class="val">"glass-modal__action"</span><span class="tag">&gt;</span>Cancel<span class="tag">&lt;/button&gt;</span>
+    <span class="tag">&lt;button</span> <span class="cls">class</span>=<span class="val">"glass-modal__action glass-modal__action--primary"</span><span class="tag">&gt;</span>OK<span class="tag">&lt;/button&gt;</span>
+  <span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;/glk-modal&gt;</span>
+
+<span class="cmt">// Methods</span>
+document.getElementById(<span class="val">'my-modal'</span>).show();
+document.getElementById(<span class="val">'my-modal'</span>).close();</div>
+          <table class="docs-table">
+            <tr><th>Attribute</th><th>Type</th><th>Description</th></tr>
+            <tr><td><code>open</code></td><td>Boolean</td><td>Show/hide</td></tr>
+            <tr><td><code>title</code></td><td>String</td><td>Header title</td></tr>
+          </table>
+          <p><strong>Methods:</strong> <code>.show()</code>, <code>.close()</code> &nbsp; <strong>Events:</strong> <code>glk-close</code></p>
+        </div>
+
+        <div class="docs-component" id="glk-toast">
+          <h3><code>&lt;glk-toast&gt;</code></h3>
+          <p>Automatisch ausblendende Benachrichtigung.</p>
+          <div class="docs-code"><span class="tag">&lt;glk-toast</span> <span class="attr">id</span>=<span class="val">"toast"</span><span class="tag">&gt;&lt;/glk-toast&gt;</span>
+
+<span class="cmt">// Show programmatically</span>
+document.getElementById(<span class="val">'toast'</span>).show(<span class="val">'Saved!'</span>, <span class="val">'success'</span>, 3000);</div>
+          <table class="docs-table">
+            <tr><th>Attribute</th><th>Type</th><th>Values</th></tr>
+            <tr><td><code>variant</code></td><td>String</td><td><code>success</code> | <code>error</code> | <code>warning</code></td></tr>
+            <tr><td><code>duration</code></td><td>Number</td><td>ms (default: 3000)</td></tr>
+          </table>
+          <p><strong>Methods:</strong> <code>.show(message, variant, duration)</code>, <code>.dismiss()</code></p>
+        </div>
+      </section>
+
+      <!-- ═══ Containers ═══ -->
+      <section class="docs-section" id="glk-accordion">
+        <h2>Container</h2>
+
+        <div class="docs-component">
+          <h3><code>&lt;glk-accordion&gt;</code> + <code>&lt;glk-accordion-item&gt;</code></h3>
+          <p>Einklappbare Akkordeon-Abschnitte.</p>
+          <div class="docs-preview">
+            <glk-accordion>
+              <glk-accordion-item title="Section 1" open>Content for section 1.</glk-accordion-item>
+              <glk-accordion-item title="Section 2">Content for section 2.</glk-accordion-item>
+            </glk-accordion>
+          </div>
+          <div class="docs-code"><span class="tag">&lt;glk-accordion&gt;</span>
+  <span class="tag">&lt;glk-accordion-item</span> <span class="attr">title</span>=<span class="val">"FAQ"</span> <span class="attr">open</span><span class="tag">&gt;</span>
+    Answer here.
+  <span class="tag">&lt;/glk-accordion-item&gt;</span>
+<span class="tag">&lt;/glk-accordion&gt;</span></div>
+          <table class="docs-table">
+            <tr><th>Attribute</th><th>Component</th><th>Description</th></tr>
+            <tr><td><code>title</code></td><td>glk-accordion-item</td><td>Trigger text</td></tr>
+            <tr><td><code>open</code></td><td>glk-accordion-item</td><td>Expanded state</td></tr>
+          </table>
+          <p><strong>Events:</strong> <code>glk-toggle</code> &rarr; <code>{ open: boolean }</code></p>
+        </div>
+      </section>
+
+      <div style="height:80px;"></div>
+    </main>
+
+  </div>
+
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement;
+      const current = html.getAttribute('data-theme');
+      html.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+    }
+
+    // Scroll Spy
+    const links = document.querySelectorAll('.docs-sidebar__link');
+    const sections = [];
+    links.forEach(link => {
+      const id = link.getAttribute('href')?.replace('#', '');
+      if (id) {
+        const el = document.getElementById(id);
+        if (el) sections.push({ id, el, link });
+      }
+    });
+
+    window.addEventListener('scroll', () => {
+      let current = '';
+      for (const s of sections) {
+        if (s.el.getBoundingClientRect().top <= 80) current = s.id;
+      }
+      links.forEach(l => l.classList.remove('is-active'));
+      if (current) {
+        const active = document.querySelector(`.docs-sidebar__link[href="#${current}"]`);
+        if (active) active.classList.add('is-active');
+      }
+    }, { passive: true });
+  </script>
+</body>
+</html>

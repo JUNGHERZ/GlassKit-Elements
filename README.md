@@ -65,26 +65,26 @@ GlassKit Elements is a companion library to [GlassKit CSS](https://github.com/JU
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.3/glasskit.min.css">
 
 <!-- 2. GlassKit Elements -->
-<script src="https://cdn.jsdelivr.net/npm/glasskit-elements/dist/glasskit-elements.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"></script>
 ```
 
 ### npm
 
 ```bash
-npm install glasskit-elements @jungherz-de/glasskit
+npm install @jungherz-de/glasskit-elements @jungherz-de/glasskit
 ```
 
 ```js
 import '@jungherz-de/glasskit/glasskit.css';
-import 'glasskit-elements';
+import '@jungherz-de/glasskit-elements';
 ```
 
 ### Selective Import
 
 ```js
 // Only import what you need
-import 'glasskit-elements/components/glk-button.js';
-import 'glasskit-elements/components/glk-toggle.js';
+import '@jungherz-de/glasskit-elements/components/glk-button.js';
+import '@jungherz-de/glasskit-elements/components/glk-toggle.js';
 ```
 
 ---
@@ -96,7 +96,7 @@ import 'glasskit-elements/components/glk-toggle.js';
 <html data-theme="dark">
 <head>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.3/glasskit.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/glasskit-elements/dist/glasskit-elements.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"></script>
 </head>
 <body>
   <glk-button variant="primary">Click me</glk-button>

@@ -22,11 +22,13 @@ class GlkModal extends GlkElement {
 
     // Footer — clone action buttons from light DOM into shadow DOM
     this._footer = this.createElement('div', ['glass-modal__footer']);
-    this._populateFooter();
 
     modal.appendChild(header);
     modal.appendChild(body);
     modal.appendChild(this._footer);
+
+    // Defer footer population — children may not be parsed yet
+    requestAnimationFrame(() => this._populateFooter());
 
     this._overlay.appendChild(modal);
     this._wrapper.appendChild(this._overlay);

@@ -847,22 +847,22 @@ class GlkSelect extends GlkFormElement {
     if (this.getBoolAttr('disabled')) this._select.disabled = true;
     if (this.getBoolAttr('required')) this._select.required = true;
 
-    // Move slotted <option> elements into the shadow select
-    this._moveOptions();
-
     group.appendChild(this._labelEl);
     group.appendChild(this._select);
 
     this._wrapper.appendChild(group);
 
-    const value = this.getAttribute('value');
-    if (value) this._select.value = value;
-
-    this._syncFormValue();
+    // Defer option copying — children may not be parsed yet in connectedCallback
+    requestAnimationFrame(() => {
+      this._moveOptions();
+      const value = this.getAttribute('value');
+      if (value) this._select.value = value;
+      this._syncFormValue();
+    });
   }
 
   _moveOptions() {
-    // Copy <option> children from the light DOM into the shadow <select>
+    this._select.innerHTML = '';
     const options = this.querySelectorAll('option');
     options.forEach(opt => {
       this._select.appendChild(opt.cloneNode(true));

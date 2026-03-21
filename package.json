@@ -1,6 +1,6 @@
 {
   "name": "@jungherz-de/glasskit-elements",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "description": "Vanilla JavaScript Web Components wrapping the GlassKit CSS glassmorphism library",
   "license": "MIT",
   "type": "module",

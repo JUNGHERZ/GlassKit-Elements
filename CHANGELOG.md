@@ -7,6 +7,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.8.1] – 2026-03-22
+
+### Fixed
+
+- **glk-select**: Options not rendering — deferred option copying to next frame (`requestAnimationFrame`) to ensure light DOM children are parsed
+- **glk-modal**: Footer buttons not visible — deferred footer population to next frame for same timing reason
+- **glk-tab-item**: Badge positioned incorrectly — moved badge element inside `.glass-tab-bar__icon` container (which has `position: relative`)
+- **glk-tab-item**: Icons not styled correctly — SVGs are now cloned from light DOM into shadow DOM so GlassKit CSS rules apply; inline attributes (`stroke`, `width`, `fill`) stripped during clone
+
+### Added
+
+- **glk-tab-bar `static` attribute**: Sets `position: relative` instead of `fixed` for embedding in documentation previews
+- **Showcase navbar**: Added `glk-nav` with pill buttons (back, theme toggle) and `glk-tab-bar` at bottom
+- **Docs live previews**: Added interactive previews for `glk-nav`, `glk-pill`, `glk-tab-bar`, `glk-modal`, and `glk-toast`
+- **npm scope**: Package published as `@jungherz-de/glasskit-elements`
+- **GitHub Pages**: Switched from import maps to built IIFE bundle (`dist/glasskit-elements.min.js`)
+- **Phone frame**: Matched GlassKit original styling with multi-layer bezel box-shadow
+- **SEO meta tags**: Open Graph, Twitter Cards, hreflang, canonical on all 6 pages
+- **German translations**: `de/index.html`, `de/docs.html`, `de/showcase.html` with language switcher
+- **Language switcher**: `🇩🇪 DE` / `🇬🇧 EN` pills in header (index) and fixed button (docs)
+- **README.md, CHANGELOG.md, LICENSE**: Project documentation
+
+### Changed
+
+- **GitHub links**: Point to `JUNGHERZ/GlassKit-Elements` instead of `JUNGHERZ/GlassKit`
+- **dist/ tracked in git**: Required for GitHub Pages deployment
+
+---
+
 ## [0.8.0] – 2026-03-21
 
 ### Added 🎉
@@ -41,4 +70,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+[0.8.1]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v0.8.1
 [0.8.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v0.8.0

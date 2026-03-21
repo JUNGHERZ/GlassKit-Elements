@@ -194,6 +194,13 @@
     [data-theme="light"] .docs-preview {
       background: rgba(0,0,0,0.02); border-color: rgba(0,0,0,0.06);
     }
+    .docs-preview--contained {
+      position: relative; overflow: hidden; height: 80px;
+      display: flex; align-items: flex-end;
+    }
+    .docs-preview--contained glk-tab-bar {
+      position: absolute; bottom: 0; left: 0; right: 0;
+    }
 
     /* ── Tables ── */
     .docs-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 14px; }
@@ -244,7 +251,7 @@
     <aside class="docs-sidebar">
       <div class="docs-sidebar__title">&#129482; <a href="/">GlassKit Elements</a></div>
       <div class="docs-sidebar__subtitle">Web Components for GlassKit CSS.</div>
-      <div class="docs-sidebar__version">v0.8.0 &ndash; Jungherz GmbH</div>
+      <div class="docs-sidebar__version">v0.8.1 &ndash; Jungherz GmbH</div>
 
       <div class="docs-sidebar__group">
         <div class="docs-sidebar__group-title">Basics</div>
@@ -314,7 +321,7 @@
         <h1>GlassKit Elements</h1>
         <p>Complete reference for all 24 web components &ndash; built by Jungherz GmbH. Vanilla JS, Shadow DOM, native form participation.</p>
         <div class="docs-hero__badges">
-          <span class="docs-hero__badge">v0.8.0</span>
+          <span class="docs-hero__badge">v0.8.1</span>
           <span class="docs-hero__badge">Shadow DOM</span>
           <span class="docs-hero__badge">24 Components</span>
           <span class="docs-hero__badge">Vanilla JS</span>
@@ -593,8 +600,15 @@
         <h2>Navigation</h2>
 
         <div class="docs-component">
-          <h3><code>&lt;glk-nav&gt;</code></h3>
-          <p>Horizontal navigation bar container for pill buttons.</p>
+          <h3><code>&lt;glk-nav&gt;</code> + <code>&lt;glk-pill&gt;</code></h3>
+          <p>Horizontal navigation bar with circular icon buttons.</p>
+          <div class="docs-preview">
+            <glk-nav>
+              <glk-pill label="Back"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg></glk-pill>
+              <glk-pill label="Theme"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></glk-pill>
+              <glk-pill label="Menu"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg></glk-pill>
+            </glk-nav>
+          </div>
           <div class="docs-code"><span class="tag">&lt;glk-nav&gt;</span>
   <span class="tag">&lt;glk-pill</span> <span class="attr">label</span>=<span class="val">"Back"</span><span class="tag">&gt;</span><span class="tag">&lt;svg&gt;</span>...<span class="tag">&lt;/svg&gt;&lt;/glk-pill&gt;</span>
   <span class="tag">&lt;glk-pill</span> <span class="attr">label</span>=<span class="val">"Settings"</span><span class="tag">&gt;</span><span class="tag">&lt;svg&gt;</span>...<span class="tag">&lt;/svg&gt;&lt;/glk-pill&gt;</span>
@@ -604,6 +618,13 @@
         <div class="docs-component" id="glk-tab-bar">
           <h3><code>&lt;glk-tab-bar&gt;</code> + <code>&lt;glk-tab-item&gt;</code></h3>
           <p>Bottom tab bar navigation.</p>
+          <div class="docs-preview">
+            <glk-tab-bar static>
+              <glk-tab-item label="Home" active><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></glk-tab-item>
+              <glk-tab-item label="Search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></glk-tab-item>
+              <glk-tab-item label="Profile" badge="3"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></glk-tab-item>
+            </glk-tab-bar>
+          </div>
           <div class="docs-code"><span class="tag">&lt;glk-tab-bar&gt;</span>
   <span class="tag">&lt;glk-tab-item</span> <span class="attr">label</span>=<span class="val">"Home"</span> <span class="attr">active</span><span class="tag">&gt;</span><span class="tag">&lt;svg&gt;</span>...<span class="tag">&lt;/svg&gt;&lt;/glk-tab-item&gt;</span>
   <span class="tag">&lt;glk-tab-item</span> <span class="attr">label</span>=<span class="val">"Profile"</span> <span class="attr">badge</span>=<span class="val">"3"</span><span class="tag">&gt;</span><span class="tag">&lt;svg&gt;</span>...<span class="tag">&lt;/svg&gt;&lt;/glk-tab-item&gt;</span>
@@ -640,6 +661,16 @@
         <div class="docs-component" id="glk-modal">
           <h3><code>&lt;glk-modal&gt;</code></h3>
           <p>Modal dialog with title, body, and action buttons.</p>
+          <div class="docs-preview">
+            <glk-button variant="secondary" size="auto" onclick="document.getElementById('docs-modal').show()">Open Modal</glk-button>
+            <glk-modal id="docs-modal" title="Confirm Action">
+              <p>Are you sure you want to proceed?</p>
+              <div slot="actions">
+                <button class="glass-modal__action" onclick="document.getElementById('docs-modal').close()">Cancel</button>
+                <button class="glass-modal__action glass-modal__action--primary" onclick="document.getElementById('docs-modal').close()">Confirm</button>
+              </div>
+            </glk-modal>
+          </div>
           <div class="docs-code"><span class="tag">&lt;glk-modal</span> <span class="attr">title</span>=<span class="val">"Confirm"</span> <span class="attr">id</span>=<span class="val">"my-modal"</span><span class="tag">&gt;</span>
   <span class="tag">&lt;p&gt;</span>Are you sure?<span class="tag">&lt;/p&gt;</span>
   <span class="tag">&lt;div</span> <span class="attr">slot</span>=<span class="val">"actions"</span><span class="tag">&gt;</span>
@@ -662,6 +693,12 @@ document.getElementById(<span class="val">'my-modal'</span>).close();</div>
         <div class="docs-component" id="glk-toast">
           <h3><code>&lt;glk-toast&gt;</code></h3>
           <p>Auto-dismissing notification.</p>
+          <div class="docs-preview" style="display:flex;gap:8px;">
+            <glk-button variant="secondary" size="auto" onclick="document.getElementById('docs-toast-ok').show('Action completed!','success')">Success</glk-button>
+            <glk-button variant="secondary" size="auto" onclick="document.getElementById('docs-toast-err').show('Something failed','error')">Error</glk-button>
+            <glk-toast id="docs-toast-ok"></glk-toast>
+            <glk-toast id="docs-toast-err"></glk-toast>
+          </div>
           <div class="docs-code"><span class="tag">&lt;glk-toast</span> <span class="attr">id</span>=<span class="val">"toast"</span><span class="tag">&gt;&lt;/glk-toast&gt;</span>
 
 <span class="cmt">// Show programmatically</span>

@@ -246,10 +246,30 @@ var GlassKitElements = (function (exports) {
   customElements.define('glk-pill', GlkPill);
 
   class GlkTabBar extends GlkElement {
+    static get observedAttributes() {
+      return ['static'];
+    }
+
     render() {
       const nav = this.createElement('nav', ['glass-tab-bar']);
       nav.appendChild(document.createElement('slot'));
       this._wrapper.appendChild(nav);
+      this._nav = nav;
+
+      if (this.getBoolAttr('static')) {
+        this._applyStatic();
+      }
+    }
+
+    onAttributeChanged(name) {
+      if (name === 'static' && this._nav) {
+        this._applyStatic();
+      }
+    }
+
+    _applyStatic() {
+      this._nav.style.position = 'relative';
+      this._nav.style.borderRadius = '16px';
     }
 
     setupEvents() {
@@ -283,26 +303,44 @@ var GlassKitElements = (function (exports) {
       this._btn = this.createElement('button', ['glass-tab-bar__item']);
       if (this.getBoolAttr('active')) this._btn.classList.add('is-active');
 
-      // Icon slot
+      // Icon — clone SVG from light DOM into shadow DOM so GlassKit CSS applies
       this._iconEl = this.createElement('span', ['glass-tab-bar__icon']);
-      this._iconEl.appendChild(document.createElement('slot'));
 
       // Label
       this._labelEl = this.createElement('span', ['glass-tab-bar__label']);
       this._labelEl.textContent = this.getAttribute('label') || '';
 
-      this._btn.appendChild(this._iconEl);
-      this._btn.appendChild(this._labelEl);
-
-      // Badge (optional)
+      // Badge inside icon container (position: absolute relative to icon)
       const badge = this.getAttribute('badge');
       if (badge) {
         this._badgeEl = this.createElement('span', ['glass-tab-bar__badge']);
         this._badgeEl.textContent = badge;
-        this._btn.appendChild(this._badgeEl);
+        this._iconEl.appendChild(this._badgeEl);
       }
 
+      this._btn.appendChild(this._iconEl);
+      this._btn.appendChild(this._labelEl);
+
       this._wrapper.appendChild(this._btn);
+
+      // Defer icon cloning — children may not be parsed yet
+      requestAnimationFrame(() => this._cloneIcon());
+    }
+
+    _cloneIcon() {
+      const svg = this.querySelector('svg');
+      if (svg) {
+        const clone = svg.cloneNode(true);
+        // Remove inline attributes that would override GlassKit styles
+        clone.removeAttribute('width');
+        clone.removeAttribute('height');
+        clone.removeAttribute('stroke');
+        clone.removeAttribute('stroke-width');
+        clone.removeAttribute('stroke-linecap');
+        clone.removeAttribute('stroke-linejoin');
+        clone.removeAttribute('fill');
+        this._iconEl.insertBefore(clone, this._iconEl.firstChild);
+      }
     }
 
     setupEvents() {
@@ -331,7 +369,7 @@ var GlassKitElements = (function (exports) {
           if (badge) {
             if (!this._badgeEl) {
               this._badgeEl = this.createElement('span', ['glass-tab-bar__badge']);
-              this._btn.appendChild(this._badgeEl);
+              this._iconEl.appendChild(this._badgeEl);
             }
             this._badgeEl.textContent = badge;
           } else if (this._badgeEl) {

@@ -1,8 +1,16 @@
 {
   "name": "@jungherz-de/glasskit-elements",
-  "version": "0.8.2",
+  "version": "0.8.3",
   "description": "Vanilla JavaScript Web Components wrapping the GlassKit CSS glassmorphism library",
   "license": "MIT",
+  "homepage": "https://glasskit-elements.jungherz.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JUNGHERZ/glasskit-elements.git"
+  },
+  "bugs": {
+    "url": "https://github.com/JUNGHERZ/glasskit-elements/issues"
+  },
   "type": "module",
   "main": "dist/glasskit-elements.js",
   "module": "dist/glasskit-elements.esm.js",

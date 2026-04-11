@@ -1,12 +1,12 @@
 <h1 align="center">🧊 GlassKit Elements</h1>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/glasskit-elements"><img src="https://img.shields.io/badge/version-0.8.3-f5a623?style=flat-square" alt="Version"></a>
+  <a href="https://www.npmjs.com/package/@jungherz-de/glasskit-elements"><img src="https://img.shields.io/npm/v/@jungherz-de/glasskit-elements?style=flat-square&color=f5a623&label=version" alt="Version"></a>
   <a href="#"><img src="https://img.shields.io/badge/vanilla_JS-no_dependencies-44cc11?style=flat-square" alt="Vanilla JS"></a>
   <a href="#"><img src="https://img.shields.io/badge/components-27-7ec8e3?style=flat-square" alt="27 Components"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="MIT License"></a>
   <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/changelog-v0.9.0-lightgrey?style=flat-square" alt="Changelog"></a>
-  <a href="https://www.npmjs.com/package/glasskit-elements"><img src="https://img.shields.io/badge/npm-glasskit--elements-cb3837?style=flat-square&logo=npm" alt="npm"></a>
+  <a href="https://www.npmjs.com/package/@jungherz-de/glasskit-elements"><img src="https://img.shields.io/badge/npm-%40jungherz--de%2Fglasskit--elements-cb3837?style=flat-square&logo=npm" alt="npm"></a>
 </p>
 
 <p align="center">

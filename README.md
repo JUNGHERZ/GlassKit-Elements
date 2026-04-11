@@ -3,15 +3,15 @@
 <p align="center">
   <a href="https://www.npmjs.com/package/glasskit-elements"><img src="https://img.shields.io/badge/version-0.8.3-f5a623?style=flat-square" alt="Version"></a>
   <a href="#"><img src="https://img.shields.io/badge/vanilla_JS-no_dependencies-44cc11?style=flat-square" alt="Vanilla JS"></a>
-  <a href="#"><img src="https://img.shields.io/badge/components-24-7ec8e3?style=flat-square" alt="24 Components"></a>
+  <a href="#"><img src="https://img.shields.io/badge/components-27-7ec8e3?style=flat-square" alt="27 Components"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="MIT License"></a>
-  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/changelog-v0.8.3-lightgrey?style=flat-square" alt="Changelog"></a>
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/changelog-v0.9.0-lightgrey?style=flat-square" alt="Changelog"></a>
   <a href="https://www.npmjs.com/package/glasskit-elements"><img src="https://img.shields.io/badge/npm-glasskit--elements-cb3837?style=flat-square&logo=npm" alt="npm"></a>
 </p>
 
 <p align="center">
   <strong>Drop-in Web Components for <a href="https://github.com/JUNGHERZ/GlassKit">GlassKit CSS</a></strong><br>
-  24 vanilla JavaScript custom elements wrapping GlassKit's glassmorphism components.<br>
+  27 vanilla JavaScript custom elements wrapping GlassKit's glassmorphism components.<br>
   Shadow DOM &middot; Native form participation &middot; Zero dependencies.
 </p>
 
@@ -25,7 +25,7 @@
 
 ## ✨ What is GlassKit Elements?
 
-GlassKit Elements is a companion library to [GlassKit CSS](https://github.com/JUNGHERZ/GlassKit). It provides **24 Web Components** that encapsulate the verbose HTML markup required by GlassKit into simple, declarative custom elements.
+GlassKit Elements is a companion library to [GlassKit CSS](https://github.com/JUNGHERZ/GlassKit). It provides **27 Web Components** that encapsulate the verbose HTML markup required by GlassKit into simple, declarative custom elements.
 
 ```html
 <!-- Before: 5 elements, 6 classes -->
@@ -48,8 +48,9 @@ GlassKit Elements is a companion library to [GlassKit CSS](https://github.com/JU
 | Feature | Details |
 |---|---|
 | 🔌 **Shadow DOM** | Style encapsulation via `adoptedStyleSheets` — no CSS leaking |
-| 🧩 **24 Components** | Buttons, cards, toggles, modals, accordions, tab bars, and more |
-| 🪶 **Zero Dependencies** | Pure vanilla JavaScript, works with React, Vue, Svelte, or plain HTML |
+| 🧩 **27 Components** | Buttons, cards, toggles, modals, accordions, lists, popovers, tab bars, and more |
+| 🪶 **Lightweight** | 105 KB raw / 83 KB minified / 14 KB gzipped (IIFE bundle), no external dependencies |
+| 📦 **Three bundle formats** | IIFE for `<script>`, minified IIFE for production, ESM for bundlers & tree-shaking |
 | 🎛️ **Form Participation** | Input, toggle, checkbox, radio, select — all work natively with `<form>` via `ElementInternals` |
 | 🌗 **Theme Sync** | Automatic dark/light mode sync via `data-theme` on `<html>` |
 | 📱 **Mobile-first** | Inherits GlassKit's mobile-optimized design with `safe-area-inset` support |
@@ -62,7 +63,7 @@ GlassKit Elements is a companion library to [GlassKit CSS](https://github.com/JU
 
 ```html
 <!-- 1. GlassKit CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.3/glasskit.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.4/glasskit.min.css">
 
 <!-- 2. GlassKit Elements -->
 <script src="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"></script>
@@ -95,7 +96,7 @@ import '@jungherz-de/glasskit-elements/components/glk-toggle.js';
 <!DOCTYPE html>
 <html data-theme="dark">
 <head>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.3/glasskit.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.4/glasskit.min.css">
   <script src="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"></script>
 </head>
 <body>
@@ -158,6 +159,7 @@ All form components support `name`, `value`, `disabled` and participate in nativ
 | `<glk-progress>` | Progress bar | `value`, `label`, `variant` (success, error), `size` (sm, lg) |
 | `<glk-modal>` | Modal dialog | `open`, `title` |
 | `<glk-toast>` | Auto-dismissing notification | `message`, `variant` (success, error, warning), `duration` |
+| `<glk-popover>` | Anchored dropdown / menu | `open`, `placement` (top, bottom, start, end) |
 
 ### Containers
 
@@ -165,6 +167,8 @@ All form components support `name`, `value`, `disabled` and participate in nativ
 |---|---|---|
 | `<glk-accordion>` | Accordion container | — |
 | `<glk-accordion-item>` | Collapsible section | `title`, `open` |
+| `<glk-list>` | iOS-style grouped list | `flush`, `bare` |
+| `<glk-list-item>` | List row (icon + title + subtitle + trailing) | `title`, `subtitle`, `interactive`, `center` |
 
 ---
 
@@ -207,12 +211,12 @@ glasskit-elements/
       content/            # glk-card, glk-badge, glk-avatar, glk-title, ...
       buttons/            # glk-button
       forms/              # glk-input, glk-toggle, glk-checkbox, ...
-      feedback/           # glk-progress, glk-modal, glk-toast
-      containers/         # glk-accordion, glk-accordion-item
+      feedback/           # glk-progress, glk-modal, glk-toast, glk-popover
+      containers/         # glk-accordion, glk-accordion-item, glk-list, glk-list-item
   dist/
-    glasskit-elements.js      # IIFE bundle
-    glasskit-elements.min.js  # IIFE minified (~71 KB)
-    glasskit-elements.esm.js  # ES module bundle
+    glasskit-elements.js      # IIFE bundle (105 KB raw / 17 KB gzipped)
+    glasskit-elements.min.js  # IIFE minified (83 KB raw / 14 KB gzipped)
+    glasskit-elements.esm.js  # ES module bundle (101 KB raw / 16 KB gzipped)
   index.html                  # Landing page
   docs.html                   # Documentation
   showcase.html               # Interactive showcase
@@ -231,6 +235,12 @@ glasskit-elements/
 | Firefox | 103+ |
 
 Requires `adoptedStyleSheets`, `ElementInternals`, and `customElements` v1.
+
+---
+
+## 🤖 AI / LLM Reference
+
+[`SKILL.md`](SKILL.md) is a tag-based, machine-readable reference for LLMs and AI copilots. It contains copy-paste-ready HTML for all 27 elements, attribute / slot / event tables, composition patterns, and a common-mistakes section. It is the companion to the class-based `SKILL.md` in [GlassKit CSS](https://github.com/JUNGHERZ/GlassKit) — use both together for complete coverage of the glass stack.
 
 ---
 

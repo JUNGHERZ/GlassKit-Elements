@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GlassKit Elements — Showcase</title>
-  <meta name="description" content="Interactive showcase of all 24 GlassKit Elements web components. Buttons, toggles, cards, modals, and more with glassmorphism styling.">
+  <meta name="description" content="Interactive showcase of all 27 GlassKit Elements web components. Buttons, toggles, cards, modals, and more with glassmorphism styling.">
   <meta name="author" content="Jungherz GmbH">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://glasskit-elements.jungherz.com/showcase.html">
@@ -12,13 +12,13 @@
   <link rel="alternate" hreflang="de" href="https://glasskit-elements.jungherz.com/de/showcase.html">
   <meta property="og:type" content="website">
   <meta property="og:title" content="GlassKit Elements — Showcase">
-  <meta property="og:description" content="Interactive showcase of all 24 GlassKit Elements web components with glassmorphism styling.">
+  <meta property="og:description" content="Interactive showcase of all 27 GlassKit Elements web components with glassmorphism styling.">
   <meta property="og:url" content="https://glasskit-elements.jungherz.com/showcase.html">
   <meta property="og:site_name" content="GlassKit Elements">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="GlassKit Elements — Showcase">
-  <meta name="twitter:description" content="Interactive showcase of all 24 GlassKit Elements web components with glassmorphism styling.">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.3/glasskit.min.css">
+  <meta name="twitter:description" content="Interactive showcase of all 27 GlassKit Elements web components with glassmorphism styling.">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.4/glasskit.min.css">
   <script src="/dist/glasskit-elements.min.js"></script>
   <style>
     body {
@@ -95,7 +95,7 @@
       </glk-pill>
     </glk-nav>
 
-    <glk-title>Component Showcase v0.8.3</glk-title>
+    <glk-title>Component Showcase v0.9.0</glk-title>
   </div>
 
   <div class="demo-section">
@@ -219,6 +219,47 @@
         Set <code>data-theme="dark"</code> or <code>data-theme="light"</code> on the <code>&lt;html&gt;</code> element. All components sync automatically.
       </glk-accordion-item>
     </glk-accordion>
+
+    <glk-divider></glk-divider>
+
+    <!-- List -->
+    <h2>List</h2>
+    <glk-list>
+      <glk-list-item title="iOS 26.4 Update" subtitle="2.1 GB · Available now" interactive>
+        <svg slot="leading" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <svg slot="trailing" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </glk-list-item>
+      <glk-list-item title="Apple One" subtitle="Family — renews Apr 28" interactive>
+        <svg slot="leading" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+        <span slot="trailing">$22.95</span>
+      </glk-list-item>
+      <glk-list-item title="Notifications" interactive>
+        <svg slot="leading" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <svg slot="trailing" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </glk-list-item>
+      <glk-list-item title="View all subscriptions" center interactive></glk-list-item>
+    </glk-list>
+
+    <glk-divider></glk-divider>
+
+    <!-- Popover -->
+    <h2>Popover</h2>
+    <div style="min-height:180px;display:flex;justify-content:center;padding-top:12px;">
+      <glk-popover id="demo-popover">
+        <glk-button slot="trigger" variant="secondary" size="auto">Open menu</glk-button>
+        <glk-list bare>
+          <glk-list-item title="Share" interactive>
+            <svg slot="leading" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+          </glk-list-item>
+          <glk-list-item title="Duplicate" interactive>
+            <svg slot="leading" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          </glk-list-item>
+          <glk-list-item title="Delete" interactive>
+            <svg slot="leading" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+          </glk-list-item>
+        </glk-list>
+      </glk-popover>
+    </div>
 
     <glk-divider></glk-divider>
 

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GlassKit Elements — Documentation</title>
-  <meta name="description" content="Complete documentation for all 24 GlassKit Elements web components. Installation, API reference, attributes, events, and live examples.">
+  <meta name="description" content="Complete documentation for all 27 GlassKit Elements web components. Installation, API reference, attributes, events, and live examples.">
   <meta name="keywords" content="glasskit elements, documentation, web components, api reference, glassmorphism, custom elements">
   <meta name="author" content="Jungherz GmbH">
   <meta name="robots" content="index, follow">
@@ -13,14 +13,14 @@
   <link rel="alternate" hreflang="de" href="https://glasskit-elements.jungherz.com/de/docs.html">
   <meta property="og:type" content="website">
   <meta property="og:title" content="GlassKit Elements — Documentation">
-  <meta property="og:description" content="Complete documentation for all 24 GlassKit Elements web components with live examples.">
+  <meta property="og:description" content="Complete documentation for all 27 GlassKit Elements web components with live examples.">
   <meta property="og:url" content="https://glasskit-elements.jungherz.com/docs.html">
   <meta property="og:site_name" content="GlassKit Elements">
   <meta property="og:locale" content="en_US">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="GlassKit Elements — Documentation">
-  <meta name="twitter:description" content="Complete documentation for all 24 GlassKit Elements web components with live examples.">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.3/glasskit.min.css">
+  <meta name="twitter:description" content="Complete documentation for all 27 GlassKit Elements web components with live examples.">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.4/glasskit.min.css">
   <script src="/dist/glasskit-elements.min.js"></script>
   <style>
     html { scroll-behavior: smooth; }
@@ -251,7 +251,7 @@
     <aside class="docs-sidebar">
       <div class="docs-sidebar__title">&#129482; <a href="/">GlassKit Elements</a></div>
       <div class="docs-sidebar__subtitle">Web Components for GlassKit CSS.</div>
-      <div class="docs-sidebar__version">v0.8.3 &ndash; Jungherz GmbH</div>
+      <div class="docs-sidebar__version">v0.9.0 &ndash; Jungherz GmbH</div>
 
       <div class="docs-sidebar__group">
         <div class="docs-sidebar__group-title">Basics</div>
@@ -299,11 +299,13 @@
         <a class="docs-sidebar__link" href="#glk-progress">glk-progress</a>
         <a class="docs-sidebar__link" href="#glk-modal">glk-modal</a>
         <a class="docs-sidebar__link" href="#glk-toast">glk-toast</a>
+        <a class="docs-sidebar__link" href="#glk-popover">glk-popover</a>
       </div>
 
       <div class="docs-sidebar__group">
         <div class="docs-sidebar__group-title">Containers</div>
         <a class="docs-sidebar__link" href="#glk-accordion">glk-accordion</a>
+        <a class="docs-sidebar__link" href="#glk-list">glk-list</a>
       </div>
 
       <div class="docs-sidebar__footer">
@@ -321,9 +323,9 @@
         <h1>GlassKit Elements</h1>
         <p>Complete reference for all 24 web components &ndash; built by Jungherz GmbH. Vanilla JS, Shadow DOM, native form participation.</p>
         <div class="docs-hero__badges">
-          <span class="docs-hero__badge">v0.8.3</span>
+          <span class="docs-hero__badge">v0.9.0</span>
           <span class="docs-hero__badge">Shadow DOM</span>
-          <span class="docs-hero__badge">24 Components</span>
+          <span class="docs-hero__badge">27 Components</span>
           <span class="docs-hero__badge">Vanilla JS</span>
         </div>
       </div>
@@ -334,7 +336,7 @@
 
         <h3>CDN (quickest)</h3>
         <div class="docs-code"><span class="cmt">&lt;!-- 1. GlassKit CSS --&gt;</span>
-<span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span> <span class="attr">href</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.3/glasskit.min.css"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span> <span class="attr">href</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.4/glasskit.min.css"</span><span class="tag">&gt;</span>
 
 <span class="cmt">&lt;!-- 2. GlassKit Elements --&gt;</span>
 <span class="tag">&lt;script</span> <span class="attr">src</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"</span><span class="tag">&gt;&lt;/script&gt;</span></div>
@@ -710,6 +712,46 @@ document.getElementById(<span class="val">'toast'</span>).show(<span class="val"
           </table>
           <p><strong>Methods:</strong> <code>.show(message, variant, duration)</code>, <code>.dismiss()</code></p>
         </div>
+
+        <div class="docs-component" id="glk-popover">
+          <h3><code>&lt;glk-popover&gt;</code></h3>
+          <p>Anchored dropdown / menu container. Wraps a trigger element (via <code>slot="trigger"</code>) and its floating content. The element manages <code>.is-open</code> toggling, outside-click dismiss, and <kbd>Escape</kbd>-key close internally — no manual class toggling needed.</p>
+          <div class="docs-preview" style="min-height:220px;display:flex;justify-content:center;align-items:flex-start;padding-top:24px;">
+            <glk-popover>
+              <glk-button slot="trigger" variant="secondary" size="auto">Open menu</glk-button>
+              <glk-list bare>
+                <glk-list-item title="Share" interactive></glk-list-item>
+                <glk-list-item title="Duplicate" interactive></glk-list-item>
+                <glk-list-item title="Delete" interactive></glk-list-item>
+              </glk-list>
+            </glk-popover>
+          </div>
+          <div class="docs-code"><span class="tag">&lt;glk-popover</span> <span class="attr">placement</span>=<span class="val">"end"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;glk-button</span> <span class="attr">slot</span>=<span class="val">"trigger"</span> <span class="attr">variant</span>=<span class="val">"secondary"</span><span class="tag">&gt;</span>Open menu<span class="tag">&lt;/glk-button&gt;</span>
+  <span class="tag">&lt;glk-list</span> <span class="attr">bare</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;glk-list-item</span> <span class="attr">title</span>=<span class="val">"Share"</span> <span class="attr">interactive</span><span class="tag">&gt;&lt;/glk-list-item&gt;</span>
+    <span class="tag">&lt;glk-list-item</span> <span class="attr">title</span>=<span class="val">"Delete"</span> <span class="attr">interactive</span><span class="tag">&gt;&lt;/glk-list-item&gt;</span>
+  <span class="tag">&lt;/glk-list&gt;</span>
+<span class="tag">&lt;/glk-popover&gt;</span>
+
+<span class="cmt">// Imperative API</span>
+document.querySelector(<span class="val">'glk-popover'</span>).show();
+document.querySelector(<span class="val">'glk-popover'</span>).close();
+document.querySelector(<span class="val">'glk-popover'</span>).toggle();</div>
+          <table class="docs-table">
+            <tr><th>Attribute</th><th>Type</th><th>Default</th><th>Description</th></tr>
+            <tr><td><code>open</code></td><td>Boolean</td><td><code>false</code></td><td>Visibility state (reflected as <code>.is-open</code> on the inner surface)</td></tr>
+            <tr><td><code>placement</code></td><td>String</td><td><code>bottom</code></td><td><code>top</code> | <code>bottom</code> | <code>start</code> | <code>end</code></td></tr>
+          </table>
+          <table class="docs-table">
+            <tr><th>Slot</th><th>Purpose</th></tr>
+            <tr><td><code>trigger</code></td><td>Element that toggles the popover when clicked</td></tr>
+            <tr><td><em>(default)</em></td><td>Floating content shown while open</td></tr>
+          </table>
+          <p><strong>Events:</strong> <code>glk-open</code>, <code>glk-close</code></p>
+          <p><strong>Methods:</strong> <code>.show()</code>, <code>.close()</code>, <code>.toggle()</code></p>
+          <p><strong>Heads-up:</strong> the method is deliberately called <code>.toggle()</code> — not <code>.togglePopover()</code>, which collides with the native <code>HTMLElement.togglePopover()</code> API.</p>
+        </div>
       </section>
 
       <!-- ═══ Containers ═══ -->
@@ -736,6 +778,48 @@ document.getElementById(<span class="val">'toast'</span>).show(<span class="val"
             <tr><td><code>open</code></td><td>glk-accordion-item</td><td>Expanded state</td></tr>
           </table>
           <p><strong>Events:</strong> <code>glk-toggle</code> &rarr; <code>{ open: boolean }</code></p>
+        </div>
+
+        <div class="docs-component" id="glk-list">
+          <h3><code>&lt;glk-list&gt;</code> + <code>&lt;glk-list-item&gt;</code></h3>
+          <p>iOS-style grouped settings list. Items carry a leading icon, title + optional subtitle, and a trailing element. Dividers between items are drawn automatically — never add <code>&lt;hr&gt;</code> markup between items.</p>
+          <div class="docs-preview">
+            <glk-list>
+              <glk-list-item title="iOS 26.4 Update" subtitle="2.1 GB · Available now" interactive>
+                <svg slot="leading" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                <svg slot="trailing" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+              </glk-list-item>
+              <glk-list-item title="Apple One" subtitle="Family — renews Apr 28" interactive>
+                <svg slot="leading" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+                <span slot="trailing">$22.95</span>
+              </glk-list-item>
+              <glk-list-item title="View all subscriptions" center interactive></glk-list-item>
+            </glk-list>
+          </div>
+          <div class="docs-code"><span class="tag">&lt;glk-list&gt;</span>
+  <span class="tag">&lt;glk-list-item</span> <span class="attr">title</span>=<span class="val">"iOS 26.4 Update"</span> <span class="attr">subtitle</span>=<span class="val">"2.1 GB"</span> <span class="attr">interactive</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;svg</span> <span class="attr">slot</span>=<span class="val">"leading"</span><span class="tag">&gt;</span>...<span class="tag">&lt;/svg&gt;</span>
+    <span class="tag">&lt;svg</span> <span class="attr">slot</span>=<span class="val">"trailing"</span><span class="tag">&gt;</span>...<span class="tag">&lt;/svg&gt;</span>
+  <span class="tag">&lt;/glk-list-item&gt;</span>
+  <span class="cmt">&lt;!-- More items… dividers appear automatically --&gt;</span>
+  <span class="tag">&lt;glk-list-item</span> <span class="attr">title</span>=<span class="val">"View all"</span> <span class="attr">center</span> <span class="attr">interactive</span><span class="tag">&gt;&lt;/glk-list-item&gt;</span>
+<span class="tag">&lt;/glk-list&gt;</span></div>
+          <table class="docs-table">
+            <tr><th>Attribute</th><th>Component</th><th>Description</th></tr>
+            <tr><td><code>flush</code></td><td>glk-list</td><td>Edge-to-edge variant — removes side margin and radius</td></tr>
+            <tr><td><code>bare</code></td><td>glk-list</td><td>Strips background, border, shadow — for embedding inside <code>&lt;glk-popover&gt;</code> or <code>&lt;glk-card&gt;</code></td></tr>
+            <tr><td><code>title</code></td><td>glk-list-item</td><td>Primary text</td></tr>
+            <tr><td><code>subtitle</code></td><td>glk-list-item</td><td>Secondary text (muted, optional)</td></tr>
+            <tr><td><code>interactive</code></td><td>glk-list-item</td><td>Hover / focus / active states + emits <code>glk-click</code></td></tr>
+            <tr><td><code>center</code></td><td>glk-list-item</td><td>Centered single-text variant (e.g. for action rows)</td></tr>
+          </table>
+          <table class="docs-table">
+            <tr><th>Slot</th><th>Component</th><th>Purpose</th></tr>
+            <tr><td><code>leading</code></td><td>glk-list-item</td><td>Icon slot (24×24 SVG recommended)</td></tr>
+            <tr><td><code>trailing</code></td><td>glk-list-item</td><td>Chevron, value, badge, or button</td></tr>
+          </table>
+          <p><strong>Events:</strong> <code>glk-click</code> on <code>&lt;glk-list-item&gt;</code> when <code>interactive</code> is set.</p>
+          <p><strong>Framework-safe:</strong> both elements use pure Shadow DOM with slot projection — no child node cloning — so they compose cleanly inside lit-html templates, HybridsJS, React, Vue, and Svelte.</p>
         </div>
       </section>
 

@@ -32,7 +32,10 @@ export { GlkRange } from './components/forms/glk-range.js';
 export { GlkProgress } from './components/feedback/glk-progress.js';
 export { GlkModal } from './components/feedback/glk-modal.js';
 export { GlkToast } from './components/feedback/glk-toast.js';
+export { GlkPopover } from './components/feedback/glk-popover.js';
 
 // Containers
 export { GlkAccordion } from './components/containers/glk-accordion.js';
 export { GlkAccordionItem } from './components/containers/glk-accordion-item.js';
+export { GlkList } from './components/containers/glk-list.js';
+export { GlkListItem } from './components/containers/glk-list-item.js';

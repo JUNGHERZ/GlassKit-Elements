@@ -20,7 +20,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="GlassKit Elements — Dokumentation">
   <meta name="twitter:description" content="Vollständige Dokumentation aller 27 GlassKit Elements Web Components mit Live-Beispielen.">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.4/glasskit.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.5/glasskit.min.css">
   <script src="/dist/glasskit-elements.min.js"></script>
   <style>
     html { scroll-behavior: smooth; }
@@ -253,7 +253,7 @@
     <aside class="docs-sidebar">
       <div class="docs-sidebar__title">&#129482; <a href="../de/">GlassKit Elements</a></div>
       <div class="docs-sidebar__subtitle">Web Components f&uuml;r GlassKit CSS.</div>
-      <div class="docs-sidebar__version">v0.9.0 &ndash; Jungherz GmbH</div>
+      <div class="docs-sidebar__version">v1.5.0 &ndash; Jungherz GmbH</div>
 
       <div class="docs-sidebar__group">
         <div class="docs-sidebar__group-title">Grundlagen</div>
@@ -325,7 +325,7 @@
         <h1>GlassKit Elements</h1>
         <p>Vollst&auml;ndige Referenz f&uuml;r alle 24 Web Components &ndash; entwickelt von Jungherz GmbH. Vanilla JS, Shadow DOM, native Formular-Teilnahme.</p>
         <div class="docs-hero__badges">
-          <span class="docs-hero__badge">v0.9.0</span>
+          <span class="docs-hero__badge">v1.5.0</span>
           <span class="docs-hero__badge">Shadow DOM</span>
           <span class="docs-hero__badge">27 Komponenten</span>
           <span class="docs-hero__badge">Vanilla JS</span>
@@ -338,7 +338,7 @@
 
         <h3>CDN (schnellste Variante)</h3>
         <div class="docs-code"><span class="cmt">&lt;!-- 1. GlassKit CSS --&gt;</span>
-<span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span> <span class="attr">href</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.4/glasskit.min.css"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span> <span class="attr">href</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.5/glasskit.min.css"</span><span class="tag">&gt;</span>
 
 <span class="cmt">&lt;!-- 2. GlassKit Elements --&gt;</span>
 <span class="tag">&lt;script</span> <span class="attr">src</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"</span><span class="tag">&gt;&lt;/script&gt;</span></div>
@@ -724,7 +724,7 @@ document.getElementById(<span class="val">'toast'</span>).show(<span class="val"
               <glk-list bare>
                 <glk-list-item title="Teilen" interactive></glk-list-item>
                 <glk-list-item title="Duplizieren" interactive></glk-list-item>
-                <glk-list-item title="Löschen" interactive></glk-list-item>
+                <glk-list-item title="Löschen" variant="danger" interactive></glk-list-item>
               </glk-list>
             </glk-popover>
           </div>
@@ -732,7 +732,7 @@ document.getElementById(<span class="val">'toast'</span>).show(<span class="val"
   <span class="tag">&lt;glk-button</span> <span class="attr">slot</span>=<span class="val">"trigger"</span> <span class="attr">variant</span>=<span class="val">"secondary"</span><span class="tag">&gt;</span>Menü öffnen<span class="tag">&lt;/glk-button&gt;</span>
   <span class="tag">&lt;glk-list</span> <span class="attr">bare</span><span class="tag">&gt;</span>
     <span class="tag">&lt;glk-list-item</span> <span class="attr">title</span>=<span class="val">"Teilen"</span> <span class="attr">interactive</span><span class="tag">&gt;&lt;/glk-list-item&gt;</span>
-    <span class="tag">&lt;glk-list-item</span> <span class="attr">title</span>=<span class="val">"Löschen"</span> <span class="attr">interactive</span><span class="tag">&gt;&lt;/glk-list-item&gt;</span>
+    <span class="tag">&lt;glk-list-item</span> <span class="attr">title</span>=<span class="val">"Löschen"</span> <span class="attr">variant</span>=<span class="val">"danger"</span> <span class="attr">interactive</span><span class="tag">&gt;&lt;/glk-list-item&gt;</span>
   <span class="tag">&lt;/glk-list&gt;</span>
 <span class="tag">&lt;/glk-popover&gt;</span>
 
@@ -784,41 +784,49 @@ document.querySelector(<span class="val">'glk-popover'</span>).toggle();</div>
 
         <div class="docs-component" id="glk-list">
           <h3><code>&lt;glk-list&gt;</code> + <code>&lt;glk-list-item&gt;</code></h3>
-          <p>iOS-Style gruppierte Einstellungsliste. Items tragen ein führendes Icon, Titel + optionalen Untertitel und ein nachgelagertes Element. Divider zwischen den Items werden automatisch gezeichnet — niemals <code>&lt;hr&gt;</code>-Markup zwischen Items einfügen.</p>
+          <p>iOS-Style gruppierte Einstellungsliste. Items tragen ein führendes Icon, Titel + optionalen Untertitel und ein nachgelagertes Element. Divider zwischen den Items werden automatisch gezeichnet — niemals <code>&lt;hr&gt;</code>-Markup zwischen Items einfügen. Unterstützt Sektions-Header, große Icons, mehrzeilige Untertitel, Trailing-Werte und semantische Varianten.</p>
           <div class="docs-preview">
-            <glk-list>
-              <glk-list-item title="iOS 26.4 Update" subtitle="2,1 GB · Jetzt verfügbar" interactive>
+            <glk-list header="Empfehlungen">
+              <glk-list-item title="Heruntergeladene Medien prüfen" subtitle="Bis zu 1,38 GB einsparen. Dateien prüfen und bei Bedarf entfernen." leading-lg wrap interactive>
                 <svg slot="leading" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                 <svg slot="trailing" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
               </glk-list-item>
-              <glk-list-item title="Apple One" subtitle="Familie — erneuert 28. Apr." interactive>
-                <svg slot="leading" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
-                <span slot="trailing">22,95 €</span>
+              <glk-list-item title="AusweisApp Bund" subtitle="Version 2.5.1" leading-lg detail="24 MB" interactive>
+                <svg slot="leading" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M9 3v18"/><path d="M15 3v18"/></svg>
+                <svg slot="trailing" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
               </glk-list-item>
-              <glk-list-item title="Alle Abos anzeigen" center interactive></glk-list-item>
+              <glk-list-item title="Account löschen" variant="danger" center interactive></glk-list-item>
+              <glk-list-item title="Alle Abos anzeigen" variant="accent" center interactive></glk-list-item>
             </glk-list>
           </div>
-          <div class="docs-code"><span class="tag">&lt;glk-list&gt;</span>
-  <span class="tag">&lt;glk-list-item</span> <span class="attr">title</span>=<span class="val">"iOS 26.4 Update"</span> <span class="attr">subtitle</span>=<span class="val">"2,1 GB"</span> <span class="attr">interactive</span><span class="tag">&gt;</span>
+          <div class="docs-code"><span class="tag">&lt;glk-list</span> <span class="attr">header</span>=<span class="val">"Empfehlungen"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;glk-list-item</span> <span class="attr">title</span>=<span class="val">"Medien prüfen"</span> <span class="attr">subtitle</span>=<span class="val">"Bis zu 1,38 GB."</span>
+    <span class="attr">leading-lg</span> <span class="attr">wrap</span> <span class="attr">interactive</span><span class="tag">&gt;</span>
     <span class="tag">&lt;svg</span> <span class="attr">slot</span>=<span class="val">"leading"</span><span class="tag">&gt;</span>...<span class="tag">&lt;/svg&gt;</span>
     <span class="tag">&lt;svg</span> <span class="attr">slot</span>=<span class="val">"trailing"</span><span class="tag">&gt;</span>...<span class="tag">&lt;/svg&gt;</span>
   <span class="tag">&lt;/glk-list-item&gt;</span>
-  <span class="cmt">&lt;!-- Weitere Items… Divider erscheinen automatisch --&gt;</span>
-  <span class="tag">&lt;glk-list-item</span> <span class="attr">title</span>=<span class="val">"Alle anzeigen"</span> <span class="attr">center</span> <span class="attr">interactive</span><span class="tag">&gt;&lt;/glk-list-item&gt;</span>
+  <span class="tag">&lt;glk-list-item</span> <span class="attr">title</span>=<span class="val">"App"</span> <span class="attr">leading-lg</span> <span class="attr">detail</span>=<span class="val">"24 MB"</span> <span class="attr">interactive</span><span class="tag">&gt;</span>...<span class="tag">&lt;/glk-list-item&gt;</span>
+  <span class="tag">&lt;glk-list-item</span> <span class="attr">title</span>=<span class="val">"Löschen"</span> <span class="attr">variant</span>=<span class="val">"danger"</span> <span class="attr">center</span> <span class="attr">interactive</span><span class="tag">&gt;&lt;/glk-list-item&gt;</span>
+  <span class="tag">&lt;glk-list-item</span> <span class="attr">title</span>=<span class="val">"Alle anzeigen"</span> <span class="attr">variant</span>=<span class="val">"accent"</span> <span class="attr">center</span> <span class="attr">interactive</span><span class="tag">&gt;&lt;/glk-list-item&gt;</span>
 <span class="tag">&lt;/glk-list&gt;</span></div>
           <table class="docs-table">
             <tr><th>Attribute</th><th>Komponente</th><th>Beschreibung</th></tr>
+            <tr><td><code>header</code></td><td>glk-list</td><td>Sektions-Header — Großbuchstaben-Label über der Liste</td></tr>
             <tr><td><code>flush</code></td><td>glk-list</td><td>Edge-to-Edge-Variante — entfernt seitlichen Rand und Radius</td></tr>
             <tr><td><code>bare</code></td><td>glk-list</td><td>Entfernt Hintergrund, Border, Shadow — für Einbettung in <code>&lt;glk-popover&gt;</code> oder <code>&lt;glk-card&gt;</code></td></tr>
             <tr><td><code>title</code></td><td>glk-list-item</td><td>Haupttext</td></tr>
             <tr><td><code>subtitle</code></td><td>glk-list-item</td><td>Sekundärtext (muted, optional)</td></tr>
             <tr><td><code>interactive</code></td><td>glk-list-item</td><td>Hover- / Focus- / Active-States + feuert <code>glk-click</code></td></tr>
             <tr><td><code>center</code></td><td>glk-list-item</td><td>Zentrierte Single-Text-Variante (z.B. für Aktionszeilen)</td></tr>
+            <tr><td><code>leading-lg</code></td><td>glk-list-item</td><td>Großes 40&times;40 Leading-Icon mit abgerundeten Ecken (für App-Icons)</td></tr>
+            <tr><td><code>wrap</code></td><td>glk-list-item</td><td>Mehrzeiliger Untertitel (bis 3 Zeilen mit Ellipsis)</td></tr>
+            <tr><td><code>detail</code></td><td>glk-list-item</td><td>Muted Trailing-Wert (z.B. Dateigröße, Version)</td></tr>
+            <tr><td><code>variant</code></td><td>glk-list-item</td><td><code>danger</code> (rote Destruktiv-Aktion) oder <code>accent</code> (Primärfarbe)</td></tr>
           </table>
           <table class="docs-table">
             <tr><th>Slot</th><th>Komponente</th><th>Zweck</th></tr>
-            <tr><td><code>leading</code></td><td>glk-list-item</td><td>Icon-Slot (24×24 SVG empfohlen)</td></tr>
-            <tr><td><code>trailing</code></td><td>glk-list-item</td><td>Chevron, Wert, Badge oder Button</td></tr>
+            <tr><td><code>leading</code></td><td>glk-list-item</td><td>Icon-Slot (24&times;24 SVG, oder 32&times;32 mit <code>leading-lg</code>)</td></tr>
+            <tr><td><code>trailing</code></td><td>glk-list-item</td><td>Chevron, Badge oder Button (gerendert nach <code>detail</code>-Wert)</td></tr>
           </table>
           <p><strong>Events:</strong> <code>glk-click</code> auf <code>&lt;glk-list-item&gt;</code>, sobald <code>interactive</code> gesetzt ist.</p>
           <p><strong>Framework-sicher:</strong> beide Elemente nutzen pures Shadow DOM mit Slot-Projection — kein Clonen von Kinder-Knoten — und komponieren sauber in lit-html-Templates, HybridsJS, React, Vue und Svelte.</p>

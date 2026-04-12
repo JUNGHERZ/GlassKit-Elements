@@ -7,6 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.5.0] – 2026-04-12
+
+### Version alignment
+
+Starting with this release, GlassKit Elements version numbers are aligned with GlassKit CSS. The jump from 0.9.0 to 1.5.0 reflects this alignment — both projects now share the same version number. Future releases will maintain this parity.
+
+### Added
+
+- **`<glk-list>` — `header` attribute** — renders an uppercase section header label above the list (maps to `.glass-list__section-header`)
+- **`<glk-list-item>` — 4 new attributes** tracking GlassKit CSS v1.5.0:
+  - **`leading-lg`** — large 40×40 icon slot with rounded corners for app icons (maps to `.glass-list__leading--lg`)
+  - **`wrap`** — multi-line subtitle (up to 3 lines with ellipsis, maps to `.glass-list__subtitle--wrap`)
+  - **`detail`** — muted trailing value text for metadata like file sizes or version numbers (maps to `.glass-list__value`)
+  - **`variant`** — semantic color: `"danger"` (red destructive) or `"accent"` (primary color), consistent with `<glk-badge>`, `<glk-button>`, `<glk-toast>` (maps to `.glass-list__item--danger` / `--accent`)
+
+### Changed
+
+- **Peer dependency** `@jungherz-de/glasskit` raised from `>=1.4.0` to `>=1.5.0`. The new List sub-features ship their CSS in 1.5.0.
+- **CDN version pin** updated from `@1.4` to `@1.5` across all HTML pages.
+
+### Fixed
+
+- **Range slider** — thumb centering fix on Chrome / Safari inherited from GlassKit CSS v1.5.0 (pure CSS, no JS change).
+
+---
+
 ## [0.9.0] – 2026-04-11
 
 ### Added
@@ -109,6 +135,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+[1.5.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.5.0
 [0.9.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v0.9.0
 [0.8.3]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v0.8.3
 [0.8.2]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v0.8.2

@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="GlassKit Elements — Showcase">
   <meta name="twitter:description" content="Interaktive Vorschau aller 27 GlassKit Elements Web Components im Glassmorphism-Stil.">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.4/glasskit.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.5/glasskit.min.css">
   <script src="/dist/glasskit-elements.min.js"></script>
   <style>
     body {
@@ -96,7 +96,7 @@
       </glk-pill>
     </glk-nav>
 
-    <glk-title>Component Showcase v0.9.0</glk-title>
+    <glk-title>Component Showcase v1.5.0</glk-title>
   </div>
 
   <div class="demo-section">
@@ -226,20 +226,20 @@
 
     <!-- Liste -->
     <h2>Liste</h2>
-    <glk-list>
-      <glk-list-item title="iOS 26.4 Update" subtitle="2,1 GB · Jetzt verfügbar" interactive>
+    <glk-list header="Empfehlungen">
+      <glk-list-item title="Heruntergeladene Medien prüfen" subtitle="Bis zu 1,38 GB einsparen. Dateien prüfen und bei Bedarf entfernen." leading-lg wrap interactive>
         <svg slot="leading" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         <svg slot="trailing" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
       </glk-list-item>
-      <glk-list-item title="Apple One" subtitle="Familie — erneuert 28. Apr." interactive>
-        <svg slot="leading" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
-        <span slot="trailing">22,95 €</span>
+      <glk-list-item title="AusweisApp Bund" subtitle="Version 2.5.1" leading-lg detail="24 MB" interactive>
+        <svg slot="leading" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M9 3v18"/><path d="M15 3v18"/></svg>
+        <svg slot="trailing" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
       </glk-list-item>
       <glk-list-item title="Mitteilungen" interactive>
         <svg slot="leading" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
         <svg slot="trailing" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
       </glk-list-item>
-      <glk-list-item title="Alle Abos anzeigen" center interactive></glk-list-item>
+      <glk-list-item title="Alle Abos anzeigen" variant="accent" center interactive></glk-list-item>
     </glk-list>
 
     <glk-divider></glk-divider>
@@ -256,7 +256,7 @@
           <glk-list-item title="Duplizieren" interactive>
             <svg slot="leading" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
           </glk-list-item>
-          <glk-list-item title="Löschen" interactive>
+          <glk-list-item title="Löschen" variant="danger" interactive>
             <svg slot="leading" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
           </glk-list-item>
         </glk-list>

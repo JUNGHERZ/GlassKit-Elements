@@ -1,6 +1,6 @@
 ---
 name: glasskit-elements
-description: GlassKit Elements is a vanilla-JS Web Components library (v0.9.0) wrapping GlassKit CSS v1.4.0. It provides 27 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
+description: GlassKit Elements is a vanilla-JS Web Components library (v1.5.0) wrapping GlassKit CSS v1.5.0. It provides 27 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
 ---
 
 # GlassKit Elements – AI Component Reference
@@ -18,7 +18,7 @@ description: GlassKit Elements is a vanilla-JS Web Components library (v0.9.0) w
 npm install @jungherz-de/glasskit-elements @jungherz-de/glasskit
 ```
 
-Peer dependency `@jungherz-de/glasskit >=1.4.0` is required for the List / Popover components.
+Peer dependency `@jungherz-de/glasskit >=1.5.0` is required. The v1.5.0 List sub-features (section headers, large icons, wrap subtitles, value, danger/accent variants) require CSS v1.5.0.
 
 ### Import (ES modules)
 
@@ -524,7 +524,7 @@ Anchored dropdown / menu container. Wraps a trigger element (`slot="trigger"`) a
   <glk-list bare>
     <glk-list-item title="Share" interactive></glk-list-item>
     <glk-list-item title="Duplicate" interactive></glk-list-item>
-    <glk-list-item title="Delete" interactive></glk-list-item>
+    <glk-list-item title="Delete" variant="danger" interactive></glk-list-item>
   </glk-list>
 </glk-popover>
 ```
@@ -615,13 +615,13 @@ Default slot: body content. Events: `glk-toggle` → `{ open }`. Property: `.ope
 
 ### 3.24 `<glk-list>` + `<glk-list-item>`
 
-iOS-style grouped settings list. Items carry a leading icon, title + optional subtitle, and a trailing element. Dividers between items are drawn automatically by GlassKit CSS — **never** add `<hr>` or divider markup manually.
+iOS-style grouped settings list. Items carry a leading icon, title + optional subtitle, and a trailing element. Dividers between items are drawn automatically by GlassKit CSS — **never** add `<hr>` or divider markup manually. Supports section headers, large icons (40×40), multi-line subtitles, trailing value text, and semantic `danger`/`accent` variants.
 
-#### Settings-style list
+#### Settings-style list with section header and large icons
 
 ```html
-<glk-list>
-  <glk-list-item title="iOS 26.4 Update" subtitle="2.1 GB · Available now" interactive>
+<glk-list header="Recommendations">
+  <glk-list-item title="Review downloaded media" subtitle="Save up to 1.38 GB. Review files and remove as needed." leading-lg wrap interactive>
     <svg slot="leading" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
       <polyline points="7 10 12 15 17 10"/>
@@ -631,24 +631,26 @@ iOS-style grouped settings list. Items carry a leading icon, title + optional su
       <polyline points="9 18 15 12 9 6"/>
     </svg>
   </glk-list-item>
-  <glk-list-item title="Apple One" subtitle="Family — renews Apr 28" interactive>
+  <glk-list-item title="AusweisApp Bund" subtitle="Version 2.5.1" leading-lg detail="24 MB" interactive>
     <svg slot="leading" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="2" y="5" width="20" height="14" rx="2"/>
-      <line x1="2" y1="10" x2="22" y2="10"/>
+      <rect x="2" y="3" width="20" height="18" rx="2"/>
+      <path d="M9 3v18"/><path d="M15 3v18"/>
     </svg>
-    <span slot="trailing">$22.95</span>
+    <svg slot="trailing" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="9 18 15 12 9 6"/>
+    </svg>
   </glk-list-item>
-  <glk-list-item title="View all subscriptions" center interactive></glk-list-item>
+  <glk-list-item title="View all subscriptions" variant="accent" center interactive></glk-list-item>
 </glk-list>
 ```
 
-#### Compact menu (centered text only)
+#### Compact menu with danger variant
 
 ```html
 <glk-list>
   <glk-list-item title="Share" center interactive></glk-list-item>
   <glk-list-item title="Duplicate" center interactive></glk-list-item>
-  <glk-list-item title="Delete" center interactive></glk-list-item>
+  <glk-list-item title="Delete" variant="danger" center interactive></glk-list-item>
 </glk-list>
 ```
 
@@ -658,6 +660,7 @@ iOS-style grouped settings list. Items carry a leading icon, title + optional su
 
 | Attribute | Type | Description |
 |---|---|---|
+| `header` | String | Section header text — renders as uppercase label above the list |
 | `flush` | Boolean | Edge-to-edge variant — removes side margin and radius |
 | `bare` | Boolean | Strips background, border, shadow — use inside `<glk-popover>` or `<glk-card>` to avoid double glass surfaces |
 
@@ -669,13 +672,17 @@ iOS-style grouped settings list. Items carry a leading icon, title + optional su
 | `subtitle` | String | Secondary text (muted, small, truncated) |
 | `interactive` | Boolean | Enables hover / focus / active states and `glk-click` event |
 | `center` | Boolean | Centered single-text variant (for action rows like "Reset to defaults") |
+| `leading-lg` | Boolean | Large 40×40 leading icon with rounded corners (for app icons; use 32×32 SVG or `<img>`) |
+| `wrap` | Boolean | Multi-line subtitle — allows up to 3 lines with ellipsis (requires `subtitle`) |
+| `detail` | String | Muted trailing value text (e.g. file size "24 MB", version number) — rendered before `slot="trailing"` |
+| `variant` | String | Semantic color: `"danger"` (red destructive) or `"accent"` (primary color). Inherits to title and leading icon |
 
 #### Slots (on `<glk-list-item>`)
 
 | Slot | Purpose |
 |---|---|
-| `leading` | Icon slot (24×24 SVG recommended, `stroke: currentColor`) |
-| `trailing` | Chevron, value, badge, or button |
+| `leading` | Icon slot (24×24 SVG recommended, or 32×32 with `leading-lg`; use `stroke: currentColor`) |
+| `trailing` | Chevron, badge, or button — rendered after `detail` value |
 
 #### Events
 
@@ -683,7 +690,7 @@ iOS-style grouped settings list. Items carry a leading icon, title + optional su
 
 #### Internals (for framework authors)
 
-Both elements use pure Shadow DOM with slot projection — no child node cloning — so they compose cleanly inside lit-html, HybridsJS, React, Vue, and Svelte templates. `<glk-list>` observes its direct children via `MutationObserver` and sets a `data-last` attribute on the final `<glk-list-item>`; each item's shadow carries a one-line override sheet (`:host([data-last]) .glass-list__item::after { content: none; }`) to suppress the auto-divider on the last row. Zero CSS duplication.
+Both elements use pure Shadow DOM with slot projection — no child node cloning — so they compose cleanly inside lit-html, HybridsJS, React, Vue, and Svelte templates. `<glk-list>` observes its direct children via `MutationObserver` and sets a `data-last` attribute on the final `<glk-list-item>`; each item's shadow carries a one-line override sheet (`:host([data-last]) .glass-list__item::after { content: none; }`) to suppress the auto-divider on the last row. Divider inset automatically adjusts for `leading-lg` via CSS `:has()`. Zero CSS duplication.
 
 ---
 
@@ -811,20 +818,18 @@ Full example reproducing the native iOS Settings layout with two grouped lists a
     </glk-popover>
   </glk-nav>
 
-  <p class="gl-text-muted gl-text-sm gl-mb-sm">ACCOUNT</p>
-  <glk-list>
-    <glk-list-item title="Marcel Jungherz" subtitle="marcel@jungherz.com" interactive>
+  <glk-list header="Account">
+    <glk-list-item title="Marcel Jungherz" subtitle="marcel@jungherz.com" leading-lg interactive>
       <svg slot="leading" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       <svg slot="trailing" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
     </glk-list-item>
-    <glk-list-item title="Subscriptions" interactive>
+    <glk-list-item title="Subscriptions" interactive detail="$34.94">
       <svg slot="leading" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
-      <span slot="trailing">$34.94</span>
+      <svg slot="trailing" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
     </glk-list-item>
   </glk-list>
 
-  <p class="gl-text-muted gl-text-sm gl-mb-sm">NOTIFICATIONS</p>
-  <glk-list>
+  <glk-list header="Notifications">
     <glk-list-item title="Push notifications" interactive>
       <svg slot="leading" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
       <span slot="trailing">On</span>
@@ -833,16 +838,17 @@ Full example reproducing the native iOS Settings layout with two grouped lists a
       <svg slot="leading" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22 6 12 13 2 6"/></svg>
       <span slot="trailing">Weekly</span>
     </glk-list-item>
-    <glk-list-item title="Reset to defaults" center interactive></glk-list-item>
+    <glk-list-item title="Reset to defaults" variant="danger" center interactive></glk-list-item>
   </glk-list>
 </div>
 ```
 
 Key points:
-- Two grouped sections labeled by small uppercase muted text above each list
-- Auto-dividers — no manual `<hr>` between rows
-- Mixed trailing content — chevrons, values, values + chevrons in the same list
-- Centered destructive action — the last item uses `center` for a "Reset to defaults" row
+- Section headers via `header` attribute — no need for external `<p>` labels
+- Large leading icon via `leading-lg` for profile-style rows
+- Trailing value via `detail` attribute — muted metadata text before the chevron
+- Auto-dividers — no manual `<hr>` between rows; inset adapts for large icons automatically
+- `variant="danger"` on destructive "Reset" row — red text signals caution
 - Popover anchored in nav — `placement="end"` aligns the menu to the right edge of the trigger
 - Bare list inside popover — `<glk-list bare>` strips the inner glass surface so only the popover's glass shows
 
@@ -932,8 +938,8 @@ All `glk-*` events bubble and are `composed: true`, so they pierce shadow bounda
 | `<glk-toast>` | Feedback | `variant`, `duration` | — | (imperative) |
 | `<glk-accordion>` | Containers | — | default | — |
 | `<glk-accordion-item>` | Containers | `title`, `open` | default | `glk-toggle` |
-| `<glk-list>` | Containers | `flush`, `bare` | default | — |
-| `<glk-list-item>` | Containers | `title`, `subtitle`, `interactive`, `center` | `leading`, `trailing` | `glk-click` (when interactive) |
+| `<glk-list>` | Containers | `header`, `flush`, `bare` | default | — |
+| `<glk-list-item>` | Containers | `title`, `subtitle`, `interactive`, `center`, `leading-lg`, `wrap`, `detail`, `variant` | `leading`, `trailing` | `glk-click` (when interactive) |
 
 ---
 

@@ -2,10 +2,17 @@ import { GlkElement } from '../../base.js';
 
 class GlkList extends GlkElement {
   static get observedAttributes() {
-    return ['flush', 'bare'];
+    return ['flush', 'bare', 'header'];
   }
 
   render() {
+    // Optional section header — sits before the <ul>.
+    this._header = this.createElement('div', ['glass-list__section-header']);
+    const initialHeader = this.getAttribute('header') || '';
+    this._header.textContent = initialHeader;
+    this._header.hidden = !initialHeader;
+    this._wrapper.appendChild(this._header);
+
     this._ul = this.createElement('ul', ['glass-list']);
     if (this.getBoolAttr('flush')) this._ul.classList.add('glass-list--flush');
     if (this.getBoolAttr('bare')) this._ul.classList.add('glass-list--bare');
@@ -41,6 +48,12 @@ class GlkList extends GlkElement {
       case 'bare':
         this._ul.classList.toggle('glass-list--bare', this.getBoolAttr('bare'));
         break;
+      case 'header': {
+        const value = this.getAttribute('header') || '';
+        this._header.textContent = value;
+        this._header.hidden = !value;
+        break;
+      }
     }
   }
 
@@ -49,6 +62,12 @@ class GlkList extends GlkElement {
 
   get bare() { return this.getBoolAttr('bare'); }
   set bare(v) { this.setBoolAttr('bare', v); }
+
+  get header() { return this.getAttribute('header') || ''; }
+  set header(v) {
+    if (v) this.setAttribute('header', v);
+    else this.removeAttribute('header');
+  }
 }
 
 customElements.define('glk-list', GlkList);

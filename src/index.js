@@ -6,6 +6,8 @@ export { GlkNav } from './components/navigation/glk-nav.js';
 export { GlkPill } from './components/navigation/glk-pill.js';
 export { GlkTabBar } from './components/navigation/glk-tab-bar.js';
 export { GlkTabItem } from './components/navigation/glk-tab-item.js';
+export { GlkTabDock } from './components/navigation/glk-tab-dock.js';
+export { GlkTabAccessory } from './components/navigation/glk-tab-accessory.js';
 
 // Content
 export { GlkCard } from './components/content/glk-card.js';

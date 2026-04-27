@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GlassKit Elements — Showcase</title>
-  <meta name="description" content="Interaktive Vorschau aller 27 GlassKit Elements Web Components. Buttons, Toggles, Karten, Modals und mehr im Glassmorphism-Stil.">
+  <meta name="description" content="Interaktive Vorschau aller 29 GlassKit Elements Web Components. Buttons, Toggles, Karten, Modals und mehr im Glassmorphism-Stil.">
   <meta name="author" content="Jungherz GmbH">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://glasskit-elements.jungherz.com/de/showcase.html">
@@ -12,14 +12,14 @@
   <link rel="alternate" hreflang="en" href="https://glasskit-elements.jungherz.com/showcase.html">
   <meta property="og:type" content="website">
   <meta property="og:title" content="GlassKit Elements — Showcase">
-  <meta property="og:description" content="Interaktive Vorschau aller 27 GlassKit Elements Web Components im Glassmorphism-Stil.">
+  <meta property="og:description" content="Interaktive Vorschau aller 29 GlassKit Elements Web Components im Glassmorphism-Stil.">
   <meta property="og:url" content="https://glasskit-elements.jungherz.com/de/showcase.html">
   <meta property="og:site_name" content="GlassKit Elements">
   <meta property="og:locale" content="de_DE">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="GlassKit Elements — Showcase">
-  <meta name="twitter:description" content="Interaktive Vorschau aller 27 GlassKit Elements Web Components im Glassmorphism-Stil.">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.5/glasskit.min.css">
+  <meta name="twitter:description" content="Interaktive Vorschau aller 29 GlassKit Elements Web Components im Glassmorphism-Stil.">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.6/glasskit.min.css">
   <script src="/dist/glasskit-elements.min.js"></script>
   <style>
     body {
@@ -81,7 +81,7 @@
 <body>
 
   <div class="preview-frame">
-  <div class="glass-bg glass-bg--has-tab-bar">
+  <div class="glass-bg glass-bg--has-tab-bar-floating">
 
   <!-- Navigation + Theme -->
   <div class="demo-nav-area">
@@ -96,7 +96,7 @@
       </glk-pill>
     </glk-nav>
 
-    <glk-title>Component Showcase v1.5.0</glk-title>
+    <glk-title>Component Showcase v1.6.0</glk-title>
   </div>
 
   <div class="demo-section">
@@ -302,18 +302,23 @@
     <div style="height:80px;"></div>
   </div>
 
-  <!-- Tab Bar -->
-  <glk-tab-bar>
-    <glk-tab-item label="Home" active>
-      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-    </glk-tab-item>
-    <glk-tab-item label="Suche">
-      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-    </glk-tab-item>
-    <glk-tab-item label="Profil" badge="3">
-      <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-    </glk-tab-item>
-  </glk-tab-bar>
+  <!-- Tab Bar – Floating + Akzent-Accessory -->
+  <glk-tab-dock>
+    <glk-tab-bar floating>
+      <glk-tab-item label="Home" active>
+        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      </glk-tab-item>
+      <glk-tab-item label="Suche">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </glk-tab-item>
+      <glk-tab-item label="Profil" badge="3">
+        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </glk-tab-item>
+    </glk-tab-bar>
+    <glk-tab-accessory variant="accent" label="Verfassen">
+      <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    </glk-tab-accessory>
+  </glk-tab-dock>
 
   </div>
   </div>

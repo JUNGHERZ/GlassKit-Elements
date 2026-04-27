@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.6.0] – 2026-04-28
+
+### Added
+
+- **Two new components — `glk-tab-dock`, `glk-tab-accessory`** — tracking GlassKit CSS v1.6.0 floating Tab-Bar variant (iOS 26 Liquid Glass):
+  - **`<glk-tab-dock>`** — wrapper that holds a floating tab bar plus an optional accessory capsule, with `accessory-left` modifier (maps to `.glass-tab-bar-dock` + `.glass-tab-bar-dock--accessory-left`).
+  - **`<glk-tab-accessory>`** — standalone 56×56 px glass capsule (search, compose…) sitting next to the bar. Supports `variant="accent" / "success" / "error"` for filled colored capsules with white icons (maps to `.glass-tab-bar__accessory` + variants), plus `label` (aria-label) and `disabled`. Emits `glk-click`.
+- **`<glk-tab-bar>` — `floating` attribute** — pill-shaped Liquid Glass variant (maps to `.glass-tab-bar--floating`). Active item gets a soft radial Spotlight halo instead of the underline dot. Use inside `<glk-tab-dock>`.
+- **Component count** bumped from **27 → 29** across README, SKILL.md, landing pages, showcase, and docs.
+
+### Changed
+
+- **Peer dependency** `@jungherz-de/glasskit` raised from `>=1.5.0` to `>=1.6.0`. The new floating Tab-Bar variant + Accessory ship their CSS in 1.6.0 only.
+- **CDN version pin** updated from `@1.5` to `@1.6` across all HTML pages.
+- **Showcase** (EN + DE) — bottom navigation switched from the standard tab bar to the new floating variant with an accent accessory capsule, matching the sister GlassKit CSS showcase.
+
+---
+
 ## [1.5.0] – 2026-04-12
 
 ### Version alignment

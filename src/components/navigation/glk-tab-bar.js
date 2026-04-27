@@ -2,7 +2,7 @@ import { GlkElement } from '../../base.js';
 
 class GlkTabBar extends GlkElement {
   static get observedAttributes() {
-    return ['static'];
+    return ['static', 'floating'];
   }
 
   render() {
@@ -11,14 +11,21 @@ class GlkTabBar extends GlkElement {
     this._wrapper.appendChild(nav);
     this._nav = nav;
 
+    if (this.getBoolAttr('floating')) {
+      nav.classList.add('glass-tab-bar--floating');
+    }
+
     if (this.getBoolAttr('static')) {
       this._applyStatic();
     }
   }
 
   onAttributeChanged(name) {
-    if (name === 'static' && this._nav) {
+    if (!this._nav) return;
+    if (name === 'static') {
       this._applyStatic();
+    } else if (name === 'floating') {
+      this._nav.classList.toggle('glass-tab-bar--floating', this.getBoolAttr('floating'));
     }
   }
 

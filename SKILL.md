@@ -1,6 +1,6 @@
 ---
 name: glasskit-elements
-description: GlassKit Elements is a vanilla-JS Web Components library (v1.5.0) wrapping GlassKit CSS v1.5.0. It provides 27 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
+description: GlassKit Elements is a vanilla-JS Web Components library (v1.6.0) wrapping GlassKit CSS v1.6.0. It provides 29 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
 ---
 
 # GlassKit Elements – AI Component Reference
@@ -18,12 +18,12 @@ description: GlassKit Elements is a vanilla-JS Web Components library (v1.5.0) w
 npm install @jungherz-de/glasskit-elements @jungherz-de/glasskit
 ```
 
-Peer dependency `@jungherz-de/glasskit >=1.5.0` is required. The v1.5.0 List sub-features (section headers, large icons, wrap subtitles, value, danger/accent variants) require CSS v1.5.0.
+Peer dependency `@jungherz-de/glasskit >=1.6.0` is required. The v1.6.0 floating Tab-Bar variant + Accessory capsule (`<glk-tab-dock>`, `<glk-tab-accessory>`, `<glk-tab-bar floating>`) requires CSS v1.6.0.
 
 ### Import (ES modules)
 
 ```js
-// Full bundle — registers all 27 elements
+// Full bundle — registers all 29 elements
 import '@jungherz-de/glasskit-elements';
 
 // Named imports (for direct references to constructor classes)
@@ -98,7 +98,7 @@ Custom properties (`--gl-*`) defined on `:root` or `<html>` pass through shadow 
 
 ---
 
-## 3. Element Catalog (27 elements)
+## 3. Element Catalog (29 elements)
 
 ### 3.1 `<glk-nav>`
 
@@ -161,17 +161,64 @@ Fixed bottom navigation. Requires `.glass-bg--has-tab-bar` on the outer backgrou
 </div>
 ```
 
-**`<glk-tab-bar>`** — container, no attributes. Accepts a `static` attribute to switch from `position: fixed` to `position: relative` (useful for docs / previews).
+**`<glk-tab-bar>`** — container.
+
+| Attribute | Type | Description |
+|---|---|---|
+| `static` | Boolean | Switches from `position: fixed` to `position: relative` (useful for docs / previews) |
+| `floating` | Boolean | Pill-shaped Liquid Glass variant — adds `.glass-tab-bar--floating`. Use inside `<glk-tab-dock>` |
 
 **`<glk-tab-item>`**
 
 | Attribute | Type | Description |
 |---|---|---|
 | `label` | String | Tab label |
-| `active` | Boolean | Active state |
+| `active` | Boolean | Active state — gets a soft radial Spotlight halo when inside a `floating` bar |
 | `badge` | String / Number | Numeric badge on the icon |
 
 Default slot: icon SVG. Events: `glk-tab-select` on click.
+
+#### Floating variant + Accessory (`<glk-tab-dock>` + `<glk-tab-accessory>`)
+
+iOS 26 Liquid Glass-style floating tab bar. Wrap a `<glk-tab-bar floating>` in a `<glk-tab-dock>`, optionally with a `<glk-tab-accessory>` (search, compose…) capsule next to it. Use `.glass-bg--has-tab-bar-floating` on the outer background to reserve padding.
+
+```html
+<div class="glass-bg glass-bg--has-tab-bar-floating">
+  <!-- page content -->
+  <glk-tab-dock>
+    <glk-tab-bar floating>
+      <glk-tab-item label="Home" active>
+        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+      </glk-tab-item>
+      <glk-tab-item label="Docs" badge="3">
+        <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/></svg>
+      </glk-tab-item>
+      <glk-tab-item label="Upload">
+        <svg viewBox="0 0 24 24"><path d="M12 16V4"/><polyline points="8 8 12 4 16 8"/></svg>
+      </glk-tab-item>
+    </glk-tab-bar>
+    <glk-tab-accessory variant="accent" label="Compose">
+      <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    </glk-tab-accessory>
+  </glk-tab-dock>
+</div>
+```
+
+**`<glk-tab-dock>`** — wrapper that holds the floating bar + optional accessory.
+
+| Attribute | Type | Description |
+|---|---|---|
+| `accessory-left` | Boolean | Place the accessory on the left of the bar (default is right) |
+
+**`<glk-tab-accessory>`** — standalone glass capsule next to the bar (e.g. search, compose). 56×56 px.
+
+| Attribute | Type | Description |
+|---|---|---|
+| `label` | String | `aria-label` for accessibility |
+| `variant` | String | `accent`, `success`, `error` — filled colored capsule with white icon |
+| `disabled` | Boolean | Disabled state |
+
+Default slot: icon SVG (22×22). Events: `glk-click` (suppressed when disabled).
 
 ---
 
@@ -861,6 +908,7 @@ Key points:
 | `<glk-button>` | — | `disabled` | `glk-click` | — |
 | `<glk-pill>` | — | `disabled` | `glk-click` | — |
 | `<glk-tab-item>` | — | `active` | `glk-tab-select` | — |
+| `<glk-tab-accessory>` | — | `disabled` | `glk-click` | — |
 | `<glk-input>` | `.value` | `value` | `glk-input`, `glk-change` (+ native `input`, `change`) | `{ value }` |
 | `<glk-textarea>` | `.value` | `value` | `glk-input`, `glk-change` | `{ value }` |
 | `<glk-select>` | `.value` | `value` | `glk-change` | `{ value }` |
@@ -906,6 +954,8 @@ All `glk-*` events bubble and are `composed: true`, so they pierce shadow bounda
 | Forgetting `slot="trigger"` on the popover trigger element | Without it, the popover's internal click handler can't identify the trigger and never toggles. |
 | Using `open` as a method name (`mypopover.open()`) | `open` is a reflected property. Use `.show()` / `.close()` / `.toggle()` for imperative control. |
 | `<glk-tab-bar>` without `.glass-bg--has-tab-bar` on the outer background | Tab bar covers bottom content. Add the modifier to the outer `.glass-bg` container. |
+| `<glk-tab-bar floating>` without `<glk-tab-dock>` wrapper | Floating bar relies on the dock for fixed centered positioning. Always wrap it in `<glk-tab-dock>`. |
+| `<glk-tab-dock>` without `.glass-bg--has-tab-bar-floating` on the outer background | Use `--has-tab-bar-floating` (not `--has-tab-bar`) for the floating variant — the padding budget differs. |
 
 ---
 
@@ -915,8 +965,10 @@ All `glk-*` events bubble and are `composed: true`, so they pierce shadow bounda
 |---|---|---|---|---|
 | `<glk-nav>` | Navigation | — | default | — |
 | `<glk-pill>` | Navigation | `label`, `disabled` | default (icon) | `glk-click` |
-| `<glk-tab-bar>` | Navigation | `static` | default | — |
+| `<glk-tab-bar>` | Navigation | `static`, `floating` | default | — |
 | `<glk-tab-item>` | Navigation | `label`, `active`, `badge` | default (icon) | `glk-tab-select` |
+| `<glk-tab-dock>` | Navigation | `accessory-left` | default | — |
+| `<glk-tab-accessory>` | Navigation | `label`, `variant`, `disabled` | default (icon) | `glk-click` |
 | `<glk-avatar>` | Content | `size`, `src` | default (initials) | — |
 | `<glk-badge>` | Content | `variant` | default | — |
 | `<glk-card>` | Content | `glow` | default | — |

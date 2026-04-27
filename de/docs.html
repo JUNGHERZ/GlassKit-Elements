@@ -20,7 +20,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="GlassKit Elements — Dokumentation">
   <meta name="twitter:description" content="Vollständige Dokumentation aller 27 GlassKit Elements Web Components mit Live-Beispielen.">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.5/glasskit.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.6/glasskit.min.css">
   <script src="/dist/glasskit-elements.min.js"></script>
   <style>
     html { scroll-behavior: smooth; }
@@ -253,7 +253,7 @@
     <aside class="docs-sidebar">
       <div class="docs-sidebar__title">&#129482; <a href="../de/">GlassKit Elements</a></div>
       <div class="docs-sidebar__subtitle">Web Components f&uuml;r GlassKit CSS.</div>
-      <div class="docs-sidebar__version">v1.5.0 &ndash; Jungherz GmbH</div>
+      <div class="docs-sidebar__version">v1.6.0 &ndash; Jungherz GmbH</div>
 
       <div class="docs-sidebar__group">
         <div class="docs-sidebar__group-title">Grundlagen</div>
@@ -294,6 +294,7 @@
         <div class="docs-sidebar__group-title">Navigation</div>
         <a class="docs-sidebar__link" href="#glk-nav">glk-nav</a>
         <a class="docs-sidebar__link" href="#glk-tab-bar">glk-tab-bar</a>
+        <a class="docs-sidebar__link" href="#glk-tab-dock">glk-tab-dock</a>
       </div>
 
       <div class="docs-sidebar__group">
@@ -325,9 +326,9 @@
         <h1>GlassKit Elements</h1>
         <p>Vollst&auml;ndige Referenz f&uuml;r alle 24 Web Components &ndash; entwickelt von Jungherz GmbH. Vanilla JS, Shadow DOM, native Formular-Teilnahme.</p>
         <div class="docs-hero__badges">
-          <span class="docs-hero__badge">v1.5.0</span>
+          <span class="docs-hero__badge">v1.6.0</span>
           <span class="docs-hero__badge">Shadow DOM</span>
-          <span class="docs-hero__badge">27 Komponenten</span>
+          <span class="docs-hero__badge">29 Komponenten</span>
           <span class="docs-hero__badge">Vanilla JS</span>
         </div>
       </div>
@@ -338,7 +339,7 @@
 
         <h3>CDN (schnellste Variante)</h3>
         <div class="docs-code"><span class="cmt">&lt;!-- 1. GlassKit CSS --&gt;</span>
-<span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span> <span class="attr">href</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.5/glasskit.min.css"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span> <span class="attr">href</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.6/glasskit.min.css"</span><span class="tag">&gt;</span>
 
 <span class="cmt">&lt;!-- 2. GlassKit Elements --&gt;</span>
 <span class="tag">&lt;script</span> <span class="attr">src</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"</span><span class="tag">&gt;&lt;/script&gt;</span></div>
@@ -640,6 +641,42 @@
             <tr><td><code>badge</code></td><td>glk-tab-item</td><td>Badge count</td></tr>
           </table>
           <p><strong>Events:</strong> <code>glk-tab-change</code> &rarr; <code>{ tab: Element }</code></p>
+        </div>
+
+        <div class="docs-component" id="glk-tab-dock">
+          <h3><code>&lt;glk-tab-dock&gt;</code> + <code>&lt;glk-tab-bar floating&gt;</code> + <code>&lt;glk-tab-accessory&gt;</code></h3>
+          <p>Pillenfoermige, mittig schwebende Tab-Leiste im Stil von iOS 26 Liquid Glass. Optional kombinierbar mit einer <code>&lt;glk-tab-accessory&gt;</code>-Kapsel (z.B. Suche, Verfassen). Der aktive Tab erhaelt einen weichen radialen Spotlight-Halo statt der Unterstrich-Markierung. Verwende <code>.glass-bg--has-tab-bar-floating</code> auf dem aeusseren Hintergrund.</p>
+          <div class="docs-preview" style="height:96px;align-items:center;">
+            <glk-tab-dock static>
+              <glk-tab-bar floating>
+                <glk-tab-item label="Home" active><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></glk-tab-item>
+                <glk-tab-item label="Docs" badge="3"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></glk-tab-item>
+                <glk-tab-item label="Upload"><svg viewBox="0 0 24 24"><path d="M12 16V4"/><polyline points="8 8 12 4 16 8"/><path d="M20 17v1a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-1"/></svg></glk-tab-item>
+              </glk-tab-bar>
+              <glk-tab-accessory variant="accent" label="Verfassen">
+                <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              </glk-tab-accessory>
+            </glk-tab-dock>
+          </div>
+          <div class="docs-code"><span class="tag">&lt;glk-tab-dock&gt;</span>
+  <span class="tag">&lt;glk-tab-bar</span> <span class="attr">floating</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;glk-tab-item</span> <span class="attr">label</span>=<span class="val">"Home"</span> <span class="attr">active</span><span class="tag">&gt;</span><span class="tag">&lt;svg&gt;</span>...<span class="tag">&lt;/svg&gt;&lt;/glk-tab-item&gt;</span>
+    <span class="cmt">&lt;!-- weitere Items --&gt;</span>
+  <span class="tag">&lt;/glk-tab-bar&gt;</span>
+  <span class="tag">&lt;glk-tab-accessory</span> <span class="attr">variant</span>=<span class="val">"accent"</span> <span class="attr">label</span>=<span class="val">"Verfassen"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;svg&gt;</span>...<span class="tag">&lt;/svg&gt;</span>
+  <span class="tag">&lt;/glk-tab-accessory&gt;</span>
+<span class="tag">&lt;/glk-tab-dock&gt;</span></div>
+          <table class="docs-table">
+            <tr><th>Attribut</th><th>Komponente</th><th>Beschreibung</th></tr>
+            <tr><td><code>floating</code></td><td>glk-tab-bar</td><td>Pillenfoermige Liquid-Glass-Variante &mdash; Spotlight-Halo am aktiven Item</td></tr>
+            <tr><td><code>accessory-left</code></td><td>glk-tab-dock</td><td>Accessory links statt rechts neben der Bar</td></tr>
+            <tr><td><code>label</code></td><td>glk-tab-accessory</td><td>aria-label fuer Barrierefreiheit</td></tr>
+            <tr><td><code>variant</code></td><td>glk-tab-accessory</td><td><code>accent</code> | <code>success</code> | <code>error</code> &mdash; gefuellte farbige Kapsel mit weissem Icon</td></tr>
+            <tr><td><code>disabled</code></td><td>glk-tab-accessory</td><td>Deaktiviert</td></tr>
+          </table>
+          <p><strong>Events:</strong> <code>&lt;glk-tab-accessory&gt;</code> sendet <code>glk-click</code> beim Klick (unterdrueckt im disabled-Zustand).</p>
+          <p><strong>Tipp:</strong> Nutze <code>.glass-bg--has-tab-bar-floating</code> auf dem aeusseren <code>.glass-bg</code> statt <code>--has-tab-bar</code>, damit das Padding zur schwebenden Variante passt.</p>
         </div>
       </section>
 

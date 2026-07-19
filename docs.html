@@ -163,6 +163,8 @@
       font-size: 16px; line-height: 1.7; color: var(--gl-color-text-muted);
       margin-bottom: 16px;
     }
+    .docs-section p a { color: var(--gl-color-primary); text-decoration: none; }
+    .docs-section p a:hover { text-decoration: underline; }
     .docs-section code {
       font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.88em;
       background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px;
@@ -251,7 +253,7 @@
     <aside class="docs-sidebar">
       <div class="docs-sidebar__title">&#129482; <a href="/">GlassKit Elements</a></div>
       <div class="docs-sidebar__subtitle">Web Components for GlassKit CSS.</div>
-      <div class="docs-sidebar__version">v1.6.0 &ndash; Jungherz GmbH</div>
+      <div class="docs-sidebar__version">v1.6.1 &ndash; Jungherz GmbH</div>
 
       <div class="docs-sidebar__group">
         <div class="docs-sidebar__group-title">Basics</div>
@@ -313,6 +315,8 @@
         <a href="/">&#8592; Home</a>
         <a href="/showcase.html">Live Showcase</a>
         <a href="https://github.com/JUNGHERZ/GlassKit-Elements" target="_blank">GitHub</a>
+        <a href="https://glasskit.jungherz.com" target="_blank">GlassKit CSS</a>
+        <a href="https://glasskit-web.jungherz.com" target="_blank">GlassKit Web</a>
       </div>
     </aside>
 
@@ -324,7 +328,7 @@
         <h1>GlassKit Elements</h1>
         <p>Complete reference for all 24 web components &ndash; built by Jungherz GmbH. Vanilla JS, Shadow DOM, native form participation.</p>
         <div class="docs-hero__badges">
-          <span class="docs-hero__badge">v1.6.0</span>
+          <span class="docs-hero__badge">v1.6.1</span>
           <span class="docs-hero__badge">Shadow DOM</span>
           <span class="docs-hero__badge">29 Components</span>
           <span class="docs-hero__badge">Vanilla JS</span>
@@ -866,6 +870,12 @@ document.querySelector(<span class="val">'glk-popover'</span>).toggle();</div>
           <p><strong>Events:</strong> <code>glk-click</code> on <code>&lt;glk-list-item&gt;</code> when <code>interactive</code> is set.</p>
           <p><strong>Framework-safe:</strong> both elements use pure Shadow DOM with slot projection — no child node cloning — so they compose cleanly inside lit-html templates, HybridsJS, React, Vue, and Svelte.</p>
         </div>
+      </section>
+
+      <!-- ═══ Family ═══ -->
+      <section class="docs-section" id="family">
+        <h2>Building a complete website?</h2>
+        <p>GlassKit Elements is the app layer of the GlassKit family &ndash; web components for application UIs. For complete marketing websites &ndash; sections, i18n, SEO &ndash; the intended path is <a href="https://glasskit-web.jungherz.com" target="_blank">GlassKit Web</a>, the official Astro template built on the same design language. The pure-CSS foundation underneath both is <a href="https://glasskit.jungherz.com" target="_blank">GlassKit</a>.</p>
       </section>
 
       <div style="height:80px;"></div>

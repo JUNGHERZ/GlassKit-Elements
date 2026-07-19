@@ -5,7 +5,7 @@
   <a href="#"><img src="https://img.shields.io/badge/vanilla_JS-no_dependencies-44cc11?style=flat-square" alt="Vanilla JS"></a>
   <a href="#"><img src="https://img.shields.io/badge/components-29-7ec8e3?style=flat-square" alt="29 Components"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="MIT License"></a>
-  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/changelog-v1.6.0-lightgrey?style=flat-square" alt="Changelog"></a>
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/changelog-v1.6.1-lightgrey?style=flat-square" alt="Changelog"></a>
   <a href="https://www.npmjs.com/package/@jungherz-de/glasskit-elements"><img src="https://img.shields.io/badge/npm-%40jungherz--de%2Fglasskit--elements-cb3837?style=flat-square&logo=npm" alt="npm"></a>
 </p>
 
@@ -18,7 +18,8 @@
 <p align="center">
   <a href="https://glasskit-elements.jungherz.com/">🌐 Live Demo</a> &nbsp;&middot;&nbsp;
   <a href="https://glasskit-elements.jungherz.com/docs.html">📖 Documentation</a> &nbsp;&middot;&nbsp;
-  <a href="https://github.com/JUNGHERZ/GlassKit">🧊 GlassKit CSS</a>
+  <a href="https://glasskit.jungherz.com/">🧊 GlassKit CSS</a> &nbsp;&middot;&nbsp;
+  <a href="https://glasskit-web.jungherz.com/">🚀 GlassKit Web</a>
 </p>
 
 ---
@@ -26,6 +27,8 @@
 ## ✨ What is GlassKit Elements?
 
 GlassKit Elements is a companion library to [GlassKit CSS](https://github.com/JUNGHERZ/GlassKit). It provides **29 Web Components** (incl. the iOS 26-style floating Tab-Bar + Accessory) that encapsulate the verbose HTML markup required by GlassKit into simple, declarative custom elements.
+
+It is the **app layer** of the GlassKit family — three layers, one design language: [GlassKit](https://glasskit.jungherz.com) is the pure-CSS foundation, GlassKit Elements wraps it into web components for application UIs, and [GlassKit Web](https://glasskit-web.jungherz.com) is the official Astro template for complete websites on top of the same foundation.
 
 ```html
 <!-- Before: 5 elements, 6 classes -->

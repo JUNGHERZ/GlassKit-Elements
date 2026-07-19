@@ -163,6 +163,8 @@
       font-size: 16px; line-height: 1.7; color: var(--gl-color-text-muted);
       margin-bottom: 16px;
     }
+    .docs-section p a { color: var(--gl-color-primary); text-decoration: none; }
+    .docs-section p a:hover { text-decoration: underline; }
     .docs-section code {
       font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.88em;
       background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px;
@@ -253,7 +255,7 @@
     <aside class="docs-sidebar">
       <div class="docs-sidebar__title">&#129482; <a href="../de/">GlassKit Elements</a></div>
       <div class="docs-sidebar__subtitle">Web Components f&uuml;r GlassKit CSS.</div>
-      <div class="docs-sidebar__version">v1.6.0 &ndash; Jungherz GmbH</div>
+      <div class="docs-sidebar__version">v1.6.1 &ndash; Jungherz GmbH</div>
 
       <div class="docs-sidebar__group">
         <div class="docs-sidebar__group-title">Grundlagen</div>
@@ -315,6 +317,8 @@
         <a href="../de/">&#8592; Startseite</a>
         <a href="/de/showcase.html">Live Showcase</a>
         <a href="https://github.com/JUNGHERZ/GlassKit-Elements" target="_blank">GitHub</a>
+        <a href="https://glasskit.jungherz.com" target="_blank">GlassKit CSS</a>
+        <a href="https://glasskit-web.jungherz.com" target="_blank">GlassKit Web</a>
       </div>
     </aside>
 
@@ -326,7 +330,7 @@
         <h1>GlassKit Elements</h1>
         <p>Vollst&auml;ndige Referenz f&uuml;r alle 24 Web Components &ndash; entwickelt von Jungherz GmbH. Vanilla JS, Shadow DOM, native Formular-Teilnahme.</p>
         <div class="docs-hero__badges">
-          <span class="docs-hero__badge">v1.6.0</span>
+          <span class="docs-hero__badge">v1.6.1</span>
           <span class="docs-hero__badge">Shadow DOM</span>
           <span class="docs-hero__badge">29 Komponenten</span>
           <span class="docs-hero__badge">Vanilla JS</span>
@@ -868,6 +872,12 @@ document.querySelector(<span class="val">'glk-popover'</span>).toggle();</div>
           <p><strong>Events:</strong> <code>glk-click</code> auf <code>&lt;glk-list-item&gt;</code>, sobald <code>interactive</code> gesetzt ist.</p>
           <p><strong>Framework-sicher:</strong> beide Elemente nutzen pures Shadow DOM mit Slot-Projection — kein Clonen von Kinder-Knoten — und komponieren sauber in lit-html-Templates, HybridsJS, React, Vue und Svelte.</p>
         </div>
+      </section>
+
+      <!-- ═══ Familie ═══ -->
+      <section class="docs-section" id="family">
+        <h2>Eine komplette Website bauen?</h2>
+        <p>GlassKit Elements ist die App-Schicht der GlassKit-Familie &ndash; Web Components f&uuml;r Anwendungs-UIs. F&uuml;r komplette Marketing-Websites &ndash; Sektionen, i18n, SEO &ndash; ist <a href="https://glasskit-web.jungherz.com" target="_blank">GlassKit Web</a> der vorgesehene Weg: das offizielle Astro-Template auf derselben Designsprache. Das Pure-CSS-Fundament unter beiden ist <a href="https://glasskit.jungherz.com" target="_blank">GlassKit</a>.</p>
       </section>
 
       <div style="height:80px;"></div>

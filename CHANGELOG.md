@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.6.1] – 2026-07-19
+
+Site / docs / README only — no component or API changes.
+
+### Added
+
+- **GlassKit family cross-linking** — landing pages, docs, and README now interlink the three-layer family (GlassKit CSS → GlassKit Elements → GlassKit Web), mirroring the family section on the [GlassKit Web](https://glasskit-web.jungherz.com) site:
+  - **Landing pages (EN + DE)** — new "The GlassKit family" / "Die GlassKit-Familie" section ("Three layers, one design language") with three cards; the own card is marked "you are here" / "du bist hier". Footer gained links to [GlassKit](https://glasskit.jungherz.com) and [GlassKit Web](https://glasskit-web.jungherz.com).
+  - **Docs (EN + DE)** — new closing section "Building a complete website?" / "Eine komplette Website bauen?" pointing to GlassKit Web as the intended path for full marketing websites; sidebar footer links to both sister projects.
+  - **README** — GlassKit Web added to the header link row and a family / layering paragraph added to the intro.
+
+### Changed
+
+- **README header link** for GlassKit CSS now points to the landing page (glasskit.jungherz.com) instead of the GitHub repo, consistent with the new GlassKit Web link.
+
+---
+
 ## [1.6.0] – 2026-04-28
 
 ### Added
@@ -153,6 +170,8 @@ Starting with this release, GlassKit Elements version numbers are aligned with G
 
 ---
 
+[1.6.1]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.6.1
+[1.6.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.6.0
 [1.5.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.5.0
 [0.9.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v0.9.0
 [0.8.3]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v0.8.3

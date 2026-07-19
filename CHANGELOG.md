@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.6.2] – 2026-07-19
+
+Site / docs / README only — no component or API changes.
+
+### Fixed
+
+- **Stale component counts aligned to 29** across all pages:
+  - Docs hero (EN + DE) still said "all 24 web components" — the only place left from the 24-component era.
+  - Meta / Open Graph / Twitter descriptions on the landing pages (EN + DE) and docs (EN + DE) still said 27.
+  - SKILL.md project-structure table still said "registers all 27 elements".
+- **German landing page wording**:
+  - Hero headline gradient said "for GlassKit CSS" — now "für GlassKit CSS", matching the page's own `<title>` and meta tags.
+  - Hero badge said "29 Components" — now "29 Komponenten", matching the German docs badge and feature card.
+
+---
+
 ## [1.6.1] – 2026-07-19
 
 Site / docs / README only — no component or API changes.
@@ -170,6 +186,7 @@ Starting with this release, GlassKit Elements version numbers are aligned with G
 
 ---
 
+[1.6.2]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.6.2
 [1.6.1]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.6.1
 [1.6.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.6.0
 [1.5.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.5.0

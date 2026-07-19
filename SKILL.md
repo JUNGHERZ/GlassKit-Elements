@@ -1,6 +1,6 @@
 ---
 name: glasskit-elements
-description: GlassKit Elements is a vanilla-JS Web Components library (v1.6.1) wrapping GlassKit CSS v1.6.0. It provides 29 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
+description: GlassKit Elements is a vanilla-JS Web Components library (v1.6.2) wrapping GlassKit CSS v1.6.0. It provides 29 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
 ---
 
 # GlassKit Elements – AI Component Reference
@@ -1113,7 +1113,7 @@ See the class-based [GlassKit CSS `SKILL.md`](https://github.com/JUNGHERZ/GlassK
 | Theme sync | Single module-level `MutationObserver` in `base.js` |
 | Adopted stylesheets | `glassSheet` (from `@jungherz-de/glasskit/glasskit-styles.js`) + module-level `hostSheet` / `inlineHostSheet` |
 | Per-component structure | One `.js` file per element in `src/components/{category}/glk-{name}.js` |
-| Barrel | `src/index.js` — exports and registers all 27 elements |
+| Barrel | `src/index.js` — exports and registers all 29 elements |
 | Build | Rollup → IIFE (`glasskit-elements.js`), minified IIFE, and ESM (`glasskit-elements.esm.js`) |
 
 Each element is a subclass of `GlkElement` (or `GlkFormElement` for form controls) and follows a consistent lifecycle:

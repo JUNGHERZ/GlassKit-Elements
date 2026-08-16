@@ -1,3 +1,18 @@
+# ============================================================
+# GlassKit Elements – Release Pipeline
+#
+# Trigger:  Tag-Push mit v* Pattern (z.B. v1.7.0)
+# Auth:     npm Trusted Publishing (OIDC) – kein NPM_TOKEN mehr nötig.
+#           Voraussetzung: auf npmjs.com muss für
+#           @jungherz-de/glasskit-elements unter
+#           Settings → Trusted Publisher hinterlegt sein:
+#           JUNGHERZ/glasskit-elements · Workflow: release.yml
+#           Der Dateiname dieses Workflows muss deshalb release.yml bleiben.
+#           Provenance wird dabei automatisch erzeugt.
+#
+# Usage:    git tag v1.7.0 && git push origin v1.7.0
+# ============================================================
+
 name: Release & Publish
 
 on:
@@ -7,6 +22,7 @@ on:
 
 permissions:
   contents: write
+  id-token: write   # OIDC-Token für npm Trusted Publishing
 
 jobs:
   build-and-publish:
@@ -15,19 +31,35 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: 24
           registry-url: https://registry.npmjs.org
+
+      # ---- npm CLI: Trusted Publishing braucht >= 11.5.1 ----
+      - name: Ensure npm supports trusted publishing
+        run: |
+          npm install -g npm@latest
+          npm --version
 
       - name: Install dependencies
         run: npm install
 
       - name: Build all artifacts
         run: npm run build
+
+      # ---- Artefakte prüfen ----
+      # dist/ ist in diesem Repo eingecheckt. Weicht der frische Build vom
+      # committeten Stand ab, wurde vergessen `npm run build` mitzucommitten.
+      - name: Committed dist/ matches source
+        run: |
+          if ! git diff --exit-code -- dist/; then
+            echo "::error::dist/ is out of date – run 'npm run build' and commit the result."
+            exit 1
+          fi
 
       - name: Log file sizes
         run: |
@@ -39,9 +71,13 @@ jobs:
           echo ""
           echo "📦 ESM Bundle:"
           ls -lh dist/glasskit-elements.esm.js
+          echo ""
+          echo "📦 Per-component entries:"
+          ls dist/components/*.js | wc -l
+          du -sh dist/components
 
       - name: Create GitHub Release & upload assets
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           name: ${{ github.ref_name }} – GlassKit Elements Release
           generate_release_notes: true
@@ -50,7 +86,6 @@ jobs:
             dist/glasskit-elements.js
             dist/glasskit-elements.esm.js
 
+      # ---- npm veröffentlichen (OIDC, kein Token) ----
       - name: Publish to npm
         run: npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -29,9 +29,17 @@ import '@jungherz-de/glasskit-elements';
 // Named imports (for direct references to constructor classes)
 import { GlkButton, GlkModal } from '@jungherz-de/glasskit-elements';
 
-// Tree-shaken per-component import
+// Per-component import (since 1.7.0) — registers just this element
+import '@jungherz-de/glasskit-elements/components/glk-button.js';
+
+// …or with the constructor class
 import { GlkButton } from '@jungherz-de/glasskit-elements/components/glk-button.js';
 ```
+
+Every element has its own entry at `components/glk-{name}.js`. Importing one pulls that
+file plus a single shared chunk (`base.js` + the GlassKit stylesheet, ~48 KB) rather than
+the 112 KB full bundle; several imports share that chunk. Each module registers its
+custom element as a side effect, so a bare `import '…'` is enough.
 
 ### CDN
 

@@ -7,6 +7,54 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.7.0] – 2026-08-16
+
+### Fixed
+
+- **`/components/*` imports resolved to nothing.** The export map advertised
+  `"./components/*": "./dist/components/*.js"`, but Rollup only ever produced the three
+  full bundles — `dist/components/` did not exist. The subpath was also malformed: `*`
+  captures the whole remainder including the extension, so the documented specifier
+  `…/components/glk-button.js` expanded to `dist/components/glk-button.js.js`. Every
+  per-component import in README.md and SKILL.md therefore failed with a resolution
+  error.
+
+  Both halves are fixed rather than removed, because the smaller import is worth having:
+
+  - Rollup now emits one ES module per element to `dist/components/glk-{name}.js`
+    (29 entries, discovered from `src/components/{category}/`), with `base.js` and the
+    GlassKit stylesheet split into a single shared chunk under
+    `dist/components/shared/` instead of being copied into each file.
+  - The export map entry is now `"./components/*.js": "./dist/components/*.js"`, which
+    matches the documented specifier. `"./package.json"` was added alongside it.
+
+  Importing a single element pulls ~50 KB (shared chunk + component) instead of the
+  112 KB full ESM bundle.
+
+### Changed
+
+- **Peer dependency raised to `@jungherz-de/glasskit >= 1.7.0`.** The elements bundle
+  the GlassKit stylesheet into their shadow roots, so they carry the 1.7.0 WCAG AA
+  contrast fixes for badges, the primary button, and filled state surfaces.
+
+  > **Release order matters:** `dist/` embeds whatever GlassKit version is installed at
+  > build time. Publish `@jungherz-de/glasskit@1.7.0` first, then `npm install` here and
+  > rebuild before tagging.
+
+- **npm publishing switched to Trusted Publishing (OIDC).** `release.yml` requests
+  `id-token: write` and publishes without `NODE_AUTH_TOKEN`; provenance is generated
+  automatically. Requires a trusted publisher registered on npm for
+  `JUNGHERZ/glasskit-elements` with workflow `release.yml`, so the filename must stay.
+- **Release workflow** now fails when the committed `dist/` differs from a fresh build,
+  and the checkout/setup-node/release actions were bumped to the majors already used by
+  the GlassKit repo. `prepublishOnly` runs `npm run build`.
+- **`prebuild` clears `dist/components/`** before each build. The shared chunk carries a
+  content hash in its filename, so a rebuild against a new GlassKit version writes a new
+  file instead of replacing the old one. Without the clean step the stale chunk would be
+  committed and published forever.
+
+---
+
 ## [1.6.2] – 2026-07-19
 
 Site / docs / README only — no component or API changes.

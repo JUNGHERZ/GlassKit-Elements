@@ -7,6 +7,58 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.8.0] – 2026-08-16
+
+### Added
+
+- **`<glk-card fill>` stretches the card to its grid or flex cell.** A card in a
+  `repeat(auto-fit, minmax(…, 1fr))` grid left the visible `.glass-card` at its natural
+  height even though the host stretched correctly, so tiles ended up ragged and footer
+  buttons sat at different heights. Measured with four tiles: hosts all 248 px, cards
+  184/200/248/184, footers 83/99/147/83 px from the top of their tile. With `fill`, all
+  four cards are 248 px and all footers sit at 147 px.
+
+  ```html
+  <glk-card fill>…</glk-card>
+  ```
+
+  The host becomes a grid when `fill` is set, and the card becomes a flex column so a
+  footer can be pushed down with `margin-top: auto`. Making the *host* a grid is the
+  point: it is stretched by the outer layout but keeps `height: auto`, so the host alone
+  is not enough — a child needs either a grid stretch or a definite height to resolve
+  against.
+
+- **`part` on the structural elements of `glk-card`, `glk-list` and `glk-modal`**, so
+  their internals can be styled from outside the shadow root:
+
+  | Element | Parts |
+  |---|---|
+  | `<glk-card>` | `card` |
+  | `<glk-list>` | `header`, `list` |
+  | `<glk-modal>` | `overlay`, `modal`, `header`, `body`, `footer` |
+
+  ```css
+  glk-card::part(card) { border-radius: 8px; }
+  ```
+
+  `::part(card) { height: 100% }` also solves the stretch problem on its own — it is the
+  general escape hatch, `fill` is the ergonomic shortcut for the common case. `fill` is
+  deliberately **not** offered on `glk-modal`: an overlay is not a grid item, so it has
+  no such problem.
+
+- **`GlkElement.hostStyles`** — an optional static returning a `CSSStyleSheet`, adopted
+  after the shared sheets. It keeps per-component selectors like `:host([fill])` out of
+  the shared stylesheet, so an attribute only means something where it is documented.
+
+### Changed
+
+- Peer dependency raised to `@jungherz-de/glasskit >= 1.7.1`, which declares
+  `color-scheme`. Because that rule is keyed on `[data-theme]`, it applies to the
+  `.glk-wrapper` inside every shadow root — so `<glk-input type="date">` and friends now
+  get browser widgets in the right scheme.
+
+---
+
 ## [1.7.0] – 2026-08-16
 
 ### Fixed

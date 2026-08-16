@@ -1,6 +1,6 @@
 {
   "name": "@jungherz-de/glasskit-elements",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "description": "Vanilla JavaScript Web Components wrapping the GlassKit CSS glassmorphism library",
   "license": "MIT",
   "homepage": "https://glasskit-elements.jungherz.com",
@@ -43,10 +43,10 @@
     "vanilla-js"
   ],
   "peerDependencies": {
-    "@jungherz-de/glasskit": ">=1.7.0"
+    "@jungherz-de/glasskit": ">=1.7.1"
   },
   "devDependencies": {
-    "@jungherz-de/glasskit": "^1.7.0",
+    "@jungherz-de/glasskit": "^1.7.1",
     "@rollup/plugin-node-resolve": "^15.0.0",
     "@rollup/plugin-terser": "^0.4.0",
     "rollup": "^4.0.0"

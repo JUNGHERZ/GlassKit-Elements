@@ -6,22 +6,22 @@ class GlkModal extends GlkElement {
   }
 
   render() {
-    this._overlay = this.createElement('div', ['glass-modal-overlay']);
+    this._overlay = this.createElement('div', ['glass-modal-overlay'], { part: 'overlay' });
 
-    const modal = this.createElement('div', ['glass-modal']);
+    const modal = this.createElement('div', ['glass-modal'], { part: 'modal' });
 
     // Header
-    const header = this.createElement('div', ['glass-modal__header']);
+    const header = this.createElement('div', ['glass-modal__header'], { part: 'header' });
     this._titleEl = this.createElement('h2', ['glass-modal__title']);
     this._titleEl.textContent = this.getAttribute('title') || '';
     header.appendChild(this._titleEl);
 
     // Body
-    const body = this.createElement('div', ['glass-modal__body']);
+    const body = this.createElement('div', ['glass-modal__body'], { part: 'body' });
     body.appendChild(document.createElement('slot'));
 
     // Footer — clone action buttons from light DOM into shadow DOM
-    this._footer = this.createElement('div', ['glass-modal__footer']);
+    this._footer = this.createElement('div', ['glass-modal__footer'], { part: 'footer' });
 
     modal.appendChild(header);
     modal.appendChild(body);

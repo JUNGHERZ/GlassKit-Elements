@@ -1,4 +1,4 @@
-import { G as GlkElement } from './shared/base-D7w9EVJi.js';
+import { G as GlkElement } from './shared/base-Bm9Z714o.js';
 
 class GlkList extends GlkElement {
   static get observedAttributes() {
@@ -7,13 +7,13 @@ class GlkList extends GlkElement {
 
   render() {
     // Optional section header — sits before the <ul>.
-    this._header = this.createElement('div', ['glass-list__section-header']);
+    this._header = this.createElement('div', ['glass-list__section-header'], { part: 'header' });
     const initialHeader = this.getAttribute('header') || '';
     this._header.textContent = initialHeader;
     this._header.hidden = !initialHeader;
     this._wrapper.appendChild(this._header);
 
-    this._ul = this.createElement('ul', ['glass-list']);
+    this._ul = this.createElement('ul', ['glass-list'], { part: 'list' });
     if (this.getBoolAttr('flush')) this._ul.classList.add('glass-list--flush');
     if (this.getBoolAttr('bare')) this._ul.classList.add('glass-list--bare');
     this._ul.appendChild(document.createElement('slot'));

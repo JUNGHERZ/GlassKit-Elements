@@ -50,6 +50,13 @@ export class GlkElement extends HTMLElement {
   /** Override in subclass to use inline-block display */
   static get displayInline() { return false; }
 
+  /**
+   * Optional CSSStyleSheet with component-specific host rules, adopted after
+   * the shared sheets. Keeps per-component selectors out of the shared sheet
+   * so an attribute like [fill] only means something where it is documented.
+   */
+  static get hostStyles() { return null; }
+
   static get observedAttributes() {
     return [];
   }
@@ -59,7 +66,10 @@ export class GlkElement extends HTMLElement {
     this._initialized = false;
     this._shadow = this.attachShadow({ mode: 'open' });
     const displaySheet = this.constructor.displayInline ? inlineHostSheet : hostSheet;
-    this._shadow.adoptedStyleSheets = [glassSheet, displaySheet];
+    const sheets = [glassSheet, displaySheet];
+    const extra = this.constructor.hostStyles;
+    if (extra) sheets.push(extra);
+    this._shadow.adoptedStyleSheets = sheets;
   }
 
   connectedCallback() {

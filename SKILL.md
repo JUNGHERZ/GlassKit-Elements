@@ -1,6 +1,6 @@
 ---
 name: glasskit-elements
-description: GlassKit Elements is a vanilla-JS Web Components library (v1.6.2) wrapping GlassKit CSS v1.6.0. It provides 29 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
+description: GlassKit Elements is a vanilla-JS Web Components library (v1.8.0) wrapping GlassKit CSS v1.7.1. It provides 29 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
 ---
 
 # GlassKit Elements – AI Component Reference
@@ -18,7 +18,7 @@ description: GlassKit Elements is a vanilla-JS Web Components library (v1.6.2) w
 npm install @jungherz-de/glasskit-elements @jungherz-de/glasskit
 ```
 
-Peer dependency `@jungherz-de/glasskit >=1.6.0` is required. The v1.6.0 floating Tab-Bar variant + Accessory capsule (`<glk-tab-dock>`, `<glk-tab-accessory>`, `<glk-tab-bar floating>`) requires CSS v1.6.0.
+Peer dependency `@jungherz-de/glasskit >=1.7.1` is required. The v1.6.0 floating Tab-Bar variant + Accessory capsule (`<glk-tab-dock>`, `<glk-tab-accessory>`, `<glk-tab-bar floating>`) requires CSS v1.6.0.
 
 ### Import (ES modules)
 
@@ -103,6 +103,26 @@ A single module-level `MutationObserver` watches `data-theme` on `<html>` and sy
 | API style | Declarative HTML attributes + reflected JS properties |
 
 Custom properties (`--gl-*`) defined on `:root` or `<html>` pass through shadow boundaries automatically, so custom theming works with a single global stylesheet.
+
+### CSS Parts (since 1.8.0)
+
+Custom properties cover colors, but not layout. For that, the structural elements of the
+container components are exposed as parts:
+
+| Element | Parts |
+|---|---|
+| `<glk-card>` | `card` |
+| `<glk-list>` | `header`, `list` |
+| `<glk-modal>` | `overlay`, `modal`, `header`, `body`, `footer` |
+
+```css
+glk-card::part(card) { border-radius: 8px; }
+glk-modal::part(footer) { justify-content: flex-start; }
+```
+
+Note that `height: 100%` on a part only resolves if the host gives it something definite
+to resolve against. A host stretched by a grid keeps `height: auto`, which is why
+`<glk-card fill>` makes the host a grid instead.
 
 ---
 
@@ -282,8 +302,30 @@ Glass container for content.
 | Attribute | Type | Description |
 |---|---|---|
 | `glow` | Boolean | Adds frosted glass gradient + light streak |
+| `fill` | Boolean | Stretches the card to the full height of its grid or flex cell (since 1.8.0) |
 
-Default slot: content.
+Default slot: content. CSS part: `card`.
+
+**Equal-height tiles.** In a grid the host stretches but the visible card keeps its
+natural height, so tiles end up ragged and footer buttons sit at different heights.
+Add `fill`:
+
+```html
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:16px">
+  <glk-card fill>
+    <div style="display:flex;flex-direction:column;height:100%">
+      <h3>Title</h3>
+      <p>Short.</p>
+      <div style="margin-top:auto"><glk-button variant="primary">Action</glk-button></div>
+    </div>
+  </glk-card>
+  <glk-card fill>…</glk-card>
+</div>
+```
+
+`fill` makes the card a flex column, so `margin-top: auto` on the last child pushes a
+footer down and buttons line up across tiles. Give your own wrapper `height: 100%` as
+shown — otherwise it sizes to its content inside the stretched card.
 
 ---
 

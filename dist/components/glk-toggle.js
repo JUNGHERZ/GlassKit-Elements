@@ -1,4 +1,4 @@
-import { a as GlkFormElement } from './shared/base-BzDV6jE3.js';
+import { a as GlkFormElement } from './shared/base-C0B1hgOt.js';
 
 class GlkToggle extends GlkFormElement {
   static get observedAttributes() {

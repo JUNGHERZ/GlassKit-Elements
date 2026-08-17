@@ -7,6 +7,61 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.11.0] – 2026-08-17
+
+### Fixed
+
+- **`<glk-radio>` did not group: two radios with the same `name` could both be
+  checked.** Every `<glk-radio>` keeps its `<input type="radio">` in its own shadow
+  root, and native radio grouping works per tree — it does not reach across shadow
+  boundaries. The `name` attribute was passed through and so *looked* like a
+  grouping that did not exist. Measured before the fix with two
+  `<glk-radio name="skr">`: right after clicking the second one, **both** inputs
+  reported `checked === true`, and a `FormData` of the surrounding form carried
+  **three** `skr` entries for three radios.
+
+  The group is now kept by the component, following the HTML definition as closely
+  as it can: same `name`, same containing tree, same form owner. Selecting one
+  clears the others — by click, by arrow key, by the `checked` property and by the
+  `checked` attribute — so `FormData` carries exactly one entry. Two `<glk-radio>`
+  in two different `<form>`s stay two groups, a radio without `name` is not grouped,
+  and when several carry `checked` in the markup the last one wins, as with native
+  radios.
+
+- **A radio group had no keyboard navigation.** Arrow keys did nothing and every
+  radio was its own tab stop. The group is now a single tab stop with a roving
+  `tabindex`; <kbd>↑</kbd> <kbd>↓</kbd> <kbd>←</kbd> <kbd>→</kbd> move through it,
+  wrap around, skip disabled entries and select as they go, firing `glk-change` and
+  `change` exactly as a click does. <kbd>Tab</kbd> and modified arrow presses are
+  left alone.
+
+### Changed
+
+- Requires **GlassKit CSS >= 1.11.0**, which brands the focus ring, the warm rim and
+  the primary glow from `--gl-color-primary`, and aligns checkbox, radio and toggle
+  on the *first* line of a multi-line label instead of the middle of the text block.
+  Both reach into the shadow roots without any change here.
+- The CDN snippets on the site and in the docs pinned `glasskit@1.6` — below the peer
+  requirement since 1.10.0. Now `@1.11` everywhere.
+
+### Why no `<glk-radio-group>`
+
+It was the report's second proposal, and it is the only way to get `role="radiogroup"`
+announced. It is not carried here: new components are out of scope for this round, and
+a container holding the selection would be a second, competing source of truth next to
+the `checked` attribute. Grouping and keyboard navigation are the parts that could be
+fixed without one, and they are. For the screen-reader announcement, wrap the radios in
+your own `<div role="radiogroup" aria-label="…">` — documented in SKILL.md.
+
+### Compatibility
+
+The grouping is a **behaviour change** for code that relied on two same-named radios
+staying independent: they now clear each other. That was the defect, but it is worth
+checking before upgrading. Tab order changes too — a group is one tab stop now, not
+one per radio.
+
+---
+
 ## [1.10.0] – 2026-08-17
 
 ### Fixed

@@ -1,6 +1,6 @@
 ---
 name: glasskit-elements
-description: GlassKit Elements is a vanilla-JS Web Components library (v1.10.0) wrapping GlassKit CSS v1.10.0. It provides 29 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
+description: GlassKit Elements is a vanilla-JS Web Components library (v1.11.0) wrapping GlassKit CSS v1.11.0. It provides 29 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
 ---
 
 # GlassKit Elements – AI Component Reference
@@ -18,7 +18,7 @@ description: GlassKit Elements is a vanilla-JS Web Components library (v1.10.0) 
 npm install @jungherz-de/glasskit-elements @jungherz-de/glasskit
 ```
 
-Peer dependency `@jungherz-de/glasskit >=1.10.0` is required — 1.9.0 is the release that made the stylesheet splittable, which is what lets document-level branding reach the elements at all.
+Peer dependency `@jungherz-de/glasskit >=1.11.0` is required — 1.9.0 is the release that made the stylesheet splittable, which is what lets document-level branding reach the elements at all.
 
 ### Import (ES modules)
 
@@ -525,6 +525,30 @@ Radio button. Group multiple with the same `name`.
 | `disabled` | Boolean | Disabled state |
 
 Events: `glk-change` → `{ checked, value }`.
+
+**Grouping (since 1.11.0).** Each `<glk-radio>` keeps its `<input type="radio">` in
+its own shadow root, and native radio grouping works per tree — it does not cross
+shadow boundaries. The group is therefore kept by the component, following the HTML
+definition: **same `name`, same containing tree, same form owner**. Selecting one
+clears the others, whether by click, by arrow key, by the `checked` property or by
+the `checked` attribute, and only the selected value is submitted. Two `<glk-radio>`
+in two different `<form>`s are two groups, and a radio without `name` is not grouped.
+If several carry `checked` in the markup, the last one wins — as with native radios.
+
+Keyboard: the group is a single tab stop. <kbd>↑</kbd> <kbd>↓</kbd> <kbd>←</kbd>
+<kbd>→</kbd> move through it, wrap around, skip disabled entries and select as they
+go, firing `glk-change` and `change` exactly as a click does.
+
+Not covered: a screen reader still announces the entries as separate radios, not as
+"1 of 3" — that needs a `role="radiogroup"` container, which no `<glk-*>` element
+provides. Wrap them yourself if you need it:
+
+```html
+<div role="radiogroup" aria-label="Plan">
+  <glk-radio name="plan" label="Free Plan" value="free" checked></glk-radio>
+  <glk-radio name="plan" label="Pro Plan" value="pro"></glk-radio>
+</div>
+```
 
 ---
 

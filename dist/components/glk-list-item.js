@@ -1,4 +1,4 @@
-import { G as GlkElement } from './shared/base-BzDV6jE3.js';
+import { G as GlkElement } from './shared/base-C0B1hgOt.js';
 
 // Module-level override sheet — shared by all instances.
 // Suppresses the auto-divider when glk-list marks this item as the

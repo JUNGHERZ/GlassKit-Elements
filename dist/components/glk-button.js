@@ -1,4 +1,4 @@
-import { G as GlkElement } from './shared/base-Bm9Z714o.js';
+import { G as GlkElement } from './shared/base-C4ZYKLPu.js';
 
 const VARIANTS = ['primary', 'secondary', 'tertiary'];
 const SIZES = ['sm', 'md', 'lg', 'auto'];

@@ -7,6 +7,68 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.9.0] – 2026-08-17
+
+Version numbers of GlassKit and GlassKit Elements are realigned with this release.
+
+### Fixed
+
+- **`--gl-*` overrides from the document had no effect inside any `<glk-*>` element.**
+  Every element adopted the full GlassKit stylesheet, which contains
+  `:root, [data-theme="dark"] { … }`. Inside the shadow root that selector matches the
+  element's own `.glk-wrapper`, so all tokens were re-declared locally — and a matching
+  rule always beats an inherited value. A project's brand file reached plain `.glass-*`
+  markup but never the components, so projects came out half-branded.
+
+  Measured before the fix, same page, same button:
+
+  | | document | inside `.glk-wrapper` |
+  |---|---|---|
+  | `--gl-color-primary` | `#2e9e8f` (brand) | `#e8852d` |
+  | `--gl-color-text` | `#12242f` (brand) | `#1a2a36` |
+  | rendered | teal | orange |
+
+  Elements now adopt `componentsSheet` — the component rules without the token
+  declarations — so the document's values are inherited normally. Both the CSS class and
+  the web component render the brand color.
+
+  `!important` never helped here, and neither did `theme-override.css`: both operate at
+  document level, while the problem was a competing declaration inside the shadow root.
+
+### Added
+
+- **Token defaults are placed on the document**, once, wrapped in
+  `@layer glasskit-defaults`. Since the tokens no longer live in the shadow roots, this
+  keeps the advertised standalone case working — a page that loads only the elements
+  bundle and no `glasskit.css` still renders styled components. The cascade layer means
+  an ordinary brand stylesheet wins regardless of load order, and so does a linked
+  `glasskit.css`, at identical values.
+
+  The sheet is *appended* to `document.adoptedStyleSheets`, never assigned, and a global
+  guard prevents a second injection when more than one copy of the bundle is loaded
+  (verified: full bundle plus a per-component entry still yields exactly one sheet).
+
+- **Branding is now documented** in README and SKILL.md. It was not mentioned in the
+  README at all, and SKILL.md claimed the opposite of the actual behavior.
+
+### Changed
+
+- Peer dependency raised to `@jungherz-de/glasskit >= 1.9.0`, the release that exports
+  the split stylesheet this depends on.
+
+### Upgrading
+
+Projects **without** `--gl-*` overrides see no change — verified against Voice-Office-Hub
+across all 117 tokens in both themes: zero differences.
+
+Projects **with** overrides will see their components change to the branded values. That
+is the fix working, but it is visible. Anything your brand file sets that differs from
+GlassKit's default will now also apply inside components. Tokens that only feed
+`.glass-bg` (`--gl-color-bg-*`, `--gl-bg-aurora-*`) were already applied at document
+level and do not change.
+
+---
+
 ## [1.8.0] – 2026-08-16
 
 ### Added

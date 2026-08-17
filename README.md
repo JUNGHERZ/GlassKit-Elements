@@ -192,11 +192,31 @@ const current = html.getAttribute('data-theme');
 html.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
 ```
 
+### Branding
+
+Override GlassKit's `--gl-*` tokens anywhere in the document. Every `<glk-*>` element
+inherits them — no JavaScript, no per-element setup:
+
+```css
+/* brand.css, loaded after glasskit.css */
+:root, [data-theme='dark'] { --gl-color-primary: #2e9e8f; }
+[data-theme='light']       { --gl-color-primary: #21786d; }
+```
+
+> **Requires 1.9.0.** Before that, every element re-declared the tokens inside its own
+> shadow root, so document-level overrides were silently ignored in components while
+> still applying to plain `.glass-*` markup — projects came out half-branded. If you are
+> upgrading from ≤1.8.0 and already ship a brand stylesheet, expect your components to
+> change to the colors you intended all along.
+
+Token defaults are placed on the document once, inside `@layer glasskit-defaults`, so
+pages that never load `glasskit.css` still work and your brand file always wins.
+
 ---
 
 ## 🛠️ Architecture
 
-- **Shadow DOM** with `adoptedStyleSheets` — GlassKit's `glassSheet` is shared across all component instances
+- **Shadow DOM** with `adoptedStyleSheets` — GlassKit's `componentsSheet` is shared across all component instances; token declarations stay on the document so branding can be inherited
 - **Theme wrapper** with `display: contents` — layout-transparent `<div>` for `data-theme` CSS selectors
 - **Global `MutationObserver`** — single observer watches `data-theme` changes and syncs all instances
 - **`GlkElement`** base class — handles Shadow DOM setup, theme sync, attribute reflection

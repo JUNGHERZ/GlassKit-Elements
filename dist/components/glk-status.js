@@ -1,4 +1,4 @@
-import { G as GlkElement } from './shared/base-Bm9Z714o.js';
+import { G as GlkElement } from './shared/base-C4ZYKLPu.js';
 
 class GlkStatus extends GlkElement {
   static get observedAttributes() {

@@ -1,4 +1,4 @@
-import { a as GlkFormElement } from './shared/base-Bm9Z714o.js';
+import { a as GlkFormElement } from './shared/base-C4ZYKLPu.js';
 
 class GlkRange extends GlkFormElement {
   static get observedAttributes() {

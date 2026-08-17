@@ -1,4 +1,31 @@
-import { glassSheet } from '@jungherz-de/glasskit/glasskit-styles.js';
+import { componentsSheet, tokensCss } from '@jungherz-de/glasskit/glasskit-styles.js';
+
+// ── Design Tokens ──
+// The shadow roots deliberately adopt the *components* sheet only. Adopting
+// the full GlassKit sheet would bring its [data-theme] blocks along, and those
+// match the .glk-wrapper below — the tokens would then be re-declared inside
+// every shadow root, where a matching rule always beats an inherited value.
+// A project's own `:root { --gl-color-primary: … }` would never arrive.
+//
+// So the token defaults go on the document once, and every shadow root
+// inherits them like any other custom property. They are wrapped in a cascade
+// layer so an ordinary (unlayered) brand stylesheet wins over them, no matter
+// whether it loads before or after this module.
+
+const TOKENS_INJECTED = '__glkDefaultTokensInjected';
+
+function injectDefaultTokens() {
+  if (typeof document === 'undefined') return;              // SSR / non-DOM
+  if (globalThis[TOKENS_INJECTED]) return;                   // another bundle copy did it
+  globalThis[TOKENS_INJECTED] = true;
+
+  const sheet = new CSSStyleSheet();
+  sheet.replaceSync(`@layer glasskit-defaults { ${tokensCss} }`);
+  // Append — never assign — so an app's own adopted sheets survive.
+  document.adoptedStyleSheets = [...document.adoptedStyleSheets, sheet];
+}
+
+injectDefaultTokens();
 
 // ── Global Theme Sync ──
 // Single MutationObserver that watches data-theme on <html>
@@ -66,7 +93,7 @@ export class GlkElement extends HTMLElement {
     this._initialized = false;
     this._shadow = this.attachShadow({ mode: 'open' });
     const displaySheet = this.constructor.displayInline ? inlineHostSheet : hostSheet;
-    const sheets = [glassSheet, displaySheet];
+    const sheets = [componentsSheet, displaySheet];
     const extra = this.constructor.hostStyles;
     if (extra) sheets.push(extra);
     this._shadow.adoptedStyleSheets = sheets;

@@ -1,6 +1,6 @@
 ---
 name: glasskit-elements
-description: GlassKit Elements is a vanilla-JS Web Components library (v1.8.0) wrapping GlassKit CSS v1.7.1. It provides 29 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
+description: GlassKit Elements is a vanilla-JS Web Components library (v1.9.0) wrapping GlassKit CSS v1.9.0. It provides 29 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
 ---
 
 # GlassKit Elements – AI Component Reference
@@ -18,7 +18,7 @@ description: GlassKit Elements is a vanilla-JS Web Components library (v1.8.0) w
 npm install @jungherz-de/glasskit-elements @jungherz-de/glasskit
 ```
 
-Peer dependency `@jungherz-de/glasskit >=1.7.1` is required. The v1.6.0 floating Tab-Bar variant + Accessory capsule (`<glk-tab-dock>`, `<glk-tab-accessory>`, `<glk-tab-bar floating>`) requires CSS v1.6.0.
+Peer dependency `@jungherz-de/glasskit >=1.9.0` is required — 1.9.0 is the release that made the stylesheet splittable, which is what lets document-level branding reach the elements at all.
 
 ### Import (ES modules)
 
@@ -47,7 +47,7 @@ custom element as a side effect, so a bare `import '…'` is enough.
 <script src="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"></script>
 ```
 
-Note: the elements bundle the GlassKit CSS `CSSStyleSheet` via `adoptedStyleSheets`. You do **not** need to load `glasskit.css` separately — it is already inside every component's shadow root.
+Note: the elements bundle the GlassKit component rules via `adoptedStyleSheets`, and put the token defaults on the document themselves. You do **not** need to load `glasskit.css` separately — but do load it if you also use plain `.glass-*` markup outside the elements.
 
 ### Minimal template
 
@@ -96,13 +96,46 @@ A single module-level `MutationObserver` watches `data-theme` on `<html>` and sy
 |---|---|
 | Tag prefix | `glk-*` (analogous to the `glass-*` CSS prefix) |
 | Rendering | Shadow DOM (`mode: 'open'`) with `adoptedStyleSheets` |
-| Stylesheet sharing | GlassKit's `glassSheet` is the same `CSSStyleSheet` object in every element — no CSS duplication |
+| Stylesheet sharing | GlassKit's `componentsSheet` is the same `CSSStyleSheet` object in every element — no CSS duplication. Token declarations live on the document, not in the shadow roots |
 | Theme sync | Global MutationObserver on `<html data-theme>` |
 | Events | Custom `glk-*` events, all `bubbles: true, composed: true` |
 | Form participation | `GlkFormElement` uses `ElementInternals` (`static formAssociated = true`) |
 | API style | Declarative HTML attributes + reflected JS properties |
 
-Custom properties (`--gl-*`) defined on `:root` or `<html>` pass through shadow boundaries automatically, so custom theming works with a single global stylesheet.
+Custom properties (`--gl-*`) defined on `:root` or `<html>` pass through shadow boundaries by inheritance, so custom theming works with a single global stylesheet.
+
+### Branding (since 1.9.0)
+
+Override `--gl-*` tokens anywhere in the document — a brand stylesheet, a `<style>` block,
+inline on `<html>`. Every `<glk-*>` element inherits them:
+
+```css
+/* brand.css, loaded after glasskit.css */
+:root, [data-theme='dark'] { --gl-color-primary: #2e9e8f; }
+[data-theme='light']       { --gl-color-primary: #21786d; }
+```
+
+No JavaScript, no `::part`, no per-element setup. Both `.glass-btn--primary` in the
+document and `<glk-button variant="primary">` end up the same color.
+
+**This did not work before 1.9.0.** Up to and including 1.8.0 every element adopted the
+full GlassKit sheet, whose `[data-theme]` blocks matched the element's own theme wrapper
+and re-declared all tokens inside the shadow root. A matching rule beats an inherited
+value, so document-level overrides were silently ignored inside every component — while
+the same override *did* apply to plain `.glass-*` markup, which made projects look
+half-branded. Since 1.9.0 the elements adopt only the component rules.
+
+**How the defaults get there.** Because the tokens no longer live in the shadow roots,
+this module puts them on the document once, wrapped in `@layer glasskit-defaults`:
+
+- Pages that never load `glasskit.css` still get styled elements, as advertised above.
+- The layer loses to any ordinary stylesheet, so your brand file wins regardless of
+  load order — and so does a linked `glasskit.css`, at identical values.
+- It is appended to `document.adoptedStyleSheets`, never assigned, and only once even if
+  several copies of the bundle are loaded.
+
+If your app assigns `document.adoptedStyleSheets = [...]` wholesale at some later point,
+re-append the existing entries rather than replacing them, or the defaults are lost.
 
 ### CSS Parts (since 1.8.0)
 

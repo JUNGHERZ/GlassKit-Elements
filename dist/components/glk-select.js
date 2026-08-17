@@ -1,4 +1,4 @@
-import { a as GlkFormElement } from './shared/base-C4ZYKLPu.js';
+import { a as GlkFormElement } from './shared/base-BzDV6jE3.js';
 
 class GlkSelect extends GlkFormElement {
   static get observedAttributes() {

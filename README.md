@@ -5,7 +5,7 @@
   <a href="#"><img src="https://img.shields.io/badge/vanilla_JS-no_dependencies-44cc11?style=flat-square" alt="Vanilla JS"></a>
   <a href="#"><img src="https://img.shields.io/badge/components-29-7ec8e3?style=flat-square" alt="29 Components"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="MIT License"></a>
-  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/changelog-v1.6.2-lightgrey?style=flat-square" alt="Changelog"></a>
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/changelog-v1.10.0-lightgrey?style=flat-square" alt="Changelog"></a>
   <a href="https://www.npmjs.com/package/@jungherz-de/glasskit-elements"><img src="https://img.shields.io/badge/npm-%40jungherz--de%2Fglasskit--elements-cb3837?style=flat-square&logo=npm" alt="npm"></a>
 </p>
 
@@ -66,7 +66,7 @@ It is the **app layer** of the GlassKit family — three layers, one design lang
 
 ```html
 <!-- 1. GlassKit CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.6/glasskit.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.10/glasskit.min.css">
 
 <!-- 2. GlassKit Elements -->
 <script src="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"></script>
@@ -99,7 +99,7 @@ import '@jungherz-de/glasskit-elements/components/glk-toggle.js';
 <!DOCTYPE html>
 <html data-theme="dark">
 <head>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.6/glasskit.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.10/glasskit.min.css">
   <script src="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"></script>
 </head>
 <body>
@@ -191,6 +191,21 @@ const html = document.documentElement;
 const current = html.getAttribute('data-theme');
 html.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
 ```
+
+### Icons
+
+Pass an icon as a **direct child**, not wrapped:
+
+```html
+<glk-button><svg viewBox="0 0 24 24">…</svg>Save</glk-button>
+<glk-list-item title="Download"><svg slot="leading" viewBox="0 0 24 24">…</svg></glk-list-item>
+```
+
+> **Requires GlassKit CSS >= 1.10.0.** The icon rules are descendant selectors, and a
+> slotted icon stays in the light DOM — before 1.10.0 they never matched it, so button
+> icons filled their container and list icons collapsed to 0×0. Wrapping the icon in a
+> `<span slot="…">` still does not work: `::slotted()` cannot reach inside an assigned
+> node. Size it yourself if you must wrap it.
 
 ### Branding
 

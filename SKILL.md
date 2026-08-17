@@ -1,6 +1,6 @@
 ---
 name: glasskit-elements
-description: GlassKit Elements is a vanilla-JS Web Components library (v1.9.0) wrapping GlassKit CSS v1.9.0. It provides 29 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
+description: GlassKit Elements is a vanilla-JS Web Components library (v1.10.0) wrapping GlassKit CSS v1.10.0. It provides 29 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
 ---
 
 # GlassKit Elements – AI Component Reference
@@ -18,7 +18,7 @@ description: GlassKit Elements is a vanilla-JS Web Components library (v1.9.0) w
 npm install @jungherz-de/glasskit-elements @jungherz-de/glasskit
 ```
 
-Peer dependency `@jungherz-de/glasskit >=1.9.0` is required — 1.9.0 is the release that made the stylesheet splittable, which is what lets document-level branding reach the elements at all.
+Peer dependency `@jungherz-de/glasskit >=1.10.0` is required — 1.9.0 is the release that made the stylesheet splittable, which is what lets document-level branding reach the elements at all.
 
 ### Import (ES modules)
 
@@ -136,6 +136,36 @@ this module puts them on the document once, wrapped in `@layer glasskit-defaults
 
 If your app assigns `document.adoptedStyleSheets = [...]` wholesale at some later point,
 re-append the existing entries rather than replacing them, or the defaults are lost.
+
+### Passing icons (fixed in 1.10.0)
+
+Pass an icon as a **direct child** — the `<svg>` itself, not wrapped:
+
+```html
+<glk-button><svg viewBox="0 0 24 24">…</svg>Save</glk-button>
+<glk-list-item title="Download"><svg slot="leading" viewBox="0 0 24 24">…</svg></glk-list-item>
+```
+
+GlassKit sizes and strokes it. Requires GlassKit CSS >= 1.10.0: the icon rules are
+descendant selectors (`.glass-btn svg`), and a slotted icon stays in the light DOM, so it
+is no descendant of the shadow tree. 1.10.0 added a `::slotted()` twin to every such rule.
+Before that, icons came out at their intrinsic size — `glk-button` icons filled the whole
+container, list and status icons collapsed to 0×0.
+
+**Wrapping the icon does not work and cannot be made to work:**
+
+```html
+<!-- the assigned node is the <span>; the <svg> inside is unreachable from the shadow root -->
+<glk-list-item title="…"><span slot="leading"><svg …></svg></span></glk-list-item>
+```
+
+`::slotted()` only ever matches the assigned node, never inside it. If you must wrap,
+size the icon yourself in your own stylesheet.
+
+Your own rules keep precedence: for slotted content the outer tree wins over `::slotted()`
+from the shadow tree, so `glk-list-item svg { width: 32px }` in your CSS still applies.
+Note that `.glass-list__leading` is a fixed 28×28 flex container — enlarging only the icon
+shrinks it back on the main axis; size the container too.
 
 ### CSS Parts (since 1.8.0)
 

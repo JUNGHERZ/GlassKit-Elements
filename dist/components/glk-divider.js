@@ -1,4 +1,4 @@
-import { G as GlkElement } from './shared/base-C4ZYKLPu.js';
+import { G as GlkElement } from './shared/base-BzDV6jE3.js';
 
 class GlkDivider extends GlkElement {
   render() {

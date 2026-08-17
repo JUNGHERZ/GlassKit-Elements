@@ -7,6 +7,58 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.10.0] – 2026-08-17
+
+### Fixed
+
+- **Icons passed into an element were not styled by GlassKit.** The icon rules are
+  descendant selectors (`.glass-btn svg`, `.glass-list__leading svg`, …), but a slotted
+  icon stays in the light DOM and is no descendant of the shadow tree, so they never
+  matched. Nothing errored — the component just rendered with an unusable icon.
+
+  | | before | after |
+  |---|---|---|
+  | `<glk-button>` | 1210×1210 | 20×20 |
+  | `<glk-tab-accessory>` | 54×54 | 22×22 |
+  | `<glk-list-item slot="leading">` | 28×28 | 24×24 |
+  | `<glk-list-item leading-lg>` | 28×28 | 32×32 |
+  | `<glk-list-item slot="trailing">` | 0×0 | 18×18 |
+  | `<glk-status slot="icon">` | 0×0 | 20×20 |
+  | `<glk-pill>` | 32×32 | 20×20 |
+
+  Fixed in GlassKit CSS 1.10.0, which gives every icon rule sitting above a slot a
+  `::slotted()` twin. This release only raises the peer dependency and documents the
+  behavior; no element changed.
+
+  `<glk-tab-item>` was never affected — it clones the SVG into its shadow root, where it
+  is a real descendant.
+
+### Why this is not fixed inside the elements
+
+The finding proposed adding `::slotted()` rules to the element stylesheets. That was not
+the right place, and it would not have been complete:
+
+1. **`::slotted()` matches only the assigned node, never inside it.** An icon wrapped in a
+   container — `<span slot="leading"><svg …></span>` — cannot be styled from the shadow
+   root at all. That is a limit of the platform. Wrapped icons still measure 0×0 after
+   this release; pass the `<svg>` directly, as the docs show, or size it yourself.
+2. **The rules belong to the stylesheet that owns them.** `.glass-btn--primary`,
+   `--secondary` and `--tertiary` each carry their own icon rule, as do the four
+   accessory variants. Restating them here would duplicate GlassKit's cascade in a second
+   project and let the two drift apart. Written as twin selectors next to the originals,
+   they cannot.
+
+The proposed rule also omitted `stroke: currentColor`; combined with `fill: none` that
+renders an icon invisible unless it carries its own presentation attributes.
+
+### Changed
+
+- Peer dependency raised to `@jungherz-de/glasskit >= 1.10.0`.
+- **Documented how to pass icons** in README and SKILL.md, including the wrapped-icon
+  limitation and the fact that a project's own rules keep precedence over `::slotted()`.
+
+---
+
 ## [1.9.0] – 2026-08-17
 
 Version numbers of GlassKit and GlassKit Elements are realigned with this release.

@@ -1,4 +1,4 @@
-import { G as GlkElement } from './shared/base-C4ZYKLPu.js';
+import { G as GlkElement } from './shared/base-BzDV6jE3.js';
 
 // <glk-card fill> stretches the visible card to the height of its grid or flex
 // cell. The host must become a grid for this: it is stretched by the outer

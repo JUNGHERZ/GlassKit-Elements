@@ -1,4 +1,4 @@
-import { a as GlkFormElement } from './shared/base-C0B1hgOt.js';
+import { a as GlkFormElement } from './shared/base-BoN33KPe.js';
 
 const CHECKMARK_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
 

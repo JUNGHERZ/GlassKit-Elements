@@ -107,6 +107,14 @@ var GlassKitElements = (function (exports) {
      */
     static get hostStyles() { return null; }
 
+    /**
+     * Opt in when the component copies light-DOM children into its shadow tree.
+     * A MutationObserver then calls projectLightDom() again whenever those
+     * children change, so a framework that swaps them keeps the rendered element
+     * in step. Without it the copy is made once and silently goes stale.
+     */
+    static get observesLightDom() { return false; }
+
     static get observedAttributes() {
       return [];
     }
@@ -133,15 +141,26 @@ var GlassKitElements = (function (exports) {
         this._shadow.appendChild(this._wrapper);
 
         this.render();
-        this.setupEvents();
+      }
 
-        // Register for theme sync
-        instances.add(this);
+      // Everything below runs on every connect, not just the first. Moving an
+      // element in the DOM disconnects and reconnects it, and disconnectedCallback
+      // tears all of this down — without re-arming it here a moved element would
+      // keep its markup but silently stop reacting.
+      this.setupEvents();
+      instances.add(this);
+
+      if (this.constructor.observesLightDom) {
+        this._lightDomObserver ??= new MutationObserver(records => this.projectLightDom(records));
+        this._lightDomObserver.observe(this, {
+          childList: true, subtree: true, characterData: true
+        });
       }
     }
 
     disconnectedCallback() {
       instances.delete(this);
+      this._lightDomObserver?.disconnect();
       this.teardownEvents();
     }
 
@@ -168,6 +187,20 @@ var GlassKitElements = (function (exports) {
 
     /** Subclasses override to react to attribute changes. */
     onAttributeChanged(name, oldValue, newValue) {}
+
+    /**
+     * Subclasses that set observesLightDom override this to (re-)copy their
+     * light-DOM children into the shadow tree. Runs on every change to those
+     * children, so it has to be safe to call repeatedly.
+     */
+    projectLightDom() {}
+
+    /**
+     * Escape hatch: re-copy the light-DOM children now. The observer covers the
+     * ordinary cases; this is for the ones it cannot see, so nobody has to reach
+     * into element.shadowRoot.
+     */
+    refresh() { this.projectLightDom(); }
 
     // ── Utility Methods ──
 
@@ -357,6 +390,8 @@ var GlassKitElements = (function (exports) {
       return ['label', 'active', 'badge'];
     }
 
+    static get observesLightDom() { return true; }
+
     render() {
       this._btn = this.createElement('button', ['glass-tab-bar__item']);
       if (this.getBoolAttr('active')) this._btn.classList.add('is-active');
@@ -382,23 +417,32 @@ var GlassKitElements = (function (exports) {
       this._wrapper.appendChild(this._btn);
 
       // Defer icon cloning — children may not be parsed yet
-      requestAnimationFrame(() => this._cloneIcon());
+      requestAnimationFrame(() => this.projectLightDom());
     }
 
-    _cloneIcon() {
+    projectLightDom() {
       const svg = this.querySelector('svg');
-      if (svg) {
-        const clone = svg.cloneNode(true);
-        // Remove inline attributes that would override GlassKit styles
-        clone.removeAttribute('width');
-        clone.removeAttribute('height');
-        clone.removeAttribute('stroke');
-        clone.removeAttribute('stroke-width');
-        clone.removeAttribute('stroke-linecap');
-        clone.removeAttribute('stroke-linejoin');
-        clone.removeAttribute('fill');
-        this._iconEl.insertBefore(clone, this._iconEl.firstChild);
-      }
+      const signature = svg ? svg.outerHTML : '';
+      if (signature === this._iconSignature) return;
+      this._iconSignature = signature;
+
+      // Drop the previous clone by hand: the icon container also holds the badge,
+      // and inserting without removing would stack a second icon on every update.
+      this._iconClone?.remove();
+      this._iconClone = null;
+      if (!svg) return;
+
+      const clone = svg.cloneNode(true);
+      // Remove inline attributes that would override GlassKit styles
+      clone.removeAttribute('width');
+      clone.removeAttribute('height');
+      clone.removeAttribute('stroke');
+      clone.removeAttribute('stroke-width');
+      clone.removeAttribute('stroke-linecap');
+      clone.removeAttribute('stroke-linejoin');
+      clone.removeAttribute('fill');
+      this._iconEl.insertBefore(clone, this._iconEl.firstChild);
+      this._iconClone = clone;
     }
 
     setupEvents() {
@@ -1061,6 +1105,8 @@ var GlassKitElements = (function (exports) {
       return ['label', 'disabled', 'name', 'value', 'required'];
     }
 
+    static get observesLightDom() { return true; }
+
     render() {
       const group = this.createElement('div', ['glass-input-group']);
 
@@ -1081,12 +1127,29 @@ var GlassKitElements = (function (exports) {
       this._wrapper.appendChild(group);
 
       // Defer option copying — children may not be parsed yet in connectedCallback
-      requestAnimationFrame(() => {
-        this._moveOptions();
-        const value = this.getAttribute('value');
-        if (value) this._select.value = value;
-        this._syncFormValue();
-      });
+      requestAnimationFrame(() => this.projectLightDom());
+    }
+
+    projectLightDom() {
+      // The options are pure data — the clones carry no listeners — so skipping an
+      // unchanged rebuild is safe, and it keeps an open dropdown from snapping shut
+      // on light-DOM churn elsewhere.
+      const signature = [...this.querySelectorAll('option')].map(o => o.outerHTML).join('');
+      if (signature === this._optionSignature) return;
+      this._optionSignature = signature;
+
+      // innerHTML = '' below drops the selection, so remember it first. A
+      // selectedIndex of -1 means "nothing is selected", which is not the same as
+      // an option whose value happens to be the empty string.
+      const previous = this._select.selectedIndex >= 0 ? this._select.value : null;
+
+      this._moveOptions();
+
+      // Keep the live selection when it survived the rebuild; otherwise fall back
+      // to the value attribute. Without this the selection jumps back to the first
+      // entry every time the list is updated.
+      if (!this._applyValue(previous)) this._applyValue(this.getAttribute('value'));
+      this._syncFormValue();
     }
 
     _moveOptions() {
@@ -1095,6 +1158,18 @@ var GlassKitElements = (function (exports) {
       options.forEach(opt => {
         this._select.appendChild(opt.cloneNode(true));
       });
+    }
+
+    /**
+     * Selects `value` if an option carries it, and reports whether it did. The
+     * empty string is a value like any other — "" is a real option in plenty of
+     * forms ("detect automatically", "enter your own below").
+     */
+    _applyValue(value) {
+      if (value === null) return false;
+      if (![...this._select.options].some(o => o.value === value)) return false;
+      this._select.value = value;
+      return true;
     }
 
     setupEvents() {
@@ -1123,7 +1198,7 @@ var GlassKitElements = (function (exports) {
           this._select.setAttribute('name', this.getAttribute('name') || '');
           break;
         case 'value':
-          this._select.value = this.getAttribute('value') || '';
+          this._applyValue(this.getAttribute('value'));
           this._syncFormValue();
           break;
       }
@@ -1833,6 +1908,8 @@ var GlassKitElements = (function (exports) {
       return ['open', 'title'];
     }
 
+    static get observesLightDom() { return true; }
+
     render() {
       this._overlay = this.createElement('div', ['glass-modal-overlay'], { part: 'overlay' });
 
@@ -1856,7 +1933,7 @@ var GlassKitElements = (function (exports) {
       modal.appendChild(this._footer);
 
       // Defer footer population — children may not be parsed yet
-      requestAnimationFrame(() => this._populateFooter());
+      requestAnimationFrame(() => this.projectLightDom());
 
       this._overlay.appendChild(modal);
       this._wrapper.appendChild(this._overlay);
@@ -1866,18 +1943,23 @@ var GlassKitElements = (function (exports) {
       }
     }
 
-    _populateFooter() {
+    projectLightDom() {
+      const buttons = [...this.querySelectorAll('[slot="actions"] button')];
+      const signature = buttons.map(b => b.outerHTML).join('');
+      if (signature === this._footerSignature) return;
+      this._footerSignature = signature;
+
       this._footer.innerHTML = '';
-      const actionsSlot = this.querySelector('[slot="actions"]');
-      if (actionsSlot) {
-        const buttons = actionsSlot.querySelectorAll('button');
-        buttons.forEach(btn => {
-          const clone = btn.cloneNode(true);
-          // Forward click events to the original button
-          clone.addEventListener('click', () => btn.click());
-          this._footer.appendChild(clone);
+      buttons.forEach((btn, i) => {
+        const clone = btn.cloneNode(true);
+        // Look the original up again at click time instead of closing over it: a
+        // framework that re-renders replaces the node, and a captured reference
+        // would then forward the click to a button no longer in the document.
+        clone.addEventListener('click', () => {
+          this.querySelectorAll('[slot="actions"] button')[i]?.click();
         });
-      }
+        this._footer.appendChild(clone);
+      });
     }
 
     setupEvents() {

@@ -1,6 +1,6 @@
 ---
 name: glasskit-elements
-description: GlassKit Elements is a vanilla-JS Web Components library (v1.11.0) wrapping GlassKit CSS v1.11.0. It provides 29 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
+description: GlassKit Elements is a vanilla-JS Web Components library (v1.12.0) wrapping GlassKit CSS v1.11.0. It provides 29 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
 ---
 
 # GlassKit Elements – AI Component Reference
@@ -103,6 +103,27 @@ A single module-level `MutationObserver` watches `data-theme` on `<html>` and sy
 | API style | Declarative HTML attributes + reflected JS properties |
 
 Custom properties (`--gl-*`) defined on `:root` or `<html>` pass through shadow boundaries by inheritance, so custom theming works with a single global stylesheet.
+
+### Light-DOM children (since 1.12.0)
+
+Most elements project children through a real `<slot>`, which is live by definition.
+Three copy them into the shadow tree instead, because GlassKit's CSS has to reach
+them: `<glk-select>` (its `<option>`s), `<glk-tab-item>` (its `<svg>`) and
+`<glk-modal>` (its `[slot="actions"]` buttons).
+
+Those copies are now kept in step by a `MutationObserver`, so swapping the children
+— by hand or through a framework — updates the rendered element. Before 1.12.0 the
+copy was made once on the first frame and then silently went stale.
+
+If you ever need to force it, `element.refresh()` re-runs the copy immediately.
+There should be no reason to reach into `element.shadowRoot`.
+
+### Moving an element (since 1.12.0)
+
+Moving a `<glk-*>` element in the DOM disconnects and reconnects it. Its event
+listeners and its theme-sync registration are re-armed on every connect, so it keeps
+working. Before 1.12.0 they were torn down on disconnect and never restored: the
+element still looked right but no longer fired events.
 
 ### Branding (since 1.9.0)
 
@@ -613,9 +634,31 @@ Dropdown select. Pass native `<option>` elements as children.
 | `value` | String | Selected value |
 | `disabled` | Boolean | Disabled state |
 
-Children: native `<option>` elements (read from light DOM on initial render).
+Children: native `<option>` elements, read from the light DOM.
 
 Events: `glk-change` → `{ value }`.
+
+**Changing the options later (since 1.12.0).** The options are copied into the
+shadow tree, and the copy is kept in step: replace, add or remove `<option>`
+children at any time — by hand or through a framework — and the rendered select
+follows. Before 1.12.0 the copy was made once and then silently went stale.
+
+The selection survives a rebuild: if the selected value is still in the new list
+it stays selected, otherwise the `value` attribute decides, otherwise the browser
+falls back to the first option. The **empty string is a real value** throughout —
+`value=""` selects `<option value="">` wherever it sits in the list, not just when
+it happens to be first.
+
+```html
+<!-- "" is a genuine choice here, and it is honoured -->
+<glk-select label="Language" value="">
+  <option value="de">Deutsch</option>
+  <option value="">Detect automatically</option>
+</glk-select>
+```
+
+A `value` naming no existing option leaves the current selection alone rather than
+clearing it — when the matching option arrives later, it is selected then.
 
 ---
 

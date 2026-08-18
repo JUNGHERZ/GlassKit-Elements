@@ -1,9 +1,11 @@
-import { G as GlkElement } from './shared/base-C0B1hgOt.js';
+import { G as GlkElement } from './shared/base-BoN33KPe.js';
 
 class GlkModal extends GlkElement {
   static get observedAttributes() {
     return ['open', 'title'];
   }
+
+  static get observesLightDom() { return true; }
 
   render() {
     this._overlay = this.createElement('div', ['glass-modal-overlay'], { part: 'overlay' });
@@ -28,7 +30,7 @@ class GlkModal extends GlkElement {
     modal.appendChild(this._footer);
 
     // Defer footer population — children may not be parsed yet
-    requestAnimationFrame(() => this._populateFooter());
+    requestAnimationFrame(() => this.projectLightDom());
 
     this._overlay.appendChild(modal);
     this._wrapper.appendChild(this._overlay);
@@ -38,18 +40,23 @@ class GlkModal extends GlkElement {
     }
   }
 
-  _populateFooter() {
+  projectLightDom() {
+    const buttons = [...this.querySelectorAll('[slot="actions"] button')];
+    const signature = buttons.map(b => b.outerHTML).join('');
+    if (signature === this._footerSignature) return;
+    this._footerSignature = signature;
+
     this._footer.innerHTML = '';
-    const actionsSlot = this.querySelector('[slot="actions"]');
-    if (actionsSlot) {
-      const buttons = actionsSlot.querySelectorAll('button');
-      buttons.forEach(btn => {
-        const clone = btn.cloneNode(true);
-        // Forward click events to the original button
-        clone.addEventListener('click', () => btn.click());
-        this._footer.appendChild(clone);
+    buttons.forEach((btn, i) => {
+      const clone = btn.cloneNode(true);
+      // Look the original up again at click time instead of closing over it: a
+      // framework that re-renders replaces the node, and a captured reference
+      // would then forward the click to a button no longer in the document.
+      clone.addEventListener('click', () => {
+        this.querySelectorAll('[slot="actions"] button')[i]?.click();
       });
-    }
+      this._footer.appendChild(clone);
+    });
   }
 
   setupEvents() {

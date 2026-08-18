@@ -1,4 +1,4 @@
-import { G as GlkElement } from './shared/base-C0B1hgOt.js';
+import { G as GlkElement } from './shared/base-BoN33KPe.js';
 
 const VARIANTS = ['accent', 'success', 'error'];
 

@@ -1,4 +1,4 @@
-import { a as GlkFormElement } from './shared/base-C0B1hgOt.js';
+import { a as GlkFormElement } from './shared/base-BoN33KPe.js';
 
 // ── Grouping ──
 // Every <glk-radio> keeps its <input type="radio"> in its own shadow root, and

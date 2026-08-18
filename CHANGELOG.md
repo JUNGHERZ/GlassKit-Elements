@@ -7,6 +7,74 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.12.0] – 2026-08-18
+
+### Fixed
+
+- **`<glk-select>` copied its options exactly once.** `render()` cloned the
+  `<option>` children into the shadow tree on the next frame and nothing watched
+  them afterwards — no observer, no `slotchange`, and `observedAttributes` cannot
+  cover children. Replacing the list after that first frame left the rendered
+  select on the first state for good. Measured: with light-DOM options `['c']`
+  the shadow select still reported `['a', 'b']`.
+
+  It fails quietly. Nothing errors, the element looks right, and
+  `querySelectorAll('option')` on the host returns the correct values — the
+  difference only exists inside the shadow root, which is why it typically
+  surfaces as a failing end-to-end test rather than a bug report.
+
+  A `MutationObserver` now keeps the copy in step. Adding, removing or replacing
+  options is picked up, including a changed option label.
+
+- **The selection no longer jumps to the first entry on every update.** Rebuilding
+  starts with `innerHTML = ''`, which drops the selection. It is now restored: a
+  selected value that is still in the new list stays selected, otherwise the
+  `value` attribute decides, otherwise the browser picks the first option.
+
+- **The empty string is a valid selection.** `render()` guarded the initial value
+  with `if (value)`, so `value=""` was discarded and the field fell back to the
+  first option. `""` is a real choice in plenty of forms ("detect automatically",
+  "enter your own below"). Measured with the `""` option placed second: before,
+  the field showed the first option; now it shows the `""` one.
+
+  As a consequence, a `value` naming no existing option now leaves the current
+  selection alone instead of clearing it — when the matching option arrives with
+  a later update, it is selected then. This makes a controlled select self-heal
+  when value and options arrive in separate renders.
+
+- **`<glk-tab-item>` and `<glk-modal>` had the same defect** and were fixed with
+  it. Both cloned from the light DOM once per `requestAnimationFrame`: a swapped
+  `<svg>` never reached the tab item, and replaced `[slot="actions"]` buttons never
+  reached the modal footer. The modal also forwarded clicks to the button object it
+  had captured at clone time, so after a framework re-render the footer buttons
+  drove nodes that were no longer in the document. The original is now looked up at
+  click time.
+
+- **A moved element stopped reacting.** `disconnectedCallback` calls
+  `teardownEvents()`, but `setupEvents()` only ever ran on the first connect, and
+  the element was dropped from the theme-sync registry for good. Moving a
+  `<glk-*>` element in the DOM — routine for any framework — left it looking
+  correct while its events were dead. Both now re-arm on every connect. Measured:
+  after `otherParent.appendChild(el)`, `glk-change` fired 0 times before and 1
+  time after, with no double-firing.
+
+### Added
+
+- `GlkElement.observesLightDom` / `projectLightDom()` — the hook the three
+  components above share, so a component that copies light-DOM children into its
+  shadow tree gets an observer without repeating the wiring.
+- `element.refresh()` — public escape hatch that re-runs the copy immediately,
+  for the cases an observer cannot see. Nobody needs to reach into
+  `element.shadowRoot` any more.
+
+### Compatibility
+
+No tag, attribute or event changed. Three behaviour changes worth knowing:
+`value=""` is now honoured, a `value` matching no option no longer clears the
+selection, and a moved element keeps working instead of going quiet.
+
+---
+
 ## [1.11.0] – 2026-08-17
 
 ### Fixed

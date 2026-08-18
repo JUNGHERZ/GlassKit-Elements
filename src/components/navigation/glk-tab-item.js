@@ -5,6 +5,8 @@ class GlkTabItem extends GlkElement {
     return ['label', 'active', 'badge'];
   }
 
+  static get observesLightDom() { return true; }
+
   render() {
     this._btn = this.createElement('button', ['glass-tab-bar__item']);
     if (this.getBoolAttr('active')) this._btn.classList.add('is-active');
@@ -30,23 +32,32 @@ class GlkTabItem extends GlkElement {
     this._wrapper.appendChild(this._btn);
 
     // Defer icon cloning — children may not be parsed yet
-    requestAnimationFrame(() => this._cloneIcon());
+    requestAnimationFrame(() => this.projectLightDom());
   }
 
-  _cloneIcon() {
+  projectLightDom() {
     const svg = this.querySelector('svg');
-    if (svg) {
-      const clone = svg.cloneNode(true);
-      // Remove inline attributes that would override GlassKit styles
-      clone.removeAttribute('width');
-      clone.removeAttribute('height');
-      clone.removeAttribute('stroke');
-      clone.removeAttribute('stroke-width');
-      clone.removeAttribute('stroke-linecap');
-      clone.removeAttribute('stroke-linejoin');
-      clone.removeAttribute('fill');
-      this._iconEl.insertBefore(clone, this._iconEl.firstChild);
-    }
+    const signature = svg ? svg.outerHTML : '';
+    if (signature === this._iconSignature) return;
+    this._iconSignature = signature;
+
+    // Drop the previous clone by hand: the icon container also holds the badge,
+    // and inserting without removing would stack a second icon on every update.
+    this._iconClone?.remove();
+    this._iconClone = null;
+    if (!svg) return;
+
+    const clone = svg.cloneNode(true);
+    // Remove inline attributes that would override GlassKit styles
+    clone.removeAttribute('width');
+    clone.removeAttribute('height');
+    clone.removeAttribute('stroke');
+    clone.removeAttribute('stroke-width');
+    clone.removeAttribute('stroke-linecap');
+    clone.removeAttribute('stroke-linejoin');
+    clone.removeAttribute('fill');
+    this._iconEl.insertBefore(clone, this._iconEl.firstChild);
+    this._iconClone = clone;
   }
 
   setupEvents() {

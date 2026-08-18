@@ -104,6 +104,14 @@ class GlkElement extends HTMLElement {
    */
   static get hostStyles() { return null; }
 
+  /**
+   * Opt in when the component copies light-DOM children into its shadow tree.
+   * A MutationObserver then calls projectLightDom() again whenever those
+   * children change, so a framework that swaps them keeps the rendered element
+   * in step. Without it the copy is made once and silently goes stale.
+   */
+  static get observesLightDom() { return false; }
+
   static get observedAttributes() {
     return [];
   }
@@ -130,15 +138,26 @@ class GlkElement extends HTMLElement {
       this._shadow.appendChild(this._wrapper);
 
       this.render();
-      this.setupEvents();
+    }
 
-      // Register for theme sync
-      instances.add(this);
+    // Everything below runs on every connect, not just the first. Moving an
+    // element in the DOM disconnects and reconnects it, and disconnectedCallback
+    // tears all of this down — without re-arming it here a moved element would
+    // keep its markup but silently stop reacting.
+    this.setupEvents();
+    instances.add(this);
+
+    if (this.constructor.observesLightDom) {
+      this._lightDomObserver ??= new MutationObserver(records => this.projectLightDom(records));
+      this._lightDomObserver.observe(this, {
+        childList: true, subtree: true, characterData: true
+      });
     }
   }
 
   disconnectedCallback() {
     instances.delete(this);
+    this._lightDomObserver?.disconnect();
     this.teardownEvents();
   }
 
@@ -165,6 +184,20 @@ class GlkElement extends HTMLElement {
 
   /** Subclasses override to react to attribute changes. */
   onAttributeChanged(name, oldValue, newValue) {}
+
+  /**
+   * Subclasses that set observesLightDom override this to (re-)copy their
+   * light-DOM children into the shadow tree. Runs on every change to those
+   * children, so it has to be safe to call repeatedly.
+   */
+  projectLightDom() {}
+
+  /**
+   * Escape hatch: re-copy the light-DOM children now. The observer covers the
+   * ordinary cases; this is for the ones it cannot see, so nobody has to reach
+   * into element.shadowRoot.
+   */
+  refresh() { this.projectLightDom(); }
 
   // ── Utility Methods ──
 

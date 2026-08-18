@@ -5,6 +5,8 @@ class GlkSelect extends GlkFormElement {
     return ['label', 'disabled', 'name', 'value', 'required'];
   }
 
+  static get observesLightDom() { return true; }
+
   render() {
     const group = this.createElement('div', ['glass-input-group']);
 
@@ -25,12 +27,29 @@ class GlkSelect extends GlkFormElement {
     this._wrapper.appendChild(group);
 
     // Defer option copying — children may not be parsed yet in connectedCallback
-    requestAnimationFrame(() => {
-      this._moveOptions();
-      const value = this.getAttribute('value');
-      if (value) this._select.value = value;
-      this._syncFormValue();
-    });
+    requestAnimationFrame(() => this.projectLightDom());
+  }
+
+  projectLightDom() {
+    // The options are pure data — the clones carry no listeners — so skipping an
+    // unchanged rebuild is safe, and it keeps an open dropdown from snapping shut
+    // on light-DOM churn elsewhere.
+    const signature = [...this.querySelectorAll('option')].map(o => o.outerHTML).join('');
+    if (signature === this._optionSignature) return;
+    this._optionSignature = signature;
+
+    // innerHTML = '' below drops the selection, so remember it first. A
+    // selectedIndex of -1 means "nothing is selected", which is not the same as
+    // an option whose value happens to be the empty string.
+    const previous = this._select.selectedIndex >= 0 ? this._select.value : null;
+
+    this._moveOptions();
+
+    // Keep the live selection when it survived the rebuild; otherwise fall back
+    // to the value attribute. Without this the selection jumps back to the first
+    // entry every time the list is updated.
+    if (!this._applyValue(previous)) this._applyValue(this.getAttribute('value'));
+    this._syncFormValue();
   }
 
   _moveOptions() {
@@ -39,6 +58,18 @@ class GlkSelect extends GlkFormElement {
     options.forEach(opt => {
       this._select.appendChild(opt.cloneNode(true));
     });
+  }
+
+  /**
+   * Selects `value` if an option carries it, and reports whether it did. The
+   * empty string is a value like any other — "" is a real option in plenty of
+   * forms ("detect automatically", "enter your own below").
+   */
+  _applyValue(value) {
+    if (value === null) return false;
+    if (![...this._select.options].some(o => o.value === value)) return false;
+    this._select.value = value;
+    return true;
   }
 
   setupEvents() {
@@ -67,7 +98,7 @@ class GlkSelect extends GlkFormElement {
         this._select.setAttribute('name', this.getAttribute('name') || '');
         break;
       case 'value':
-        this._select.value = this.getAttribute('value') || '';
+        this._applyValue(this.getAttribute('value'));
         this._syncFormValue();
         break;
     }

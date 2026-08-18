@@ -1,4 +1,4 @@
-import { G as GlkElement } from './shared/base-C0B1hgOt.js';
+import { G as GlkElement } from './shared/base-BoN33KPe.js';
 
 const CHEVRON_SVG = `<span class="glass-accordion__trigger-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></span>`;
 

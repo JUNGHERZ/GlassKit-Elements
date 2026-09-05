@@ -30,6 +30,7 @@
   "scripts": {
     "prebuild": "node -e \"require('fs').rmSync('dist/components',{recursive:true,force:true})\"",
     "build": "rollup -c",
+    "check:versions": "node check-versions.mjs",
     "prepublishOnly": "npm run build",
     "dev": "rollup -c --watch",
     "serve": "npx serve ."

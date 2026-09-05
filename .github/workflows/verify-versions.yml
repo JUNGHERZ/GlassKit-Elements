@@ -1,0 +1,40 @@
+# ============================================================
+# GlassKit Elements – Version Consistency Check
+#
+# Trigger:  Push/PR auf main
+# Zweck:    Die Version steht von Hand im README-Badge, in der SKILL.md-
+#           Beschreibung und auf sechs HTML-Seiten (drei plus die deutschen
+#           Fassungen). Dazu kommen die CDN-Pins auf GlassKit CSS, die der
+#           Peer-Dependency folgen müssen. Beides ist mehrfach auseinander-
+#           gelaufen, ohne dass irgendetwas falsch gerendert hätte — die
+#           Landingpages standen sechs Versionen zurück, bis es jemandem auffiel.
+#
+# Lokal:    npm run check:versions
+#
+# Das Skript nutzt nur Node-Bordmittel, daher kein npm install nötig.
+# ============================================================
+
+name: Verify Versions
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  versions:
+    name: Documented versions match package.json
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - name: Check versions
+        run: npm run check:versions

@@ -523,6 +523,12 @@ Starting with this release, GlassKit Elements version numbers are aligned with G
 
 ---
 
+[1.12.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.12.0
+[1.11.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.11.0
+[1.10.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.10.0
+[1.9.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.9.0
+[1.8.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.8.0
+[1.7.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.7.0
 [1.6.2]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.6.2
 [1.6.1]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.6.1
 [1.6.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.6.0

@@ -1,4 +1,4 @@
-import { a as GlkFormElement } from './shared/base-BoN33KPe.js';
+import { a as GlkFormElement } from './shared/base-ClsXgLON.js';
 
 class GlkTextarea extends GlkFormElement {
   static get observedAttributes() {

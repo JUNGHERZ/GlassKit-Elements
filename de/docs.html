@@ -20,7 +20,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="GlassKit Elements — Dokumentation">
   <meta name="twitter:description" content="Vollständige Dokumentation aller 29 GlassKit Elements Web Components mit Live-Beispielen.">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.11/glasskit.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.12/glasskit.min.css">
   <script src="/dist/glasskit-elements.min.js"></script>
   <style>
     html { scroll-behavior: smooth; }
@@ -255,7 +255,7 @@
     <aside class="docs-sidebar">
       <div class="docs-sidebar__title">&#129482; <a href="../de/">GlassKit Elements</a></div>
       <div class="docs-sidebar__subtitle">Web Components f&uuml;r GlassKit CSS.</div>
-      <div class="docs-sidebar__version">v1.12.0 &ndash; Jungherz GmbH</div>
+      <div class="docs-sidebar__version">v1.13.0 &ndash; Jungherz GmbH</div>
 
       <div class="docs-sidebar__group">
         <div class="docs-sidebar__group-title">Grundlagen</div>
@@ -330,7 +330,7 @@
         <h1>GlassKit Elements</h1>
         <p>Vollst&auml;ndige Referenz f&uuml;r alle 29 Web Components &ndash; entwickelt von Jungherz GmbH. Vanilla JS, Shadow DOM, native Formular-Teilnahme.</p>
         <div class="docs-hero__badges">
-          <span class="docs-hero__badge">v1.12.0</span>
+          <span class="docs-hero__badge">v1.13.0</span>
           <span class="docs-hero__badge">Shadow DOM</span>
           <span class="docs-hero__badge">29 Komponenten</span>
           <span class="docs-hero__badge">Vanilla JS</span>
@@ -343,7 +343,7 @@
 
         <h3>CDN (schnellste Variante)</h3>
         <div class="docs-code"><span class="cmt">&lt;!-- 1. GlassKit CSS --&gt;</span>
-<span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span> <span class="attr">href</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.11/glasskit.min.css"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span> <span class="attr">href</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.12/glasskit.min.css"</span><span class="tag">&gt;</span>
 
 <span class="cmt">&lt;!-- 2. GlassKit Elements --&gt;</span>
 <span class="tag">&lt;script</span> <span class="attr">src</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"</span><span class="tag">&gt;&lt;/script&gt;</span></div>
@@ -406,7 +406,7 @@
 
         <div class="docs-component" id="glk-badge">
           <h3><code>&lt;glk-badge&gt;</code></h3>
-          <p>Inline-Status-Badge mit Farbvarianten.</p>
+          <p>Inline-Status-Badge mit Farbvarianten &mdash; und mit <code>interactive</code> ein Filter-Chip.</p>
           <div class="docs-preview" style="display:flex;gap:8px;">
             <glk-badge>Default</glk-badge>
             <glk-badge variant="primary">Primary</glk-badge>
@@ -414,10 +414,22 @@
             <glk-badge variant="error">Error</glk-badge>
           </div>
           <div class="docs-code"><span class="tag">&lt;glk-badge</span> <span class="attr">variant</span>=<span class="val">"success"</span><span class="tag">&gt;</span>Active<span class="tag">&lt;/glk-badge&gt;</span></div>
+          <p><code>interactive</code> rendert den Badge als echten <code>&lt;button&gt;</code> &mdash; Zeiger, Hover-T&ouml;nung, Fokusring, per Tastatur bedienbar &mdash; und l&auml;sst ihn <code>glk-click</code> senden. <code>selected</code> markiert den aktiven Chip und wird nach <code>aria-pressed</code> gespiegelt. Probier die Zeile aus: sie verschiebt <code>selected</code> bei <code>glk-click</code>.</p>
+          <div class="docs-preview" style="display:flex;gap:8px;flex-wrap:wrap;" id="glk-badge-chips">
+            <glk-badge interactive selected>aktiv</glk-badge>
+            <glk-badge interactive>beworben</glk-badge>
+            <glk-badge interactive>pausiert</glk-badge>
+            <glk-badge variant="success" interactive selected>erledigt</glk-badge>
+          </div>
+          <div class="docs-code"><span class="tag">&lt;glk-badge</span> <span class="attr">interactive selected</span><span class="tag">&gt;</span>aktiv<span class="tag">&lt;/glk-badge&gt;</span>
+<span class="tag">&lt;glk-badge</span> <span class="attr">interactive</span><span class="tag">&gt;</span>beworben<span class="tag">&lt;/glk-badge&gt;</span></div>
           <table class="docs-table">
-            <tr><th>Attribute</th><th>Type</th><th>Values</th></tr>
+            <tr><th>Attribut</th><th>Typ</th><th>Werte</th></tr>
             <tr><td><code>variant</code></td><td>String</td><td><code>primary</code> | <code>success</code> | <code>error</code></td></tr>
+            <tr><td><code>interactive</code></td><td>Boolean</td><td>Anklickbarer Chip; aktiviert <code>glk-click</code></td></tr>
+            <tr><td><code>selected</code></td><td>Boolean</td><td>Der aktive Chip &mdash; vertieft die eigene Farbe des Badges, setzt <code>aria-pressed</code></td></tr>
           </table>
+          <p><strong>Events:</strong> <code>glk-click</code>, wenn <code>interactive</code> gesetzt ist.</p>
         </div>
 
         <div class="docs-component" id="glk-avatar">
@@ -914,6 +926,14 @@ document.querySelector(<span class="val">'glk-popover'</span>).toggle();</div>
         if (active) active.classList.add('is-active');
       }
     }, { passive: true });
+
+    // Badge chips demo — one chip on at a time; the green status chip is its own group.
+    const chips = document.getElementById('glk-badge-chips');
+    chips?.addEventListener('glk-click', e => {
+      const chip = e.target;
+      if (chip.hasAttribute('variant')) { chip.selected = !chip.selected; return; }
+      for (const c of chips.querySelectorAll('glk-badge:not([variant])')) c.selected = c === chip;
+    });
   </script>
 </body>
 </html>

@@ -7,6 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.13.0] – 2026-09-20
+
+### Added
+
+- **`<glk-badge interactive selected>` — the badge as a filter chip.** A badge was already being used as a chip in the wild — a status row where one entry is picked — but the element offered nothing for it. Projects marked the chosen chip with `variant="primary"` and bolted an `onclick` onto the host, which worked with a mouse and nowhere else: no focus ring, no keyboard, nothing announced.
+
+  `interactive` renders the badge as a real `<button type="button">` instead of a `<span>`, so the keyboard, the focus ring and the click semantics come from the platform rather than from a re-implementation. `selected` marks the chip that is on and is mirrored to `aria-pressed`, so a screen reader announces the row as a group of toggles. Both are reflected as properties.
+
+  ```html
+  <div id="filter">
+    <glk-badge interactive selected>Active</glk-badge>
+    <glk-badge interactive>Applied</glk-badge>
+  </div>
+  <script>
+    filter.addEventListener('glk-click', e => {
+      for (const chip of filter.querySelectorAll('glk-badge')) chip.selected = chip === e.target;
+    });
+  </script>
+  ```
+
+  `glk-click` fires only while `interactive` is set — the same rule `<glk-list-item>` follows. Toggling `interactive` at runtime swaps the inner element; the slot moves across, so the slotted label never has to be re-assigned.
+
+### Changed
+
+- **Requires GlassKit 1.12.0.** The chip states are painted by `.glass-badge--interactive` and `.glass-badge--selected`, which arrived in GlassKit CSS 1.12.0 — a selected chip deepens the colour the badge already has, so `variant="success"` stays green when picked. The peer dependency moves to `>=1.12.0`; on an older stylesheet the button renders, but without hover, focus ring or selection tint.
+
+---
+
 ## [1.12.0] – 2026-08-18
 
 ### Fixed
@@ -523,6 +551,7 @@ Starting with this release, GlassKit Elements version numbers are aligned with G
 
 ---
 
+[1.13.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.13.0
 [1.12.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.12.0
 [1.11.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.11.0
 [1.10.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.10.0

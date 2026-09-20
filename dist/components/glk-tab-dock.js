@@ -1,4 +1,4 @@
-import { G as GlkElement } from './shared/base-BoN33KPe.js';
+import { G as GlkElement } from './shared/base-ClsXgLON.js';
 
 class GlkTabDock extends GlkElement {
   static get observedAttributes() {

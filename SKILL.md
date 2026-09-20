@@ -1,6 +1,6 @@
 ---
 name: glasskit-elements
-description: GlassKit Elements is a vanilla-JS Web Components library (v1.12.0) wrapping GlassKit CSS v1.11.0. It provides 29 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
+description: GlassKit Elements is a vanilla-JS Web Components library (v1.13.0) wrapping GlassKit CSS v1.12.0. It provides 29 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
 ---
 
 # GlassKit Elements – AI Component Reference
@@ -18,7 +18,7 @@ description: GlassKit Elements is a vanilla-JS Web Components library (v1.12.0) 
 npm install @jungherz-de/glasskit-elements @jungherz-de/glasskit
 ```
 
-Peer dependency `@jungherz-de/glasskit >=1.11.0` is required — 1.9.0 is the release that made the stylesheet splittable, which is what lets document-level branding reach the elements at all.
+Peer dependency `@jungherz-de/glasskit >=1.12.0` is required — 1.9.0 is the release that made the stylesheet splittable, which is what lets document-level branding reach the elements at all.
 
 ### Import (ES modules)
 
@@ -352,7 +352,7 @@ Inline avatar circle.
 
 ### 3.5 `<glk-badge>`
 
-Inline status badge.
+Inline status badge — and, with `interactive`, a filter chip.
 
 ```html
 <glk-badge>Default</glk-badge>
@@ -364,8 +364,27 @@ Inline status badge.
 | Attribute | Type | Description |
 |---|---|---|
 | `variant` | String | `primary`, `success`, `error` |
+| `interactive` | Boolean | Renders the badge as a real `<button>`: pointer cursor, hover tint, focus ring, keyboard operable. Enables `glk-click`. |
+| `selected` | Boolean | Marks the chip that is on. Mirrored to `aria-pressed` on the button. |
 
-Default slot: label text.
+Default slot: label text. Events: `glk-click` (only when `interactive`).
+
+**Filter chips (since 1.13.0, needs GlassKit 1.12.0).** A row of chips where one is picked: listen for `glk-click` on the row and move `selected`. The element keeps `aria-pressed` in step, so the row is announced as a group of toggles.
+
+```html
+<div id="filter">
+  <glk-badge interactive selected>Active</glk-badge>
+  <glk-badge interactive>Applied</glk-badge>
+  <glk-badge interactive>Paused</glk-badge>
+</div>
+<script>
+  filter.addEventListener('glk-click', e => {
+    for (const chip of filter.querySelectorAll('glk-badge')) chip.selected = chip === e.target;
+  });
+</script>
+```
+
+`selected` deepens the colour the badge already has: a plain chip turns primary, `<glk-badge variant="success" interactive selected>` stays green. `interactive` can be toggled at runtime — the element swaps between `<span>` and `<button>` underneath, the slotted label stays put. Without `interactive`, clicks do not emit `glk-click`, exactly like `<glk-list-item>`.
 
 ---
 
@@ -1101,6 +1120,7 @@ Key points:
 | `<glk-popover>` | `.open` | `open` | `glk-open`, `glk-close` | — |
 | `<glk-accordion-item>` | `.open` | `open` | `glk-toggle` | `{ open }` |
 | `<glk-list-item>` | — | `interactive` | `glk-click` (only when interactive) | — |
+| `<glk-badge>` | `.selected` | `interactive`, `selected` | `glk-click` (only when interactive) | — |
 | `<glk-toast>` | — | — | — | (imperative) |
 
 All `glk-*` events bubble and are `composed: true`, so they pierce shadow boundaries naturally.
@@ -1150,7 +1170,7 @@ All `glk-*` events bubble and are `composed: true`, so they pierce shadow bounda
 | `<glk-tab-dock>` | Navigation | `accessory-left` | default | — |
 | `<glk-tab-accessory>` | Navigation | `label`, `variant`, `disabled` | default (icon) | `glk-click` |
 | `<glk-avatar>` | Content | `size`, `src` | default (initials) | — |
-| `<glk-badge>` | Content | `variant` | default | — |
+| `<glk-badge>` | Content | `variant`, `interactive`, `selected` | default | `glk-click` (only when interactive) |
 | `<glk-card>` | Content | `glow` | default | — |
 | `<glk-divider>` | Content | — | — | — |
 | `<glk-status>` | Content | `message` | — | — |

@@ -1,4 +1,4 @@
-import { a as GlkFormElement } from './shared/base-ClsXgLON.js';
+import { GlkFormElement } from './base.js';
 
 class GlkInput extends GlkFormElement {
   static get observedAttributes() {

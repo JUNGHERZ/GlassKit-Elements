@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.14.0] – 2026-09-20
+
+Version numbers realign with GlassKit CSS at 1.14.0.
+
+### Added
+
+- **`GlkElement` and `GlkFormElement` are exported.** A project that wanted to build its own elements on the same base — lifecycle, adopted GlassKit stylesheet, theme sync, `emit()` — could not: the bundle exported the 29 component classes and nothing else. EhrenPfoten had to wrap its own elements in a different library, and every one of them that later flows back here would have to be rewritten instead of moved.
+
+  The classes are now reachable three ways: `import { GlkElement, GlkFormElement } from '@jungherz-de/glasskit-elements'` from the bundle; `from '@jungherz-de/glasskit-elements/base.js'` for per-component setups; and `GlassKitElements.GlkElement` from the CDN `<script>` bundle.
+
+- **`dist/components/base.js` is a stable entry, not a hashed chunk.** `base.js` used to land in `dist/components/shared/base-<hash>.js`, a name that changed with every build and could not be imported on purpose. It is now an entry of the per-component build; Rollup never duplicates an entry module, so `glk-button.js` and a project's subclass import the same file and `instanceof GlkElement` holds across both. The `./base.js` export in `package.json` points at it.
+
+  Documented with a live `<demo-counter>` on the docs and showcase pages (both languages) and in SKILL.md, including the rules a subclass has to follow.
+
+### Changed
+
+- **Requires GlassKit 1.14.0.** It ships `.glass-skeleton`, `.glass-table` and `.glass-prose`. All three are document-level blocks — from a shadow root, `::slotted()` cannot reach a table's cells or a Markdown paragraph — so no element wraps them; put the class on the light-DOM element. The peer dependency moves to `>=1.14.0`.
+
+---
+
 ## [1.13.0] – 2026-09-20
 
 ### Added
@@ -551,6 +571,7 @@ Starting with this release, GlassKit Elements version numbers are aligned with G
 
 ---
 
+[1.14.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.14.0
 [1.13.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.13.0
 [1.12.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.12.0
 [1.11.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.11.0

@@ -5,7 +5,7 @@
   <a href="#"><img src="https://img.shields.io/badge/vanilla_JS-no_dependencies-44cc11?style=flat-square" alt="Vanilla JS"></a>
   <a href="#"><img src="https://img.shields.io/badge/components-29-7ec8e3?style=flat-square" alt="29 Components"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="MIT License"></a>
-  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/changelog-v1.13.0-lightgrey?style=flat-square" alt="Changelog"></a>
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/changelog-v1.14.0-lightgrey?style=flat-square" alt="Changelog"></a>
   <a href="https://www.npmjs.com/package/@jungherz-de/glasskit-elements"><img src="https://img.shields.io/badge/npm-%40jungherz--de%2Fglasskit--elements-cb3837?style=flat-square&logo=npm" alt="npm"></a>
 </p>
 
@@ -66,7 +66,7 @@ It is the **app layer** of the GlassKit family — three layers, one design lang
 
 ```html
 <!-- 1. GlassKit CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.12/glasskit.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.14/glasskit.min.css">
 
 <!-- 2. GlassKit Elements -->
 <script src="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"></script>
@@ -89,6 +89,9 @@ import '@jungherz-de/glasskit-elements';
 // Only import what you need
 import '@jungherz-de/glasskit-elements/components/glk-button.js';
 import '@jungherz-de/glasskit-elements/components/glk-toggle.js';
+
+// The base classes, for elements of your own (same module the components use)
+import { GlkElement, GlkFormElement } from '@jungherz-de/glasskit-elements/base.js';
 ```
 
 ---
@@ -99,7 +102,7 @@ import '@jungherz-de/glasskit-elements/components/glk-toggle.js';
 <!DOCTYPE html>
 <html data-theme="dark">
 <head>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.12/glasskit.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.14/glasskit.min.css">
   <script src="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"></script>
 </head>
 <body>
@@ -237,6 +240,33 @@ pages that never load `glasskit.css` still work and your brand file always wins.
 - **`GlkElement`** base class — handles Shadow DOM setup, theme sync, attribute reflection
 - **`GlkFormElement`** extends `GlkElement` — adds `ElementInternals` for native form participation
 
+### Build your own element
+
+Since 1.14.0 both base classes are exported, so a project element inherits the whole setup — open shadow root with GlassKit's stylesheet adopted (`.glass-*` classes work inside), theme wrapper following `data-theme`, listeners re-armed when the element moves, `emit()` for bubbling, composed events:
+
+```js
+import { GlkElement } from '@jungherz-de/glasskit-elements';   // or '…/base.js', or GlassKitElements.GlkElement from the CDN bundle
+
+class DemoCounter extends GlkElement {
+  static get observedAttributes() { return ['count']; }
+  render() {
+    this._btn = this.createElement('button', ['glass-btn', 'glass-btn--secondary', 'glass-btn--sm', 'glass-btn--auto']);
+    this._wrapper.appendChild(this._btn);
+  }
+  setupEvents() {
+    this._onClick = () => { this.count += 1; this.emit('demo-count', { count: this.count }); };
+    this._btn.addEventListener('click', this._onClick);
+  }
+  teardownEvents() { this._btn?.removeEventListener('click', this._onClick); }
+  onAttributeChanged() { this._btn.textContent = `Clicked ${this.count}×`; }
+  get count() { return Number(this.getAttribute('count')) || 0; }
+  set count(v) { this.setAttribute('count', v); }
+}
+customElements.define('demo-counter', DemoCounter);
+```
+
+Hooks: `render()` builds into `this._wrapper`, `setupEvents()` / `teardownEvents()` run on every connect / disconnect, `onAttributeChanged(name, old, value)` after the first render. `static get displayInline()` → `true` for inline elements; `static get observesLightDom()` → `true` re-runs `projectLightDom()` whenever light-DOM children change. `GlkFormElement` adds `setFormValue()`, `setValidity()`, `resetValue()` / `restoreValue()`.
+
 ---
 
 ## 📁 Project Structure
@@ -257,6 +287,7 @@ glasskit-elements/
     glasskit-elements.js      # IIFE bundle (117 KB raw / 18 KB gzipped)
     glasskit-elements.min.js  # IIFE minified (92 KB raw / 15 KB gzipped)
     glasskit-elements.esm.js  # ES module bundle (112 KB raw / 17 KB gzipped)
+    components/               # one ESM file per element + base.js (GlkElement, GlkFormElement)
   index.html                  # Landing page
   docs.html                   # Documentation
   showcase.html               # Interactive showcase

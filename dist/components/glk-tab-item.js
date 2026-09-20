@@ -1,4 +1,4 @@
-import { G as GlkElement } from './shared/base-ClsXgLON.js';
+import { GlkElement } from './base.js';
 
 class GlkTabItem extends GlkElement {
   static get observedAttributes() {

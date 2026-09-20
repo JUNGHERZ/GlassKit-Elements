@@ -20,7 +20,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="GlassKit Elements — Documentation">
   <meta name="twitter:description" content="Complete documentation for all 29 GlassKit Elements web components with live examples.">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.12/glasskit.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.14/glasskit.min.css">
   <script src="/dist/glasskit-elements.min.js"></script>
   <style>
     html { scroll-behavior: smooth; }
@@ -253,7 +253,7 @@
     <aside class="docs-sidebar">
       <div class="docs-sidebar__title">&#129482; <a href="/">GlassKit Elements</a></div>
       <div class="docs-sidebar__subtitle">Web Components for GlassKit CSS.</div>
-      <div class="docs-sidebar__version">v1.13.0 &ndash; Jungherz GmbH</div>
+      <div class="docs-sidebar__version">v1.14.0 &ndash; Jungherz GmbH</div>
 
       <div class="docs-sidebar__group">
         <div class="docs-sidebar__group-title">Basics</div>
@@ -310,6 +310,10 @@
         <a class="docs-sidebar__link" href="#glk-accordion">glk-accordion</a>
         <a class="docs-sidebar__link" href="#glk-list">glk-list</a>
       </div>
+      <div class="docs-sidebar__group">
+        <div class="docs-sidebar__group-title">Extend</div>
+        <a class="docs-sidebar__link" href="#extend">GlkElement</a>
+      </div>
 
       <div class="docs-sidebar__footer">
         <a href="/">&#8592; Home</a>
@@ -328,7 +332,7 @@
         <h1>GlassKit Elements</h1>
         <p>Complete reference for all 29 web components &ndash; built by Jungherz GmbH. Vanilla JS, Shadow DOM, native form participation.</p>
         <div class="docs-hero__badges">
-          <span class="docs-hero__badge">v1.13.0</span>
+          <span class="docs-hero__badge">v1.14.0</span>
           <span class="docs-hero__badge">Shadow DOM</span>
           <span class="docs-hero__badge">29 Components</span>
           <span class="docs-hero__badge">Vanilla JS</span>
@@ -341,7 +345,7 @@
 
         <h3>CDN (quickest)</h3>
         <div class="docs-code"><span class="cmt">&lt;!-- 1. GlassKit CSS --&gt;</span>
-<span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span> <span class="attr">href</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.12/glasskit.min.css"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span> <span class="attr">href</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.14/glasskit.min.css"</span><span class="tag">&gt;</span>
 
 <span class="cmt">&lt;!-- 2. GlassKit Elements --&gt;</span>
 <span class="tag">&lt;script</span> <span class="attr">src</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"</span><span class="tag">&gt;&lt;/script&gt;</span></div>
@@ -882,6 +886,69 @@ document.querySelector(<span class="val">'glk-popover'</span>).toggle();</div>
           <p><strong>Events:</strong> <code>glk-click</code> on <code>&lt;glk-list-item&gt;</code> when <code>interactive</code> is set.</p>
           <p><strong>Framework-safe:</strong> both elements use pure Shadow DOM with slot projection — no child node cloning — so they compose cleanly inside lit-html templates, HybridsJS, React, Vue, and Svelte.</p>
         </div>
+      </section>
+
+      <!-- ═══ Extend ═══ -->
+      <section class="docs-section" id="extend">
+        <h2>Build your own element</h2>
+        <p>Since 1.14.0 the base classes are exported. A project element that extends <code>GlkElement</code> gets what every <code>&lt;glk-*&gt;</code> has: an open shadow root with GlassKit's stylesheet adopted (so <code>.glass-btn</code> &amp; Co. work inside), the theme wrapper that follows <code>data-theme</code>, listeners re-armed when the element moves, and <code>emit()</code> for bubbling, composed events. <code>GlkFormElement</code> adds <code>ElementInternals</code> for native form participation. Try it &mdash; this button is a <code>&lt;demo-counter&gt;</code> defined on this page:</p>
+        <div class="docs-preview" style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+          <demo-counter count="0"></demo-counter>
+          <span data-demo-count-out style="opacity:.75">waiting for <code>demo-count</code>&hellip;</span>
+        </div>
+        <div class="docs-code"><span class="tag">import</span> { GlkElement } <span class="tag">from</span> <span class="val">'@jungherz-de/glasskit-elements'</span>;
+
+<span class="tag">class</span> DemoCounter <span class="tag">extends</span> GlkElement {
+  <span class="tag">static get</span> observedAttributes() { <span class="tag">return</span> [<span class="val">'count'</span>]; }
+  render() {
+    <span class="attr">// this._wrapper is the themed root; GlassKit classes work inside</span>
+    this._btn = this.createElement(<span class="val">'button'</span>, [<span class="val">'glass-btn'</span>, <span class="val">'glass-btn--secondary'</span>, <span class="val">'glass-btn--sm'</span>, <span class="val">'glass-btn--auto'</span>]);
+    this._wrapper.appendChild(this._btn);
+  }
+  setupEvents() {
+    this._onClick = () => { this.count += 1; this.emit(<span class="val">'demo-count'</span>, { count: this.count }); };
+    this._btn.addEventListener(<span class="val">'click'</span>, this._onClick);
+  }
+  teardownEvents() { this._btn?.removeEventListener(<span class="val">'click'</span>, this._onClick); }
+  onAttributeChanged() { <span class="attr">/* re-render the label */</span> }
+  <span class="tag">get</span> count() { <span class="tag">return</span> Number(this.getAttribute(<span class="val">'count'</span>)) || 0; }
+  <span class="tag">set</span> count(v) { this.setAttribute(<span class="val">'count'</span>, v); }
+}
+customElements.define(<span class="val">'demo-counter'</span>, DemoCounter);</div>
+        <table class="docs-table">
+          <tr><th>Setup</th><th>Import</th></tr>
+          <tr><td>Bundle (ESM)</td><td><code>import { GlkElement, GlkFormElement } from '@jungherz-de/glasskit-elements';</code></td></tr>
+          <tr><td>Per component</td><td><code>import { GlkElement } from '@jungherz-de/glasskit-elements/base.js';</code> &mdash; the very module the components import, so <code>instanceof GlkElement</code> holds across both</td></tr>
+          <tr><td>CDN / <code>&lt;script&gt;</code></td><td><code>const { GlkElement } = GlassKitElements;</code></td></tr>
+        </table>
+        <p><strong>Hooks:</strong> <code>render()</code> builds into <code>this._wrapper</code>; <code>setupEvents()</code> / <code>teardownEvents()</code> run on every connect / disconnect; <code>onAttributeChanged(name, old, value)</code> fires after the first render. <strong>Helpers:</strong> <code>createElement(tag, classes, attrs)</code>, <code>getBoolAttr()</code> / <code>setBoolAttr()</code>, <code>emit(name, detail)</code>. Return <code>true</code> from <code>static get displayInline()</code> for an inline element, and set <code>static get observesLightDom()</code> to have <code>projectLightDom()</code> re-run whenever light-DOM children change.</p>
+        <script>
+  // A project element on the exported base class: shadow root with GlassKit's
+  // stylesheet adopted, theme sync, re-armed listeners, emit() — all inherited.
+  const { GlkElement } = GlassKitElements;
+  class DemoCounter extends GlkElement {
+    static get observedAttributes() { return ['count']; }
+    render() {
+      this._btn = this.createElement('button', ['glass-btn', 'glass-btn--secondary', 'glass-btn--sm', 'glass-btn--auto']);
+      this._btn.type = 'button';
+      this._btn.textContent = this._label();
+      this._wrapper.appendChild(this._btn);
+    }
+    setupEvents() {
+      this._onClick = () => { this.count += 1; this.emit('demo-count', { count: this.count }); };
+      this._btn.addEventListener('click', this._onClick);
+    }
+    teardownEvents() { this._btn?.removeEventListener('click', this._onClick); }
+    onAttributeChanged() { if (this._btn) this._btn.textContent = this._label(); }
+    _label() { return `Clicked ${this.count}×`; }
+    get count() { return Number(this.getAttribute('count')) || 0; }
+    set count(v) { this.setAttribute('count', v); }
+  }
+  if (!customElements.get('demo-counter')) customElements.define('demo-counter', DemoCounter);
+  document.addEventListener('demo-count', e => {
+    for (const out of document.querySelectorAll('[data-demo-count-out]')) out.textContent = `demo-count → ${e.detail.count}`;
+  });
+</script>
       </section>
 
       <!-- ═══ Family ═══ -->

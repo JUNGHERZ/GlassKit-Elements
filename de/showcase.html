@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="GlassKit Elements — Showcase">
   <meta name="twitter:description" content="Interaktive Vorschau aller 29 GlassKit Elements Web Components im Glassmorphism-Stil.">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.12/glasskit.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.14/glasskit.min.css">
   <script src="/dist/glasskit-elements.min.js"></script>
   <style>
     body {
@@ -96,7 +96,7 @@
       </glk-pill>
     </glk-nav>
 
-    <glk-title>Component Showcase v1.13.0</glk-title>
+    <glk-title>Component Showcase v1.14.0</glk-title>
   </div>
 
   <div class="demo-section">
@@ -303,6 +303,41 @@
     <glk-toast id="toast-error"></glk-toast>
 
     <glk-divider></glk-divider>
+
+    <!-- Your own element on GlkElement -->
+    <h2>Eigenes Element</h2>
+    <p style="opacity:.75;margin:0 0 10px">Auf dieser Seite in 20 Zeilen auf dem exportierten <code>GlkElement</code> definiert &mdash; Button-Styling und Theme-Sync kommen aus der Basisklasse.</p>
+    <div class="demo-row" style="align-items:center">
+      <demo-counter count="0"></demo-counter>
+      <span data-demo-count-out style="opacity:.75">&hellip;</span>
+    </div>
+    <script>
+  // A project element on the exported base class: shadow root with GlassKit's
+  // stylesheet adopted, theme sync, re-armed listeners, emit() — all inherited.
+  const { GlkElement } = GlassKitElements;
+  class DemoCounter extends GlkElement {
+    static get observedAttributes() { return ['count']; }
+    render() {
+      this._btn = this.createElement('button', ['glass-btn', 'glass-btn--secondary', 'glass-btn--sm', 'glass-btn--auto']);
+      this._btn.type = 'button';
+      this._btn.textContent = this._label();
+      this._wrapper.appendChild(this._btn);
+    }
+    setupEvents() {
+      this._onClick = () => { this.count += 1; this.emit('demo-count', { count: this.count }); };
+      this._btn.addEventListener('click', this._onClick);
+    }
+    teardownEvents() { this._btn?.removeEventListener('click', this._onClick); }
+    onAttributeChanged() { if (this._btn) this._btn.textContent = this._label(); }
+    _label() { return `${this.count}× geklickt`; }
+    get count() { return Number(this.getAttribute('count')) || 0; }
+    set count(v) { this.setAttribute('count', v); }
+  }
+  if (!customElements.get('demo-counter')) customElements.define('demo-counter', DemoCounter);
+  document.addEventListener('demo-count', e => {
+    for (const out of document.querySelectorAll('[data-demo-count-out]')) out.textContent = `demo-count → ${e.detail.count}`;
+  });
+</script>
 
     <!-- Status -->
     <h2>Status</h2>

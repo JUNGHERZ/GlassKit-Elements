@@ -1,6 +1,12 @@
 // GlassKit Elements — Web Components for GlassKit CSS
 // https://github.com/JUNGHERZ/GlassKit
 
+// Base classes — so a project can build its own elements on the same
+// lifecycle, stylesheet adoption, theme sync and emit(). Also reachable as
+// GlassKitElements.GlkElement from the IIFE bundle, and via the stable
+// subpath '@jungherz-de/glasskit-elements/base.js' for per-component setups.
+export { GlkElement, GlkFormElement } from './base.js';
+
 // Navigation
 export { GlkNav } from './components/navigation/glk-nav.js';
 export { GlkPill } from './components/navigation/glk-pill.js';

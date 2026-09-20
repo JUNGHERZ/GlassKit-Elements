@@ -17,6 +17,11 @@ const componentEntries = Object.fromEntries(
       .filter(f => f.startsWith('glk-') && f.endsWith('.js'))
       .map(f => [basename(f, '.js'), join(COMPONENT_ROOT, d.name, f)]))
 );
+// base.js is an entry of its own, not only a shared chunk: an entry keeps a
+// stable file name (dist/components/base.js — the `./base.js` export), and
+// Rollup never duplicates an entry module, so every component imports that
+// one file and a project's subclass shares the same GlkElement identity.
+componentEntries.base = 'src/base.js';
 
 export default [
   // Full bundle (IIFE) — for CDN <script> usage

@@ -1,6 +1,6 @@
 ---
 name: glasskit-elements
-description: GlassKit Elements is a vanilla-JS Web Components library (v1.13.0) wrapping GlassKit CSS v1.12.0. It provides 29 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
+description: GlassKit Elements is a vanilla-JS Web Components library (v1.14.0) wrapping GlassKit CSS v1.14.0. It provides 29 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
 ---
 
 # GlassKit Elements – AI Component Reference
@@ -18,7 +18,7 @@ description: GlassKit Elements is a vanilla-JS Web Components library (v1.13.0) 
 npm install @jungherz-de/glasskit-elements @jungherz-de/glasskit
 ```
 
-Peer dependency `@jungherz-de/glasskit >=1.12.0` is required — 1.9.0 is the release that made the stylesheet splittable, which is what lets document-level branding reach the elements at all.
+Peer dependency `@jungherz-de/glasskit >=1.14.0` is required — 1.9.0 is the release that made the stylesheet splittable, which is what lets document-level branding reach the elements at all.
 
 ### Import (ES modules)
 
@@ -103,6 +103,31 @@ A single module-level `MutationObserver` watches `data-theme` on `<html>` and sy
 | API style | Declarative HTML attributes + reflected JS properties |
 
 Custom properties (`--gl-*`) defined on `:root` or `<html>` pass through shadow boundaries by inheritance, so custom theming works with a single global stylesheet.
+
+### Building your own element (since 1.14.0)
+
+`GlkElement` and `GlkFormElement` are exported — from the bundle (`import { GlkElement } from '@jungherz-de/glasskit-elements'`), from the stable subpath `@jungherz-de/glasskit-elements/base.js` (the very module the components import, so `instanceof GlkElement` holds across both), and as `GlassKitElements.GlkElement` from the CDN `<script>` bundle. A subclass inherits the whole setup: open shadow root with GlassKit's stylesheet adopted (`.glass-*` classes work inside), the theme wrapper following `data-theme`, listeners re-armed when the element moves, `emit()` for bubbling, composed events.
+
+```js
+class DemoCounter extends GlkElement {
+  static get observedAttributes() { return ['count']; }
+  render() {                       // build into this._wrapper
+    this._btn = this.createElement('button', ['glass-btn', 'glass-btn--secondary', 'glass-btn--sm', 'glass-btn--auto']);
+    this._wrapper.appendChild(this._btn);
+  }
+  setupEvents() {                  // runs on every connect
+    this._onClick = () => { this.count += 1; this.emit('demo-count', { count: this.count }); };
+    this._btn.addEventListener('click', this._onClick);
+  }
+  teardownEvents() { this._btn?.removeEventListener('click', this._onClick); }   // every disconnect
+  onAttributeChanged() { this._btn.textContent = `Clicked ${this.count}×`; }      // after first render
+  get count() { return Number(this.getAttribute('count')) || 0; }
+  set count(v) { this.setAttribute('count', v); }
+}
+customElements.define('demo-counter', DemoCounter);
+```
+
+Rules for a subclass: build only inside `this._wrapper` (it carries `data-theme`); keep listeners in `setupEvents()` / `teardownEvents()`, never in `render()`, or a moved element loses them; use `emit()` instead of `dispatchEvent()` so the event bubbles and crosses the shadow boundary; return `true` from `static get displayInline()` for inline elements; set `static get observesLightDom()` to `true` and implement `projectLightDom()` when copying light-DOM children into the shadow tree. `GlkFormElement` adds `setFormValue()`, `setValidity()`, `resetValue()` / `restoreValue()` and `static formAssociated = true`.
 
 ### Light-DOM children (since 1.12.0)
 
@@ -1313,8 +1338,8 @@ See the class-based [GlassKit CSS `SKILL.md`](https://github.com/JUNGHERZ/GlassK
 | Theme sync | Single module-level `MutationObserver` in `base.js` |
 | Adopted stylesheets | `glassSheet` (from `@jungherz-de/glasskit/glasskit-styles.js`) + module-level `hostSheet` / `inlineHostSheet` |
 | Per-component structure | One `.js` file per element in `src/components/{category}/glk-{name}.js` |
-| Barrel | `src/index.js` — exports and registers all 29 elements |
-| Build | Rollup → IIFE (`glasskit-elements.js`), minified IIFE, and ESM (`glasskit-elements.esm.js`) |
+| Barrel | `src/index.js` — exports and registers all 29 elements, and exports `GlkElement` / `GlkFormElement` (since 1.14.0) |
+| Build | Rollup → IIFE (`glasskit-elements.js`), minified IIFE, ESM (`glasskit-elements.esm.js`), and per-element ESM in `dist/components/` with `base.js` as a stable entry |
 
 Each element is a subclass of `GlkElement` (or `GlkFormElement` for form controls) and follows a consistent lifecycle:
 

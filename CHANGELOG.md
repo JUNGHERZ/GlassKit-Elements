@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.15.1] – 2026-09-21
+
+### Fixed
+
+- **Rebuilt against GlassKit 1.15.1.** The elements bundle GlassKit's stylesheet, so two CSS fixes need a new build to reach them: `<glk-sheet>` is readable in dark mode (it had a light milk surface under white text), and a `<glk-sheet>` or `<glk-modal>` overlay now paints above a `<glk-tab-bar>` when both sit inside `.glass-bg` — `.glass-bg` no longer turns each of its children into a stacking context that trapped the overlay below the bar. No element changed; the peer dependency moves to `>=1.15.1`.
+
+---
+
 ## [1.15.0] – 2026-09-21
 
 Version numbers stay in step with GlassKit CSS at 1.15.0.
@@ -591,6 +599,7 @@ Starting with this release, GlassKit Elements version numbers are aligned with G
 
 ---
 
+[1.15.1]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.15.1
 [1.15.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.15.0
 [1.14.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.14.0
 [1.13.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.13.0

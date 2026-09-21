@@ -1,6 +1,6 @@
 ---
 name: glasskit-elements
-description: GlassKit Elements is a vanilla-JS Web Components library (v1.15.1) wrapping GlassKit CSS v1.15.1. It provides 29 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
+description: GlassKit Elements is a vanilla-JS Web Components library (v1.15.2) wrapping GlassKit CSS v1.15.1. It provides 29 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
 ---
 
 # GlassKit Elements – AI Component Reference
@@ -432,7 +432,7 @@ Glass container for content.
 | Attribute | Type | Description |
 |---|---|---|
 | `glow` | Boolean | Adds frosted glass gradient + light streak |
-| `fill` | Boolean | Stretches the card to the full height of its grid or flex cell (since 1.8.0) |
+| `fill` | Boolean | Stretches the card to the full height of its grid or flex cell (since 1.8.0); the card yields to its cell, so nowrap content is truncated instead of widening it (since 1.15.2) |
 
 Default slot: content. CSS part: `card`.
 
@@ -456,6 +456,8 @@ Add `fill`:
 `fill` makes the card a flex column, so `margin-top: auto` on the last child pushes a
 footer down and buttons line up across tiles. Give your own wrapper `height: 100%` as
 shown — otherwise it sizes to its content inside the stretched card.
+
+**The card yields to its cell (since 1.15.2).** `fill` makes the card a grid item of the host, and a grid item's `min-width: auto` is its min-content width — a nowrap subtitle in a `<glk-list-item>` used to widen the card past its cell instead of getting its ellipsis. The card and the host now carry `min-width: 0`, and the card `min-height: 0`, so long nowrap content truncates and a scrollable child (`overflow: auto`) inside a cell of fixed height shrinks and scrolls. Content that can neither wrap nor shrink overflows the card's edge rather than pushing the card out of the cell. A plain `<glk-card>` is unchanged: as a block in a `1fr` track it keeps `min-width: auto` like any block, so give it `min-width: 0` yourself when it holds nowrap content.
 
 ---
 

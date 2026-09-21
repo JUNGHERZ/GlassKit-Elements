@@ -6,10 +6,16 @@ import { GlkElement } from '../../base.js';
 // nothing definite to resolve against. Making the host a grid stretches its
 // single child instead, which needs no percentage at all. The card also becomes
 // a flex column so a footer can be pushed down with margin-top:auto.
+//
+// Both boxes are grid items now, and a grid item's min-width:auto is its
+// min-content width — content that cannot wrap (a nowrap list subtitle) would
+// widen the card past its cell instead of being truncated. min-width:0 lets the
+// card and the host yield to the cell; min-height:0 does the same for a cell of
+// fixed height, so a scrollable child inside the card can shrink and scroll.
 const fillSheet = new CSSStyleSheet();
 fillSheet.replaceSync(`
-  :host([fill]) { display: grid; }
-  :host([fill]) .glass-card { display: flex; flex-direction: column; }
+  :host([fill]) { display: grid; min-width: 0; }
+  :host([fill]) .glass-card { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
 `);
 
 class GlkCard extends GlkElement {

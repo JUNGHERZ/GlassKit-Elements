@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.15.2] – 2026-09-21
+
+### Fixed
+
+- **`<glk-card fill>` grew past its grid cell with content that cannot wrap.** `fill` makes the host a grid so the inner `.glass-card` stretches to the cell — which also makes the card a grid item, and a grid item's `min-width: auto` is its min-content width. A nowrap `<glk-list-item>` subtitle therefore widened the card past its cell instead of getting its ellipsis: in a `repeat(auto-fit, minmax(300px, 1fr))` grid at 1100 px the host measured 522 px and the card 888 px, 366 px over the cell and across the neighbour; without `fill` the ellipsis worked. The card and the host now carry `min-width: 0`, so both yield to the cell and the subtitle truncates — the host part matters in `1fr` tracks and flex rows, where the host itself refused to shrink. The card also gets `min-height: 0`: in a cell of fixed height a scrollable child inside the card now shrinks and scrolls instead of the card running 250 px past the cell. Measured in Chromium and WebKit: card 522 px in the `minmax` grid, in a `1fr 1fr` grid and in a flex row; equal heights across a row unchanged; a plain `<glk-card>` unchanged. Compatibility: content that can neither wrap nor shrink now overflows the card's edge instead of pushing the card out of its cell, which is the trade-off `min-width: 0` always makes; a `glk-card[fill]::part(card) { min-width: 0 }` workaround can go. A plain `<glk-card>` keeps `min-width: auto` like any block — set `min-width: 0` on it yourself when it holds nowrap content in a `1fr` track. (EhrenPfoten, Elements finding 4.)
+
+---
+
 ## [1.15.1] – 2026-09-21
 
 ### Fixed
@@ -599,6 +607,7 @@ Starting with this release, GlassKit Elements version numbers are aligned with G
 
 ---
 
+[1.15.2]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.15.2
 [1.15.1]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.15.1
 [1.15.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.15.0
 [1.14.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.14.0

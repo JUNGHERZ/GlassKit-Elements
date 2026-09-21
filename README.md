@@ -5,7 +5,7 @@
   <a href="#"><img src="https://img.shields.io/badge/vanilla_JS-no_dependencies-44cc11?style=flat-square" alt="Vanilla JS"></a>
   <a href="#"><img src="https://img.shields.io/badge/components-33-7ec8e3?style=flat-square" alt="33 Components"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="MIT License"></a>
-  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/changelog-v1.15.1-lightgrey?style=flat-square" alt="Changelog"></a>
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/changelog-v1.15.2-lightgrey?style=flat-square" alt="Changelog"></a>
   <a href="https://www.npmjs.com/package/@jungherz-de/glasskit-elements"><img src="https://img.shields.io/badge/npm-%40jungherz--de%2Fglasskit--elements-cb3837?style=flat-square&logo=npm" alt="npm"></a>
 </p>
 
@@ -135,7 +135,7 @@ The per-component files leave `@jungherz-de/glasskit/glasskit-styles.js` as an e
 
 | Component | Description | Key Attributes |
 |---|---|---|
-| `<glk-card>` | Glass-effect content card | `glow` |
+| `<glk-card>` | Glass-effect content card | `glow`, `fill` |
 | `<glk-badge>` | Inline status badge, or a filter chip with `interactive` | `variant` (primary, success, error), `interactive`, `selected` |
 | `<glk-avatar>` | Circular avatar | `size` (sm, lg), `src` |
 | `<glk-title>` | Styled heading | — |

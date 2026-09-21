@@ -1,4 +1,5 @@
 import { GlkFormElement } from './base.js';
+import '@jungherz-de/glasskit/glasskit-styles.js';
 
 // ── Grouping ──
 // Every <glk-radio> keeps its <input type="radio"> in its own shadow root, and

@@ -1,6 +1,6 @@
 ---
 name: glasskit-elements
-description: GlassKit Elements is a vanilla-JS Web Components library (v1.14.0) wrapping GlassKit CSS v1.14.0. It provides 29 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
+description: GlassKit Elements is a vanilla-JS Web Components library (v1.15.0) wrapping GlassKit CSS v1.15.0. It provides 29 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
 ---
 
 # GlassKit Elements – AI Component Reference
@@ -18,12 +18,12 @@ description: GlassKit Elements is a vanilla-JS Web Components library (v1.14.0) 
 npm install @jungherz-de/glasskit-elements @jungherz-de/glasskit
 ```
 
-Peer dependency `@jungherz-de/glasskit >=1.14.0` is required — 1.9.0 is the release that made the stylesheet splittable, which is what lets document-level branding reach the elements at all.
+Peer dependency `@jungherz-de/glasskit >=1.15.0` is required — 1.9.0 is the release that made the stylesheet splittable, which is what lets document-level branding reach the elements at all.
 
 ### Import (ES modules)
 
 ```js
-// Full bundle — registers all 29 elements
+// Full bundle — registers all 33 elements
 import '@jungherz-de/glasskit-elements';
 
 // Named imports (for direct references to constructor classes)
@@ -36,7 +36,7 @@ import '@jungherz-de/glasskit-elements/components/glk-button.js';
 import { GlkButton } from '@jungherz-de/glasskit-elements/components/glk-button.js';
 ```
 
-Every element has its own entry at `components/glk-{name}.js`. Importing one pulls that
+Every element has its own entry at `components/glk-{name}.js`; they import `./base.js` and leave `@jungherz-de/glasskit/glasskit-styles.js` external (bundler or import map resolves it). Importing one pulls that
 file plus a single shared chunk (`base.js` + the GlassKit stylesheet, ~48 KB) rather than
 the 112 KB full bundle; several imports share that chunk. Each module registers its
 custom element as a side effect, so a bare `import '…'` is enough.
@@ -126,6 +126,8 @@ class DemoCounter extends GlkElement {
 }
 customElements.define('demo-counter', DemoCounter);
 ```
+
+Which import to take depends on how the elements are loaded, and mixing them is the one mistake to avoid: the `<script>` / ESM **bundle** carries its own copy of `GlkElement`, so a subclass built on `base.js` next to it is a different class — `instanceof` fails across the two, and the GlassKit stylesheet lives twice. Bundle loaded → take `GlassKitElements.GlkElement` or `import { GlkElement } from '@jungherz-de/glasskit-elements'`. Per-component files loaded → `base.js`, which the components import themselves. The per-component files leave `@jungherz-de/glasskit/glasskit-styles.js` external, so a bundler resolves it from `node_modules` and an import-map project maps it to the one copy it already loads for its own elements.
 
 Rules for a subclass: build only inside `this._wrapper` (it carries `data-theme`); keep listeners in `setupEvents()` / `teardownEvents()`, never in `render()`, or a moved element loses them; use `emit()` instead of `dispatchEvent()` so the event bubbles and crosses the shadow boundary; return `true` from `static get displayInline()` for inline elements; set `static get observesLightDom()` to `true` and implement `projectLightDom()` when copying light-DOM children into the shadow tree. `GlkFormElement` adds `setFormValue()`, `setValidity()`, `resetValue()` / `restoreValue()` and `static formAssociated = true`.
 
@@ -235,7 +237,7 @@ to resolve against. A host stretched by a grid keeps `height: auto`, which is wh
 
 ---
 
-## 3. Element Catalog (29 elements)
+## 3. Element Catalog (33 elements)
 
 ### 3.1 `<glk-nav>`
 
@@ -965,6 +967,88 @@ Both elements use pure Shadow DOM with slot projection — no child node cloning
 
 ---
 
+### 3.25 `<glk-segmented>`
+
+A small, exclusive choice as one control (since 1.15.0) — traffic light, morning / afternoon, mode. One `<button>` per option, the chosen one marked `aria-pressed="true"` (GlassKit styles exactly that attribute); a value change only re-sets the attribute, never rebuilds, so focus stays on the pressed button. Form-associated (`GlkFormElement`): a surrounding `<form>` receives `name=value`, reset restores the initial value.
+
+```html
+<glk-segmented full name="status" label="Status" value="y"
+  options='[{"value":"g","label":"Green","tone":"success"},{"value":"y","label":"Yellow","tone":"warning"},{"value":"r","label":"Red","tone":"error"},{"value":"x","label":"Locked","disabled":true}]'>
+</glk-segmented>
+```
+
+| Attribute | Type | Description |
+|---|---|---|
+| `options` | JSON | `[{ value, label, tone?, disabled? }]`; `tone` is `success` \| `warning` \| `error` and puts a dot in that colour before the label |
+| `value` | String | Value of the chosen option (reflected property) |
+| `full` | Boolean | Buttons share the width |
+| `label` | String | `aria-label` of the group (no default — set it) |
+| `name` | String | Form field name |
+
+Properties: `value`, `options` (array or JSON text), `full`, `label`. Events: `glk-change` `{ value }` — only on a change made by the user, not on `.value = …`. Part: `group`.
+
+---
+
+### 3.26 `<glk-steps>`
+
+Progress through a short flow (since 1.15.0), purely presentational: the current step carries `aria-current="step"`, done steps show an SVG check. The narrowing in tight frames is the CSS block's container query (below 360 px only the current label stays) — the element knows nothing about it, so in a flex row give it a width.
+
+```html
+<glk-steps steps="Day,Slot,Dog,Confirm" current="2" label="Progress"></glk-steps>
+```
+
+| Attribute | Type | Description |
+|---|---|---|
+| `steps` | String | Comma-separated labels (property also accepts an array) |
+| `current` | Number | 0-based index of the current step (reflected property) |
+| `label` | String | `aria-label` of the list, optional |
+
+Part: `steps`.
+
+---
+
+### 3.27 `<glk-sheet>`
+
+Bottom sheet (since 1.15.0) — the mobile sibling of `<glk-modal>`, same API shape. Opening and closing are animated by GlassKit's `.glass-sheet` block: `.is-active` is added one frame after the overlay is unhidden, and on closing the overlay is hidden only after `transitionend` (safety net 400 ms), so no blurred layer idles behind the page; under `prefers-reduced-motion` it switches at once. The Escape listener sits on `document` and is removed in `teardownEvents()`.
+
+```html
+<glk-sheet id="sheet" title="Rebook to …">
+  <p>Content: a list, text, a form.</p>
+  <glk-button slot="actions" variant="secondary" onclick="sheet.close()">Close</glk-button>
+</glk-sheet>
+<script>sheet.show();</script>
+```
+
+| Attribute | Type | Description |
+|---|---|---|
+| `open` | Boolean | Shown as an overlay (reflected property) |
+| `inline` | Boolean | In the flow, no overlay, always visible — e.g. inside a phone frame or a card |
+| `title` | String | Heading and `aria-label` of the dialog |
+
+Methods: `show()`, `close()`. Slots: default (content), `actions`. Events: `glk-close` — only when the user closes it (scrim click, Escape), like `<glk-modal>`; `close()` does not emit. Parts: `overlay`, `sheet`, `title`, `body`, `actions`.
+
+---
+
+### 3.28 `<glk-empty>`
+
+Empty state for lists and result pages (since 1.15.0): icon plate, title, short muted text and room for one action. An empty `title` or `text` hides its element instead of leaving an empty paragraph.
+
+```html
+<glk-empty title="No bookings yet" text="Pick a day and a dog — the team is looking forward to it.">
+  <svg viewBox="0 0 24 24">…</svg>
+  <glk-button slot="action" variant="primary" size="sm">Book</glk-button>
+</glk-empty>
+```
+
+| Attribute | Type | Description |
+|---|---|---|
+| `title` | String | Heading; hidden when empty |
+| `text` | String | Muted text; hidden when empty |
+
+Slots: default (an `<svg>` icon, 24 px stroked; a plain circle as fallback), `action`. Parts: `empty`, `icon`, `title`, `text`, `action`.
+
+---
+
 ## 4. Composition Patterns
 
 ### Login Screen
@@ -1145,6 +1229,8 @@ Key points:
 | `<glk-popover>` | `.open` | `open` | `glk-open`, `glk-close` | — |
 | `<glk-accordion-item>` | `.open` | `open` | `glk-toggle` | `{ open }` |
 | `<glk-list-item>` | — | `interactive` | `glk-click` (only when interactive) | — |
+| `<glk-segmented>` | `.value` | `value` | `glk-change` | `{ value }` |
+| `<glk-sheet>` | `.open` | `open` | `glk-close` (user close only) | — |
 | `<glk-badge>` | `.selected` | `interactive`, `selected` | `glk-click` (only when interactive) | — |
 | `<glk-toast>` | — | — | — | (imperative) |
 
@@ -1196,6 +1282,10 @@ All `glk-*` events bubble and are `composed: true`, so they pierce shadow bounda
 | `<glk-tab-accessory>` | Navigation | `label`, `variant`, `disabled` | default (icon) | `glk-click` |
 | `<glk-avatar>` | Content | `size`, `src` | default (initials) | — |
 | `<glk-badge>` | Content | `variant`, `interactive`, `selected` | default | `glk-click` (only when interactive) |
+| `<glk-empty>` | Content | `title`, `text` | default (icon), `action` | — |
+| `<glk-segmented>` | Forms | `options`, `value`, `full`, `label`, `name` | — | `glk-change` |
+| `<glk-steps>` | Navigation | `steps`, `current`, `label` | — | — |
+| `<glk-sheet>` | Feedback | `open`, `inline`, `title` | default, `actions` | `glk-close` |
 | `<glk-card>` | Content | `glow` | default | — |
 | `<glk-divider>` | Content | — | — | — |
 | `<glk-status>` | Content | `message` | — | — |
@@ -1338,7 +1428,7 @@ See the class-based [GlassKit CSS `SKILL.md`](https://github.com/JUNGHERZ/GlassK
 | Theme sync | Single module-level `MutationObserver` in `base.js` |
 | Adopted stylesheets | `glassSheet` (from `@jungherz-de/glasskit/glasskit-styles.js`) + module-level `hostSheet` / `inlineHostSheet` |
 | Per-component structure | One `.js` file per element in `src/components/{category}/glk-{name}.js` |
-| Barrel | `src/index.js` — exports and registers all 29 elements, and exports `GlkElement` / `GlkFormElement` (since 1.14.0) |
+| Barrel | `src/index.js` — exports and registers all 33 elements, and exports `GlkElement` / `GlkFormElement` (since 1.14.0) |
 | Build | Rollup → IIFE (`glasskit-elements.js`), minified IIFE, ESM (`glasskit-elements.esm.js`), and per-element ESM in `dist/components/` with `base.js` as a stable entry |
 
 Each element is a subclass of `GlkElement` (or `GlkFormElement` for form controls) and follows a consistent lifecycle:

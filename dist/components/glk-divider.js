@@ -1,4 +1,5 @@
 import { GlkElement } from './base.js';
+import '@jungherz-de/glasskit/glasskit-styles.js';
 
 class GlkDivider extends GlkElement {
   render() {

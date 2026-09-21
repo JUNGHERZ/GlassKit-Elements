@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.15.0] – 2026-09-21
+
+Version numbers stay in step with GlassKit CSS at 1.15.0.
+
+### Added
+
+- **Four elements from EhrenPfoten: `<glk-segmented>`, `<glk-steps>`, `<glk-sheet>`, `<glk-empty>`.** Built there as `GlkElement` subclasses by the rules in SKILL.md and reviewed here class by class. They arrive as copies with these deviations, which the project mirrors: no German defaults — `label` on `<glk-segmented>` and `<glk-steps>` sets the `aria-label` and there is none without it; `aria-current` only on the current step, not `"false"` on the others; the done check is an SVG, not a text glyph; tones are `success` / `warning` / `error`; `full` and `label` changes no longer rebuild the buttons. `<glk-segmented>` is form-associated (`name`, `setFormValue`, reset restores the initial value), like every other element in the forms group.
+
+  `<glk-sheet>` is the mobile sibling of `<glk-modal>` with the same API shape (`open`, `title`, `show()`, `close()`, `glk-close` only on a user close). It hides its overlay after `transitionend` (fallback 400 ms, immediate under reduced motion), so the blurred layer leaves the layout instead of idling at opacity 0 — `<glk-modal>` still keeps its overlay in the layout with `pointer-events: none`; giving it the same mechanic is a follow-up, not part of this release.
+
+  Documented on the docs and showcase pages in both languages with live demos, in README and SKILL.md. Requires GlassKit 1.15.0 for the four CSS blocks; the peer dependency moves to `>=1.15.0`. All 29 existing elements, attributes and events are unchanged.
+
+### Changed
+
+- **The per-component files no longer inline the GlassKit stylesheet.** `dist/components/base.js` carried `componentsSheet` and `tokensCss` from `@jungherz-de/glasskit/glasskit-styles.js` compiled in — 61 KB, and a second copy of the sheet next to the one an import-map project already loads for its own elements (EhrenPfoten, finding 3). The per-component build now leaves `@jungherz-de/glasskit/glasskit-styles.js` as an external import: a bundler resolves it from `node_modules`, a build-free project adds one import-map entry, and either way the sheet exists once. `base.js` shrinks to about 8 KB. The full bundles keep inlining it — a `<script>` tag has nothing to resolve against.
+
+  Documented alongside: never mix the bundle with `base.js`. The bundle carries its own copy of `GlkElement`, so a subclass built on `base.js` next to it is a different class and `instanceof` fails across the two — with the bundle, take `GlassKitElements.GlkElement` or the ESM bundle's export.
+
+---
+
 ## [1.14.0] – 2026-09-20
 
 Version numbers realign with GlassKit CSS at 1.14.0.
@@ -571,6 +591,7 @@ Starting with this release, GlassKit Elements version numbers are aligned with G
 
 ---
 
+[1.15.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.15.0
 [1.14.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.14.0
 [1.13.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.13.0
 [1.12.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.12.0

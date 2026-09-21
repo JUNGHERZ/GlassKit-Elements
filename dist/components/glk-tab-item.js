@@ -1,4 +1,5 @@
 import { GlkElement } from './base.js';
+import '@jungherz-de/glasskit/glasskit-styles.js';
 
 class GlkTabItem extends GlkElement {
   static get observedAttributes() {

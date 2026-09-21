@@ -14,6 +14,7 @@ export { GlkTabBar } from './components/navigation/glk-tab-bar.js';
 export { GlkTabItem } from './components/navigation/glk-tab-item.js';
 export { GlkTabDock } from './components/navigation/glk-tab-dock.js';
 export { GlkTabAccessory } from './components/navigation/glk-tab-accessory.js';
+export { GlkSteps } from './components/navigation/glk-steps.js';
 
 // Content
 export { GlkCard } from './components/content/glk-card.js';
@@ -22,6 +23,7 @@ export { GlkAvatar } from './components/content/glk-avatar.js';
 export { GlkTitle } from './components/content/glk-title.js';
 export { GlkDivider } from './components/content/glk-divider.js';
 export { GlkStatus } from './components/content/glk-status.js';
+export { GlkEmpty } from './components/content/glk-empty.js';
 
 // Buttons
 export { GlkButton } from './components/buttons/glk-button.js';
@@ -35,12 +37,14 @@ export { GlkToggle } from './components/forms/glk-toggle.js';
 export { GlkCheckbox } from './components/forms/glk-checkbox.js';
 export { GlkRadio } from './components/forms/glk-radio.js';
 export { GlkRange } from './components/forms/glk-range.js';
+export { GlkSegmented } from './components/forms/glk-segmented.js';
 
 // Feedback
 export { GlkProgress } from './components/feedback/glk-progress.js';
 export { GlkModal } from './components/feedback/glk-modal.js';
 export { GlkToast } from './components/feedback/glk-toast.js';
 export { GlkPopover } from './components/feedback/glk-popover.js';
+export { GlkSheet } from './components/feedback/glk-sheet.js';
 
 // Containers
 export { GlkAccordion } from './components/containers/glk-accordion.js';

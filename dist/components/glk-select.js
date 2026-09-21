@@ -1,4 +1,5 @@
 import { GlkFormElement } from './base.js';
+import '@jungherz-de/glasskit/glasskit-styles.js';
 
 class GlkSelect extends GlkFormElement {
   static get observedAttributes() {

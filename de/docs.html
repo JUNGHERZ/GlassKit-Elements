@@ -20,7 +20,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="GlassKit Elements — Dokumentation">
   <meta name="twitter:description" content="Vollständige Dokumentation aller 29 GlassKit Elements Web Components mit Live-Beispielen.">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.14/glasskit.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.15/glasskit.min.css">
   <script src="/dist/glasskit-elements.min.js"></script>
   <style>
     html { scroll-behavior: smooth; }
@@ -255,7 +255,7 @@
     <aside class="docs-sidebar">
       <div class="docs-sidebar__title">&#129482; <a href="../de/">GlassKit Elements</a></div>
       <div class="docs-sidebar__subtitle">Web Components f&uuml;r GlassKit CSS.</div>
-      <div class="docs-sidebar__version">v1.14.0 &ndash; Jungherz GmbH</div>
+      <div class="docs-sidebar__version">v1.15.0 &ndash; Jungherz GmbH</div>
 
       <div class="docs-sidebar__group">
         <div class="docs-sidebar__group-title">Grundlagen</div>
@@ -272,6 +272,7 @@
         <a class="docs-sidebar__link" href="#glk-card">glk-card</a>
         <a class="docs-sidebar__link" href="#glk-divider">glk-divider</a>
         <a class="docs-sidebar__link" href="#glk-status">glk-status</a>
+        <a class="docs-sidebar__link" href="#glk-empty">glk-empty</a>
       </div>
 
       <div class="docs-sidebar__group">
@@ -290,6 +291,7 @@
         <a class="docs-sidebar__link" href="#glk-checkbox">glk-checkbox</a>
         <a class="docs-sidebar__link" href="#glk-radio">glk-radio</a>
         <a class="docs-sidebar__link" href="#glk-range">glk-range</a>
+        <a class="docs-sidebar__link" href="#glk-segmented">glk-segmented</a>
       </div>
 
       <div class="docs-sidebar__group">
@@ -297,6 +299,7 @@
         <a class="docs-sidebar__link" href="#glk-nav">glk-nav</a>
         <a class="docs-sidebar__link" href="#glk-tab-bar">glk-tab-bar</a>
         <a class="docs-sidebar__link" href="#glk-tab-dock">glk-tab-dock</a>
+        <a class="docs-sidebar__link" href="#glk-steps">glk-steps</a>
       </div>
 
       <div class="docs-sidebar__group">
@@ -305,6 +308,7 @@
         <a class="docs-sidebar__link" href="#glk-modal">glk-modal</a>
         <a class="docs-sidebar__link" href="#glk-toast">glk-toast</a>
         <a class="docs-sidebar__link" href="#glk-popover">glk-popover</a>
+        <a class="docs-sidebar__link" href="#glk-sheet">glk-sheet</a>
       </div>
 
       <div class="docs-sidebar__group">
@@ -334,9 +338,9 @@
         <h1>GlassKit Elements</h1>
         <p>Vollst&auml;ndige Referenz f&uuml;r alle 29 Web Components &ndash; entwickelt von Jungherz GmbH. Vanilla JS, Shadow DOM, native Formular-Teilnahme.</p>
         <div class="docs-hero__badges">
-          <span class="docs-hero__badge">v1.14.0</span>
+          <span class="docs-hero__badge">v1.15.0</span>
           <span class="docs-hero__badge">Shadow DOM</span>
-          <span class="docs-hero__badge">29 Komponenten</span>
+          <span class="docs-hero__badge">33 Komponenten</span>
           <span class="docs-hero__badge">Vanilla JS</span>
         </div>
       </div>
@@ -347,7 +351,7 @@
 
         <h3>CDN (schnellste Variante)</h3>
         <div class="docs-code"><span class="cmt">&lt;!-- 1. GlassKit CSS --&gt;</span>
-<span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span> <span class="attr">href</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.14/glasskit.min.css"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span> <span class="attr">href</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.15/glasskit.min.css"</span><span class="tag">&gt;</span>
 
 <span class="cmt">&lt;!-- 2. GlassKit Elements --&gt;</span>
 <span class="tag">&lt;script</span> <span class="attr">src</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"</span><span class="tag">&gt;&lt;/script&gt;</span></div>
@@ -475,6 +479,23 @@
           <p>Statushinweis mit Nachricht.</p>
           <div class="docs-preview"><glk-status message="No results found"></glk-status></div>
           <div class="docs-code"><span class="tag">&lt;glk-status</span> <span class="attr">message</span>=<span class="val">"No results found"</span><span class="tag">&gt;&lt;/glk-status&gt;</span></div>
+        </div>
+        <div class="docs-component" id="glk-empty">
+          <h3><code>&lt;glk-empty&gt;</code></h3>
+          <p>Leerzustand für Listen und Ergebnisseiten: Icon-Fläche, Titel, kurzer Text und eine Aktion. Ein leerer <code>title</code> oder <code>text</code> blendet sein Element aus.</p>
+          <div class="docs-preview">
+            <glk-empty title="Noch keine Buchungen" text="Such dir einen Tag und einen Hund aus — das Team freut sich."><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/></svg><glk-button slot="action" variant="primary" size="sm">Buchen</glk-button></glk-empty>
+          </div>
+          <div class="docs-code"><span class="tag">&lt;glk-empty</span> <span class="attr">title</span>=<span class="val">"Noch keine Buchungen"</span> <span class="attr">text</span>=<span class="val">"…"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;svg</span> <span class="attr">viewBox</span>=<span class="val">"0 0 24 24"</span><span class="tag">&gt;</span>…<span class="tag">&lt;/svg&gt;</span>
+  <span class="tag">&lt;glk-button</span> <span class="attr">slot</span>=<span class="val">"action"</span> <span class="attr">size</span>=<span class="val">"sm"</span><span class="tag">&gt;</span>Buchen<span class="tag">&lt;/glk-button&gt;</span>
+<span class="tag">&lt;/glk-empty&gt;</span></div>
+          <table class="docs-table">
+            <tr><th>Attribut</th><th>Typ</th><th>Werte</th></tr>
+            <tr><td><code>title</code></td><td>String</td><td>Überschrift; leer = ausgeblendet</td></tr>
+            <tr><td><code>text</code></td><td>String</td><td>Gedämpfter Text; leer = ausgeblendet</td></tr>
+          </table>
+          <p><strong>Slots:</strong> Standard (ein <code>&lt;svg&gt;</code>-Icon; ein Kreis als Rückfall), <code>action</code>. <strong>Parts:</strong> <code>empty</code>, <code>icon</code>, <code>title</code>, <code>text</code>, <code>action</code>.</p>
         </div>
       </section>
 
@@ -618,6 +639,29 @@
             <tr><td><code>step</code></td><td>Number</td><td>Step increment</td></tr>
           </table>
         </div>
+        <div class="docs-component" id="glk-segmented">
+          <h3><code>&lt;glk-segmented&gt;</code></h3>
+          <p>Eine kleine, exklusive Auswahl als ein Bedienelement. Rendert je Option einen <code>&lt;button&gt;</code>, der gewählte trägt <code>aria-pressed="true"</code>; eine Wertänderung setzt nur dieses Attribut neu, der Fokus bleibt, wo er war. Formular-assoziiert: ein umschließendes <code>&lt;form&gt;</code> erhält <code>name=value</code>, Reset stellt den Anfangswert wieder her. Probier es: Tab auf einen Knopf, Leertaste.</p>
+          <div class="docs-preview" style="display:flex;flex-direction:column;gap:10px;align-items:flex-start;">
+            <glk-segmented label="Modus" options='[{"value":"context","label":"Kontextuell"},{"value":"page","label":"Hilfeseite"},{"value":"inline","label":"Inline"}]' value="context" id="docs-seg"></glk-segmented>
+            <glk-segmented full label="Status" style="width:100%" options='[{"value":"g","label":"Grün","tone":"success"},{"value":"y","label":"Gelb","tone":"warning"},{"value":"r","label":"Rot","tone":"error"},{"value":"x","label":"Gesperrt","disabled":true}]' value="y"></glk-segmented>
+            <span data-docs-seg-out style="opacity:.75;font-size:13px">wartet auf glk-change…</span>
+          </div>
+          <div class="docs-code"><span class="tag">&lt;glk-segmented</span> <span class="attr">full label</span>=<span class="val">"Status"</span> <span class="attr">name</span>=<span class="val">"status"</span> <span class="attr">value</span>=<span class="val">"y"</span>
+  <span class="attr">options</span>=<span class="val">'[{"value":"g","label":"Grün","tone":"success"}, {"value":"y","label":"Gelb","tone":"warning"}, {"value":"x","label":"Gesperrt","disabled":true}]'</span><span class="tag">&gt;&lt;/glk-segmented&gt;</span></div>
+          <table class="docs-table">
+            <tr><th>Attribut</th><th>Typ</th><th>Werte</th></tr>
+            <tr><td><code>options</code></td><td>JSON</td><td><code>[{ value, label, tone?, disabled? }]</code> &mdash; <code>tone</code>: <code>success</code> | <code>warning</code> | <code>error</code></td></tr>
+            <tr><td><code>value</code></td><td>String</td><td>Wert der gewählten Option</td></tr>
+            <tr><td><code>full</code></td><td>Boolean</td><td>Knöpfe teilen sich die Breite</td></tr>
+            <tr><td><code>label</code></td><td>String</td><td><code>aria-label</code> der Gruppe</td></tr>
+            <tr><td><code>name</code></td><td>String</td><td>Feldname im Formular (form-assoziiert)</td></tr>
+          </table>
+          <p><strong>Events:</strong> <code>glk-change</code> <code>{ value }</code> — nur bei einer Änderung durch den Nutzer. <strong>Part:</strong> <code>group</code>.</p>
+          <script>
+            document.getElementById('docs-seg').addEventListener('glk-change', e => { document.querySelector('[data-docs-seg-out]').textContent = 'glk-change → ' + e.detail.value; });
+          </script>
+        </div>
       </section>
 
       <!-- ═══ Navigation ═══ -->
@@ -697,6 +741,22 @@
           </table>
           <p><strong>Events:</strong> <code>&lt;glk-tab-accessory&gt;</code> sendet <code>glk-click</code> beim Klick (unterdrueckt im disabled-Zustand).</p>
           <p><strong>Tipp:</strong> Nutze <code>.glass-bg--has-tab-bar-floating</code> auf dem aeusseren <code>.glass-bg</code> statt <code>--has-tab-bar</code>, damit das Padding zur schwebenden Variante passt.</p>
+        </div>
+        <div class="docs-component" id="glk-steps">
+          <h3><code>&lt;glk-steps&gt;</code></h3>
+          <p>Fortschritt durch einen kurzen Ablauf, rein darstellend: der aktuelle Schritt trägt <code>aria-current="step"</code>, erledigte zeigen einen SVG-Haken. Die Verengung in schmalen Rahmen macht die Container-Query des CSS-Blocks (unter 360 px bleibt nur das aktuelle Label) — das Element weiß nichts davon.</p>
+          <div class="docs-preview" style="display:flex;flex-direction:column;gap:12px;">
+            <glk-steps steps="Tag,Fenster,Hund,Bestätigen" current="2" label="Fortschritt"></glk-steps>
+            <div style="width:300px;padding:8px;border:1px dashed var(--gl-border-medium);border-radius:var(--gl-radius-sm)"><glk-steps steps="Tag,Zeitfenster wählen,Hund,Bestätigen" current="1"></glk-steps></div>
+          </div>
+          <div class="docs-code"><span class="tag">&lt;glk-steps</span> <span class="attr">steps</span>=<span class="val">"Tag,Fenster,Hund,Bestätigen"</span> <span class="attr">current</span>=<span class="val">"2"</span><span class="tag">&gt;&lt;/glk-steps&gt;</span></div>
+          <table class="docs-table">
+            <tr><th>Attribut</th><th>Typ</th><th>Werte</th></tr>
+            <tr><td><code>steps</code></td><td>String</td><td>Kommagetrennte Beschriftungen</td></tr>
+            <tr><td><code>current</code></td><td>Number</td><td>0-basierter Index des aktuellen Schritts</td></tr>
+            <tr><td><code>label</code></td><td>String</td><td><code>aria-label</code> der Liste (optional)</td></tr>
+          </table>
+          <p>Eigenschaft <code>current</code> spiegelt das Attribut; <code>steps</code> nimmt ein Array oder kommagetrennten Text. <strong>Part:</strong> <code>steps</code>.</p>
         </div>
       </section>
 
@@ -811,6 +871,30 @@ document.querySelector(<span class="val">'glk-popover'</span>).toggle();</div>
           <p><strong>Methoden:</strong> <code>.show()</code>, <code>.close()</code>, <code>.toggle()</code></p>
           <p><strong>Achtung:</strong> die Methode heißt bewusst <code>.toggle()</code> — nicht <code>.togglePopover()</code>, da dies mit der nativen <code>HTMLElement.togglePopover()</code>-API kollidiert.</p>
         </div>
+        <div class="docs-component" id="glk-sheet">
+          <h3><code>&lt;glk-sheet&gt;</code></h3>
+          <p>Bottom-Sheet — das mobile Geschwister von <code>&lt;glk-modal&gt;</code>. Öffnen und Schließen animiert GlassKits <code>.glass-sheet</code>-Block; das Overlay wird erst nach <code>transitionend</code> versteckt, damit keine Blur-Schicht hinter der Seite stehen bleibt, und unter <code>prefers-reduced-motion</code> schaltet es sofort. Scrim-Klick und Escape schließen und senden <code>glk-close</code>; <code>show()</code> / <code>close()</code> nicht. <code>inline</code> bettet das Panel ohne Overlay ein.</p>
+          <div class="docs-preview">
+            <glk-sheet inline title="Umbuchen auf …"><p style="margin:0">Inhalt des Sheets: Liste, Text, Formular. Dieses hier ist eingebettet.</p><glk-button slot="actions" variant="primary" size="sm" id="docs-sheet-open">Als Overlay öffnen</glk-button></glk-sheet>
+            <glk-sheet id="docs-sheet-el" title="Umbuchen auf …"><p style="margin:0">Tippen außerhalb oder Escape schließt.</p><glk-button slot="actions" variant="secondary" size="sm" id="docs-sheet-close">Schließen</glk-button></glk-sheet>
+          </div>
+          <div class="docs-code"><span class="tag">&lt;glk-sheet</span> <span class="attr">id</span>=<span class="val">"sheet"</span> <span class="attr">title</span>=<span class="val">"Umbuchen auf …"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;p&gt;</span>…<span class="tag">&lt;/p&gt;</span>
+  <span class="tag">&lt;glk-button</span> <span class="attr">slot</span>=<span class="val">"actions"</span> <span class="attr">onclick</span>=<span class="val">"sheet.close()"</span><span class="tag">&gt;</span>Schließen<span class="tag">&lt;/glk-button&gt;</span>
+<span class="tag">&lt;/glk-sheet&gt;</span>
+<span class="tag">&lt;script&gt;</span>sheet.show();<span class="tag">&lt;/script&gt;</span></div>
+          <table class="docs-table">
+            <tr><th>Attribut</th><th>Typ</th><th>Werte</th></tr>
+            <tr><td><code>open</code></td><td>Boolean</td><td>Als Overlay angezeigt</td></tr>
+            <tr><td><code>inline</code></td><td>Boolean</td><td>Im Fluss, ohne Overlay, immer sichtbar</td></tr>
+            <tr><td><code>title</code></td><td>String</td><td>Überschrift und <code>aria-label</code></td></tr>
+          </table>
+          <p><strong>Methoden:</strong> <code>show()</code>, <code>close()</code>. <strong>Slots:</strong> Standard (Inhalt), <code>actions</code>. <strong>Events:</strong> <code>glk-close</code> — nur beim Schließen durch den Nutzer (Scrim, Escape). <strong>Parts:</strong> <code>overlay</code>, <code>sheet</code>, <code>title</code>, <code>body</code>, <code>actions</code>.</p>
+          <script>
+            document.getElementById('docs-sheet-open').addEventListener('click', () => document.getElementById('docs-sheet-el').show());
+            document.getElementById('docs-sheet-close').addEventListener('click', () => document.getElementById('docs-sheet-el').close());
+          </script>
+        </div>
       </section>
 
       <!-- ═══ Containers ═══ -->
@@ -920,7 +1004,7 @@ customElements.define(<span class="val">'demo-counter'</span>, DemoCounter);</di
         <table class="docs-table">
           <tr><th>Setup</th><th>Import</th></tr>
           <tr><td>Bundle (ESM)</td><td><code>import { GlkElement, GlkFormElement } from '@jungherz-de/glasskit-elements';</code></td></tr>
-          <tr><td>Pro Komponente</td><td><code>import { GlkElement } from '@jungherz-de/glasskit-elements/base.js';</code> &mdash; genau das Modul, das die Komponenten importieren, also gilt <code>instanceof GlkElement</code> &uuml;ber beide hinweg</td></tr>
+          <tr><td>Pro Komponente</td><td><code>import { GlkElement } from '@jungherz-de/glasskit-elements/base.js';</code> &mdash; genau das Modul, das die Komponenten importieren, also gilt <code>instanceof GlkElement</code> &uuml;ber beide hinweg. Die Einzelmodule lassen <code>@jungherz-de/glasskit/glasskit-styles.js</code> extern: ein Bundler l&ouml;st es auf, eine Import-Map braucht einen Eintrag daf&uuml;r. Nie neben dem <code>&lt;script&gt;</code>-Bundle &mdash; das tr&auml;gt seine eigene Kopie der Klasse.</td></tr>
           <tr><td>CDN / <code>&lt;script&gt;</code></td><td><code>const { GlkElement } = GlassKitElements;</code></td></tr>
         </table>
         <p><strong>Hooks:</strong> <code>render()</code> baut in <code>this._wrapper</code>; <code>setupEvents()</code> / <code>teardownEvents()</code> laufen bei jedem Connect / Disconnect; <code>onAttributeChanged(name, old, value)</code> feuert nach dem ersten Render. <strong>Helfer:</strong> <code>createElement(tag, classes, attrs)</code>, <code>getBoolAttr()</code> / <code>setBoolAttr()</code>, <code>emit(name, detail)</code>. <code>static get displayInline()</code> liefert <code>true</code> f&uuml;r ein Inline-Element; <code>static get observesLightDom()</code> l&auml;sst <code>projectLightDom()</code> bei jeder &Auml;nderung der Light-DOM-Kinder erneut laufen.</p>

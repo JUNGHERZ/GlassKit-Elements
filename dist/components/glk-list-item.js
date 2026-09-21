@@ -1,4 +1,5 @@
 import { GlkElement } from './base.js';
+import '@jungherz-de/glasskit/glasskit-styles.js';
 
 // Module-level override sheet — shared by all instances.
 // Suppresses the auto-divider when glk-list marks this item as the

@@ -53,9 +53,17 @@ export default [
     },
     plugins: [nodeResolve()]
   },
-  // Per-component ES modules — one entry per element, shared chunks extracted
+  // Per-component ES modules — one entry per element, shared chunks extracted.
+  // GlassKit's stylesheet module stays an external import here: these files
+  // are consumed through a bundler or an import map, and both resolve
+  // '@jungherz-de/glasskit/glasskit-styles.js' to the one copy the project
+  // already has. Inlined, base.js carried the whole sheet (61 KB) a second
+  // time next to the project's own glasskit-styles import, and two sheets
+  // meant two adopted copies in every shadow root. The full bundles above keep
+  // inlining it — a <script> tag has nothing to resolve against.
   {
     input: componentEntries,
+    external: ['@jungherz-de/glasskit/glasskit-styles.js'],
     output: {
       dir: 'dist/components',
       format: 'es',

@@ -1,4 +1,5 @@
 import { GlkElement } from './base.js';
+import '@jungherz-de/glasskit/glasskit-styles.js';
 
 // <glk-card fill> stretches the visible card to the height of its grid or flex
 // cell. The host must become a grid for this: it is stretched by the outer

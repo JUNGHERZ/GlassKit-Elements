@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="GlassKit Elements — Showcase">
   <meta name="twitter:description" content="Interaktive Vorschau aller 29 GlassKit Elements Web Components im Glassmorphism-Stil.">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.14/glasskit.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.15/glasskit.min.css">
   <script src="/dist/glasskit-elements.min.js"></script>
   <style>
     body {
@@ -96,7 +96,7 @@
       </glk-pill>
     </glk-nav>
 
-    <glk-title>Component Showcase v1.14.0</glk-title>
+    <glk-title>Component Showcase v1.15.0</glk-title>
   </div>
 
   <div class="demo-section">
@@ -303,6 +303,32 @@
     <glk-toast id="toast-error"></glk-toast>
 
     <glk-divider></glk-divider>
+
+    <!-- Segmented -->
+    <h2>Segmentwahl</h2>
+    <div class="demo-row" style="flex-direction:column;align-items:flex-start;gap:10px">
+      <glk-segmented label="Modus" options='[{"value":"context","label":"Kontextuell"},{"value":"page","label":"Hilfeseite"},{"value":"inline","label":"Inline"}]' value="context"></glk-segmented>
+      <glk-segmented full label="Status" style="width:100%;max-width:420px" options='[{"value":"g","label":"Grün","tone":"success"},{"value":"y","label":"Gelb","tone":"warning"},{"value":"r","label":"Rot","tone":"error"},{"value":"x","label":"Gesperrt","disabled":true}]' value="y"></glk-segmented>
+    </div>
+
+    <!-- Steps -->
+    <h2>Schrittanzeige</h2>
+    <div class="demo-row"><glk-steps steps="Tag,Fenster,Hund,Bestätigen" current="2" style="width:100%"></glk-steps></div>
+
+    <!-- Sheet -->
+    <h2>Bottom-Sheet</h2>
+    <div class="demo-row">
+      <glk-sheet inline title="Umbuchen auf …" style="width:100%"><p style="margin:0">Inhalt des Sheets: Liste, Text, Formular. Dieses hier ist eingebettet.</p><glk-button slot="actions" variant="primary" size="sm" id="sc-sheet-open">Als Overlay öffnen</glk-button></glk-sheet>
+      <glk-sheet id="sc-sheet" title="Umbuchen auf …"><p style="margin:0">Tippen außerhalb oder Escape schließt.</p><glk-button slot="actions" variant="secondary" size="sm" id="sc-sheet-close">Schließen</glk-button></glk-sheet>
+    </div>
+    <script>
+      document.getElementById('sc-sheet-open').addEventListener('click', () => document.getElementById('sc-sheet').show());
+      document.getElementById('sc-sheet-close').addEventListener('click', () => document.getElementById('sc-sheet').close());
+    </script>
+
+    <!-- Empty -->
+    <h2>Leerzustand</h2>
+    <div class="demo-row"><glk-card style="width:100%"><glk-empty title="Noch keine Buchungen" text="Such dir einen Tag und einen Hund aus — das Team freut sich."><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/></svg><glk-button slot="action" variant="primary" size="sm">Buchen</glk-button></glk-empty></glk-card></div>
 
     <!-- Your own element on GlkElement -->
     <h2>Eigenes Element</h2>

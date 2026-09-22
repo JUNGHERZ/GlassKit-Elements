@@ -1,6 +1,6 @@
 ---
 name: glasskit-elements
-description: GlassKit Elements is a vanilla-JS Web Components library (v1.16.1) wrapping GlassKit CSS v1.16.0. It provides 36 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
+description: GlassKit Elements is a vanilla-JS Web Components library (v1.17.0) wrapping GlassKit CSS v1.17.0. It provides 36 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
 ---
 
 # GlassKit Elements – AI Component Reference
@@ -18,7 +18,7 @@ description: GlassKit Elements is a vanilla-JS Web Components library (v1.16.1) 
 npm install @jungherz-de/glasskit-elements @jungherz-de/glasskit
 ```
 
-Peer dependency `@jungherz-de/glasskit >=1.16.0` is required — 1.9.0 is the release that made the stylesheet splittable, which is what lets document-level branding reach the elements at all.
+Peer dependency `@jungherz-de/glasskit >=1.17.0` is required — 1.9.0 is the release that made the stylesheet splittable, which is what lets document-level branding reach the elements at all.
 
 ### Import (ES modules)
 
@@ -570,8 +570,13 @@ Text input with label + hint.
 | `required` | Boolean | Required field |
 | `name` | String | Form field name |
 | `value` | String | Current value |
+| `min`, `max`, `step` | String | Passed to the inner field — range and step of the picker for dates, times and numbers (since 1.17.0) |
+| `minlength`, `maxlength`, `pattern` | String | Passed to the inner field (since 1.17.0) |
+| `autocomplete`, `inputmode` | String | Autofill and on-screen keyboard, passed to the inner field (since 1.17.0) |
 
 Events: `glk-input` → `{ value }`, `glk-change` → `{ value }`. Native `input` / `change` also dispatched. Property: `.value`.
+
+The inner field's validity is not reported to the surrounding form: `required`, `pattern` and `min` constrain the field and its picker, but they do not block a submit — validate before sending.
 
 ---
 
@@ -984,10 +989,20 @@ A small, exclusive choice as one control (since 1.15.0) — traffic light, morni
 | `options` | JSON | `[{ value, label, tone?, disabled? }]`; `tone` is `success` \| `warning` \| `error` and puts a dot in that colour before the label |
 | `value` | String | Value of the chosen option (reflected property) |
 | `full` | Boolean | Buttons share the width |
+| `overflow` | String | What happens when the options do not fit: `scroll` — one row that scrolls sideways, the chosen option kept in view; `wrap` — breaks into lines. Without it the row stays one line (since 1.17.0) |
 | `label` | String | `aria-label` of the group (no default — set it) |
 | `name` | String | Form field name |
 
-Properties: `value`, `options` (array or JSON text), `full`, `label`. Events: `glk-change` `{ value }` — only on a change made by the user, not on `.value = …`. Part: `group`.
+Properties: `value`, `options` (array or JSON text), `full`, `overflow`, `label`. Events: `glk-change` `{ value }` — only on a change made by the user, not on `.value = …`. Part: `group`.
+
+With `overflow="scroll"` the chosen option is centred in the row after the first layout, on every value change and when the row's width changes — the row scrolls, never the page. Seven areas on a phone:
+
+```html
+<glk-segmented full overflow="scroll" label="Area" value="g"
+  options='[{"value":"a","label":"General"},{"value":"b","label":"Hours"},…,{"value":"g","label":"Privacy"}]'></glk-segmented>
+```
+
+The attribute is `overflow`, not `scroll`: `scroll` is a method of every element, and a framework that sets a property whenever the element has one (hybrids, Vue, React 19) would overwrite that method instead of setting the attribute.
 
 ---
 
@@ -1360,7 +1375,7 @@ All `glk-*` events bubble and are `composed: true`, so they pierce shadow bounda
 | `<glk-avatar>` | Content | `size`, `src` | default (initials) | — |
 | `<glk-badge>` | Content | `variant`, `interactive`, `selected` | default | `glk-click` (only when interactive) |
 | `<glk-empty>` | Content | `title`, `text` | default (icon), `action` | — |
-| `<glk-segmented>` | Forms | `options`, `value`, `full`, `label`, `name` | — | `glk-change` |
+| `<glk-segmented>` | Forms | `options`, `value`, `full`, `overflow`, `label`, `name` | — | `glk-change` |
 | `<glk-steps>` | Navigation | `steps`, `current`, `label` | — | — |
 | `<glk-sheet>` | Feedback | `open`, `inline`, `title` | default, `actions` | `glk-close` |
 | `<glk-date-strip>` | Navigation | `start`, `days`, `value`, `today`, `marks`, `locale`, `label` | — | `glk-change` |
@@ -1372,7 +1387,7 @@ All `glk-*` events bubble and are `composed: true`, so they pierce shadow bounda
 | `<glk-title>` | Content | — | default | — |
 | `<glk-button>` | Buttons | `variant`, `size`, `disabled`, `type` | default | `glk-click` |
 | `<glk-checkbox>` | Forms | `label`, `checked`, `disabled`, `name`, `value` | — | `glk-change` |
-| `<glk-input>` | Forms | `label`, `type`, `placeholder`, `hint`, `error`, `disabled`, `required`, `name`, `value` | — | `glk-input`, `glk-change` |
+| `<glk-input>` | Forms | `label`, `type`, `placeholder`, `hint`, `error`, `disabled`, `required`, `name`, `value`, `min`, `max`, `step`, `minlength`, `maxlength`, `pattern`, `autocomplete`, `inputmode` | — | `glk-input`, `glk-change` |
 | `<glk-radio>` | Forms | `label`, `name`, `value`, `checked`, `disabled` | — | `glk-change` |
 | `<glk-range>` | Forms | `label`, `min`, `max`, `value`, `step`, `name`, `disabled` | — | `glk-input`, `glk-change` |
 | `<glk-search>` | Forms | `placeholder`, `value`, `name`, `disabled` | — | `glk-input`, `glk-change` |

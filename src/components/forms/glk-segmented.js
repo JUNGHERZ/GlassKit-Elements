@@ -1,19 +1,31 @@
 import { GlkFormElement } from '../../base.js';
+import { revealCentered } from '../../reveal.js';
 
 // One button per option, the chosen one marked aria-pressed="true" — GlassKit
 // styles exactly that attribute. Came back from EhrenPfoten in 1.15.0.
 //
 // Attributes: options (JSON [{value,label,tone?,disabled?}]), value, full,
-//             label (aria-label of the group), name (form field name)
-// Properties: value, options (array or JSON text), full, label
+//             overflow ("scroll" | "wrap": what happens when the options
+//             do not fit — without it the row stays one line and runs past
+//             the edge), label (aria-label of the group), name (form field)
+// Properties: value, options (array or JSON text), full, overflow, label
 // Event:      glk-change { value } — only on a change made by the user
 // Part:       group
 //
 // Form-associated: a surrounding <form> receives name=value, reset restores
 // the initial value. A value change only re-sets aria-pressed, never rebuilds,
 // so focus stays on the button that was pressed.
+//
+// overflow="scroll" keeps the chosen option in view: it is centred in the
+// row after the first layout, on every value change and when the row's width
+// changes, through the row's own scrolling, so the page never moves (since
+// 1.17.0). The attribute is not called "scroll": that is a method of every
+// element, and a framework that sets a property whenever the element has one
+// (hybrids, Vue, React 19) would overwrite the method instead of setting the
+// attribute.
 
 const TONES = ['success', 'warning', 'error'];
+const OVERFLOWS = ['scroll', 'wrap'];
 
 function parseList(json) {
   try {
@@ -25,14 +37,14 @@ function parseList(json) {
 }
 
 class GlkSegmented extends GlkFormElement {
-  static get observedAttributes() { return ['options', 'value', 'full', 'label']; }
+  static get observedAttributes() { return ['options', 'value', 'full', 'overflow', 'label']; }
 
   render() {
     this._group = this.createElement('div', ['glass-segmented'], { role: 'group', part: 'group' });
     this._wrapper.appendChild(this._group);
     this._initialValue = this.value;
     this._build();
-    this._applyFull();
+    this._applyLayout();
     this._applyLabel();
   }
 
@@ -58,10 +70,20 @@ class GlkSegmented extends GlkFormElement {
       button.setAttribute('aria-pressed', String(button.dataset.value === value));
     }
     this.setFormValue(value);
+    this._reveal(this._revealedAt ? 'smooth' : 'instant');
   }
 
-  _applyFull() {
+  _applyLayout() {
+    const overflow = this.overflow;
     this._group.classList.toggle('glass-segmented--full', this.getBoolAttr('full'));
+    for (const mode of OVERFLOWS) this._group.classList.toggle(`glass-segmented--${mode}`, overflow === mode);
+    this._reveal('instant');
+  }
+
+  _reveal(behavior) {
+    if (this.overflow !== 'scroll') return;
+    const pressed = this._group.querySelector('[aria-pressed="true"]');
+    if (revealCentered(this._group, pressed, behavior === 'smooth')) this._revealedAt = this._group.clientWidth;
   }
 
   _applyLabel() {
@@ -79,11 +101,16 @@ class GlkSegmented extends GlkFormElement {
       this.value = value;
       this.emit('glk-change', { value });
     };
+    this._onResize = () => { if (this._group.clientWidth !== this._revealedAt) this._reveal('instant'); };
     this._group.addEventListener('click', this._onClick);
+    this._resizeObserver = new ResizeObserver(this._onResize);
+    this._resizeObserver.observe(this._group);
   }
 
   teardownEvents() {
     this._group?.removeEventListener('click', this._onClick);
+    this._resizeObserver?.disconnect();
+    this._resizeObserver = null;
   }
 
   onAttributeChanged(name) {
@@ -91,7 +118,8 @@ class GlkSegmented extends GlkFormElement {
     switch (name) {
       case 'value': this._syncValue(); break;
       case 'options': this._build(); break;
-      case 'full': this._applyFull(); break;
+      case 'full':
+      case 'overflow': this._applyLayout(); break;
       case 'label': this._applyLabel(); break;
     }
   }
@@ -110,6 +138,15 @@ class GlkSegmented extends GlkFormElement {
 
   get full() { return this.getBoolAttr('full'); }
   set full(v) { this.setBoolAttr('full', v); }
+
+  get overflow() {
+    const v = this.getAttribute('overflow');
+    return OVERFLOWS.includes(v) ? v : '';
+  }
+  set overflow(v) {
+    if (v) this.setAttribute('overflow', String(v));
+    else this.removeAttribute('overflow');
+  }
 
   get label() { return this.getAttribute('label') || ''; }
   set label(v) {

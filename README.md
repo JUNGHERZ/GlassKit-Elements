@@ -5,7 +5,7 @@
   <a href="#"><img src="https://img.shields.io/badge/vanilla_JS-no_dependencies-44cc11?style=flat-square" alt="Vanilla JS"></a>
   <a href="#"><img src="https://img.shields.io/badge/components-33-7ec8e3?style=flat-square" alt="33 Components"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="MIT License"></a>
-  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/changelog-v1.16.1-lightgrey?style=flat-square" alt="Changelog"></a>
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/changelog-v1.17.0-lightgrey?style=flat-square" alt="Changelog"></a>
   <a href="https://www.npmjs.com/package/@jungherz-de/glasskit-elements"><img src="https://img.shields.io/badge/npm-%40jungherz--de%2Fglasskit--elements-cb3837?style=flat-square&logo=npm" alt="npm"></a>
 </p>
 
@@ -66,7 +66,7 @@ It is the **app layer** of the GlassKit family — three layers, one design lang
 
 ```html
 <!-- 1. GlassKit CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.16/glasskit.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.17/glasskit.min.css">
 
 <!-- 2. GlassKit Elements -->
 <script src="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"></script>
@@ -104,7 +104,7 @@ The per-component files leave `@jungherz-de/glasskit/glasskit-styles.js` as an e
 <!DOCTYPE html>
 <html data-theme="dark">
 <head>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.16/glasskit.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.17/glasskit.min.css">
   <script src="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"></script>
 </head>
 <body>
@@ -156,7 +156,7 @@ All form components support `name`, `value`, `disabled` and participate in nativ
 
 | Component | Description | Key Attributes |
 |---|---|---|
-| `<glk-input>` | Text input with label & hint | `label`, `type`, `placeholder`, `hint`, `error`, `required` |
+| `<glk-input>` | Text input with label & hint | `label`, `type`, `placeholder`, `hint`, `error`, `required`, `min`, `max`, `step`, `maxlength`, `pattern`, `autocomplete`, `inputmode` |
 | `<glk-textarea>` | Multi-line text input | `label`, `rows`, `placeholder` |
 | `<glk-select>` | Dropdown select | `label` (children: `<option>`) |
 | `<glk-search>` | Search input with icon | `placeholder` |
@@ -164,7 +164,7 @@ All form components support `name`, `value`, `disabled` and participate in nativ
 | `<glk-checkbox>` | Checkbox | `label`, `checked`, `disabled` |
 | `<glk-radio>` | Radio button | `label`, `name`, `value`, `checked` |
 | `<glk-range>` | Range slider | `label`, `min`, `max`, `value`, `step` |
-| `<glk-segmented>` | Small exclusive choice as one control; form-associated | `options` (JSON), `value`, `full`, `label`, `name` |
+| `<glk-segmented>` | Small exclusive choice as one control; form-associated | `options` (JSON), `value`, `full`, `overflow` (scroll, wrap), `label`, `name` |
 | `<glk-calendar>` | One month with a day to pick; keyboard navigation, `Intl` names; form-associated | `month`, `value`, `today`, `min`, `max`, `marks`, `locale`, `week-start`, `label`, `name` |
 | `<glk-image-picker>` | One image with preview, resized on the client, EXIF rotation applied; not form-associated | `src`, `label`, `hint`, `round`, `max`, `type`, `quality`, `accept` |
 

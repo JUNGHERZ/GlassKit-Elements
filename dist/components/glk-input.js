@@ -1,9 +1,15 @@
 import { GlkFormElement } from './base.js';
 import '@jungherz-de/glasskit/glasskit-styles.js';
 
+// Attributes that belong to the inner <input> and are handed down unchanged:
+// the picker's range and step, the typing limits, the pattern, autofill and
+// the on-screen keyboard. Absent on the host means absent inside (since
+// 1.17.0 — before, a date field with min still offered every past day).
+const FORWARDED = ['min', 'max', 'step', 'minlength', 'maxlength', 'pattern', 'autocomplete', 'inputmode'];
+
 class GlkInput extends GlkFormElement {
   static get observedAttributes() {
-    return ['label', 'type', 'placeholder', 'error', 'hint', 'disabled', 'name', 'value', 'required'];
+    return ['label', 'type', 'placeholder', 'error', 'hint', 'disabled', 'name', 'value', 'required', ...FORWARDED];
   }
 
   render() {
@@ -29,6 +35,7 @@ class GlkInput extends GlkFormElement {
 
     if (this.getBoolAttr('disabled')) this._input.disabled = true;
     if (this.getBoolAttr('required')) this._input.required = true;
+    for (const attr of FORWARDED) this._forward(attr);
 
     // Hint
     this._hintEl = this.createElement('span', this._computeHintClasses());
@@ -98,7 +105,15 @@ class GlkInput extends GlkFormElement {
       case 'required':
         this._input.required = this.getBoolAttr('required');
         break;
+      default:
+        if (FORWARDED.includes(name)) this._forward(name);
     }
+  }
+
+  _forward(attr) {
+    const value = this.getAttribute(attr);
+    if (value === null) this._input.removeAttribute(attr);
+    else this._input.setAttribute(attr, value);
   }
 
   _computeInputClasses() {

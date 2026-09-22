@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.17.0] – 2026-09-22
+
+Versions realign with GlassKit at 1.17.0.
+
+### Added
+
+- **`<glk-segmented overflow="scroll" | "wrap">` for more options than fit.** Seven areas in `<glk-segmented full>` did not fit on a phone: the row ran past its edge and the last area could not be reached. `overflow="scroll"` keeps one row that scrolls sideways (GlassKit's `.glass-segmented--scroll`, scrollbar hidden) and keeps the chosen option in view — centred in the row after the first layout, on every value change and when the row's width changes, through the row's own scrolling, so the page never moves; a value change glides unless reduced motion is asked for, a change of size snaps. `overflow="wrap"` breaks the row into lines (`--wrap`). Without the attribute the row stays one line, as before. Deviation from the proposal, which had two booleans `scroll` and `wrap`: `scroll` is a method of every element, and a framework that sets a property whenever the element has one — hybrids 9 checks `name in element`, Vue and React 19 do the same — would overwrite the method instead of setting the attribute, so `scroll="${…}"` would silently do nothing; one enumerated `overflow` also rules out asking for both at once. Verified in Chromium and WebKit, LTR and RTL: with the seventh option chosen it is visible after load; picking the first scrolls back to the start; `.value = 'd'` centres the fourth to the pixel; the page's scroll position never changes; keyboard focus scrolls the focused option into view. (EhrenPfoten, Elements finding 7.)
+
+### Fixed
+
+- **`<glk-input>` did not pass `min`, `max` and `step` to its field.** The element observed nine attributes, and `min`, `max`, `step`, `minlength`, `maxlength`, `pattern`, `autocomplete` and `inputmode` on the host never reached the inner `<input>` — a date field with `min` set to today still offered every past day in its picker. All eight are now handed down unchanged when present and removed when they go. The inner field's validity is still not reported to the surrounding form: like `required`, `pattern` and `min` constrain the field and its picker but do not block a submit. (EhrenPfoten, Elements finding 6.)
+
+- **Rebuilt against GlassKit 1.17.0**, which the elements bundle: `<glk-input type="date">` (and `time`, `datetime-local`, `month`) keeps its column width on iOS — measured in the iOS 26.3 and 27.0 simulators at 402 px, the field sat 35 px past its column before and flush after, with the value at the start like every other field; several buttons in `<glk-empty>`'s `action` slot stand side by side with an 8 px gap instead of touching. The peer dependency moves to `>=1.17.0`.
+
+### Changed
+
+- `<glk-date-strip>` and `<glk-segmented>` share one helper for centring the chosen item (`src/reveal.js`, a shared chunk of the per-component build). It scrolls by a relative distance, so the strip now also centres in right-to-left layouts, where the absolute `scrollLeft` it used before runs negative.
+
+---
+
 ## [1.16.1] – 2026-09-22
 
 ### Fixed
@@ -633,6 +653,7 @@ Starting with this release, GlassKit Elements version numbers are aligned with G
 
 ---
 
+[1.17.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.17.0
 [1.16.1]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.16.1
 [1.16.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.16.0
 [1.15.2]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.15.2

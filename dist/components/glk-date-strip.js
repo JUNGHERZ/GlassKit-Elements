@@ -1,5 +1,6 @@
 import { GlkElement } from './base.js';
 import { f as formatters, r as resolveLocale, b as parseJsonObject, p as parseIso, i as isoDate, c as addDays, w as weekdayShort, d as isTone } from './shared/dates-CNWaJf09.js';
+import { r as revealCentered } from './shared/reveal-CjjzoxTa.js';
 import '@jungherz-de/glasskit/glasskit-styles.js';
 
 // A row of day chips that scrolls sideways — a booking horizon, the days
@@ -85,24 +86,15 @@ class GlkDateStrip extends GlkElement {
     for (const chip of this._chips()) chip.tabIndex = chip === target ? 0 : -1;
   }
 
-  // Scroll the chosen chip to the middle of the strip. Computed from client
-  // rects and applied to the strip's own scrollLeft, so the page never moves —
-  // scrollIntoView would scroll every ancestor. Before the first layout the
-  // strip has no width; the ResizeObserver in setupEvents centres then, and
-  // again whenever the strip's width changes — a parent that upgrades later
-  // and adds its padding, a window resize, a strip that starts out hidden. A
-  // value change glides unless the user asked for reduced motion; a size
-  // change snaps, so a settling layout never animates.
+  // Centre the chosen chip in the strip (see reveal.js). Before the first
+  // layout the strip has no width; the ResizeObserver in setupEvents centres
+  // then, and again whenever the strip's width changes — a parent that
+  // upgrades later and adds its padding, a window resize, a strip that
+  // starts out hidden. A value change glides; a size change snaps, so a
+  // settling layout never animates.
   _reveal(behavior = 'instant') {
     const chip = this._strip.querySelector('[aria-pressed="true"]');
-    const width = this._strip.clientWidth;
-    if (!chip || !width) return;
-    const strip = this._strip.getBoundingClientRect();
-    const box = chip.getBoundingClientRect();
-    const left = this._strip.scrollLeft + (box.left - strip.left) - (strip.width - box.width) / 2;
-    const smooth = behavior === 'smooth' && !matchMedia('(prefers-reduced-motion: reduce)').matches;
-    this._strip.scrollTo({ left: Math.max(0, left), behavior: smooth ? 'smooth' : 'instant' });
-    this._revealedAt = width;
+    if (revealCentered(this._strip, chip, behavior === 'smooth')) this._revealedAt = this._strip.clientWidth;
   }
 
   _applyLabel() {

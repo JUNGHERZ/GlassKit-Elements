@@ -204,6 +204,24 @@ var GlassKitElements = (function (exports) {
 
     // ── Utility Methods ──
 
+    /**
+     * For elements whose heading arrives as `title`. That is also the global
+     * HTML attribute, and a title on the host shows as a browser tooltip — the
+     * sheet's heading floating over its form. So the value is read into
+     * this._title and the attribute is taken off the host; a later
+     * setAttribute('title') comes through attributeChangedCallback, is taken
+     * the same way and removed again, and the element's `title` accessor
+     * answers from this._title. The removal fires the callback with null,
+     * which is ignored here — only an empty string clears the heading.
+     * Returns whether a value was taken.
+     */
+    takeTitle(value = this.getAttribute('title')) {
+      if (value === null) return false;
+      this._title = value;
+      this.removeAttribute('title');
+      return true;
+    }
+
     getBoolAttr(name) {
       return this.hasAttribute(name);
     }
@@ -1204,11 +1222,12 @@ var GlassKitElements = (function (exports) {
       action.appendChild(this.createElement('slot', [], { name: 'action' }));
       root.append(icon, this._titleEl, this._textEl, action);
       this._wrapper.appendChild(root);
+      this.takeTitle();
       this._update();
     }
 
     _update() {
-      const title = this.getAttribute('title') || '';
+      const title = this._title || '';
       const text = this.getAttribute('text') || '';
       this._titleEl.textContent = title;
       this._titleEl.hidden = !title;
@@ -1216,8 +1235,20 @@ var GlassKitElements = (function (exports) {
       this._textEl.hidden = !text;
     }
 
-    onAttributeChanged() {
+    onAttributeChanged(name, _old, value) {
+      if (name === 'title' && !this.takeTitle(value)) return;
       if (this._titleEl) this._update();
+    }
+
+    _applyTitle() {
+      if (this._titleEl) this._update();
+    }
+
+    // `title` is the heading, never a tooltip — see GlkElement.takeTitle().
+    get title() { return this._title ?? ''; }
+    set title(v) {
+      this._title = v == null ? '' : String(v);
+      this._applyTitle();
     }
 
     get text() { return this.getAttribute('text') || ''; }
@@ -2901,7 +2932,8 @@ var GlassKitElements = (function (exports) {
       // Header
       const header = this.createElement('div', ['glass-modal__header'], { part: 'header' });
       this._titleEl = this.createElement('h2', ['glass-modal__title']);
-      this._titleEl.textContent = this.getAttribute('title') || '';
+      this.takeTitle();
+      this._applyTitle();
       header.appendChild(this._titleEl);
 
       // Body
@@ -2970,20 +3002,31 @@ var GlassKitElements = (function (exports) {
       document.removeEventListener('keydown', this._onKeydown);
     }
 
-    onAttributeChanged(name) {
+    onAttributeChanged(name, _old, value) {
       if (!this._overlay) return;
       switch (name) {
         case 'open':
           this._overlay.classList.toggle('is-active', this.getBoolAttr('open'));
           break;
         case 'title':
-          this._titleEl.textContent = this.getAttribute('title') || '';
+          if (this.takeTitle(value)) this._applyTitle();
           break;
       }
     }
 
     show() { this.setAttribute('open', ''); }
     close() { this.removeAttribute('open'); }
+
+    _applyTitle() {
+      if (this._titleEl) this._titleEl.textContent = this._title || '';
+    }
+
+    // `title` is the heading, never a tooltip — see GlkElement.takeTitle().
+    get title() { return this._title ?? ''; }
+    set title(v) {
+      this._title = v == null ? '' : String(v);
+      this._applyTitle();
+    }
 
     get open() { return this.getBoolAttr('open'); }
     set open(v) { this.setBoolAttr('open', v); }
@@ -3236,12 +3279,14 @@ var GlassKitElements = (function (exports) {
       this._panel.append(this._titleEl, body, actions);
       this._overlay.appendChild(this._panel);
       this._wrapper.appendChild(this._overlay);
+      this.takeTitle();
       this._applyTitle();
       this._applyMode();
     }
 
     _applyTitle() {
-      const title = this.getAttribute('title') || '';
+      if (!this._titleEl) return;
+      const title = this._title || '';
       this._titleEl.textContent = title;
       this._titleEl.hidden = !title;
       if (title) this._panel.setAttribute('aria-label', title);
@@ -3311,7 +3356,7 @@ var GlassKitElements = (function (exports) {
       document.removeEventListener('keydown', this._onKeydown);
     }
 
-    onAttributeChanged(name) {
+    onAttributeChanged(name, _old, value) {
       if (!this._overlay) return;
       switch (name) {
         case 'open':
@@ -3320,12 +3365,19 @@ var GlassKitElements = (function (exports) {
           else this._hide();
           break;
         case 'inline': this._applyMode(); break;
-        case 'title': this._applyTitle(); break;
+        case 'title': if (this.takeTitle(value)) this._applyTitle(); break;
       }
     }
 
     show() { this.setAttribute('open', ''); }
     close() { this.removeAttribute('open'); }
+
+    // `title` is the heading, never a tooltip — see GlkElement.takeTitle().
+    get title() { return this._title ?? ''; }
+    set title(v) {
+      this._title = v == null ? '' : String(v);
+      this._applyTitle();
+    }
 
     get open() { return this.getBoolAttr('open'); }
     set open(v) { this.setBoolAttr('open', v); }
@@ -3359,7 +3411,8 @@ var GlassKitElements = (function (exports) {
 
       // Trigger button
       this._trigger = this.createElement('button', ['glass-accordion__trigger']);
-      this._triggerText = document.createTextNode(this.getAttribute('title') || '');
+      this.takeTitle();
+      this._triggerText = document.createTextNode(this._title || '');
       this._trigger.appendChild(this._triggerText);
       this._trigger.insertAdjacentHTML('beforeend', CHEVRON_SVG);
 
@@ -3387,16 +3440,27 @@ var GlassKitElements = (function (exports) {
       this._trigger?.removeEventListener('click', this._onClick);
     }
 
-    onAttributeChanged(name) {
+    onAttributeChanged(name, _old, value) {
       if (!this._item) return;
       switch (name) {
         case 'open':
           this._item.classList.toggle('is-open', this.getBoolAttr('open'));
           break;
         case 'title':
-          this._triggerText.textContent = this.getAttribute('title') || '';
+          if (this.takeTitle(value)) this._applyTitle();
           break;
       }
+    }
+
+    _applyTitle() {
+      if (this._triggerText) this._triggerText.textContent = this._title || '';
+    }
+
+    // `title` is the heading, never a tooltip — see GlkElement.takeTitle().
+    get title() { return this._title ?? ''; }
+    set title(v) {
+      this._title = v == null ? '' : String(v);
+      this._applyTitle();
     }
 
     get open() { return this.getBoolAttr('open'); }
@@ -3525,7 +3589,8 @@ var GlassKitElements = (function (exports) {
       // Content — title + optional subtitle.
       this._content = this.createElement('div', ['glass-list__content']);
       this._titleEl = this.createElement('div', ['glass-list__title']);
-      this._titleEl.textContent = this.getAttribute('title') || '';
+      this.takeTitle();
+      this._titleEl.textContent = this._title || '';
       this._subtitleEl = this.createElement('div', ['glass-list__subtitle']);
       if (this.getBoolAttr('wrap')) this._subtitleEl.classList.add('glass-list__subtitle--wrap');
       const initialSubtitle = this.getAttribute('subtitle') || '';
@@ -3591,11 +3656,11 @@ var GlassKitElements = (function (exports) {
       this._item?.removeEventListener('click', this._onClick);
     }
 
-    onAttributeChanged(name) {
+    onAttributeChanged(name, _old, value) {
       if (!this._item) return;
       switch (name) {
         case 'title':
-          this._titleEl.textContent = this.getAttribute('title') || '';
+          if (this.takeTitle(value)) this._applyTitle();
           break;
         case 'subtitle': {
           const value = this.getAttribute('subtitle') || '';
@@ -3633,6 +3698,17 @@ var GlassKitElements = (function (exports) {
           break;
         }
       }
+    }
+
+    _applyTitle() {
+      if (this._titleEl) this._titleEl.textContent = this._title || '';
+    }
+
+    // `title` is the heading, never a tooltip — see GlkElement.takeTitle().
+    get title() { return this._title ?? ''; }
+    set title(v) {
+      this._title = v == null ? '' : String(v);
+      this._applyTitle();
     }
 
     get interactive() { return this.getBoolAttr('interactive'); }

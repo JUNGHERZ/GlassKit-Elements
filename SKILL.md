@@ -1,6 +1,6 @@
 ---
 name: glasskit-elements
-description: GlassKit Elements is a vanilla-JS Web Components library (v1.16.0) wrapping GlassKit CSS v1.16.0. It provides 36 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
+description: GlassKit Elements is a vanilla-JS Web Components library (v1.16.1) wrapping GlassKit CSS v1.16.0. It provides 36 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
 ---
 
 # GlassKit Elements – AI Component Reference
@@ -1326,6 +1326,7 @@ All `glk-*` events bubble and are `composed: true`, so they pierce shadow bounda
 6. **Use `<glk-list bare>` inside `<glk-popover>`** — otherwise you get a double glass surface.
 7. **Import the library once** — `import '@jungherz-de/glasskit-elements'` registers all elements via `customElements.define`. Multiple imports are idempotent but unnecessary.
 8. **SVG icons: `stroke: currentColor, stroke-width: 2`** — matches GlassKit's icon convention and inherits the token-driven text color.
+9. **`title` on `<glk-sheet>`, `<glk-modal>`, `<glk-list-item>`, `<glk-accordion-item>` and `<glk-empty>` is the heading, not a tooltip** (since 1.16.1) — the element reads it and takes the attribute off the host, so `el.getAttribute('title')` is `null` after upgrade; read and write `el.title` instead. Every other element keeps the native `title` tooltip.
 
 ### Common mistakes
 

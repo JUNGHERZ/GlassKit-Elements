@@ -37,12 +37,14 @@ class GlkSheet extends GlkElement {
     this._panel.append(this._titleEl, body, actions);
     this._overlay.appendChild(this._panel);
     this._wrapper.appendChild(this._overlay);
+    this.takeTitle();
     this._applyTitle();
     this._applyMode();
   }
 
   _applyTitle() {
-    const title = this.getAttribute('title') || '';
+    if (!this._titleEl) return;
+    const title = this._title || '';
     this._titleEl.textContent = title;
     this._titleEl.hidden = !title;
     if (title) this._panel.setAttribute('aria-label', title);
@@ -112,7 +114,7 @@ class GlkSheet extends GlkElement {
     document.removeEventListener('keydown', this._onKeydown);
   }
 
-  onAttributeChanged(name) {
+  onAttributeChanged(name, _old, value) {
     if (!this._overlay) return;
     switch (name) {
       case 'open':
@@ -121,12 +123,19 @@ class GlkSheet extends GlkElement {
         else this._hide();
         break;
       case 'inline': this._applyMode(); break;
-      case 'title': this._applyTitle(); break;
+      case 'title': if (this.takeTitle(value)) this._applyTitle(); break;
     }
   }
 
   show() { this.setAttribute('open', ''); }
   close() { this.removeAttribute('open'); }
+
+  // `title` is the heading, never a tooltip — see GlkElement.takeTitle().
+  get title() { return this._title ?? ''; }
+  set title(v) {
+    this._title = v == null ? '' : String(v);
+    this._applyTitle();
+  }
 
   get open() { return this.getBoolAttr('open'); }
   set open(v) { this.setBoolAttr('open', v); }

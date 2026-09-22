@@ -16,7 +16,8 @@ class GlkModal extends GlkElement {
     // Header
     const header = this.createElement('div', ['glass-modal__header'], { part: 'header' });
     this._titleEl = this.createElement('h2', ['glass-modal__title']);
-    this._titleEl.textContent = this.getAttribute('title') || '';
+    this.takeTitle();
+    this._applyTitle();
     header.appendChild(this._titleEl);
 
     // Body
@@ -85,20 +86,31 @@ class GlkModal extends GlkElement {
     document.removeEventListener('keydown', this._onKeydown);
   }
 
-  onAttributeChanged(name) {
+  onAttributeChanged(name, _old, value) {
     if (!this._overlay) return;
     switch (name) {
       case 'open':
         this._overlay.classList.toggle('is-active', this.getBoolAttr('open'));
         break;
       case 'title':
-        this._titleEl.textContent = this.getAttribute('title') || '';
+        if (this.takeTitle(value)) this._applyTitle();
         break;
     }
   }
 
   show() { this.setAttribute('open', ''); }
   close() { this.removeAttribute('open'); }
+
+  _applyTitle() {
+    if (this._titleEl) this._titleEl.textContent = this._title || '';
+  }
+
+  // `title` is the heading, never a tooltip — see GlkElement.takeTitle().
+  get title() { return this._title ?? ''; }
+  set title(v) {
+    this._title = v == null ? '' : String(v);
+    this._applyTitle();
+  }
 
   get open() { return this.getBoolAttr('open'); }
   set open(v) { this.setBoolAttr('open', v); }

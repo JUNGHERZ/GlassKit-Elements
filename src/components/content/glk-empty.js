@@ -24,11 +24,12 @@ class GlkEmpty extends GlkElement {
     action.appendChild(this.createElement('slot', [], { name: 'action' }));
     root.append(icon, this._titleEl, this._textEl, action);
     this._wrapper.appendChild(root);
+    this.takeTitle();
     this._update();
   }
 
   _update() {
-    const title = this.getAttribute('title') || '';
+    const title = this._title || '';
     const text = this.getAttribute('text') || '';
     this._titleEl.textContent = title;
     this._titleEl.hidden = !title;
@@ -36,8 +37,20 @@ class GlkEmpty extends GlkElement {
     this._textEl.hidden = !text;
   }
 
-  onAttributeChanged() {
+  onAttributeChanged(name, _old, value) {
+    if (name === 'title' && !this.takeTitle(value)) return;
     if (this._titleEl) this._update();
+  }
+
+  _applyTitle() {
+    if (this._titleEl) this._update();
+  }
+
+  // `title` is the heading, never a tooltip — see GlkElement.takeTitle().
+  get title() { return this._title ?? ''; }
+  set title(v) {
+    this._title = v == null ? '' : String(v);
+    this._applyTitle();
   }
 
   get text() { return this.getAttribute('text') || ''; }

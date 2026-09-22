@@ -49,7 +49,8 @@ class GlkListItem extends GlkElement {
     // Content — title + optional subtitle.
     this._content = this.createElement('div', ['glass-list__content']);
     this._titleEl = this.createElement('div', ['glass-list__title']);
-    this._titleEl.textContent = this.getAttribute('title') || '';
+    this.takeTitle();
+    this._titleEl.textContent = this._title || '';
     this._subtitleEl = this.createElement('div', ['glass-list__subtitle']);
     if (this.getBoolAttr('wrap')) this._subtitleEl.classList.add('glass-list__subtitle--wrap');
     const initialSubtitle = this.getAttribute('subtitle') || '';
@@ -115,11 +116,11 @@ class GlkListItem extends GlkElement {
     this._item?.removeEventListener('click', this._onClick);
   }
 
-  onAttributeChanged(name) {
+  onAttributeChanged(name, _old, value) {
     if (!this._item) return;
     switch (name) {
       case 'title':
-        this._titleEl.textContent = this.getAttribute('title') || '';
+        if (this.takeTitle(value)) this._applyTitle();
         break;
       case 'subtitle': {
         const value = this.getAttribute('subtitle') || '';
@@ -157,6 +158,17 @@ class GlkListItem extends GlkElement {
         break;
       }
     }
+  }
+
+  _applyTitle() {
+    if (this._titleEl) this._titleEl.textContent = this._title || '';
+  }
+
+  // `title` is the heading, never a tooltip — see GlkElement.takeTitle().
+  get title() { return this._title ?? ''; }
+  set title(v) {
+    this._title = v == null ? '' : String(v);
+    this._applyTitle();
   }
 
   get interactive() { return this.getBoolAttr('interactive'); }

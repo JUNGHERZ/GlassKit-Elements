@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.16.1] – 2026-09-22
+
+### Fixed
+
+- **`title` on the elements that take a heading showed as a browser tooltip.** `<glk-sheet>`, `<glk-modal>`, `<glk-list-item>`, `<glk-accordion-item>` and `<glk-empty>` take their heading as `title` — which is also the global HTML attribute, so hovering a sheet floated its heading over the form, and a list showed a tooltip on every row. The elements now read the attribute and take it off the host (`GlkElement.takeTitle()`): a later `setAttribute('title', …)` is consumed the same way, `el.title` answers from the stored value and setting it never touches the attribute, and a framework that binds `title` as a property — hybrids, lit's `.title` — never puts one on the host at all. The API is unchanged, `title="…"` stays the documented attribute; what changes is that `getAttribute('title')` returns `null` after upgrade. Every other element keeps the native `title` tooltip. The proposal was a new `heading` attribute with `title` removed after reading; the second half is what happened, the first would have given one thing two names across five elements. (EhrenPfoten, Elements finding 5.)
+
+---
+
 ## [1.16.0] – 2026-09-22
 
 ### Added
@@ -625,6 +633,7 @@ Starting with this release, GlassKit Elements version numbers are aligned with G
 
 ---
 
+[1.16.1]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.16.1
 [1.16.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.16.0
 [1.15.2]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.15.2
 [1.15.1]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.15.1

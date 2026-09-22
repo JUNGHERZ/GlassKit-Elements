@@ -181,6 +181,24 @@ export class GlkElement extends HTMLElement {
 
   // ── Utility Methods ──
 
+  /**
+   * For elements whose heading arrives as `title`. That is also the global
+   * HTML attribute, and a title on the host shows as a browser tooltip — the
+   * sheet's heading floating over its form. So the value is read into
+   * this._title and the attribute is taken off the host; a later
+   * setAttribute('title') comes through attributeChangedCallback, is taken
+   * the same way and removed again, and the element's `title` accessor
+   * answers from this._title. The removal fires the callback with null,
+   * which is ignored here — only an empty string clears the heading.
+   * Returns whether a value was taken.
+   */
+  takeTitle(value = this.getAttribute('title')) {
+    if (value === null) return false;
+    this._title = value;
+    this.removeAttribute('title');
+    return true;
+  }
+
   getBoolAttr(name) {
     return this.hasAttribute(name);
   }

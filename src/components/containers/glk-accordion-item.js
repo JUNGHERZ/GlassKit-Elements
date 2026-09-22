@@ -13,7 +13,8 @@ class GlkAccordionItem extends GlkElement {
 
     // Trigger button
     this._trigger = this.createElement('button', ['glass-accordion__trigger']);
-    this._triggerText = document.createTextNode(this.getAttribute('title') || '');
+    this.takeTitle();
+    this._triggerText = document.createTextNode(this._title || '');
     this._trigger.appendChild(this._triggerText);
     this._trigger.insertAdjacentHTML('beforeend', CHEVRON_SVG);
 
@@ -41,16 +42,27 @@ class GlkAccordionItem extends GlkElement {
     this._trigger?.removeEventListener('click', this._onClick);
   }
 
-  onAttributeChanged(name) {
+  onAttributeChanged(name, _old, value) {
     if (!this._item) return;
     switch (name) {
       case 'open':
         this._item.classList.toggle('is-open', this.getBoolAttr('open'));
         break;
       case 'title':
-        this._triggerText.textContent = this.getAttribute('title') || '';
+        if (this.takeTitle(value)) this._applyTitle();
         break;
     }
+  }
+
+  _applyTitle() {
+    if (this._triggerText) this._triggerText.textContent = this._title || '';
+  }
+
+  // `title` is the heading, never a tooltip — see GlkElement.takeTitle().
+  get title() { return this._title ?? ''; }
+  set title(v) {
+    this._title = v == null ? '' : String(v);
+    this._applyTitle();
   }
 
   get open() { return this.getBoolAttr('open'); }

@@ -20,7 +20,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="GlassKit Elements — Dokumentation">
   <meta name="twitter:description" content="Vollständige Dokumentation aller 29 GlassKit Elements Web Components mit Live-Beispielen.">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.15/glasskit.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.16/glasskit.min.css">
   <script src="/dist/glasskit-elements.min.js"></script>
   <style>
     html { scroll-behavior: smooth; }
@@ -255,7 +255,7 @@
     <aside class="docs-sidebar">
       <div class="docs-sidebar__title">&#129482; <a href="../de/">GlassKit Elements</a></div>
       <div class="docs-sidebar__subtitle">Web Components f&uuml;r GlassKit CSS.</div>
-      <div class="docs-sidebar__version">v1.15.2 &ndash; Jungherz GmbH</div>
+      <div class="docs-sidebar__version">v1.16.0 &ndash; Jungherz GmbH</div>
 
       <div class="docs-sidebar__group">
         <div class="docs-sidebar__group-title">Grundlagen</div>
@@ -292,6 +292,8 @@
         <a class="docs-sidebar__link" href="#glk-radio">glk-radio</a>
         <a class="docs-sidebar__link" href="#glk-range">glk-range</a>
         <a class="docs-sidebar__link" href="#glk-segmented">glk-segmented</a>
+        <a class="docs-sidebar__link" href="#glk-calendar">glk-calendar</a>
+        <a class="docs-sidebar__link" href="#glk-image-picker">glk-image-picker</a>
       </div>
 
       <div class="docs-sidebar__group">
@@ -300,6 +302,7 @@
         <a class="docs-sidebar__link" href="#glk-tab-bar">glk-tab-bar</a>
         <a class="docs-sidebar__link" href="#glk-tab-dock">glk-tab-dock</a>
         <a class="docs-sidebar__link" href="#glk-steps">glk-steps</a>
+        <a class="docs-sidebar__link" href="#glk-date-strip">glk-date-strip</a>
       </div>
 
       <div class="docs-sidebar__group">
@@ -338,7 +341,7 @@
         <h1>GlassKit Elements</h1>
         <p>Vollst&auml;ndige Referenz f&uuml;r alle 29 Web Components &ndash; entwickelt von Jungherz GmbH. Vanilla JS, Shadow DOM, native Formular-Teilnahme.</p>
         <div class="docs-hero__badges">
-          <span class="docs-hero__badge">v1.15.2</span>
+          <span class="docs-hero__badge">v1.16.0</span>
           <span class="docs-hero__badge">Shadow DOM</span>
           <span class="docs-hero__badge">33 Komponenten</span>
           <span class="docs-hero__badge">Vanilla JS</span>
@@ -351,7 +354,7 @@
 
         <h3>CDN (schnellste Variante)</h3>
         <div class="docs-code"><span class="cmt">&lt;!-- 1. GlassKit CSS --&gt;</span>
-<span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span> <span class="attr">href</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.15/glasskit.min.css"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span> <span class="attr">href</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.16/glasskit.min.css"</span><span class="tag">&gt;</span>
 
 <span class="cmt">&lt;!-- 2. GlassKit Elements --&gt;</span>
 <span class="tag">&lt;script</span> <span class="attr">src</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"</span><span class="tag">&gt;&lt;/script&gt;</span></div>
@@ -663,6 +666,63 @@
             document.getElementById('docs-seg').addEventListener('glk-change', e => { document.querySelector('[data-docs-seg-out]').textContent = 'glk-change → ' + e.detail.value; });
           </script>
         </div>
+        <div class="docs-component" id="glk-calendar">
+          <h3><code>&lt;glk-calendar&gt;</code></h3>
+          <p>Ein Monat mit einem Tag zum Wählen. Die Tage sind Knöpfe in einer <code>role="group"</code>, der gewählte trägt <code>aria-pressed="true"</code>, jeder ist mit seinem vollen Datum benannt; Monatstitel, Wochentagsnamen und der erste Wochentag kommen aus <code>Intl</code> für die <code>locale</code> (<code>week-start</code> übersteuert). Ein Tab-Stopp: Pfeiltasten wandern um einen Tag oder eine Woche, Pos1/Ende an die Enden der Woche, Bild auf/ab um einen Monat — über die Monatsgrenze hinaus zeigt der Kalender diesen Monat und sendet <code>glk-month</code>. Pfeiltasten bewegen nur den Fokus; Enter oder Leertaste wählt, damit ein Kalender, der bei jeder Wahl ein Sheet öffnet, beim Umschauen still bleibt. Tage außerhalb von <code>min</code>/<code>max</code> sind <code>aria-disabled</code>: im Pfeilpfad, angesagt, nie gewählt. Formularfähig wie <code>&lt;glk-segmented&gt;</code>. Probier es: Mit Tab ins Raster, Pfeiltasten, Enter.</p>
+          <div class="docs-preview" style="display:flex;flex-direction:column;gap:10px;">
+            <glk-calendar id="docs-cal" style="width:100%;max-width:360px" value="2026-09-22" today="2026-09-22" min="2026-09-22" locale="de" label="Tag wählen" prev-label="Vormonat" next-label="Folgemonat" marks='{"2026-09-24":["error"],"2026-09-25":["warning"],"2026-09-27":["success","warning","primary"],"2026-10-02":"primary"}'></glk-calendar>
+            <span data-docs-cal-out style="opacity:.75;font-size:13px">wartet auf glk-change / glk-month…</span>
+          </div>
+          <div class="docs-code"><span class="tag">&lt;glk-calendar</span> <span class="attr">name</span>=<span class="val">"day"</span> <span class="attr">value</span>=<span class="val">"2026-09-22"</span> <span class="attr">min</span>=<span class="val">"2026-09-22"</span> <span class="attr">label</span>=<span class="val">"Tag wählen"</span>
+  <span class="attr">marks</span>=<span class="val">'{"2026-09-24":["error"],"2026-09-27":["success","warning"]}'</span><span class="tag">&gt;&lt;/glk-calendar&gt;</span></div>
+          <table class="docs-table">
+            <tr><th>Attribut</th><th>Typ</th><th>Werte</th></tr>
+            <tr><td><code>month</code></td><td>String</td><td>Gezeigter Monat <code>YYYY-MM</code>; ohne Angabe der Monat des Werts, sonst von heute. Wird beim Blättern reflektiert; ein Wert in einem anderen Monat schaltet dorthin um</td></tr>
+            <tr><td><code>value</code></td><td>String</td><td>Gewählter Tag <code>YYYY-MM-DD</code></td></tr>
+            <tr><td><code>today</code></td><td>String</td><td>Der Tag mit dem warmen Rahmen; ohne Angabe der Tag des Browsers</td></tr>
+            <tr><td><code>min</code>, <code>max</code></td><td>String</td><td>Tage außerhalb sind nicht wählbar (<code>aria-disabled</code>)</td></tr>
+            <tr><td><code>marks</code></td><td>JSON</td><td><code>{ "2026-09-30": ["error", "warning"] }</code> &mdash; bis zu drei Töne je Tag: <code>primary</code> | <code>success</code> | <code>warning</code> | <code>error</code></td></tr>
+            <tr><td><code>locale</code></td><td>String</td><td>BCP-47-Tag für Namen und Wochenbeginn; ohne Angabe die Browsersprache</td></tr>
+            <tr><td><code>week-start</code></td><td>Number</td><td>0 = Sonntag … 6 = Samstag; ohne Angabe aus der Locale, Montag wo der Browser es nicht weiß</td></tr>
+            <tr><td><code>label</code></td><td>String</td><td><code>aria-label</code> der Tagesgruppe</td></tr>
+            <tr><td><code>prev-label</code>, <code>next-label</code></td><td>String</td><td>Namen der Navigationsknöpfe; Vorgabe „Previous month“ / „Next month“</td></tr>
+            <tr><td><code>name</code></td><td>String</td><td>Feldname im Formular (formularfähig)</td></tr>
+          </table>
+          <p><strong>Ereignisse:</strong> <code>glk-change</code> <code>{ value }</code> bei einer Wahl durch den Nutzer; <code>glk-month</code> <code>{ month }</code> wenn der Nutzer zu einem anderen Monat wechselt. <strong>Eigenschaften:</strong> <code>month</code>, <code>value</code>, <code>marks</code>, <code>locale</code>, <code>label</code>. <strong>Parts:</strong> <code>calendar</code>, <code>head</code>, <code>title</code>, <code>grid</code>.</p>
+          <script>
+            (() => { const cal = document.getElementById('docs-cal'), out = document.querySelector('[data-docs-cal-out]');
+              cal.addEventListener('glk-change', e => { out.textContent = 'glk-change → ' + e.detail.value; });
+              cal.addEventListener('glk-month', e => { out.textContent = 'glk-month → ' + e.detail.month; }); })();
+          </script>
+        </div>
+        <div class="docs-component" id="glk-image-picker">
+          <h3><code>&lt;glk-image-picker&gt;</code></h3>
+          <p>Ein Bild mit Vorschau, auf dem Client verkleinert, bevor es irgendwohin geht. Auswählen öffnet den Dateidialog aus einem echten Knopf; die Datei wird mit <code>createImageBitmap</code> dekodiert, die EXIF-Drehung eines Handyfotos angewendet, auf ein Canvas nicht größer als <code>max</code> gezeichnet und als Data-URL in <code>glk-change</code> übergeben. Die Eigenschaft <code>src</code> hält sie und wird nicht reflektiert, damit eine Data-URL von Megabytes nie im DOM landet. Eine Datei, die der Browser nicht dekodieren kann — Chrome und HEIC, eine kaputte Datei — sendet <code>glk-error</code>, statt still zu scheitern. Nicht formularfähig: auf <code>glk-change</code> hören und hochladen. Probier es mit einem Foto vom Handy.</p>
+          <div class="docs-preview" style="display:flex;flex-direction:column;gap:16px;">
+            <glk-image-picker id="docs-pick" label="Foto des Hundes" hint="JPG oder PNG · wird vor dem Hochladen auf 1024 px verkleinert" choose-label="Auswählen" change-label="Ändern" remove-label="Entfernen"></glk-image-picker>
+            <glk-image-picker round max="512" label="Profilfoto" choose-label="Auswählen" change-label="Ändern" remove-label="Entfernen"></glk-image-picker>
+            <span data-docs-pick-out style="opacity:.75;font-size:13px">wartet auf glk-change…</span>
+          </div>
+          <div class="docs-code"><span class="tag">&lt;glk-image-picker</span> <span class="attr">round</span> <span class="attr">max</span>=<span class="val">"512"</span> <span class="attr">label</span>=<span class="val">"Profilfoto"</span> <span class="attr">hint</span>=<span class="val">"JPG, PNG"</span><span class="tag">&gt;&lt;/glk-image-picker&gt;</span>
+<span class="tag">&lt;script&gt;</span>picker.addEventListener('glk-change', e =&gt; upload(e.detail.dataUrl));<span class="tag">&lt;/script&gt;</span></div>
+          <table class="docs-table">
+            <tr><th>Attribut</th><th>Typ</th><th>Werte</th></tr>
+            <tr><td><code>src</code></td><td>String</td><td>Startbild: URL oder Data-URL</td></tr>
+            <tr><td><code>label</code></td><td>String</td><td>Sichtbare Beschriftung; benennt die Gruppe</td></tr>
+            <tr><td><code>hint</code></td><td>String</td><td>Kleine gedämpfte Zeile; ohne Vorgabe — was angenommen wird, hängt von <code>accept</code> und vom Browser ab</td></tr>
+            <tr><td><code>round</code></td><td>Boolean</td><td>Runde Vorschau, für Avatare</td></tr>
+            <tr><td><code>max</code></td><td>Number</td><td>Längste Kante in px nach dem Verkleinern, Vorgabe 1024</td></tr>
+            <tr><td><code>type</code>, <code>quality</code></td><td>String, Number</td><td>Ausgabe-MIME (Vorgabe <code>image/jpeg</code>; <code>image/webp</code>, wo der Browser es kodiert, sonst PNG) und Qualität 0–1 (Vorgabe 0,82)</td></tr>
+            <tr><td><code>accept</code></td><td>String</td><td>Filter des Dateidialogs, Vorgabe <code>image/*</code></td></tr>
+            <tr><td><code>choose-label</code>, <code>change-label</code>, <code>remove-label</code></td><td>String</td><td>Knopftexte; Vorgabe „Choose“, „Change“, „Remove“</td></tr>
+          </table>
+          <p><strong>Ereignisse:</strong> <code>glk-change</code> <code>{ dataUrl, width, height, size }</code> nach einer Wahl, beim Entfernen mit leerer <code>dataUrl</code> und Nullen; <code>glk-error</code> <code>{ message, name }</code> wenn die Datei nicht dekodiert werden kann. <strong>Eigenschaft:</strong> <code>src</code> (nicht reflektiert). <strong>Parts:</strong> <code>picker</code>, <code>preview</code>, <code>meta</code>, <code>label</code>, <code>hint</code>, <code>actions</code>.</p>
+          <script>
+            (() => { const out = document.querySelector('[data-docs-pick-out]');
+              document.getElementById('docs-pick').addEventListener('glk-change', e => { out.textContent = e.detail.dataUrl ? `glk-change → ${e.detail.width} × ${e.detail.height} px, ${Math.round(e.detail.size / 1024)} KB` : 'glk-change → removed'; });
+              document.getElementById('docs-pick').addEventListener('glk-error', e => { out.textContent = 'glk-error → ' + e.detail.message; }); })();
+          </script>
+        </div>
       </section>
 
       <!-- ═══ Navigation ═══ -->
@@ -758,6 +818,30 @@
             <tr><td><code>label</code></td><td>String</td><td><code>aria-label</code> der Liste (optional)</td></tr>
           </table>
           <p>Eigenschaft <code>current</code> spiegelt das Attribut; <code>steps</code> nimmt ein Array oder kommagetrennten Text. <strong>Part:</strong> <code>steps</code>.</p>
+        </div>
+        <div class="docs-component" id="glk-date-strip">
+          <h3><code>&lt;glk-date-strip&gt;</code></h3>
+          <p>Eine Reihe von Tages-Chips, die seitwärts scrollt — ein Buchungshorizont, die Tage um heute. Die Chips sind Knöpfe in einer <code>role="group"</code>, der gewählte trägt <code>aria-pressed="true"</code>, jeder ist mit seinem vollen Datum benannt. Ein Tab-Stopp: Pfeiltasten wandern zwischen den Chips, Pos1/Ende springen an die Enden, Enter oder Leertaste wählt. Der gewählte Chip wird nach dem ersten Layout und bei jeder Wertänderung in die Mitte des Streifens gescrollt — nur der Streifen scrollt, nie die Seite. Wochentagsnamen kommen aus <code>Intl</code> für die <code>locale</code>. Probier es: Der Streifen unten beginnt mit dem 20. Tag gewählt.</p>
+          <div class="docs-preview" style="display:flex;flex-direction:column;gap:10px;">
+            <glk-date-strip id="docs-strip" start="2026-09-22" days="29" value="2026-10-11" today="2026-09-22" locale="de" label="Tag wählen" marks='{"2026-09-22":"success","2026-09-24":"warning","2026-09-25":{"tone":"error","disabled":true},"2026-10-11":"primary"}'></glk-date-strip>
+            <span data-docs-strip-out style="opacity:.75;font-size:13px">wartet auf glk-change…</span>
+          </div>
+          <div class="docs-code"><span class="tag">&lt;glk-date-strip</span> <span class="attr">start</span>=<span class="val">"2026-09-22"</span> <span class="attr">days</span>=<span class="val">"29"</span> <span class="attr">value</span>=<span class="val">"2026-10-11"</span> <span class="attr">label</span>=<span class="val">"Tag wählen"</span>
+  <span class="attr">marks</span>=<span class="val">'{"2026-09-22":"success","2026-09-25":{"tone":"error","disabled":true}}'</span><span class="tag">&gt;&lt;/glk-date-strip&gt;</span></div>
+          <table class="docs-table">
+            <tr><th>Attribut</th><th>Typ</th><th>Werte</th></tr>
+            <tr><td><code>start</code></td><td>String</td><td>Erster Tag <code>YYYY-MM-DD</code>; ohne Angabe heute</td></tr>
+            <tr><td><code>days</code></td><td>Number</td><td>Anzahl der Chips, Vorgabe 7</td></tr>
+            <tr><td><code>value</code></td><td>String</td><td>Gewählter Tag <code>YYYY-MM-DD</code></td></tr>
+            <tr><td><code>today</code></td><td>String</td><td>Der unterstrichene Tag; ohne Angabe der Tag des Browsers</td></tr>
+            <tr><td><code>marks</code></td><td>JSON</td><td><code>{ "2026-09-24": "warning", "2026-09-25": { "tone": "error", "disabled": true } }</code> &mdash; tone: <code>primary</code> | <code>success</code> | <code>warning</code> | <code>error</code>; <code>disabled</code> macht den Chip unwählbar</td></tr>
+            <tr><td><code>locale</code></td><td>String</td><td>BCP-47-Tag für Wochentagsnamen und das <code>aria-label</code> der Chips; ohne Angabe die Browsersprache</td></tr>
+            <tr><td><code>label</code></td><td>String</td><td><code>aria-label</code> der Gruppe</td></tr>
+          </table>
+          <p><strong>Ereignisse:</strong> <code>glk-change</code> <code>{ value }</code> &mdash; nur bei einer Änderung durch den Nutzer. <strong>Eigenschaften:</strong> <code>value</code>, <code>marks</code> (Objekt oder JSON-Text), <code>locale</code>, <code>label</code>. <strong>Part:</strong> <code>strip</code>.</p>
+          <script>
+            document.getElementById('docs-strip').addEventListener('glk-change', e => { document.querySelector('[data-docs-strip-out]').textContent = 'glk-change → ' + e.detail.value; });
+          </script>
         </div>
       </section>
 

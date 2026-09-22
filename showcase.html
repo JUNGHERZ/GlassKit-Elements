@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GlassKit Elements — Showcase</title>
-  <meta name="description" content="Interactive showcase of all 29 GlassKit Elements web components. Buttons, toggles, cards, modals, and more with glassmorphism styling.">
+  <meta name="description" content="Interactive showcase of all 36 GlassKit Elements web components. Buttons, toggles, cards, modals, and more with glassmorphism styling.">
   <meta name="author" content="Jungherz GmbH">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://glasskit-elements.jungherz.com/showcase.html">
@@ -12,13 +12,13 @@
   <link rel="alternate" hreflang="de" href="https://glasskit-elements.jungherz.com/de/showcase.html">
   <meta property="og:type" content="website">
   <meta property="og:title" content="GlassKit Elements — Showcase">
-  <meta property="og:description" content="Interactive showcase of all 29 GlassKit Elements web components with glassmorphism styling.">
+  <meta property="og:description" content="Interactive showcase of all 36 GlassKit Elements web components with glassmorphism styling.">
   <meta property="og:url" content="https://glasskit-elements.jungherz.com/showcase.html">
   <meta property="og:site_name" content="GlassKit Elements">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="GlassKit Elements — Showcase">
-  <meta name="twitter:description" content="Interactive showcase of all 29 GlassKit Elements web components with glassmorphism styling.">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.15/glasskit.min.css">
+  <meta name="twitter:description" content="Interactive showcase of all 36 GlassKit Elements web components with glassmorphism styling.">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.16/glasskit.min.css">
   <script src="/dist/glasskit-elements.min.js"></script>
   <style>
     body {
@@ -95,7 +95,7 @@
       </glk-pill>
     </glk-nav>
 
-    <glk-title>Component Showcase v1.15.2</glk-title>
+    <glk-title>Component Showcase v1.16.0</glk-title>
   </div>
 
   <div class="demo-section">
@@ -327,6 +327,21 @@
     <!-- Empty -->
     <h2>Empty state</h2>
     <div class="demo-row"><glk-card style="width:100%"><glk-empty title="No bookings yet" text="Pick a day and a dog — the team is looking forward to it."><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/></svg><glk-button slot="action" variant="primary" size="sm">Book</glk-button></glk-empty></glk-card></div>
+
+    <!-- Date strip -->
+    <h2>Date strip</h2>
+    <div class="demo-row"><glk-date-strip style="width:100%" start="2026-09-22" days="29" value="2026-10-11" today="2026-09-22" locale="en-GB" label="Pick a day" marks='{"2026-09-22":"success","2026-09-24":"warning","2026-09-25":{"tone":"error","disabled":true},"2026-10-11":"primary"}'></glk-date-strip></div>
+
+    <!-- Calendar -->
+    <h2>Calendar</h2>
+    <div class="demo-row"><glk-calendar style="width:100%;max-width:360px" value="2026-09-22" today="2026-09-22" min="2026-09-22" locale="en-GB" label="Pick a day" marks='{"2026-09-24":["error"],"2026-09-25":["warning"],"2026-09-27":["success","warning","primary"],"2026-10-02":"primary"}'></glk-calendar></div>
+
+    <!-- Image picker -->
+    <h2>Image picker</h2>
+    <div class="demo-row" style="flex-direction:column;align-items:stretch;gap:16px">
+      <glk-image-picker label="Photo of the dog" hint="JPG or PNG · resized to 1024 px before upload"></glk-image-picker>
+      <glk-image-picker round max="512" label="Profile photo"></glk-image-picker>
+    </div>
 
     <!-- Your own element on GlkElement -->
     <h2>Your own element</h2>

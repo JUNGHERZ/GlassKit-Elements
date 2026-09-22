@@ -1,6 +1,6 @@
 ---
 name: glasskit-elements
-description: GlassKit Elements is a vanilla-JS Web Components library (v1.15.2) wrapping GlassKit CSS v1.15.1. It provides 29 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
+description: GlassKit Elements is a vanilla-JS Web Components library (v1.16.0) wrapping GlassKit CSS v1.16.0. It provides 36 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
 ---
 
 # GlassKit Elements – AI Component Reference
@@ -18,12 +18,12 @@ description: GlassKit Elements is a vanilla-JS Web Components library (v1.15.2) 
 npm install @jungherz-de/glasskit-elements @jungherz-de/glasskit
 ```
 
-Peer dependency `@jungherz-de/glasskit >=1.15.1` is required — 1.9.0 is the release that made the stylesheet splittable, which is what lets document-level branding reach the elements at all.
+Peer dependency `@jungherz-de/glasskit >=1.16.0` is required — 1.9.0 is the release that made the stylesheet splittable, which is what lets document-level branding reach the elements at all.
 
 ### Import (ES modules)
 
 ```js
-// Full bundle — registers all 33 elements
+// Full bundle — registers all 36 elements
 import '@jungherz-de/glasskit-elements';
 
 // Named imports (for direct references to constructor classes)
@@ -237,7 +237,7 @@ to resolve against. A host stretched by a grid keeps `height: auto`, which is wh
 
 ---
 
-## 3. Element Catalog (33 elements)
+## 3. Element Catalog (36 elements)
 
 ### 3.1 `<glk-nav>`
 
@@ -1049,6 +1049,77 @@ Empty state for lists and result pages (since 1.15.0): icon plate, title, short 
 
 Slots: default (an `<svg>` icon, 24 px stroked; a plain circle as fallback), `action`. Parts: `empty`, `icon`, `title`, `text`, `action`.
 
+### 3.29 `<glk-date-strip>`
+
+A row of day chips that scrolls sideways (since 1.16.0) — a booking horizon, the days around today. Chips are buttons in a `role="group"`, the chosen one `aria-pressed="true"`, each named with its full date from `Intl` for the `locale`. One tab stop: arrow keys move between chips, Home/End jump to the ends, Enter or Space picks. The chosen chip is centred in the strip after the first layout and on every value change; only the strip scrolls, never the page. A value change re-sets state; `start`, `days`, `today`, `marks` and `locale` rebuild the chips.
+
+```html
+<glk-date-strip start="2026-09-22" days="29" value="2026-10-11" label="Pick a day"
+  marks='{"2026-09-22":"success","2026-09-25":{"tone":"error","disabled":true}}'></glk-date-strip>
+```
+
+| Attribute | Type | Description |
+|---|---|---|
+| `start` | String | First day `YYYY-MM-DD`; today when missing |
+| `days` | Number | Number of chips (default 7) |
+| `value` | String | Chosen day `YYYY-MM-DD` |
+| `today` | String | The underlined day; the browser's day when missing |
+| `marks` | JSON | `{ date: tone \| { tone, disabled } }` — tone `primary` / `success` / `warning` / `error`; `disabled` makes the chip unpickable |
+| `locale` | String | BCP 47 tag for the names; the browser language when missing |
+| `label` | String | `aria-label` of the group |
+
+Event: `glk-change { value }` — only on a change made by the user. Properties: `value`, `marks` (object or JSON text), `locale`, `label`. Part: `strip`.
+
+---
+
+### 3.30 `<glk-calendar>`
+
+One month with a day to pick (since 1.16.0). The days are buttons in a `role="group"`, the chosen one `aria-pressed="true"`, each named with its full date; month title, weekday names and the first day of the week come from `Intl` for the `locale` (`week-start` overrides; Monday where a browser has no week info). One tab stop: arrows move by a day or a week, Home/End to the ends of the week, PageUp/PageDown by a month — past the month's edge the calendar shows that month and emits `glk-month`. Arrows only move focus; Enter or Space picks. Days outside `min`/`max` carry `aria-disabled="true"`: in the arrow path, announced, never picked. A value set to another month flips the calendar there. Form-associated (`GlkFormElement`): a surrounding `<form>` receives `name=value`, reset restores the initial value.
+
+```html
+<glk-calendar name="day" value="2026-09-22" min="2026-09-22" label="Pick a day"
+  marks='{"2026-09-24":["error"],"2026-09-27":["success","warning"]}'></glk-calendar>
+```
+
+| Attribute | Type | Description |
+|---|---|---|
+| `month` | String | Shown month `YYYY-MM`; without it the month of the value, else of today; reflected when the user navigates |
+| `value` | String | Chosen day `YYYY-MM-DD` |
+| `today` | String | The day with the warm border; the browser's day when missing |
+| `min`, `max` | String | Days outside cannot be picked |
+| `marks` | JSON | `{ date: tone \| [tone, …] }` — up to three tones per day |
+| `locale` | String | BCP 47 tag for names and week start; the browser language when missing |
+| `week-start` | Number | 0 = Sunday … 6 = Saturday; from the locale when missing |
+| `label` | String | `aria-label` of the day group |
+| `prev-label`, `next-label` | String | Names of the nav buttons ("Previous month" / "Next month") |
+| `name` | String | Form field name |
+
+Events: `glk-change { value }` on a pick by the user; `glk-month { month }` when the user moves to another month. Properties: `month`, `value`, `marks`, `locale`, `label`. Parts: `calendar`, `head`, `title`, `grid`.
+
+---
+
+### 3.31 `<glk-image-picker>`
+
+One image with a preview, resized on the client before it goes anywhere (since 1.16.0). Choose opens the file dialog from a real button; the file is decoded with `createImageBitmap` (`imageOrientation: 'from-image'`, so a phone photo comes out upright), drawn onto a canvas no larger than `max` and handed out as a data URL in `glk-change`. The `src` property holds it and is not reflected, so a data URL of megabytes never lands in the DOM. A file the browser cannot decode — Chrome and HEIC, a corrupt file — emits `glk-error`. Not form-associated: listen to `glk-change` and upload, or copy the data URL into a hidden field.
+
+```html
+<glk-image-picker id="photo" round max="512" label="Profile photo" hint="JPG or PNG"></glk-image-picker>
+<script>photo.addEventListener('glk-change', e => upload(e.detail.dataUrl));</script>
+```
+
+| Attribute | Type | Description |
+|---|---|---|
+| `src` | String | Starting image: URL or data URL |
+| `label` | String | Visible label; names the group |
+| `hint` | String | Small muted line; none by default |
+| `round` | Boolean | Circular preview, for avatars |
+| `max` | Number | Longest edge in px after resizing (default 1024) |
+| `type`, `quality` | String, Number | Output MIME (default `image/jpeg`; `image/webp` where the browser encodes it, PNG otherwise), quality 0–1 (default 0.82) |
+| `accept` | String | File dialog filter (default `image/*`) |
+| `choose-label`, `change-label`, `remove-label` | String | Button texts ("Choose", "Change", "Remove") |
+
+Events: `glk-change { dataUrl, width, height, size }` after a pick, on remove with an empty `dataUrl` and zeros; `glk-error { message, name }` when the file cannot be decoded. Property: `src` (not reflected). Parts: `picker`, `preview`, `meta`, `label`, `hint`, `actions`.
+
 ---
 
 ## 4. Composition Patterns
@@ -1233,6 +1304,9 @@ Key points:
 | `<glk-list-item>` | — | `interactive` | `glk-click` (only when interactive) | — |
 | `<glk-segmented>` | `.value` | `value` | `glk-change` | `{ value }` |
 | `<glk-sheet>` | `.open` | `open` | `glk-close` (user close only) | — |
+| `<glk-date-strip>` | `.value` | `value` | `glk-change` (user only) | `{ value }` |
+| `<glk-calendar>` | `.value`, `.month` | `value`, `month` | `glk-change` (user only), `glk-month` (user only) | `{ value }`, `{ month }` |
+| `<glk-image-picker>` | `.src` (not reflected) | `src` | `glk-change`, `glk-error` | `{ dataUrl, width, height, size }`, `{ message, name }` |
 | `<glk-badge>` | `.selected` | `interactive`, `selected` | `glk-click` (only when interactive) | — |
 | `<glk-toast>` | — | — | — | (imperative) |
 
@@ -1288,6 +1362,9 @@ All `glk-*` events bubble and are `composed: true`, so they pierce shadow bounda
 | `<glk-segmented>` | Forms | `options`, `value`, `full`, `label`, `name` | — | `glk-change` |
 | `<glk-steps>` | Navigation | `steps`, `current`, `label` | — | — |
 | `<glk-sheet>` | Feedback | `open`, `inline`, `title` | default, `actions` | `glk-close` |
+| `<glk-date-strip>` | Navigation | `start`, `days`, `value`, `today`, `marks`, `locale`, `label` | — | `glk-change` |
+| `<glk-calendar>` | Forms | `month`, `value`, `today`, `min`, `max`, `marks`, `locale`, `week-start`, `label`, `name` | — | `glk-change`, `glk-month` |
+| `<glk-image-picker>` | Forms | `src`, `label`, `hint`, `round`, `max`, `type`, `quality`, `accept` | — | `glk-change`, `glk-error` |
 | `<glk-card>` | Content | `glow` | default | — |
 | `<glk-divider>` | Content | — | — | — |
 | `<glk-status>` | Content | `message` | — | — |
@@ -1430,7 +1507,7 @@ See the class-based [GlassKit CSS `SKILL.md`](https://github.com/JUNGHERZ/GlassK
 | Theme sync | Single module-level `MutationObserver` in `base.js` |
 | Adopted stylesheets | `glassSheet` (from `@jungherz-de/glasskit/glasskit-styles.js`) + module-level `hostSheet` / `inlineHostSheet` |
 | Per-component structure | One `.js` file per element in `src/components/{category}/glk-{name}.js` |
-| Barrel | `src/index.js` — exports and registers all 33 elements, and exports `GlkElement` / `GlkFormElement` (since 1.14.0) |
+| Barrel | `src/index.js` — exports and registers all 36 elements, and exports `GlkElement` / `GlkFormElement` (since 1.14.0) |
 | Build | Rollup → IIFE (`glasskit-elements.js`), minified IIFE, ESM (`glasskit-elements.esm.js`), and per-element ESM in `dist/components/` with `base.js` as a stable entry |
 
 Each element is a subclass of `GlkElement` (or `GlkFormElement` for form controls) and follows a consistent lifecycle:

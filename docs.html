@@ -20,7 +20,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="GlassKit Elements — Documentation">
   <meta name="twitter:description" content="Complete documentation for all 29 GlassKit Elements web components with live examples.">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.15/glasskit.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.16/glasskit.min.css">
   <script src="/dist/glasskit-elements.min.js"></script>
   <style>
     html { scroll-behavior: smooth; }
@@ -253,7 +253,7 @@
     <aside class="docs-sidebar">
       <div class="docs-sidebar__title">&#129482; <a href="/">GlassKit Elements</a></div>
       <div class="docs-sidebar__subtitle">Web Components for GlassKit CSS.</div>
-      <div class="docs-sidebar__version">v1.15.2 &ndash; Jungherz GmbH</div>
+      <div class="docs-sidebar__version">v1.16.0 &ndash; Jungherz GmbH</div>
 
       <div class="docs-sidebar__group">
         <div class="docs-sidebar__group-title">Basics</div>
@@ -290,6 +290,8 @@
         <a class="docs-sidebar__link" href="#glk-radio">glk-radio</a>
         <a class="docs-sidebar__link" href="#glk-range">glk-range</a>
         <a class="docs-sidebar__link" href="#glk-segmented">glk-segmented</a>
+        <a class="docs-sidebar__link" href="#glk-calendar">glk-calendar</a>
+        <a class="docs-sidebar__link" href="#glk-image-picker">glk-image-picker</a>
       </div>
 
       <div class="docs-sidebar__group">
@@ -298,6 +300,7 @@
         <a class="docs-sidebar__link" href="#glk-tab-bar">glk-tab-bar</a>
         <a class="docs-sidebar__link" href="#glk-tab-dock">glk-tab-dock</a>
         <a class="docs-sidebar__link" href="#glk-steps">glk-steps</a>
+        <a class="docs-sidebar__link" href="#glk-date-strip">glk-date-strip</a>
       </div>
 
       <div class="docs-sidebar__group">
@@ -336,7 +339,7 @@
         <h1>GlassKit Elements</h1>
         <p>Complete reference for all 29 web components &ndash; built by Jungherz GmbH. Vanilla JS, Shadow DOM, native form participation.</p>
         <div class="docs-hero__badges">
-          <span class="docs-hero__badge">v1.15.2</span>
+          <span class="docs-hero__badge">v1.16.0</span>
           <span class="docs-hero__badge">Shadow DOM</span>
           <span class="docs-hero__badge">33 Components</span>
           <span class="docs-hero__badge">Vanilla JS</span>
@@ -349,7 +352,7 @@
 
         <h3>CDN (quickest)</h3>
         <div class="docs-code"><span class="cmt">&lt;!-- 1. GlassKit CSS --&gt;</span>
-<span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span> <span class="attr">href</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.15/glasskit.min.css"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span> <span class="attr">href</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.16/glasskit.min.css"</span><span class="tag">&gt;</span>
 
 <span class="cmt">&lt;!-- 2. GlassKit Elements --&gt;</span>
 <span class="tag">&lt;script</span> <span class="attr">src</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"</span><span class="tag">&gt;&lt;/script&gt;</span></div>
@@ -661,6 +664,63 @@
             document.getElementById('docs-seg').addEventListener('glk-change', e => { document.querySelector('[data-docs-seg-out]').textContent = 'glk-change → ' + e.detail.value; });
           </script>
         </div>
+        <div class="docs-component" id="glk-calendar">
+          <h3><code>&lt;glk-calendar&gt;</code></h3>
+          <p>One month with a day to pick. The days are buttons in a <code>role="group"</code>, the chosen one <code>aria-pressed="true"</code>, each named with its full date; month title, weekday names and the first day of the week come from <code>Intl</code> for the <code>locale</code> (<code>week-start</code> overrides). One tab stop: arrows move by a day or a week, Home/End to the ends of the week, PageUp/PageDown by a month — moving past the month&rsquo;s edge shows that month and emits <code>glk-month</code>. Arrows only move focus; Enter or Space picks, so a calendar that opens a sheet on every pick stays quiet while the user looks around. Days outside <code>min</code>/<code>max</code> are <code>aria-disabled</code>: in the arrow path, announced, never picked. Form-associated like <code>&lt;glk-segmented&gt;</code>. Try it: Tab into the grid, use the arrows, press Enter.</p>
+          <div class="docs-preview" style="display:flex;flex-direction:column;gap:10px;">
+            <glk-calendar id="docs-cal" style="width:100%;max-width:360px" value="2026-09-22" today="2026-09-22" min="2026-09-22" locale="en-GB" label="Pick a day" marks='{"2026-09-24":["error"],"2026-09-25":["warning"],"2026-09-27":["success","warning","primary"],"2026-10-02":"primary"}'></glk-calendar>
+            <span data-docs-cal-out style="opacity:.75;font-size:13px">waiting for glk-change / glk-month…</span>
+          </div>
+          <div class="docs-code"><span class="tag">&lt;glk-calendar</span> <span class="attr">name</span>=<span class="val">"day"</span> <span class="attr">value</span>=<span class="val">"2026-09-22"</span> <span class="attr">min</span>=<span class="val">"2026-09-22"</span> <span class="attr">label</span>=<span class="val">"Pick a day"</span>
+  <span class="attr">marks</span>=<span class="val">'{"2026-09-24":["error"],"2026-09-27":["success","warning"]}'</span><span class="tag">&gt;&lt;/glk-calendar&gt;</span></div>
+          <table class="docs-table">
+            <tr><th>Attribute</th><th>Type</th><th>Values</th></tr>
+            <tr><td><code>month</code></td><td>String</td><td>Shown month <code>YYYY-MM</code>; without it the month of the value, else of today. Reflected when the user navigates; a value set to another month flips to it</td></tr>
+            <tr><td><code>value</code></td><td>String</td><td>Chosen day <code>YYYY-MM-DD</code></td></tr>
+            <tr><td><code>today</code></td><td>String</td><td>The day with the warm border; the browser&rsquo;s day when missing</td></tr>
+            <tr><td><code>min</code>, <code>max</code></td><td>String</td><td>Days outside cannot be picked (<code>aria-disabled</code>)</td></tr>
+            <tr><td><code>marks</code></td><td>JSON</td><td><code>{ "2026-09-30": ["error", "warning"] }</code> &mdash; up to three tones per day: <code>primary</code> | <code>success</code> | <code>warning</code> | <code>error</code></td></tr>
+            <tr><td><code>locale</code></td><td>String</td><td>BCP 47 tag for names and week start; the browser language when missing</td></tr>
+            <tr><td><code>week-start</code></td><td>Number</td><td>0 = Sunday … 6 = Saturday; from the locale when missing, Monday where the browser cannot say</td></tr>
+            <tr><td><code>label</code></td><td>String</td><td><code>aria-label</code> of the day group</td></tr>
+            <tr><td><code>prev-label</code>, <code>next-label</code></td><td>String</td><td>Names of the nav buttons; &ldquo;Previous month&rdquo; / &ldquo;Next month&rdquo; by default</td></tr>
+            <tr><td><code>name</code></td><td>String</td><td>Form field name (form-associated)</td></tr>
+          </table>
+          <p><strong>Events:</strong> <code>glk-change</code> <code>{ value }</code> on a pick by the user; <code>glk-month</code> <code>{ month }</code> when the user moves to another month. <strong>Properties:</strong> <code>month</code>, <code>value</code>, <code>marks</code>, <code>locale</code>, <code>label</code>. <strong>Parts:</strong> <code>calendar</code>, <code>head</code>, <code>title</code>, <code>grid</code>.</p>
+          <script>
+            (() => { const cal = document.getElementById('docs-cal'), out = document.querySelector('[data-docs-cal-out]');
+              cal.addEventListener('glk-change', e => { out.textContent = 'glk-change → ' + e.detail.value; });
+              cal.addEventListener('glk-month', e => { out.textContent = 'glk-month → ' + e.detail.month; }); })();
+          </script>
+        </div>
+        <div class="docs-component" id="glk-image-picker">
+          <h3><code>&lt;glk-image-picker&gt;</code></h3>
+          <p>One image with a preview, resized on the client before it goes anywhere. Choose opens the file dialog from a real button; the file is decoded with <code>createImageBitmap</code>, the EXIF rotation of a phone photo applied, drawn onto a canvas no larger than <code>max</code> and handed out as a data URL in <code>glk-change</code>. The <code>src</code> property holds it and is not reflected, so a data URL of megabytes never lands in the DOM. A file the browser cannot decode — Chrome and HEIC, a corrupt file — emits <code>glk-error</code> instead of failing silently. Not form-associated: listen to <code>glk-change</code> and upload. Try it with a photo from your phone.</p>
+          <div class="docs-preview" style="display:flex;flex-direction:column;gap:16px;">
+            <glk-image-picker id="docs-pick" label="Photo of the dog" hint="JPG or PNG · resized to 1024 px before upload"></glk-image-picker>
+            <glk-image-picker round max="512" label="Profile photo"></glk-image-picker>
+            <span data-docs-pick-out style="opacity:.75;font-size:13px">waiting for glk-change…</span>
+          </div>
+          <div class="docs-code"><span class="tag">&lt;glk-image-picker</span> <span class="attr">round</span> <span class="attr">max</span>=<span class="val">"512"</span> <span class="attr">label</span>=<span class="val">"Profile photo"</span> <span class="attr">hint</span>=<span class="val">"JPG, PNG"</span><span class="tag">&gt;&lt;/glk-image-picker&gt;</span>
+<span class="tag">&lt;script&gt;</span>picker.addEventListener('glk-change', e =&gt; upload(e.detail.dataUrl));<span class="tag">&lt;/script&gt;</span></div>
+          <table class="docs-table">
+            <tr><th>Attribute</th><th>Type</th><th>Values</th></tr>
+            <tr><td><code>src</code></td><td>String</td><td>Starting image: URL or data URL</td></tr>
+            <tr><td><code>label</code></td><td>String</td><td>Visible label; names the group</td></tr>
+            <tr><td><code>hint</code></td><td>String</td><td>Small muted line; none by default — what is accepted depends on <code>accept</code> and the browser</td></tr>
+            <tr><td><code>round</code></td><td>Boolean</td><td>Circular preview, for avatars</td></tr>
+            <tr><td><code>max</code></td><td>Number</td><td>Longest edge in px after resizing, default 1024</td></tr>
+            <tr><td><code>type</code>, <code>quality</code></td><td>String, Number</td><td>Output MIME (default <code>image/jpeg</code>; <code>image/webp</code> where the browser encodes it, PNG otherwise) and quality 0–1 (default 0.82)</td></tr>
+            <tr><td><code>accept</code></td><td>String</td><td>File dialog filter, default <code>image/*</code></td></tr>
+            <tr><td><code>choose-label</code>, <code>change-label</code>, <code>remove-label</code></td><td>String</td><td>Button texts; &ldquo;Choose&rdquo;, &ldquo;Change&rdquo;, &ldquo;Remove&rdquo; by default</td></tr>
+          </table>
+          <p><strong>Events:</strong> <code>glk-change</code> <code>{ dataUrl, width, height, size }</code> after a pick, and on remove with an empty <code>dataUrl</code> and zeros; <code>glk-error</code> <code>{ message, name }</code> when the file cannot be decoded. <strong>Property:</strong> <code>src</code> (not reflected). <strong>Parts:</strong> <code>picker</code>, <code>preview</code>, <code>meta</code>, <code>label</code>, <code>hint</code>, <code>actions</code>.</p>
+          <script>
+            (() => { const out = document.querySelector('[data-docs-pick-out]');
+              document.getElementById('docs-pick').addEventListener('glk-change', e => { out.textContent = e.detail.dataUrl ? `glk-change → ${e.detail.width} × ${e.detail.height} px, ${Math.round(e.detail.size / 1024)} KB` : 'glk-change → removed'; });
+              document.getElementById('docs-pick').addEventListener('glk-error', e => { out.textContent = 'glk-error → ' + e.detail.message; }); })();
+          </script>
+        </div>
       </section>
 
       <!-- ═══ Navigation ═══ -->
@@ -756,6 +816,30 @@
             <tr><td><code>label</code></td><td>String</td><td><code>aria-label</code> of the list (optional)</td></tr>
           </table>
           <p>Property <code>current</code> reflects the attribute; <code>steps</code> accepts an array or comma-separated text. <strong>Part:</strong> <code>steps</code>.</p>
+        </div>
+        <div class="docs-component" id="glk-date-strip">
+          <h3><code>&lt;glk-date-strip&gt;</code></h3>
+          <p>A row of day chips that scrolls sideways — a booking horizon, the days around today. Chips are buttons in a <code>role="group"</code>, the chosen one <code>aria-pressed="true"</code>, each named with its full date. One tab stop: arrow keys move between chips, Home/End jump to the ends, Enter or Space picks. The chosen chip is scrolled to the middle of the strip after the first layout and on every value change — the strip alone scrolls, never the page. Weekday names come from <code>Intl</code> for the <code>locale</code>. Try it: the strip below starts with its 20th day chosen.</p>
+          <div class="docs-preview" style="display:flex;flex-direction:column;gap:10px;">
+            <glk-date-strip id="docs-strip" start="2026-09-22" days="29" value="2026-10-11" today="2026-09-22" locale="en-GB" label="Pick a day" marks='{"2026-09-22":"success","2026-09-24":"warning","2026-09-25":{"tone":"error","disabled":true},"2026-10-11":"primary"}'></glk-date-strip>
+            <span data-docs-strip-out style="opacity:.75;font-size:13px">waiting for glk-change…</span>
+          </div>
+          <div class="docs-code"><span class="tag">&lt;glk-date-strip</span> <span class="attr">start</span>=<span class="val">"2026-09-22"</span> <span class="attr">days</span>=<span class="val">"29"</span> <span class="attr">value</span>=<span class="val">"2026-10-11"</span> <span class="attr">label</span>=<span class="val">"Pick a day"</span>
+  <span class="attr">marks</span>=<span class="val">'{"2026-09-22":"success","2026-09-25":{"tone":"error","disabled":true}}'</span><span class="tag">&gt;&lt;/glk-date-strip&gt;</span></div>
+          <table class="docs-table">
+            <tr><th>Attribute</th><th>Type</th><th>Values</th></tr>
+            <tr><td><code>start</code></td><td>String</td><td>First day <code>YYYY-MM-DD</code>; today when missing</td></tr>
+            <tr><td><code>days</code></td><td>Number</td><td>Number of chips, default 7</td></tr>
+            <tr><td><code>value</code></td><td>String</td><td>Chosen day <code>YYYY-MM-DD</code></td></tr>
+            <tr><td><code>today</code></td><td>String</td><td>The underlined day; the browser&rsquo;s day when missing</td></tr>
+            <tr><td><code>marks</code></td><td>JSON</td><td><code>{ "2026-09-24": "warning", "2026-09-25": { "tone": "error", "disabled": true } }</code> &mdash; tone: <code>primary</code> | <code>success</code> | <code>warning</code> | <code>error</code>; <code>disabled</code> makes the chip unpickable</td></tr>
+            <tr><td><code>locale</code></td><td>String</td><td>BCP 47 tag for the weekday names and the chips&rsquo; <code>aria-label</code>; the browser language when missing</td></tr>
+            <tr><td><code>label</code></td><td>String</td><td><code>aria-label</code> of the group</td></tr>
+          </table>
+          <p><strong>Events:</strong> <code>glk-change</code> <code>{ value }</code> &mdash; only on a change made by the user. <strong>Properties:</strong> <code>value</code>, <code>marks</code> (object or JSON text), <code>locale</code>, <code>label</code>. <strong>Part:</strong> <code>strip</code>.</p>
+          <script>
+            document.getElementById('docs-strip').addEventListener('glk-change', e => { document.querySelector('[data-docs-strip-out]').textContent = 'glk-change → ' + e.detail.value; });
+          </script>
         </div>
       </section>
 

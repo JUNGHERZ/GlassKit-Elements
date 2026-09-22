@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.16.0] – 2026-09-22
+
+### Added
+
+- **Three elements from EhrenPfoten: `<glk-date-strip>`, `<glk-calendar>`, `<glk-image-picker>`.** The ones that waited until real data had settled their attributes — the strip and the calendar run in booking (29-day horizon), in the team's day view and for schedule exceptions, the picker in the dog and profile photo upload. Built there as `GlkElement` subclasses by the rules in SKILL.md and reviewed here class by class. They arrive as copies with what the project proposed from the field, plus the deviations named below, which the project mirrors. Needs GlassKit 1.16.0 for the three CSS blocks; the peer dependency moves to `>=1.16.0`.
+
+  `<glk-date-strip>` (navigation): `start`, `days`, `value`, `today`, `marks`, plus `locale` and `label`. Against the project's element: the chips are a `role="group"` of `aria-pressed` buttons like `<glk-segmented>`, not a `role="listbox"` — `aria-pressed` on a `role="option"` is invalid, and the CSS hangs on `aria-pressed`; every chip is named with its full date from `Intl` ("Sonntag, 11. Oktober 2026") instead of the visible "So 11"; weekday names come from `Intl.DateTimeFormat` for the `locale` (the browser language by default) — the German constants are gone, and so is the German `aria-label`: `label` sets one, there is none without it; the strip is one tab stop with arrow keys, Home and End, where 29 chips were 29 tab stops; the chosen chip is centred in the strip after the first layout and on every value change, computed from client rects and applied to the strip's own `scrollLeft` (`scrollIntoView` would scroll every ancestor, the page included) and re-centred when the strip's width changes — a parent that upgrades later and adds its padding, a resize; `marks` takes a tone (`primary` / `success` / `warning` / `error`) or `{ tone, disabled }`, where `disabled` makes the chip unpickable — the project's `closed` becomes `{ "tone": "error", "disabled": true }`, or just `"error"` when a closed day should stay tappable; `glk-change` only on an actual change.
+
+  `<glk-calendar>` (forms): `month`, `value`, `today`, `marks`, plus `min`, `max`, `locale`, `week-start`, `label`, `prev-label`, `next-label` and `name`. Against the project's element: arrows only move focus and Enter or Space picks — the APG grid pattern — so a calendar that opens a sheet on every pick stays quiet while the user looks around, where the project's version picked on every arrow step; `min`/`max` mark days outside as `aria-disabled="true"`: in the arrow path and announced, never picked and never in `glk-change` — `disabled` would have taken them out of the arrow path, since a disabled button cannot take focus; the days are a `role="group"`, not `role="grid"` (a grid demands rows and cells with `aria-selected`); PageUp/PageDown move by a month, Home/End to the ends of the week; month title and weekday names come from `Intl`, and so does the first day of the week (`Intl.Locale.prototype.getWeekInfo()`, Monday where a browser cannot say, `week-start` overrides) — the German constants and labels are gone, `prev-label` / `next-label` default to English; the nav buttons carry SVG chevrons; the title is `aria-live="polite"`, so a new month is announced; a value set to another month flips the calendar there, also when `month` was set; form-associated like every other element in the forms group (`name`, `setFormValue`, reset restores the initial value); `glk-change` only on an actual change — a project that reopens a sheet by picking the same day again clears `value` when the sheet closes.
+
+  `<glk-image-picker>` (forms) — the project's photo picker, renamed with its CSS block because it takes any image: `src`, `label`, `round`, `max`, plus `hint`, `type`, `quality`, `accept`, `choose-label`, `change-label`, `remove-label`. Against the project's element: Choose is a real `<button>` that opens the hidden file input — the project's `<label>` around a hidden input could not be reached by keyboard at all; a file the browser cannot decode (Chrome and HEIC, a corrupt file) emits `glk-error { message, name }`, where the project's version rejected silently; the remove button is really hidden — `hidden` on a `.glass-btn` lost to its `display: flex` until GlassKit 1.16.0, which is why the project's picker shows Remove without an image; after remove, focus moves to Choose instead of falling off the vanished button; the German texts are gone, and there is no default hint at all, since what is accepted depends on `accept` and on the browser; a JPEG is drawn on white first, so a transparent PNG does not come out on black; `size` counts the base64 payload without prefix and padding; `label` names the group (`aria-labelledby`), `hint` describes it. Not form-associated, as proposed: the form value would be either the original file, which is not what gets uploaded, or a data URL of megabytes. The `glk-file` with a preview slot that the plan foresaw does not exist; this element is the answer to that need.
+
+  Verified in Chromium and WebKit: 29 chips with a deep link to the 20th day — the chosen chip inside the strip's visible range, centred to the pixel, page scroll unchanged; arrows on the calendar from 22 September across the month's edge to 7 October emit one `glk-month`, Enter on a `min`-blocked day emits nothing, Enter on the 23rd emits `glk-change`; a 200 × 100 JPEG with EXIF orientation 6 comes out 100 × 200 with the left half on top; `max="50"` on the same file gives 25 × 50; a bogus `.heic` emits `glk-error`; `FormData` carries the calendar's value and reset restores it.
+
+  Shared code: `src/dates.js` (ISO dates, `Intl` formatters, first weekday) becomes a shared chunk of the per-component build, `dist/components/shared/dates-<hash>.js`; the full bundles inline it.
+
+---
+
 ## [1.15.2] – 2026-09-21
 
 ### Fixed
@@ -607,6 +625,7 @@ Starting with this release, GlassKit Elements version numbers are aligned with G
 
 ---
 
+[1.16.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.16.0
 [1.15.2]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.15.2
 [1.15.1]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.15.1
 [1.15.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.15.0

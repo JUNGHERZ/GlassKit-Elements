@@ -15,6 +15,7 @@ export { GlkTabItem } from './components/navigation/glk-tab-item.js';
 export { GlkTabDock } from './components/navigation/glk-tab-dock.js';
 export { GlkTabAccessory } from './components/navigation/glk-tab-accessory.js';
 export { GlkSteps } from './components/navigation/glk-steps.js';
+export { GlkDateStrip } from './components/navigation/glk-date-strip.js';
 
 // Content
 export { GlkCard } from './components/content/glk-card.js';
@@ -38,6 +39,8 @@ export { GlkCheckbox } from './components/forms/glk-checkbox.js';
 export { GlkRadio } from './components/forms/glk-radio.js';
 export { GlkRange } from './components/forms/glk-range.js';
 export { GlkSegmented } from './components/forms/glk-segmented.js';
+export { GlkCalendar } from './components/forms/glk-calendar.js';
+export { GlkImagePicker } from './components/forms/glk-image-picker.js';
 
 // Feedback
 export { GlkProgress } from './components/feedback/glk-progress.js';

@@ -1,6 +1,6 @@
 ---
 name: glasskit-elements
-description: GlassKit Elements is a vanilla-JS Web Components library (v1.17.0) wrapping GlassKit CSS v1.17.0. It provides 36 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
+description: GlassKit Elements is a vanilla-JS Web Components library (v1.18.0) wrapping GlassKit CSS v1.18.0. It provides 36 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
 ---
 
 # GlassKit Elements – AI Component Reference
@@ -18,7 +18,7 @@ description: GlassKit Elements is a vanilla-JS Web Components library (v1.17.0) 
 npm install @jungherz-de/glasskit-elements @jungherz-de/glasskit
 ```
 
-Peer dependency `@jungherz-de/glasskit >=1.17.0` is required — 1.9.0 is the release that made the stylesheet splittable, which is what lets document-level branding reach the elements at all.
+Peer dependency `@jungherz-de/glasskit >=1.18.0` is required — 1.9.0 is the release that made the stylesheet splittable, which is what lets document-level branding reach the elements at all.
 
 ### Import (ES modules)
 
@@ -385,12 +385,13 @@ Inline status badge — and, with `interactive`, a filter chip.
 <glk-badge>Default</glk-badge>
 <glk-badge variant="primary">Active</glk-badge>
 <glk-badge variant="success">Done</glk-badge>
+<glk-badge variant="warning">Pending</glk-badge>
 <glk-badge variant="error">Failed</glk-badge>
 ```
 
 | Attribute | Type | Description |
 |---|---|---|
-| `variant` | String | `primary`, `success`, `error` |
+| `variant` | String | `primary`, `success`, `warning` (since 1.18.0), `error`; any other value gives the neutral badge |
 | `interactive` | Boolean | Renders the badge as a real `<button>`: pointer cursor, hover tint, focus ring, keyboard operable. Enables `glk-click`. |
 | `selected` | Boolean | Marks the chip that is on. Mirrored to `aria-pressed` on the button. |
 

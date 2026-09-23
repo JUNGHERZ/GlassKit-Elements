@@ -1,6 +1,8 @@
 import { GlkElement } from '../../base.js';
 
-const VARIANTS = ['primary', 'success', 'error'];
+// warning since 1.18.0 (needs GlassKit 1.18.0). Any other value falls back to
+// the neutral badge, as an unknown value of an enumerated attribute does.
+const VARIANTS = ['primary', 'success', 'warning', 'error'];
 
 class GlkBadge extends GlkElement {
   static get displayInline() { return true; }

@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.18.0] – 2026-09-23
+
+Versions realign with GlassKit at 1.18.0.
+
+### Added
+
+- **`<glk-badge variant="warning">`.** The element accepted `primary`, `success` and `error` and turned every other value into the neutral badge without a word, so `variant="warning"` — a state that waits for someone, like a booking still to be assigned — looked exactly like a cancelled one. It now maps to GlassKit 1.18.0's `.glass-badge--warning`, with its own tinted fill, border and text, and works with `interactive` and `selected`: a selected warning chip deepens its own yellow. A value outside the four still falls back to the neutral badge, as an unknown value of an enumerated attribute does. Rebuilt against GlassKit 1.18.0; the peer dependency moves to `>=1.18.0`. (EhrenPfoten, Elements finding 8.)
+
+---
+
 ## [1.17.0] – 2026-09-22
 
 Versions realign with GlassKit at 1.17.0.
@@ -653,6 +663,7 @@ Starting with this release, GlassKit Elements version numbers are aligned with G
 
 ---
 
+[1.18.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.18.0
 [1.17.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.17.0
 [1.16.1]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.16.1
 [1.16.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.16.0

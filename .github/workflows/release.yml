@@ -61,6 +61,11 @@ jobs:
             exit 1
           fi
 
+      # Before anything leaves: the tarball has to carry every file package.json
+      # and the README point to — SKILL.md, CHANGELOG.md, entry points, maps.
+      - name: The package carries every file it points to
+        run: npm run check:package
+
       - name: Log file sizes
         run: |
           echo "📦 IIFE Bundle:"

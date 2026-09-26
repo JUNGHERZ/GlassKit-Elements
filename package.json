@@ -1,6 +1,6 @@
 {
   "name": "@jungherz-de/glasskit-elements",
-  "version": "1.19.0",
+  "version": "1.19.1",
   "description": "Vanilla JavaScript Web Components wrapping the GlassKit CSS glassmorphism library",
   "license": "MIT",
   "homepage": "https://glasskit-elements.jungherz.com",
@@ -26,12 +26,16 @@
   "files": [
     "dist/",
     "src/",
-    "LICENSE"
+    "LICENSE",
+    "README.md",
+    "SKILL.md",
+    "CHANGELOG.md"
   ],
   "scripts": {
     "prebuild": "node -e \"require('fs').rmSync('dist/components',{recursive:true,force:true})\"",
     "build": "rollup -c",
     "check:versions": "node check-versions.mjs",
+    "check:package": "node check-package.mjs",
     "prepublishOnly": "npm run build",
     "dev": "rollup -c --watch",
     "serve": "npx serve ."
@@ -45,10 +49,10 @@
     "vanilla-js"
   ],
   "peerDependencies": {
-    "@jungherz-de/glasskit": ">=1.19.0"
+    "@jungherz-de/glasskit": ">=1.19.1"
   },
   "devDependencies": {
-    "@jungherz-de/glasskit": "^1.19.0",
+    "@jungherz-de/glasskit": "^1.19.1",
     "@rollup/plugin-node-resolve": "^15.0.0",
     "@rollup/plugin-terser": "^0.4.0",
     "rollup": "^4.0.0"

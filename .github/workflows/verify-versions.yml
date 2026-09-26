@@ -53,6 +53,9 @@ jobs:
       - name: Check versions
         run: npm run check:versions
 
+      - name: The package carries every file it points to
+        run: npm run check:package
+
       # ---- Pages-Artefakt (nur Push auf main, nicht für PRs) ----
       - name: Assemble the site
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'

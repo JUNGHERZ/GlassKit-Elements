@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.19.1] – 2026-09-26
+
+### Fixed
+
+- **The package carries `SKILL.md` and `CHANGELOG.md`.** `files` in package.json listed `dist/`, `src/` and `LICENSE` only, so no release up to 1.19.0 had them — an agent that reads `SKILL.md` from `node_modules`, or a developer looking up what changed, found nothing there and had to go to GitHub. The same gap NotionKit Elements closed in its 1.11.1; the question came up there.
+- **Rebuilt against GlassKit 1.19.1**, whose `glasskit-styles.js` no longer embeds the `sourceMappingURL` comment of the minified sheet: all three bundles carried it inside their CSS text, where it pointed at a map that does not exist next to them. The peer dependency moves to `>=1.19.1`; no element changed.
+
+### Added
+
+- **`npm run check:package`, in CI and before every publish.** The release workflow runs it before it publishes, so a package that misses a file it points to no longer goes out; it reads the output of npm 10 and npm 12 alike (npm 12, which the release workflow installs, prints an object keyed by package name instead of a list). It packs the package without publishing and fails when an entry point of package.json (`main`, `module`, every `exports` target and pattern), `README.md`, `LICENSE`, `CHANGELOG.md`, `SKILL.md` or a source map named by a shipped file is missing — run against 1.19.0 it reports exactly the two missing documents and the three embedded map comments.
+
+---
+
 ## [1.19.0] – 2026-09-26
 
 Versions realign with GlassKit at 1.19.0.
@@ -688,6 +701,7 @@ Starting with this release, GlassKit Elements version numbers are aligned with G
 
 ---
 
+[1.19.1]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.19.1
 [1.19.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.19.0
 [1.18.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.18.0
 [1.17.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.17.0

@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.19.2] – 2026-09-26
+
+### Fixed
+
+- **`<glk-date-strip>` and `<glk-calendar>` name days in the page's language, not the browser's.** Without `locale` they went straight to `navigator.language`, so a German page opened on a phone set to English showed "SUN MON TUE" in the strip and started the calendar on Sunday — next to German text everywhere else. They now take the `lang` of the nearest ancestor, usually `<html lang>`, looked up across shadow roots through their hosts, so an element inside another component's shadow tree — a hybrids view, say — reaches the page's language, and a `<section lang="en">` in a German page stays English. Only without any `lang` does the browser language follow, then English; an empty `lang=""` means "unknown" in HTML and falls through to the browser. `locale` still wins over all of it. The page language decides weekday and month names, the chips' and days' `aria-label`s and the calendar's first day of the week. Measured in Chromium and WebKit with an `en-US` browser on `<html lang="de">`: "So Mo Di" and "Sonntag, 27. September 2026" instead of "Sun Mon Tue" and "Sunday, September 27, 2026", the calendar starts on Monday; a page without `lang` looks as before. Compatibility: a page whose `lang` differs from its visitors' browsers now shows its own language in these two elements — set `locale` to keep another. NotionKit Elements falls back to `<html lang>` since 1.17; this looks at the nearest ancestor instead. (EhrenPfoten, Elements finding 10.)
+
+---
+
 ## [1.19.1] – 2026-09-26
 
 ### Fixed
@@ -701,6 +709,7 @@ Starting with this release, GlassKit Elements version numbers are aligned with G
 
 ---
 
+[1.19.2]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.19.2
 [1.19.1]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.19.1
 [1.19.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.19.0
 [1.18.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.18.0

@@ -253,7 +253,7 @@
     <aside class="docs-sidebar">
       <div class="docs-sidebar__title">&#129482; <a href="/">GlassKit Elements</a></div>
       <div class="docs-sidebar__subtitle">Web Components for GlassKit CSS.</div>
-      <div class="docs-sidebar__version">v1.19.1 &ndash; Jungherz GmbH</div>
+      <div class="docs-sidebar__version">v1.19.2 &ndash; Jungherz GmbH</div>
 
       <div class="docs-sidebar__group">
         <div class="docs-sidebar__group-title">Basics</div>
@@ -339,7 +339,7 @@
         <h1>GlassKit Elements</h1>
         <p>Complete reference for all 29 web components &ndash; built by Jungherz GmbH. Vanilla JS, Shadow DOM, native form participation.</p>
         <div class="docs-hero__badges">
-          <span class="docs-hero__badge">v1.19.1</span>
+          <span class="docs-hero__badge">v1.19.2</span>
           <span class="docs-hero__badge">Shadow DOM</span>
           <span class="docs-hero__badge">33 Components</span>
           <span class="docs-hero__badge">Vanilla JS</span>
@@ -691,7 +691,7 @@
             <tr><td><code>today</code></td><td>String</td><td>The day with the warm border; the browser&rsquo;s day when missing</td></tr>
             <tr><td><code>min</code>, <code>max</code></td><td>String</td><td>Days outside cannot be picked (<code>aria-disabled</code>)</td></tr>
             <tr><td><code>marks</code></td><td>JSON</td><td><code>{ "2026-09-30": ["error", "warning"] }</code> &mdash; up to three tones per day: <code>primary</code> | <code>success</code> | <code>warning</code> | <code>error</code></td></tr>
-            <tr><td><code>locale</code></td><td>String</td><td>BCP 47 tag for names and week start; the browser language when missing</td></tr>
+            <tr><td><code>locale</code></td><td>String</td><td>BCP 47 tag for names and week start; without it the page language &mdash; the <code>lang</code> of the nearest ancestor, usually <code>&lt;html lang&gt;</code>, also across shadow roots &mdash; else the browser language (page language since 1.19.2)</td></tr>
             <tr><td><code>week-start</code></td><td>Number</td><td>0 = Sunday … 6 = Saturday; from the locale when missing, Monday where the browser cannot say</td></tr>
             <tr><td><code>label</code></td><td>String</td><td><code>aria-label</code> of the day group</td></tr>
             <tr><td><code>prev-label</code>, <code>next-label</code></td><td>String</td><td>Names of the nav buttons; &ldquo;Previous month&rdquo; / &ldquo;Next month&rdquo; by default</td></tr>
@@ -844,7 +844,7 @@
             <tr><td><code>value</code></td><td>String</td><td>Chosen day <code>YYYY-MM-DD</code></td></tr>
             <tr><td><code>today</code></td><td>String</td><td>The underlined day; the browser&rsquo;s day when missing</td></tr>
             <tr><td><code>marks</code></td><td>JSON</td><td><code>{ "2026-09-24": "warning", "2026-09-25": { "tone": "error", "disabled": true } }</code> &mdash; tone: <code>primary</code> | <code>success</code> | <code>warning</code> | <code>error</code>; <code>disabled</code> makes the chip unpickable</td></tr>
-            <tr><td><code>locale</code></td><td>String</td><td>BCP 47 tag for the weekday names and the chips&rsquo; <code>aria-label</code>; the browser language when missing</td></tr>
+            <tr><td><code>locale</code></td><td>String</td><td>BCP 47 tag for the weekday names and the chips&rsquo; <code>aria-label</code>; without it the page language &mdash; the <code>lang</code> of the nearest ancestor, usually <code>&lt;html lang&gt;</code>, also across shadow roots &mdash; else the browser language (page language since 1.19.2)</td></tr>
             <tr><td><code>label</code></td><td>String</td><td><code>aria-label</code> of the group</td></tr>
           </table>
           <p><strong>Events:</strong> <code>glk-change</code> <code>{ value }</code> &mdash; only on a change made by the user. <strong>Properties:</strong> <code>value</code>, <code>marks</code> (object or JSON text), <code>locale</code>, <code>label</code>. <strong>Part:</strong> <code>strip</code>.</p>

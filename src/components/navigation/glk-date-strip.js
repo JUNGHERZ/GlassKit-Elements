@@ -8,7 +8,8 @@ import { revealCentered } from '../../reveal.js';
 // Attributes: start (YYYY-MM-DD, default today), days (count, default 7),
 //             value (YYYY-MM-DD), today (YYYY-MM-DD, default the browser's
 //             day), marks (JSON {date: tone | {tone, disabled}}), locale
-//             (default the browser language), label (aria-label of the group)
+//             (default the page language, else the browser's), label
+//             (aria-label of the group)
 // Properties: value, marks (object or JSON text), locale, label
 // Event:      glk-change { value } — only on a change made by the user
 // Part:       strip
@@ -41,7 +42,7 @@ class GlkDateStrip extends GlkElement {
   }
 
   _build() {
-    const f = formatters(resolveLocale(this.getAttribute('locale')));
+    const f = formatters(resolveLocale(this.getAttribute('locale'), this));
     const marks = parseJsonObject(this.getAttribute('marks'));
     const start = parseIso(this.getAttribute('start')) ?? new Date();
     const today = this.getAttribute('today') || isoDate(new Date());
@@ -153,7 +154,7 @@ class GlkDateStrip extends GlkElement {
   get marks() { return parseJsonObject(this.getAttribute('marks')); }
   set marks(v) { this.setAttribute('marks', typeof v === 'string' ? v : JSON.stringify(v ?? {})); }
 
-  get locale() { return resolveLocale(this.getAttribute('locale')); }
+  get locale() { return resolveLocale(this.getAttribute('locale'), this); }
   set locale(v) {
     if (v) this.setAttribute('locale', v);
     else this.removeAttribute('locale');

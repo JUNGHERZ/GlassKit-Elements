@@ -255,7 +255,7 @@
     <aside class="docs-sidebar">
       <div class="docs-sidebar__title">&#129482; <a href="../de/">GlassKit Elements</a></div>
       <div class="docs-sidebar__subtitle">Web Components f&uuml;r GlassKit CSS.</div>
-      <div class="docs-sidebar__version">v1.19.1 &ndash; Jungherz GmbH</div>
+      <div class="docs-sidebar__version">v1.19.2 &ndash; Jungherz GmbH</div>
 
       <div class="docs-sidebar__group">
         <div class="docs-sidebar__group-title">Grundlagen</div>
@@ -341,7 +341,7 @@
         <h1>GlassKit Elements</h1>
         <p>Vollst&auml;ndige Referenz f&uuml;r alle 29 Web Components &ndash; entwickelt von Jungherz GmbH. Vanilla JS, Shadow DOM, native Formular-Teilnahme.</p>
         <div class="docs-hero__badges">
-          <span class="docs-hero__badge">v1.19.1</span>
+          <span class="docs-hero__badge">v1.19.2</span>
           <span class="docs-hero__badge">Shadow DOM</span>
           <span class="docs-hero__badge">33 Komponenten</span>
           <span class="docs-hero__badge">Vanilla JS</span>
@@ -693,7 +693,7 @@
             <tr><td><code>today</code></td><td>String</td><td>Der Tag mit dem warmen Rahmen; ohne Angabe der Tag des Browsers</td></tr>
             <tr><td><code>min</code>, <code>max</code></td><td>String</td><td>Tage außerhalb sind nicht wählbar (<code>aria-disabled</code>)</td></tr>
             <tr><td><code>marks</code></td><td>JSON</td><td><code>{ "2026-09-30": ["error", "warning"] }</code> &mdash; bis zu drei Töne je Tag: <code>primary</code> | <code>success</code> | <code>warning</code> | <code>error</code></td></tr>
-            <tr><td><code>locale</code></td><td>String</td><td>BCP-47-Tag für Namen und Wochenbeginn; ohne Angabe die Browsersprache</td></tr>
+            <tr><td><code>locale</code></td><td>String</td><td>BCP-47-Tag für Namen und Wochenbeginn; ohne Angabe die Sprache der Seite &mdash; das <code>lang</code> des n&auml;chsten Vorfahren, meist <code>&lt;html lang&gt;</code>, auch &uuml;ber Shadow Roots hinweg &mdash;, sonst die Browsersprache (Seitensprache seit 1.19.2)</td></tr>
             <tr><td><code>week-start</code></td><td>Number</td><td>0 = Sonntag … 6 = Samstag; ohne Angabe aus der Locale, Montag wo der Browser es nicht weiß</td></tr>
             <tr><td><code>label</code></td><td>String</td><td><code>aria-label</code> der Tagesgruppe</td></tr>
             <tr><td><code>prev-label</code>, <code>next-label</code></td><td>String</td><td>Namen der Navigationsknöpfe; Vorgabe „Previous month“ / „Next month“</td></tr>
@@ -846,7 +846,7 @@
             <tr><td><code>value</code></td><td>String</td><td>Gewählter Tag <code>YYYY-MM-DD</code></td></tr>
             <tr><td><code>today</code></td><td>String</td><td>Der unterstrichene Tag; ohne Angabe der Tag des Browsers</td></tr>
             <tr><td><code>marks</code></td><td>JSON</td><td><code>{ "2026-09-24": "warning", "2026-09-25": { "tone": "error", "disabled": true } }</code> &mdash; tone: <code>primary</code> | <code>success</code> | <code>warning</code> | <code>error</code>; <code>disabled</code> macht den Chip unwählbar</td></tr>
-            <tr><td><code>locale</code></td><td>String</td><td>BCP-47-Tag für Wochentagsnamen und das <code>aria-label</code> der Chips; ohne Angabe die Browsersprache</td></tr>
+            <tr><td><code>locale</code></td><td>String</td><td>BCP-47-Tag für Wochentagsnamen und das <code>aria-label</code> der Chips; ohne Angabe die Sprache der Seite &mdash; das <code>lang</code> des n&auml;chsten Vorfahren, meist <code>&lt;html lang&gt;</code>, auch &uuml;ber Shadow Roots hinweg &mdash;, sonst die Browsersprache (Seitensprache seit 1.19.2)</td></tr>
             <tr><td><code>label</code></td><td>String</td><td><code>aria-label</code> der Gruppe</td></tr>
           </table>
           <p><strong>Ereignisse:</strong> <code>glk-change</code> <code>{ value }</code> &mdash; nur bei einer Änderung durch den Nutzer. <strong>Eigenschaften:</strong> <code>value</code>, <code>marks</code> (Objekt oder JSON-Text), <code>locale</code>, <code>label</code>. <strong>Part:</strong> <code>strip</code>.</p>

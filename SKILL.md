@@ -1,6 +1,6 @@
 ---
 name: glasskit-elements
-description: GlassKit Elements is a vanilla-JS Web Components library (v1.19.1) wrapping GlassKit CSS v1.19.1. It provides 36 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
+description: GlassKit Elements is a vanilla-JS Web Components library (v1.19.2) wrapping GlassKit CSS v1.19.1. It provides 36 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
 ---
 
 # GlassKit Elements – AI Component Reference
@@ -1097,7 +1097,7 @@ A row of day chips that scrolls sideways (since 1.16.0) — a booking horizon, t
 | `value` | String | Chosen day `YYYY-MM-DD` |
 | `today` | String | The underlined day; the browser's day when missing |
 | `marks` | JSON | `{ date: tone \| { tone, disabled } }` — tone `primary` / `success` / `warning` / `error`; `disabled` makes the chip unpickable |
-| `locale` | String | BCP 47 tag for the names; the browser language when missing |
+| `locale` | String | BCP 47 tag for the names; without it the page language — the `lang` of the nearest ancestor, usually `<html lang>`, also across shadow roots — else the browser language (page language since 1.19.2) |
 | `label` | String | `aria-label` of the group |
 
 Event: `glk-change { value }` — only on a change made by the user. Properties: `value`, `marks` (object or JSON text), `locale`, `label`. Part: `strip`.
@@ -1120,7 +1120,7 @@ One month with a day to pick (since 1.16.0). The days are buttons in a `role="gr
 | `today` | String | The day with the warm border; the browser's day when missing |
 | `min`, `max` | String | Days outside cannot be picked |
 | `marks` | JSON | `{ date: tone \| [tone, …] }` — up to three tones per day |
-| `locale` | String | BCP 47 tag for names and week start; the browser language when missing |
+| `locale` | String | BCP 47 tag for names and week start; without it the page language — the `lang` of the nearest ancestor, usually `<html lang>`, also across shadow roots — else the browser language (page language since 1.19.2) |
 | `week-start` | Number | 0 = Sunday … 6 = Saturday; from the locale when missing |
 | `label` | String | `aria-label` of the day group |
 | `prev-label`, `next-label` | String | Names of the nav buttons ("Previous month" / "Next month") |

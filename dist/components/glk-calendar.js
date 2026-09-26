@@ -1,5 +1,5 @@
 import { GlkFormElement } from './base.js';
-import { i as isoDate, r as resolveLocale, f as formatters, p as parseIso, a as firstWeekday, b as parseJsonObject, w as weekdayShort, c as addDays, d as isTone } from './shared/dates-CNWaJf09.js';
+import { i as isoDate, r as resolveLocale, f as formatters, p as parseIso, a as firstWeekday, b as parseJsonObject, w as weekdayShort, c as addDays, d as isTone } from './shared/dates-D4JTqoiG.js';
 import '@jungherz-de/glasskit/glasskit-styles.js';
 
 // One month with a day to pick. Came back from EhrenPfoten in 1.16.0.
@@ -8,7 +8,7 @@ import '@jungherz-de/glasskit/glasskit-styles.js';
 //             today), value (YYYY-MM-DD), today (YYYY-MM-DD), min, max
 //             (YYYY-MM-DD; days outside cannot be picked), marks (JSON
 //             {date: tone | [tone, …]}, up to three dots), locale (default
-//             the browser language), week-start (0 = Sunday … 6 = Saturday;
+//             the page language, else the browser's), week-start (0 = Sunday … 6 = Saturday;
 //             default from the locale, Monday where the browser cannot say),
 //             label (aria-label of the day group), prev-label / next-label
 //             (names of the nav buttons, English by default)
@@ -66,7 +66,7 @@ class GlkCalendar extends GlkFormElement {
   get _todayIso() { return this.getAttribute('today') || isoDate(new Date()); }
 
   _build() {
-    const locale = resolveLocale(this.getAttribute('locale'));
+    const locale = resolveLocale(this.getAttribute('locale'), this);
     const f = formatters(locale);
     const month = this.month;
     const first = parseIso(month);
@@ -243,7 +243,7 @@ class GlkCalendar extends GlkFormElement {
   get marks() { return parseJsonObject(this.getAttribute('marks')); }
   set marks(v) { this.setAttribute('marks', typeof v === 'string' ? v : JSON.stringify(v ?? {})); }
 
-  get locale() { return resolveLocale(this.getAttribute('locale')); }
+  get locale() { return resolveLocale(this.getAttribute('locale'), this); }
   set locale(v) {
     if (v) this.setAttribute('locale', v);
     else this.removeAttribute('locale');

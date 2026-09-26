@@ -1,8 +1,8 @@
 // Date helpers shared by <glk-date-strip> and <glk-calendar>. Everything
 // works on local calendar days — a date is "YYYY-MM-DD" in the element API
 // and a local Date inside — so a day never shifts across midnight the way a
-// UTC timestamp would. Names come from Intl, keyed by the element's locale
-// attribute or the browser language.
+// UTC timestamp would. Names come from Intl, in the language resolveLocale()
+// finds for the element.
 
 export const pad = n => String(n).padStart(2, '0');
 
@@ -30,8 +30,29 @@ export function parseJsonObject(text) {
   }
 }
 
-export function resolveLocale(attr) {
-  return attr || (typeof navigator !== 'undefined' && navigator.language) || 'en';
+/**
+ * The language to name days and months in: the element's locale attribute;
+ * else the language of the page around it — the lang of the nearest
+ * ancestor, looked up across shadow roots through their hosts, so
+ * <html lang="de"> reaches an element inside another component's shadow
+ * tree and a <section lang="en"> in a German page stays English; else the
+ * browser's; else English. An empty lang means "unknown" in HTML and falls
+ * through to the browser's language. (Since 1.19.2 — before, the browser's
+ * language came right after the attribute.)
+ */
+export function resolveLocale(attr, el) {
+  if (attr) return attr;
+  for (let node = el; node; ) {
+    const tagged = node.closest?.('[lang]');
+    if (tagged) {
+      const lang = tagged.getAttribute('lang').trim();
+      if (lang) return lang;
+      break;
+    }
+    const root = node.getRootNode?.();
+    node = typeof ShadowRoot !== 'undefined' && root instanceof ShadowRoot ? root.host : null;
+  }
+  return (typeof navigator !== 'undefined' && navigator.language) || 'en';
 }
 
 // Intl formatters are cheap to keep and not to make; one set per locale.

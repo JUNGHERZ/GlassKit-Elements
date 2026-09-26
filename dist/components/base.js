@@ -220,10 +220,15 @@ class GlkElement extends HTMLElement {
     return el;
   }
 
-  emit(eventName, detail = null) {
-    this.dispatchEvent(new CustomEvent(eventName, {
+  /**
+   * Dispatch a bubbling, composed CustomEvent. With { cancelable: true } a
+   * listener may call preventDefault(); the return value is false then.
+   */
+  emit(eventName, detail = null, { cancelable = false } = {}) {
+    return this.dispatchEvent(new CustomEvent(eventName, {
       bubbles: true,
       composed: true,
+      cancelable,
       detail
     }));
   }

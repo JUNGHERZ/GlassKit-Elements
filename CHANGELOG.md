@@ -7,6 +7,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.19.0] – 2026-09-26
+
+Versions realign with GlassKit at 1.19.0.
+
+### Added
+
+- **`<glk-toast>` can offer something: a button and an ×.** It took `message`, `variant`, `duration` and `visible`; with `duration="0"` it stayed, but only code could close it, and there was no button — an offer like "A new version · Reload" had to live in a banner in the page. Now: `action-label` and `action-value`, or `show(message, { action: { label, value } })`, add GlassKit's `.glass-toast__action`, and with it an × (`.glass-toast__close`, named by `close-label`, "Close" by default); `dismissible` gives the × alone. A toast with an action stays until one of them is used, unless a `duration` is set, and it does not time out while the pointer or the focus is on it. The action emits `glk-action { action, label }` and closes the toast — unless a listener calls `preventDefault()`, or shows the next message from the handler ("Undo" → `show('Restored')`), both of which keep it up; the × and Escape emit `glk-close`; running out of time still emits `glk-dismiss`. `show()` keeps its old signature and gains an options form, `show(message, { variant, duration, action, dismissible })`: keys that are left out keep their attribute, except `action` — a message without one shows no button. The same shape as NotionKit Elements 1.19, with `glk-` names. (EhrenPfoten, Elements finding 9.)
+
+- **An `icon` slot on `<glk-toast>`** replaces the built-in icon — an offer to reload wants a refresh icon, not the success check a toast without a variant shows. Leave the slotted icon's stroke unset and it takes the variant colour.
+
+- **The toast is a live region.** `role="status"` and `aria-live="polite"` on the toast, so the message is announced; it was silent before. While hidden, its buttons are inert; closing it from the keyboard hands the focus back to where it came from.
+
+- **`emit(name, detail, { cancelable: true })`** on `GlkElement` — the event can be cancelled with `preventDefault()`, and `emit()` returns `false` then. Without the option nothing changes.
+
+### Fixed
+
+- **The toast's icon never took the variant colour.** The built-in icons carried `stroke="currentColor"`, which wins over the colour GlassKit sets on `.glass-toast__icon`, so success, error and warning toasts all showed a white icon — unlike the CSS toast. The icons now inherit their stroke: green, red, yellow.
+- **Changing `variant` on a visible toast hid it.** The class list was rebuilt without `is-visible` while the `visible` attribute stayed.
+- **A second `show()` while the toast was up did not restart its timer**, so the second message disappeared early — at 400 ms, a second `show(…, 600)` was gone 200 ms later. It now runs its full duration.
+- Rebuilt against GlassKit 1.19.0; the peer dependency moves to `>=1.19.0`.
+
+Verified in Chromium and WebKit: the old `show(message, variant, duration)` still hides after its duration and emits `glk-dismiss`; an offer is still up after 3.5 s; the action emits `glk-action { action: "reload" }` and closes; `preventDefault()` and a `show()` in the handler keep the toast up; × and Escape emit `glk-close`, and Escape hands the focus back; a toast with a 600 ms duration is still up after 900 ms under the pointer and hides 600 ms after the pointer leaves; hidden buttons refuse focus; on a 390 px phone the offer is 358 px wide with both buttons inside.
+
+---
+
 ## [1.18.0] – 2026-09-23
 
 Versions realign with GlassKit at 1.18.0.
@@ -663,6 +688,7 @@ Starting with this release, GlassKit Elements version numbers are aligned with G
 
 ---
 
+[1.19.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.19.0
 [1.18.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.18.0
 [1.17.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.17.0
 [1.16.1]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.16.1

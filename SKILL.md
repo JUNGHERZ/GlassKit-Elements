@@ -1,6 +1,6 @@
 ---
 name: glasskit-elements
-description: GlassKit Elements is a vanilla-JS Web Components library (v1.18.0) wrapping GlassKit CSS v1.18.0. It provides 36 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
+description: GlassKit Elements is a vanilla-JS Web Components library (v1.19.0) wrapping GlassKit CSS v1.19.0. It provides 36 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
 ---
 
 # GlassKit Elements – AI Component Reference
@@ -18,7 +18,7 @@ description: GlassKit Elements is a vanilla-JS Web Components library (v1.18.0) 
 npm install @jungherz-de/glasskit-elements @jungherz-de/glasskit
 ```
 
-Peer dependency `@jungherz-de/glasskit >=1.18.0` is required — 1.9.0 is the release that made the stylesheet splittable, which is what lets document-level branding reach the elements at all.
+Peer dependency `@jungherz-de/glasskit >=1.19.0` is required — 1.9.0 is the release that made the stylesheet splittable, which is what lets document-level branding reach the elements at all.
 
 ### Import (ES modules)
 
@@ -129,7 +129,7 @@ customElements.define('demo-counter', DemoCounter);
 
 Which import to take depends on how the elements are loaded, and mixing them is the one mistake to avoid: the `<script>` / ESM **bundle** carries its own copy of `GlkElement`, so a subclass built on `base.js` next to it is a different class — `instanceof` fails across the two, and the GlassKit stylesheet lives twice. Bundle loaded → take `GlassKitElements.GlkElement` or `import { GlkElement } from '@jungherz-de/glasskit-elements'`. Per-component files loaded → `base.js`, which the components import themselves. The per-component files leave `@jungherz-de/glasskit/glasskit-styles.js` external, so a bundler resolves it from `node_modules` and an import-map project maps it to the one copy it already loads for its own elements.
 
-Rules for a subclass: build only inside `this._wrapper` (it carries `data-theme`); keep listeners in `setupEvents()` / `teardownEvents()`, never in `render()`, or a moved element loses them; use `emit()` instead of `dispatchEvent()` so the event bubbles and crosses the shadow boundary; return `true` from `static get displayInline()` for inline elements; set `static get observesLightDom()` to `true` and implement `projectLightDom()` when copying light-DOM children into the shadow tree. `GlkFormElement` adds `setFormValue()`, `setValidity()`, `resetValue()` / `restoreValue()` and `static formAssociated = true`.
+Rules for a subclass: build only inside `this._wrapper` (it carries `data-theme`); keep listeners in `setupEvents()` / `teardownEvents()`, never in `render()`, or a moved element loses them; use `emit()` instead of `dispatchEvent()` so the event bubbles and crosses the shadow boundary — `emit(name, detail, { cancelable: true })` lets a listener call `preventDefault()`, and `emit()` returns `false` then (since 1.19.0); return `true` from `static get displayInline()` for inline elements; set `static get observesLightDom()` to `true` and implement `projectLightDom()` when copying light-DOM children into the shadow tree. `GlkFormElement` adds `setFormValue()`, `setValidity()`, `resetValue()` / `restoreValue()` and `static formAssociated = true`.
 
 ### Light-DOM children (since 1.12.0)
 
@@ -847,22 +847,38 @@ Progress bar.
 
 ### 3.22 `<glk-toast>`
 
-Auto-dismissing notification popover (shown imperatively).
+Notification at the top of the screen that hides itself (shown imperatively) — and, since 1.19.0, one that offers something: "A new version · Reload".
 
 ```html
 <glk-toast id="toast"></glk-toast>
 
 <script>
-  document.getElementById('toast').show('Saved successfully!', 'success', 3000);
+  toast.show('Saved successfully!', 'success', 3000);
+
+  // An offer: a button and an ×, stays until one of them is used
+  toast.show('A new version is ready', { action: { label: 'Reload', value: 'reload' } });
+  toast.addEventListener('glk-action', (e) => { if (e.detail.action === 'reload') location.reload(); });
+  toast.addEventListener('glk-close', () => { /* dismissed with × or Escape */ });
 </script>
 ```
 
 | Attribute | Type | Description |
 |---|---|---|
-| `variant` | String | `success`, `error`, `warning` |
-| `duration` | Number | Auto-dismiss time in ms (default `3000`) |
+| `message` | String | The text |
+| `variant` | String | `success`, `error`, `warning` — colours the icon and the action |
+| `duration` | Number | Auto-dismiss time in ms (default `3000`); `0` keeps it up. With an action there is no timeout unless `duration` is set |
+| `visible` | Boolean | Shown |
+| `action-label`, `action-value` | String | The action button, and the value `glk-action` reports (the label when missing) (since 1.19.0) |
+| `dismissible` | Boolean | An × without an action; an action always brings one (since 1.19.0) |
+| `close-label` | String | Name of the ×, `"Close"` by default (since 1.19.0) |
 
-Methods: `.show(message, variant, duration)`, `.dismiss()`.
+Methods: `.show(message, variant, duration)`, `.show(message, { variant, duration, action: { label, value }, dismissible })`, `.dismiss()`. In the options form, left-out keys keep their attribute, except `action`: a message without one shows no button, and one with an action but no `duration` stays. Calling `show()` again while the toast is up restarts its timer.
+
+Slot: `icon` — replaces the built-in icon; leave its stroke unset and it takes the variant colour.
+
+Events: `glk-action { action, label }` — the action was used; the toast closes unless a listener calls `preventDefault()` or shows the next message (`show('Restored')`) from the handler. `glk-close` — closed with the × or Escape. `glk-dismiss` — timed out.
+
+While the pointer or the focus is on a toast with buttons, it does not time out. The toast is a polite live region (`role="status"`), so the message is announced; hidden, its buttons are inert, and closing it from the keyboard hands the focus back. Where it sits comes from GlassKit's `--gl-toast-top` — set it on an ancestor to place the toast below your header (with `viewport-fit=cover`, add `env(safe-area-inset-top)`).
 
 ---
 
@@ -1324,7 +1340,7 @@ Key points:
 | `<glk-calendar>` | `.value`, `.month` | `value`, `month` | `glk-change` (user only), `glk-month` (user only) | `{ value }`, `{ month }` |
 | `<glk-image-picker>` | `.src` (not reflected) | `src` | `glk-change`, `glk-error` | `{ dataUrl, width, height, size }`, `{ message, name }` |
 | `<glk-badge>` | `.selected` | `interactive`, `selected` | `glk-click` (only when interactive) | — |
-| `<glk-toast>` | — | — | — | (imperative) |
+| `<glk-toast>` | `.show()` | `visible` | `glk-action`, `glk-close`, `glk-dismiss` | `{ action, label }`, —, — |
 
 All `glk-*` events bubble and are `composed: true`, so they pierce shadow boundaries naturally.
 
@@ -1398,7 +1414,7 @@ All `glk-*` events bubble and are `composed: true`, so they pierce shadow bounda
 | `<glk-modal>` | Feedback | `open`, `title` | default, `actions` | `glk-close` |
 | `<glk-popover>` | Feedback | `open`, `placement` | `trigger`, default | `glk-open`, `glk-close` |
 | `<glk-progress>` | Feedback | `value`, `label`, `variant`, `size` | — | — |
-| `<glk-toast>` | Feedback | `variant`, `duration` | — | (imperative) |
+| `<glk-toast>` | Feedback | `message`, `variant`, `duration`, `visible`, `action-label`, `action-value`, `dismissible`, `close-label` | `icon` | `glk-action`, `glk-close`, `glk-dismiss` |
 | `<glk-accordion>` | Containers | — | default | — |
 | `<glk-accordion-item>` | Containers | `title`, `open` | default | `glk-toggle` |
 | `<glk-list>` | Containers | `header`, `flush`, `bare` | default | — |

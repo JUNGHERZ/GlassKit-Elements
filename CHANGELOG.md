@@ -7,11 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [Unreleased]
+## [1.21.0] – 2026-10-05
+
+Versions realign with GlassKit at 1.21.0, which this release needs (peer dependency `>=1.21.0`). Contributed as pull request [#10](https://github.com/JUNGHERZ/GlassKit-Elements/pull/10), the companion of GlassKit's [#5](https://github.com/JUNGHERZ/GlassKit/pull/5).
 
 ### Added
 
-- **`data-density` on `<html>` reaches the elements, like `data-theme`.** GlassKit 1.21.0 turns the sizes of fields, buttons, toggles, checkboxes, radios, list rows and modal actions into density tokens, with `data-density="compact"` on `<html>` as a denser preset for admin screens, desktop layouts and narrow forms. The values arrive in every shadow root by inheritance — GlassKit puts the preset into `tokensCss`, which the elements place on the document in `@layer glasskit-defaults` — so a project's own density values (`[data-density='compact'] { --gl-btn-height: 36px; }`) reach the elements too; with `data-glk-defaults="off"` the preset comes from `glasskit.css` on the page, like every other token. The global `MutationObserver` now watches `data-density` next to `data-theme` and `data-glk-defaults` and mirrors it onto every element's `.glk-wrapper`: set when the wrapper is created, updated when `<html>` changes, removed when `<html>` has none. A rule keyed on the attribute — a GlassKit component rule, the `hostStyles` of a project's own `GlkElement` — therefore matches inside the shadow root, as it does for the theme. `GlkElement` gains `_syncDensity(density)` next to `_syncTheme(theme)`; the observer calls each only for the attribute that changed. The compact sizes need GlassKit 1.21.0: the bundles carry the GlassKit sheet they were built against, which in `dist/` is still the lockfile's 1.20.0 — rebuilt against 1.21.0, they bring the tokens along; the per-component files use the GlassKit the project installs.
+- **`data-density` on `<html>` reaches the elements, like `data-theme`.** GlassKit 1.21.0 turns the sizes of fields, buttons, toggles, checkboxes, radios, list rows and modal actions into density tokens, with `data-density="compact"` on `<html>` as a denser preset for admin screens, desktop layouts and narrow forms. The values arrive in every shadow root by inheritance — GlassKit puts the preset into `tokensCss`, which the elements place on the document in `@layer glasskit-defaults` — so a project's own density values (`[data-density='compact'] { --gl-btn-height: 36px; }`) reach the elements too; with `data-glk-defaults="off"` the preset comes from `glasskit.css` on the page, like every other token. The global `MutationObserver` now watches `data-density` next to `data-theme` and `data-glk-defaults` and mirrors it onto every element's `.glk-wrapper`: set when the wrapper is created, updated when `<html>` changes, removed when `<html>` has none. A rule keyed on the attribute — a GlassKit component rule, the `hostStyles` of a project's own `GlkElement` — therefore matches inside the shadow root, as it does for the theme. `GlkElement` gains `_syncDensity(density)` next to `_syncTheme(theme)`; the observer calls each only for the attribute that changed. The bundles are built against GlassKit 1.21.0 and carry its tokens; the per-component files use the GlassKit the project installs.
 
 ### Fixed
 
@@ -749,7 +751,8 @@ Starting with this release, GlassKit Elements version numbers are aligned with G
 
 ---
 
-[Unreleased]: https://github.com/JUNGHERZ/GlassKit-Elements/compare/v1.20.0...HEAD
+[Unreleased]: https://github.com/JUNGHERZ/GlassKit-Elements/compare/v1.21.0...HEAD
+[1.21.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.21.0
 [1.20.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.20.0
 [1.19.2]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.19.2
 [1.19.1]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.19.1

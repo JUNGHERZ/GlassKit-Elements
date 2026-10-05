@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.21.1] – 2026-10-05
+
+### Fixed
+
+- **Printed pages keep the state of the controls.** Rebuilt against GlassKit 1.21.1, whose print rule keeps the parts that carry a state in colour on paper — print dialogs leave out background graphics by default, and a checked `<glk-checkbox>` printed like an empty one, a `<glk-progress>` printed empty, the chosen day of `<glk-calendar>` paler than the others. The rule is part of GlassKit's component sheet, so it reaches the shadow roots; the bundles carry that sheet and needed the rebuild, the per-component files take it from the project's GlassKit. Measured in Chromium with `page.pdf()` without background graphics, inked pixels inside the indicator, on / off: `<glk-toggle>` 231 / 222 → 1025 / 226, `<glk-checkbox>` 87 / 79 → 511 / 79, `<glk-radio>` 75 / 67 → 383 / 67, the chosen `<glk-calendar>` day 42 → 1915 against 56 for another day; the `<glk-progress>` fill, the current `<glk-steps>` step and the calendar's tone dots now print. The peer dependency moves to `>=1.21.1`. ([GlassKit #6](https://github.com/JUNGHERZ/GlassKit/issues/6))
+
+### Documentation
+
+- README, SKILL.md and the docs (English and German) describe printing, with a `beforeprint` / `afterprint` snippet that prints a dark page in the light theme; the elements follow the switch in time for the print (checked in Chromium).
+
+---
+
 ## [1.21.0] – 2026-10-05
 
 Versions realign with GlassKit at 1.21.0, which this release needs (peer dependency `>=1.21.0`). Contributed as pull request [#10](https://github.com/JUNGHERZ/GlassKit-Elements/pull/10), the companion of GlassKit's [#5](https://github.com/JUNGHERZ/GlassKit/pull/5).
@@ -751,7 +763,8 @@ Starting with this release, GlassKit Elements version numbers are aligned with G
 
 ---
 
-[Unreleased]: https://github.com/JUNGHERZ/GlassKit-Elements/compare/v1.21.0...HEAD
+[Unreleased]: https://github.com/JUNGHERZ/GlassKit-Elements/compare/v1.21.1...HEAD
+[1.21.1]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.21.1
 [1.21.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.21.0
 [1.20.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.20.0
 [1.19.2]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.19.2

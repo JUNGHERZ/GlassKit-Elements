@@ -253,7 +253,7 @@
     <aside class="docs-sidebar">
       <div class="docs-sidebar__title">&#129482; <a href="/">GlassKit Elements</a></div>
       <div class="docs-sidebar__subtitle">Web Components for GlassKit CSS.</div>
-      <div class="docs-sidebar__version">v1.21.0 &ndash; Jungherz GmbH</div>
+      <div class="docs-sidebar__version">v1.21.1 &ndash; Jungherz GmbH</div>
 
       <div class="docs-sidebar__group">
         <div class="docs-sidebar__group-title">Basics</div>
@@ -339,7 +339,7 @@
         <h1>GlassKit Elements</h1>
         <p>Complete reference for all 36 web components &ndash; built by Jungherz GmbH. Vanilla JS, Shadow DOM, native form participation.</p>
         <div class="docs-hero__badges">
-          <span class="docs-hero__badge">v1.21.0</span>
+          <span class="docs-hero__badge">v1.21.1</span>
           <span class="docs-hero__badge">Shadow DOM</span>
           <span class="docs-hero__badge">36 Components</span>
           <span class="docs-hero__badge">Vanilla JS</span>
@@ -393,6 +393,17 @@
   <span class="cmt">// Back to the default density</span>
   document.documentElement.removeAttribute(<span class="val">'data-density'</span>);
 <span class="tag">&lt;/script&gt;</span></div>
+        <h3>Printing</h3>
+        <p>Print dialogs leave out background graphics by default. With GlassKit 1.21.1 the parts that carry a state keep their colours on paper &mdash; checkbox, radio, toggle, progress, the current step, the chosen day, the slider thumb, the tone dots &mdash; inside the elements as well. A dark page prints its light text and surfaces on white paper; a page meant for printing switches to the light theme for it, and the elements follow:</p>
+        <div class="docs-code">let printTheme = null;
+addEventListener(<span class="val">'beforeprint'</span>, () =&gt; {
+  printTheme = document.documentElement.getAttribute(<span class="val">'data-theme'</span>);
+  document.documentElement.setAttribute(<span class="val">'data-theme'</span>, <span class="val">'light'</span>);
+});
+addEventListener(<span class="val">'afterprint'</span>, () =&gt; {
+  if (printTheme) document.documentElement.setAttribute(<span class="val">'data-theme'</span>, printTheme);
+  else document.documentElement.removeAttribute(<span class="val">'data-theme'</span>);
+});</div>
       </section>
 
       <!-- ═══ Forms ═══ -->

@@ -1,6 +1,6 @@
 ---
 name: glasskit-elements
-description: GlassKit Elements is a vanilla-JS Web Components library (v1.21.0) wrapping GlassKit CSS v1.21.0. It provides 36 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
+description: GlassKit Elements is a vanilla-JS Web Components library (v1.21.1) wrapping GlassKit CSS v1.21.1. It provides 36 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
 ---
 
 # GlassKit Elements – AI Component Reference
@@ -18,7 +18,7 @@ description: GlassKit Elements is a vanilla-JS Web Components library (v1.21.0) 
 npm install @jungherz-de/glasskit-elements @jungherz-de/glasskit
 ```
 
-Peer dependency `@jungherz-de/glasskit >=1.21.0` is required — 1.21.0 brings the density tokens behind `data-density`, 1.20.0 the rules the elements build on since then (the dialog overlay, hidden list slots, empty control labels, control inputs on top); 1.9.0 is the release that made the stylesheet splittable, which is what lets document-level branding reach the elements at all.
+Peer dependency `@jungherz-de/glasskit >=1.21.1` is required — 1.21.1 keeps the controls' state on paper, 1.21.0 brings the density tokens behind `data-density`, 1.20.0 the rules the elements build on since then (the dialog overlay, hidden list slots, empty control labels, control inputs on top); 1.9.0 is the release that made the stylesheet splittable, which is what lets document-level branding reach the elements at all.
 
 ### Import (ES modules)
 
@@ -96,6 +96,23 @@ A single module-level `MutationObserver` watches `data-theme` on `<html>` and sy
 ```
 
 Denser controls for admin screens, desktop layouts and narrow forms: fields and buttons 40px instead of 52 and 56, smaller toggles, checkboxes and radios, denser list rows and modal actions. Without the attribute nothing changes; `removeAttribute('data-density')` switches back at runtime. The sizes are GlassKit's density tokens (GlassKit 1.21.0 or later), so they reach every shadow root by inheritance, and a project's own values do too (`[data-density='compact'] { --gl-btn-height: 36px; }`); with `data-glk-defaults="off"` the preset comes from `glasskit.css` on the page, like every other token. The same observer mirrors `data-density` onto each element's theme wrapper — set it on `<html>` only, never on individual elements.
+
+
+### Printing (since 1.21.1)
+
+Print dialogs leave out backgrounds by default; with GlassKit 1.21.1 the parts that carry a state keep their colours on paper, inside the elements too (`print-color-adjust: exact` in GlassKit's `@media print` rule — the component sheet reaches the shadow roots). A dark page prints light text and surfaces on white paper; for pages meant to be printed, switch to the light theme around printing — the elements follow `data-theme` as always:
+
+```js
+let printTheme = null;
+addEventListener('beforeprint', () => {
+  printTheme = document.documentElement.getAttribute('data-theme');
+  document.documentElement.setAttribute('data-theme', 'light');
+});
+addEventListener('afterprint', () => {
+  if (printTheme) document.documentElement.setAttribute('data-theme', printTheme);
+  else document.documentElement.removeAttribute('data-theme');
+});
+```
 
 ---
 

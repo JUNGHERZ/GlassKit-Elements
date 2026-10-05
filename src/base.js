@@ -53,14 +53,26 @@ function syncDefaultTokens() {
 
 injectDefaultTokens();
 
-// ── Global Theme Sync ──
-// Single MutationObserver that watches data-theme on <html>
+// ── Global Theme & Density Sync ──
+// Single MutationObserver that watches data-theme and data-density on <html>
 // and notifies all GlkElement instances.
+//
+// The density tokens themselves arrive from <html> by inheritance, like every
+// other token: GlassKit's [data-density="compact"] preset is part of
+// tokensCss, not of the components sheet. The wrapper mirrors the attribute
+// anyway, as it mirrors data-theme — a rule keyed on it (a component rule, a
+// subclass's hostStyles) can match inside a shadow root only on an element
+// there.
 
 const instances = new Set();
 
 function getCurrentTheme() {
   return document.documentElement.getAttribute('data-theme') || 'dark';
+}
+
+/** The density on <html>, or null — there is no default to fall back to. */
+function getCurrentDensity() {
+  return document.documentElement.getAttribute('data-density');
 }
 
 function syncAllThemes() {
@@ -70,14 +82,22 @@ function syncAllThemes() {
   }
 }
 
+function syncAllDensities() {
+  const density = getCurrentDensity();
+  for (const instance of instances) {
+    instance._syncDensity(density);
+  }
+}
+
 if (typeof window !== 'undefined' && typeof MutationObserver !== 'undefined') {
   const observer = new MutationObserver(records => {
     if (records.some(r => r.attributeName === 'data-theme')) syncAllThemes();
+    if (records.some(r => r.attributeName === 'data-density')) syncAllDensities();
     if (records.some(r => r.attributeName === DEFAULTS_ATTR)) syncDefaultTokens();
   });
   observer.observe(document.documentElement, {
     attributes: true,
-    attributeFilter: ['data-theme', DEFAULTS_ATTR]
+    attributeFilter: ['data-theme', 'data-density', DEFAULTS_ATTR]
   });
 }
 
@@ -211,9 +231,17 @@ export class GlkElement extends HTMLElement {
       this._wrapper = document.createElement('div');
       this._wrapper.className = 'glk-wrapper';
       this._wrapper.setAttribute('data-theme', getCurrentTheme());
+      this._syncDensity(getCurrentDensity());
       this._shadow.appendChild(this._wrapper);
 
       this.render();
+    } else {
+      // Back in the document. While it was out, the observer did not reach
+      // it, so a theme or density switched in the meantime is caught up here
+      // — the wrapper's data-theme also sets the color-scheme of the native
+      // parts inside.
+      this._syncTheme(getCurrentTheme());
+      this._syncDensity(getCurrentDensity());
     }
 
     // Everything below runs on every connect, not just the first. Moving an
@@ -246,6 +274,16 @@ export class GlkElement extends HTMLElement {
   _syncTheme(theme) {
     if (this._wrapper) {
       this._wrapper.setAttribute('data-theme', theme);
+    }
+  }
+
+  /** Mirrors data-density from <html>; without one there, the wrapper has none. */
+  _syncDensity(density) {
+    if (!this._wrapper) return;
+    if (density) {
+      this._wrapper.setAttribute('data-density', density);
+    } else {
+      this._wrapper.removeAttribute('data-density');
     }
   }
 

@@ -55,7 +55,7 @@ It is the **app layer** of the GlassKit family — three layers, one design lang
 | 🪶 **Lightweight** | 156 KB minified / 28 KB gzipped (IIFE bundle, GlassKit's component rules included), no external dependencies |
 | 📦 **Three bundle formats** | IIFE for `<script>`, minified IIFE for production, ESM for bundlers & tree-shaking |
 | 🎛️ **Form Participation** | Input, toggle, checkbox, radio, select — all work natively with `<form>` via `ElementInternals`: value, reset and, since 1.20.0, validity; `<glk-button type="submit">` submits |
-| 🌗 **Theme Sync** | Automatic dark/light mode sync via `data-theme` on `<html>` |
+| 🌗 **Theme Sync** | Automatic dark/light mode sync via `data-theme` on `<html>`, compact controls via `data-density` |
 | 📱 **Mobile-first** | Inherits GlassKit's mobile-optimized design with `safe-area-inset` support |
 
 ---
@@ -204,6 +204,18 @@ const current = html.getAttribute('data-theme');
 html.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
 ```
 
+### Density
+
+Admin screens, desktop layouts and narrow forms want denser controls. Set `data-density="compact"` on `<html>`, next to `data-theme`:
+
+```html
+<html data-theme="dark" data-density="compact">
+```
+
+Fields and buttons become 40px high instead of 52 and 56, toggles, checkboxes and radios smaller, list rows and modal actions denser; `removeAttribute('data-density')` switches back at runtime. Without the attribute nothing changes.
+
+> **Requires GlassKit CSS >= 1.21.0.** The sizes are GlassKit's density tokens, so they reach every shadow root by inheritance, like the brand colors below — and so do your own: `[data-density='compact'] { --gl-btn-height: 36px; }`. With `data-glk-defaults="off"` the preset comes from `glasskit.css` on the page, like every other token. The global observer mirrors `data-density` onto each element's theme wrapper as well, so a rule keyed on the attribute matches inside the shadow root too.
+
 ### Icons
 
 Pass an icon as a **direct child**, not wrapped:
@@ -256,15 +268,15 @@ itself, or wants them on part of the page only, switches the defaults off:
 ## 🛠️ Architecture
 
 - **Shadow DOM** with `adoptedStyleSheets` — GlassKit's `componentsSheet` is shared across all component instances; token declarations stay on the document so branding can be inherited
-- **Theme wrapper** with `display: contents` — layout-transparent `<div>` for `data-theme` CSS selectors
-- **Global `MutationObserver`** — single observer watches `data-theme` changes and syncs all instances
+- **Theme wrapper** with `display: contents` — layout-transparent `<div>` for `data-theme` and `data-density` CSS selectors
+- **Global `MutationObserver`** — single observer watches `data-theme` and `data-density` changes and syncs all instances
 - **`GlkElement`** base class — handles Shadow DOM setup, theme sync, attribute reflection
 - **`GlkFormElement`** extends `GlkElement` — adds `ElementInternals` for native form participation, delegates focus to its field and reports the field's validity
 - **Native semantics** — labels tied to their fields, the toggle's `role="switch"` on its native checkbox, `<glk-modal>` a native `<dialog>`, `aria-expanded` on accordion and popover triggers
 
 ### Build your own element
 
-Since 1.14.0 both base classes are exported, so a project element inherits the whole setup — open shadow root with GlassKit's stylesheet adopted (`.glass-*` classes work inside), theme wrapper following `data-theme`, listeners re-armed when the element moves, `emit()` for bubbling, composed events:
+Since 1.14.0 both base classes are exported, so a project element inherits the whole setup — open shadow root with GlassKit's stylesheet adopted (`.glass-*` classes work inside), theme wrapper following `data-theme` and `data-density`, listeners re-armed when the element moves, `emit()` for bubbling, composed events:
 
 ```js
 import { GlkElement } from '@jungherz-de/glasskit-elements';   // or '…/base.js', or GlassKitElements.GlkElement from the CDN bundle

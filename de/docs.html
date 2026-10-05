@@ -386,6 +386,15 @@
         <p>Die Token-Namen bleiben global; eine eigene Komponente, die <code>var(--gl-…, fallback)</code> liest, bekommt GlassKits Wert. Eine Seite, die die Tokens selbst deklariert oder nur in einem Teil der Seite haben will, schaltet die Vorgaben ab &mdash; das Attribut wird beobachtet, darf also auch später kommen oder gehen:</p>
         <div class="docs-code"><span class="tag">&lt;html</span> <span class="attr">data-glk-defaults</span>=<span class="val">"off"</span><span class="tag">&gt;</span></div>
         <p>Die Elemente nehmen die Tokens dann von dort, wo sie sie erben: aus <code>glasskit.css</code> oder aus einem eigenen Block auf einem Container um sie herum.</p>
+
+        <h3>Dichte</h3>
+        <p>F&uuml;r Admin-Oberfl&auml;chen, Desktop-Layouts und schmale Formulare macht <code>data-density="compact"</code> auf dem <code>&lt;html&gt;</code>-Element jedes Bedienelement dichter: Felder und Buttons 40px hoch statt 52 und 56, kleinere Toggles, Checkboxen und Radios, dichtere Listenzeilen und Modal-Aktionen. Die Gr&ouml;&szlig;en sind die Dichte-Tokens von GlassKit (GlassKit 1.21.0) und erreichen so jeden Shadow Root durch Vererbung &mdash; auch die eigenen Werte eines Projekts; mit <code>data-glk-defaults="off"</code> kommt die Vorgabe wie jedes andere Token aus <code>glasskit.css</code> auf der Seite. Derselbe Observer spiegelt das Attribut auf den Theme-Wrapper jedes Elements; zum Umschalten zur Laufzeit braucht es nichts weiter.</p>
+        <div class="docs-code"><span class="tag">&lt;html</span> <span class="attr">data-theme</span>=<span class="val">"dark"</span> <span class="attr">data-density</span>=<span class="val">"compact"</span><span class="tag">&gt;</span>
+
+<span class="tag">&lt;script&gt;</span>
+  <span class="cmt">// Back to the default density</span>
+  document.documentElement.removeAttribute(<span class="val">'data-density'</span>);
+<span class="tag">&lt;/script&gt;</span></div>
       </section>
 
       <!-- ═══ Forms ═══ -->
@@ -1107,7 +1116,7 @@ document.querySelector(<span class="val">'glk-popover'</span>).toggle();</div>
       <!-- ═══ Erweitern ═══ -->
       <section class="docs-section" id="extend">
         <h2>Eigene Elemente bauen</h2>
-        <p>Seit 1.14.0 sind die Basisklassen exportiert. Ein Projekt-Element, das <code>GlkElement</code> erweitert, bekommt, was jedes <code>&lt;glk-*&gt;</code> hat: einen offenen Shadow Root mit adoptiertem GlassKit-Stylesheet (<code>.glass-btn</code> &amp; Co. funktionieren darin), den Theme-Wrapper, der <code>data-theme</code> folgt, beim Verschieben neu gesetzte Listener und <code>emit()</code> f&uuml;r bubbling, composed Events. <code>GlkFormElement</code> erg&auml;nzt <code>ElementInternals</code> f&uuml;r native Formularteilnahme. Probier es aus &mdash; dieser Knopf ist ein auf dieser Seite definiertes <code>&lt;demo-counter&gt;</code>:</p>
+        <p>Seit 1.14.0 sind die Basisklassen exportiert. Ein Projekt-Element, das <code>GlkElement</code> erweitert, bekommt, was jedes <code>&lt;glk-*&gt;</code> hat: einen offenen Shadow Root mit adoptiertem GlassKit-Stylesheet (<code>.glass-btn</code> &amp; Co. funktionieren darin), den Theme-Wrapper, der <code>data-theme</code> und <code>data-density</code> folgt, beim Verschieben neu gesetzte Listener und <code>emit()</code> f&uuml;r bubbling, composed Events. <code>GlkFormElement</code> erg&auml;nzt <code>ElementInternals</code> f&uuml;r native Formularteilnahme. Probier es aus &mdash; dieser Knopf ist ein auf dieser Seite definiertes <code>&lt;demo-counter&gt;</code>:</p>
         <div class="docs-preview" style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
           <demo-counter count="0"></demo-counter>
           <span data-demo-count-out style="opacity:.75">wartet auf <code>demo-count</code>&hellip;</span>

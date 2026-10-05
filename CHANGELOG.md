@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.21.2] – 2026-10-05
+
+### Fixed
+
+- **Disabled elements look disabled.** Rebuilt against GlassKit 1.21.2, which adds the disabled state its controls were missing. `<glk-button disabled>` rendered exactly like an enabled button, with the pointer cursor and the hover lift; so did `<glk-pill>` and `<glk-tab-accessory>`, and `<glk-toggle>`, `<glk-checkbox>`, `<glk-radio>`, `<glk-textarea>` and `<glk-range>` showed no difference at all — `<glk-select>` was dimmed by Chrome's own stylesheet only. Now buttons, pill, accessory and the check controls dim to 0.45 with the not-allowed cursor and no hover effect, the fields to 0.4 like `<glk-input>`. Measured in Chromium and WebKit, opacity of the inner control with `disabled` on the element: 1 → 0.45 for button, pill, accessory, toggle, checkbox and radio, 1 (Chrome: 0.7 for the select) → 0.4 for select, textarea and range. The rules are part of GlassKit's component sheet, so they reach the shadow roots; the bundles carry that sheet and needed the rebuild. The disabled toggle and button on the showcase and the docs now look disabled. The peer dependency moves to `>=1.21.2`. ([GlassKit #7](https://github.com/JUNGHERZ/GlassKit/issues/7))
+
+---
+
 ## [1.21.1] – 2026-10-05
 
 ### Fixed
@@ -763,7 +771,8 @@ Starting with this release, GlassKit Elements version numbers are aligned with G
 
 ---
 
-[Unreleased]: https://github.com/JUNGHERZ/GlassKit-Elements/compare/v1.21.1...HEAD
+[Unreleased]: https://github.com/JUNGHERZ/GlassKit-Elements/compare/v1.21.2...HEAD
+[1.21.2]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.21.2
 [1.21.1]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.21.1
 [1.21.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.21.0
 [1.20.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.20.0

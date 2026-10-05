@@ -20,7 +20,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="GlassKit Elements — Documentation">
   <meta name="twitter:description" content="Complete documentation for all 29 GlassKit Elements web components with live examples.">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.19/glasskit.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.20/glasskit.min.css">
   <script src="/dist/glasskit-elements.min.js"></script>
   <style>
     html { scroll-behavior: smooth; }
@@ -253,7 +253,7 @@
     <aside class="docs-sidebar">
       <div class="docs-sidebar__title">&#129482; <a href="/">GlassKit Elements</a></div>
       <div class="docs-sidebar__subtitle">Web Components for GlassKit CSS.</div>
-      <div class="docs-sidebar__version">v1.19.2 &ndash; Jungherz GmbH</div>
+      <div class="docs-sidebar__version">v1.20.0 &ndash; Jungherz GmbH</div>
 
       <div class="docs-sidebar__group">
         <div class="docs-sidebar__group-title">Basics</div>
@@ -337,11 +337,11 @@
       <!-- Hero -->
       <div class="docs-hero">
         <h1>GlassKit Elements</h1>
-        <p>Complete reference for all 29 web components &ndash; built by Jungherz GmbH. Vanilla JS, Shadow DOM, native form participation.</p>
+        <p>Complete reference for all 36 web components &ndash; built by Jungherz GmbH. Vanilla JS, Shadow DOM, native form participation.</p>
         <div class="docs-hero__badges">
-          <span class="docs-hero__badge">v1.19.2</span>
+          <span class="docs-hero__badge">v1.20.0</span>
           <span class="docs-hero__badge">Shadow DOM</span>
-          <span class="docs-hero__badge">33 Components</span>
+          <span class="docs-hero__badge">36 Components</span>
           <span class="docs-hero__badge">Vanilla JS</span>
         </div>
       </div>
@@ -352,7 +352,7 @@
 
         <h3>CDN (quickest)</h3>
         <div class="docs-code"><span class="cmt">&lt;!-- 1. GlassKit CSS --&gt;</span>
-<span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span> <span class="attr">href</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.19/glasskit.min.css"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span> <span class="attr">href</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.20/glasskit.min.css"</span><span class="tag">&gt;</span>
 
 <span class="cmt">&lt;!-- 2. GlassKit Elements --&gt;</span>
 <span class="tag">&lt;script</span> <span class="attr">src</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"</span><span class="tag">&gt;&lt;/script&gt;</span></div>
@@ -380,12 +380,17 @@
   document.documentElement.setAttribute(<span class="val">'data-theme'</span>,
     theme === <span class="val">'dark'</span> ? <span class="val">'light'</span> : <span class="val">'dark'</span>);
 <span class="tag">&lt;/script&gt;</span></div>
+        <p><strong>Token defaults and <code>color-scheme</code>.</strong> The elements put GlassKit&rsquo;s token defaults on the document once, in <code>@layer glasskit-defaults</code>, so any stylesheet of yours wins over them. Since 1.20.0 that layer carries the <code>--gl-*</code> tokens only. <code>color-scheme</code> stays off the page: each element sets it on its own theme wrapper, so a select&rsquo;s list, a date picker or a scrollbar inside an element matches its theme while the page keeps its own. Before, importing the elements switched the whole page to <code>color-scheme: dark</code> &mdash; text without a colour of its own turned white, links light blue, native controls dark.</p>
+        <p>The token names stay global, so a component of yours that reads <code>var(--gl-…, fallback)</code> gets GlassKit&rsquo;s value. A page that declares the tokens itself, or wants them on part of the page only, switches the defaults off &mdash; the attribute is watched, so it may also come or go later:</p>
+        <div class="docs-code"><span class="tag">&lt;html</span> <span class="attr">data-glk-defaults</span>=<span class="val">"off"</span><span class="tag">&gt;</span></div>
+        <p>The elements then take the tokens from wherever they inherit them: <code>glasskit.css</code>, or a block of your own on a container around them.</p>
       </section>
 
       <!-- ═══ Forms ═══ -->
       <section class="docs-section" id="forms">
         <h2>Form Integration</h2>
-        <p>All form components participate in native forms via <code>ElementInternals</code>.</p>
+        <p>All form components participate in native forms via <code>ElementInternals</code>: their value goes into <code>FormData</code>, and a reset restores it. Since 1.20.0 the form also learns whether they are valid. The inner field checks <code>required</code>, <code>pattern</code>, <code>min</code>, <code>type="email"</code> and the like, and the element reports its verdict: <code>form.checkValidity()</code> is false while a required field is empty, a submit stops at the first invalid field with the browser&rsquo;s own message, <code>reportValidity()</code> focuses it, and <code>validity</code>, <code>validationMessage</code> and <code>willValidate</code> answer on the element. <code>&lt;glk-button type="submit"&gt;</code> submits its form and <code>type="reset"</code> resets it &mdash; before 1.20.0 both did nothing.</p>
+        <p>Labels are tied to their fields: a screen reader names the field by its <code>label</code>, and a click on the label text focuses it &mdash; as do <code>element.focus()</code> and a click on a <code>&lt;label for&gt;</code> that names the element. The <code>hint</code> of <code>&lt;glk-input&gt;</code> is read as the field&rsquo;s description.</p>
         <div class="docs-code"><span class="tag">&lt;form</span> <span class="attr">id</span>=<span class="val">"settings"</span><span class="tag">&gt;</span>
   <span class="tag">&lt;glk-input</span> <span class="attr">name</span>=<span class="val">"username"</span> <span class="attr">label</span>=<span class="val">"Username"</span><span class="tag">&gt;&lt;/glk-input&gt;</span>
   <span class="tag">&lt;glk-toggle</span> <span class="attr">name</span>=<span class="val">"notify"</span> <span class="attr">label</span>=<span class="val">"Notifications"</span> <span class="attr">checked</span><span class="tag">&gt;&lt;/glk-toggle&gt;</span>
@@ -521,9 +526,10 @@
             <tr><td><code>variant</code></td><td>String</td><td><code>primary</code> | <code>secondary</code> | <code>tertiary</code></td></tr>
             <tr><td><code>size</code></td><td>String</td><td><code>sm</code> | <code>md</code> | <code>lg</code> | <code>auto</code></td></tr>
             <tr><td><code>disabled</code></td><td>Boolean</td><td>Disables the button</td></tr>
-            <tr><td><code>type</code></td><td>String</td><td><code>button</code> | <code>submit</code> | <code>reset</code></td></tr>
+            <tr><td><code>type</code></td><td>String</td><td><code>button</code> | <code>submit</code> | <code>reset</code> &mdash; submit and reset act on the element&rsquo;s form (since 1.20.0)</td></tr>
           </table>
           <p><strong>Events:</strong> <code>glk-click</code></p>
+          <p><code>type="submit"</code> submits the form the element sits in, <code>type="reset"</code> resets it &mdash; once the click has finished bubbling, so a listener that calls <code>preventDefault()</code> on the click stops it, as on a native button. A form with invalid fields does not submit and shows the browser&rsquo;s message. The submit event names the element as its <code>submitter</code>; <code>.form</code> is its form, and <code>element.click()</code> acts like a click. <code>aria-expanded</code>, <code>aria-haspopup</code> and <code>aria-pressed</code> set on the element are handed on to the native button inside, which is what screen readers read (since 1.20.0).</p>
         </div>
 
         <div class="docs-component" id="glk-pill">
@@ -537,6 +543,7 @@
             <tr><td><code>label</code></td><td>String</td><td>Accessible aria-label</td></tr>
             <tr><td><code>disabled</code></td><td>Boolean</td><td>Disables the button</td></tr>
           </table>
+          <p><code>aria-expanded</code>, <code>aria-haspopup</code> and <code>aria-pressed</code> are handed on to the native button inside (since 1.20.0) &mdash; <code>&lt;glk-popover&gt;</code> sets <code>aria-expanded</code> on its trigger.</p>
         </div>
       </section>
 
@@ -562,9 +569,9 @@
             <tr><td><code>label</code></td><td>String</td><td>Input label</td></tr>
             <tr><td><code>type</code></td><td>String</td><td>text, email, password, ...</td></tr>
             <tr><td><code>placeholder</code></td><td>String</td><td>Placeholder text</td></tr>
-            <tr><td><code>hint</code></td><td>String</td><td>Helper text</td></tr>
-            <tr><td><code>error</code></td><td>Boolean</td><td>Error styling</td></tr>
-            <tr><td><code>required</code></td><td>Boolean</td><td>Required field</td></tr>
+            <tr><td><code>hint</code></td><td>String</td><td>Helper text, read as the field&rsquo;s description</td></tr>
+            <tr><td><code>error</code></td><td>Boolean</td><td>Error styling; marks the field invalid for screen readers (<code>aria-invalid</code>, since 1.20.0). It does not block the form &mdash; a server&rsquo;s verdict arrives this way</td></tr>
+            <tr><td><code>required</code></td><td>Boolean</td><td>Required field; while it is empty the form does not submit (since 1.20.0)</td></tr>
             <tr><td><code>min</code>, <code>max</code>, <code>step</code></td><td>String</td><td>Passed to the inner field: range and step of the picker for dates, times and numbers (since 1.17.0)</td></tr>
             <tr><td><code>minlength</code>, <code>maxlength</code>, <code>pattern</code></td><td>String</td><td>Passed to the inner field (since 1.17.0)</td></tr>
             <tr><td><code>autocomplete</code>, <code>inputmode</code></td><td>String</td><td>Autofill and on-screen keyboard, passed to the inner field (since 1.17.0)</td></tr>
@@ -576,6 +583,7 @@
           <h3><code>&lt;glk-textarea&gt;</code></h3>
           <div class="docs-preview"><glk-textarea label="Message" placeholder="Type here..." rows="3"></glk-textarea></div>
           <div class="docs-code"><span class="tag">&lt;glk-textarea</span> <span class="attr">label</span>=<span class="val">"Message"</span> <span class="attr">rows</span>=<span class="val">"4"</span><span class="tag">&gt;&lt;/glk-textarea&gt;</span></div>
+          <p>Attributes: <code>label</code>, <code>rows</code>, <code>placeholder</code>, <code>required</code>, <code>name</code>, <code>value</code>, <code>disabled</code>. The label names the field.</p>
         </div>
 
         <div class="docs-component" id="glk-select">
@@ -591,12 +599,14 @@
   <span class="tag">&lt;option</span> <span class="attr">value</span>=<span class="val">"free"</span><span class="tag">&gt;</span>Free<span class="tag">&lt;/option&gt;</span>
   <span class="tag">&lt;option</span> <span class="attr">value</span>=<span class="val">"pro"</span><span class="tag">&gt;</span>Pro<span class="tag">&lt;/option&gt;</span>
 <span class="tag">&lt;/glk-select&gt;</span></div>
+          <p>Children: native <code>&lt;option&gt;</code> elements. With <code>required</code> and an empty first option (<code>value=""</code>) the form does not submit until a choice is made (since 1.20.0). The label names the field.</p>
         </div>
 
         <div class="docs-component" id="glk-search">
           <h3><code>&lt;glk-search&gt;</code></h3>
-          <div class="docs-preview"><glk-search placeholder="Search..."></glk-search></div>
-          <div class="docs-code"><span class="tag">&lt;glk-search</span> <span class="attr">placeholder</span>=<span class="val">"Search..."</span><span class="tag">&gt;&lt;/glk-search&gt;</span></div>
+          <div class="docs-preview"><glk-search label="Search components" placeholder="Search..."></glk-search></div>
+          <div class="docs-code"><span class="tag">&lt;glk-search</span> <span class="attr">label</span>=<span class="val">"Search components"</span> <span class="attr">placeholder</span>=<span class="val">"Search..."</span><span class="tag">&gt;&lt;/glk-search&gt;</span></div>
+          <p>The search field has no visible label; <code>label</code> names it for screen readers (since 1.20.0) &mdash; without it the placeholder is all they can say.</p>
         </div>
 
         <div class="docs-component" id="glk-toggle">
@@ -612,8 +622,10 @@
             <tr><td><code>label</code></td><td>String</td><td>Toggle label</td></tr>
             <tr><td><code>checked</code></td><td>Boolean</td><td>Checked state</td></tr>
             <tr><td><code>disabled</code></td><td>Boolean</td><td>Disabled state</td></tr>
+            <tr><td><code>required</code></td><td>Boolean</td><td>Must be on before the form submits (since 1.20.0)</td></tr>
           </table>
           <p><strong>Events:</strong> <code>glk-change</code> &rarr; <code>{ checked: boolean }</code></p>
+          <p>The switch is the native checkbox inside, with <code>role="switch"</code>: one control for screen readers, named by <code>label</code>, its state read from the checkbox. Since 1.20.0 the element itself carries no <code>role</code>, <code>aria-checked</code> or <code>aria-disabled</code> &mdash; style and select on <code>[checked]</code> and <code>[disabled]</code>. <code>element.click()</code> and a <code>&lt;label&gt;</code> around the element or naming it toggle it, as they do a native checkbox; the same holds for <code>&lt;glk-checkbox&gt;</code> and <code>&lt;glk-radio&gt;</code>. Without <code>label</code> the element is exactly as large as its track, 52 &times; 30&nbsp;px.</p>
         </div>
 
         <div class="docs-component" id="glk-checkbox">
@@ -623,6 +635,7 @@
             <glk-checkbox label="Subscribe"></glk-checkbox>
           </div>
           <div class="docs-code"><span class="tag">&lt;glk-checkbox</span> <span class="attr">label</span>=<span class="val">"I agree"</span> <span class="attr">name</span>=<span class="val">"terms"</span> <span class="attr">checked</span><span class="tag">&gt;&lt;/glk-checkbox&gt;</span></div>
+          <p><code>required</code> keeps the form from submitting until the box is ticked (since 1.20.0).</p>
         </div>
 
         <div class="docs-component" id="glk-radio">
@@ -633,6 +646,7 @@
           </div>
           <div class="docs-code"><span class="tag">&lt;glk-radio</span> <span class="attr">name</span>=<span class="val">"plan"</span> <span class="attr">label</span>=<span class="val">"Free"</span> <span class="attr">value</span>=<span class="val">"free"</span> <span class="attr">checked</span><span class="tag">&gt;&lt;/glk-radio&gt;</span>
 <span class="tag">&lt;glk-radio</span> <span class="attr">name</span>=<span class="val">"plan"</span> <span class="attr">label</span>=<span class="val">"Pro"</span> <span class="attr">value</span>=<span class="val">"pro"</span><span class="tag">&gt;&lt;/glk-radio&gt;</span></div>
+          <p><code>required</code> on any radio of a group makes the group required; any checked radio satisfies it, as with native radios (since 1.20.0).</p>
         </div>
 
         <div class="docs-component" id="glk-range">
@@ -875,7 +889,7 @@
 
         <div class="docs-component" id="glk-modal">
           <h3><code>&lt;glk-modal&gt;</code></h3>
-          <p>Modal dialog with title, body, and action buttons.</p>
+          <p>Modal dialog with title, body, and action buttons. Since 1.20.0 it is a native <code>&lt;dialog&gt;</code>, opened with <code>showModal()</code>: it lies above everything else, the page behind it is inert for pointer, keyboard and screen readers, focus moves into it and goes back to where it came from when it closes, and its content is out of reach while it is closed. The title names the dialog.</p>
           <div class="docs-preview">
             <glk-button variant="secondary" size="auto" onclick="document.getElementById('docs-modal').show()">Open Modal</glk-button>
             <glk-modal id="docs-modal" title="Confirm Action">
@@ -903,6 +917,7 @@ document.getElementById(<span class="val">'my-modal'</span>).close();</div>
             <tr><td><code>title</code></td><td>String</td><td>Header title</td></tr>
           </table>
           <p><strong>Methods:</strong> <code>.show()</code>, <code>.close()</code> &nbsp; <strong>Events:</strong> <code>glk-close</code></p>
+          <p>Which element gets the focus on opening, browsers decide differently &mdash; Chrome takes the first field of the content, Safari the first action. Mark one with <code>autofocus</code>, in the content or among the actions, to settle it. Escape and a click on the dimmed area close the modal with its fade and emit <code>glk-close</code>; <code>.close()</code> does not emit. While it is open, everything outside is inert &mdash; a <code>&lt;glk-toast&gt;</code> shown then is neither clickable nor announced, so give feedback inside the modal or close it first.</p>
         </div>
 
         <div class="docs-component" id="glk-toast">
@@ -981,6 +996,7 @@ document.querySelector(<span class="val">'glk-popover'</span>).toggle();</div>
           <p><strong>Events:</strong> <code>glk-open</code>, <code>glk-close</code></p>
           <p><strong>Methods:</strong> <code>.show()</code>, <code>.close()</code>, <code>.toggle()</code></p>
           <p><strong>Heads-up:</strong> the method is deliberately called <code>.toggle()</code> — not <code>.togglePopover()</code>, which collides with the native <code>HTMLElement.togglePopover()</code> API.</p>
+          <p>The trigger tells whether the popover is open: it gets <code>aria-expanded</code>, also after it is swapped (since 1.20.0). <code>&lt;glk-button&gt;</code> and <code>&lt;glk-pill&gt;</code> hand it on to their native button.</p>
         </div>
         <div class="docs-component" id="glk-sheet">
           <h3><code>&lt;glk-sheet&gt;</code></h3>
@@ -1032,6 +1048,7 @@ document.querySelector(<span class="val">'glk-popover'</span>).toggle();</div>
             <tr><td><code>open</code></td><td>glk-accordion-item</td><td>Expanded state</td></tr>
           </table>
           <p><strong>Events:</strong> <code>glk-toggle</code> &rarr; <code>{ open: boolean }</code></p>
+          <p>The trigger carries <code>aria-expanded</code> and <code>aria-controls</code>; a closed section is inert, so its links and fields are out of the tab order and out of the accessibility tree until it opens (since 1.20.0).</p>
         </div>
 
         <div class="docs-component" id="glk-list">
@@ -1118,7 +1135,7 @@ customElements.define(<span class="val">'demo-counter'</span>, DemoCounter);</di
           <tr><td>Per component</td><td><code>import { GlkElement } from '@jungherz-de/glasskit-elements/base.js';</code> &mdash; the very module the components import, so <code>instanceof GlkElement</code> holds across both. The per-component files leave <code>@jungherz-de/glasskit/glasskit-styles.js</code> external: a bundler resolves it, an import map needs an entry for it. Never next to the <code>&lt;script&gt;</code> bundle &mdash; that carries its own copy of the class.</td></tr>
           <tr><td>CDN / <code>&lt;script&gt;</code></td><td><code>const { GlkElement } = GlassKitElements;</code></td></tr>
         </table>
-        <p><strong>Hooks:</strong> <code>render()</code> builds into <code>this._wrapper</code>; <code>setupEvents()</code> / <code>teardownEvents()</code> run on every connect / disconnect; <code>onAttributeChanged(name, old, value)</code> fires after the first render. <strong>Helpers:</strong> <code>createElement(tag, classes, attrs)</code>, <code>getBoolAttr()</code> / <code>setBoolAttr()</code>, <code>emit(name, detail)</code>. Return <code>true</code> from <code>static get displayInline()</code> for an inline element, and set <code>static get observesLightDom()</code> to have <code>projectLightDom()</code> re-run whenever light-DOM children change.</p>
+        <p><strong>Hooks:</strong> <code>render()</code> builds into <code>this._wrapper</code>; <code>setupEvents()</code> / <code>teardownEvents()</code> run on every connect / disconnect; <code>onAttributeChanged(name, old, value)</code> fires after the first render. <strong>Helpers:</strong> <code>createElement(tag, classes, attrs)</code>, <code>getBoolAttr()</code> / <code>setBoolAttr()</code>, <code>emit(name, detail)</code>. Return <code>true</code> from <code>static get displayInline()</code> for an inline element, and set <code>static get observesLightDom()</code> to have <code>projectLightDom()</code> re-run whenever light-DOM children change. Since 1.20.0, <code>static get delegatesFocus()</code> returning <code>true</code> hands the focus to the first field inside (on for <code>GlkFormElement</code>), and a <code>GlkFormElement</code> whose <code>get _validityField()</code> returns its native field reports that field&rsquo;s validity on the host after every <code>setFormValue()</code> and attribute change.</p>
         <script>
   // A project element on the exported base class: shadow root with GlassKit's
   // stylesheet adopted, theme sync, re-armed listeners, emit() — all inherited.

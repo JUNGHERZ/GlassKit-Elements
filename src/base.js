@@ -11,18 +11,44 @@ import { componentsSheet, tokensCss } from '@jungherz-de/glasskit/glasskit-style
 // inherits them like any other custom property. They are wrapped in a cascade
 // layer so an ordinary (unlayered) brand stylesheet wins over them, no matter
 // whether it loads before or after this module.
+//
+// Only the custom properties go there. GlassKit's token blocks also set
+// color-scheme, and on the document that is no default: it switches the whole
+// page to dark — native controls, scrollbars, the root text colour, link
+// colours — on pages that never asked for GlassKit's theme. The elements set
+// color-scheme on their own theme wrapper instead (host sheet below).
+//
+// The --gl-* names themselves are still global. A page that declares them
+// itself, or wants them on part of the page only, switches the defaults off
+// with <html data-glk-defaults="off">. The attribute is watched, so it may
+// also be set or removed later.
 
 const TOKENS_INJECTED = '__glkDefaultTokensInjected';
+const DEFAULTS_ATTR = 'data-glk-defaults';
+let defaultTokensSheet = null;
 
 function injectDefaultTokens() {
   if (typeof document === 'undefined') return;              // SSR / non-DOM
   if (globalThis[TOKENS_INJECTED]) return;                   // another bundle copy did it
   globalThis[TOKENS_INJECTED] = true;
 
-  const sheet = new CSSStyleSheet();
-  sheet.replaceSync(`@layer glasskit-defaults { ${tokensCss} }`);
-  // Append — never assign — so an app's own adopted sheets survive.
-  document.adoptedStyleSheets = [...document.adoptedStyleSheets, sheet];
+  const tokens = tokensCss.replace(/color-scheme\s*:[^;}]*;?/g, '');
+  defaultTokensSheet = new CSSStyleSheet();
+  defaultTokensSheet.replaceSync(`@layer glasskit-defaults { ${tokens} }`);
+  syncDefaultTokens();
+}
+
+/** Adopts or drops the default tokens to match <html data-glk-defaults>. */
+function syncDefaultTokens() {
+  if (!defaultTokensSheet) return;
+  const wanted = document.documentElement.getAttribute(DEFAULTS_ATTR) !== 'off';
+  const sheets = document.adoptedStyleSheets;
+  if (wanted === sheets.includes(defaultTokensSheet)) return;
+  // Add or remove only this sheet — never assign a fresh list — so an app's
+  // own adopted sheets survive.
+  document.adoptedStyleSheets = wanted
+    ? [...sheets, defaultTokensSheet]
+    : sheets.filter(sheet => sheet !== defaultTokensSheet);
 }
 
 injectDefaultTokens();
@@ -45,30 +71,93 @@ function syncAllThemes() {
 }
 
 if (typeof window !== 'undefined' && typeof MutationObserver !== 'undefined') {
-  const observer = new MutationObserver(syncAllThemes);
+  const observer = new MutationObserver(records => {
+    if (records.some(r => r.attributeName === 'data-theme')) syncAllThemes();
+    if (records.some(r => r.attributeName === DEFAULTS_ATTR)) syncDefaultTokens();
+  });
   observer.observe(document.documentElement, {
     attributes: true,
-    attributeFilter: ['data-theme']
+    attributeFilter: ['data-theme', DEFAULTS_ATTR]
   });
 }
 
 // ── Host Stylesheet ──
 // Sets display:block on all custom elements by default.
 // Inline components (badge, avatar) override this.
+//
+// The wrapper carries the theme's color-scheme, so native parts inside the
+// elements — a select's list, a date picker, scrollbars — match the element,
+// whatever the page around it uses.
+
+const wrapperRules = `
+  .glk-wrapper { display: contents; }
+  .glk-wrapper[data-theme="dark"] { color-scheme: dark; }
+  .glk-wrapper[data-theme="light"] { color-scheme: light; }
+`;
 
 const hostSheet = new CSSStyleSheet();
 hostSheet.replaceSync(`
   :host { display: block; }
   :host([hidden]) { display: none; }
-  .glk-wrapper { display: contents; }
+  ${wrapperRules}
 `);
 
 const inlineHostSheet = new CSSStyleSheet();
 inlineHostSheet.replaceSync(`
   :host { display: inline-block; }
   :host([hidden]) { display: none; }
-  .glk-wrapper { display: contents; }
+  ${wrapperRules}
 `);
+
+/**
+ * Host rules for glk-checkbox, glk-radio and glk-toggle. Their control is an
+ * inline-flex label inside a block host; sitting on the text baseline it left
+ * room for descenders below, so the host was about 4px taller than the
+ * control and the control sat high in a centred row. Aligned to the top of
+ * its line, the label is as tall as the host.
+ */
+export const checkControlSheet = new CSSStyleSheet();
+checkControlSheet.replaceSync(`
+  .glass-checkbox, .glass-radio, .glass-toggle { vertical-align: top; }
+`);
+
+// ── Clicks Aimed at the Host ──
+// The innermost target of the latest pointerdown anywhere in the document;
+// tracked once, on first use.
+let lastPressed = null;
+let trackingPresses = false;
+
+/**
+ * For elements whose control is a native input or button inside the shadow
+ * root: glk-checkbox, glk-radio, glk-toggle, glk-button. A click aimed at the
+ * host itself — host.click(), or the click a <label> around the element or
+ * naming it dispatches — reaches only the host. The control never saw it, so
+ * nothing changed where a native checkbox toggles and a native button
+ * submits. Such a click is handed to the control; the original is stopped, so
+ * listeners see one click, the control's.
+ *
+ * A pointer press on the host's own empty box (the host is a block, the
+ * control is narrower) also lands on the host. Chrome cannot tell it apart
+ * from a label's click by the event, only by where the pointer went down; it
+ * stays a no-op, as before. Returns the teardown.
+ */
+export function forwardHostClicks(host, getField) {
+  if (!trackingPresses && typeof window !== 'undefined') {
+    trackingPresses = true;
+    window.addEventListener('pointerdown', e => { lastPressed = e.composedPath()[0]; },
+      { capture: true, passive: true });
+  }
+  const onClick = (e) => {
+    if (e.composedPath()[0] !== host) return;           // from inside: the input had it
+    if (e.isTrusted && lastPressed === host) return;     // a press on the empty box
+    const field = getField();
+    if (!field || field.disabled) return;
+    e.stopImmediatePropagation();
+    field.click();
+  };
+  host.addEventListener('click', onClick);
+  return () => host.removeEventListener('click', onClick);
+}
 
 // ── Base Class ──
 
@@ -92,6 +181,13 @@ export class GlkElement extends HTMLElement {
    */
   static get observesLightDom() { return false; }
 
+  /**
+   * Turned on by elements built around one native field: focus() on the
+   * host, a click on the label text and a <label for> outside all land in
+   * that field.
+   */
+  static get delegatesFocus() { return false; }
+
   static get observedAttributes() {
     return [];
   }
@@ -99,7 +195,7 @@ export class GlkElement extends HTMLElement {
   constructor() {
     super();
     this._initialized = false;
-    this._shadow = this.attachShadow({ mode: 'open' });
+    this._shadow = this.attachShadow({ mode: 'open', delegatesFocus: this.constructor.delegatesFocus });
     const displaySheet = this.constructor.displayInline ? inlineHostSheet : hostSheet;
     const sheets = [componentsSheet, displaySheet];
     const extra = this.constructor.hostStyles;
@@ -240,14 +336,26 @@ export class GlkFormElement extends GlkElement {
 
   static formAssociated = true;
 
+  // One native field inside, so focus goes there. The button groups
+  // (glk-segmented, glk-calendar) turn this off again: their first button is
+  // not the chosen one.
+  static get delegatesFocus() { return true; }
+
   constructor() {
     super();
     this._internals = this.attachInternals();
   }
 
+  attributeChangedCallback(name, oldValue, newValue) {
+    super.attributeChangedCallback(name, oldValue, newValue);
+    // required, min, pattern, type … all change what counts as valid.
+    if (this._initialized) this.syncValidity();
+  }
+
   get form() { return this._internals.form; }
   get validationMessage() { return this._internals.validationMessage; }
   get validity() { return this._internals.validity; }
+  get willValidate() { return this._internals.willValidate; }
 
   checkValidity() { return this._internals.checkValidity(); }
   reportValidity() { return this._internals.reportValidity(); }
@@ -266,9 +374,36 @@ export class GlkFormElement extends GlkElement {
 
   setFormValue(value) {
     this._internals.setFormValue(value);
+    this.syncValidity();
   }
 
   setValidity(flags, message, anchor) {
     this._internals.setValidity(flags, message, anchor);
+  }
+
+  /**
+   * The native field whose constraint validation the host reports, or null.
+   * Subclasses built around one field return it.
+   */
+  get _validityField() { return null; }
+
+  /**
+   * A form asks the host — checkValidity(), reportValidity(), submitting — and
+   * the host knows nothing by itself, so the inner field's verdict is copied
+   * over after everything that can change it: a value (every setFormValue
+   * lands here), an attribute, a reset. The field is the anchor: the browser's
+   * bubble points at it, and reportValidity() focuses it.
+   */
+  syncValidity() {
+    const field = this._validityField;
+    if (!field) return;
+    const message = field.validationMessage;
+    // A field barred from validation (disabled) can still carry flags, but
+    // it has no message, and setValidity() refuses flags without one.
+    if (!field.willValidate || field.validity.valid || !message) {
+      this._internals.setValidity({});
+    } else {
+      this._internals.setValidity(field.validity, message, field);
+    }
   }
 }

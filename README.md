@@ -3,15 +3,15 @@
 <p align="center">
   <a href="https://www.npmjs.com/package/@jungherz-de/glasskit-elements"><img src="https://img.shields.io/npm/v/@jungherz-de/glasskit-elements?style=flat-square&color=f5a623&label=version" alt="Version"></a>
   <a href="#"><img src="https://img.shields.io/badge/vanilla_JS-no_dependencies-44cc11?style=flat-square" alt="Vanilla JS"></a>
-  <a href="#"><img src="https://img.shields.io/badge/components-33-7ec8e3?style=flat-square" alt="33 Components"></a>
+  <a href="#"><img src="https://img.shields.io/badge/components-36-7ec8e3?style=flat-square" alt="36 Components"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="MIT License"></a>
-  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/changelog-v1.19.2-lightgrey?style=flat-square" alt="Changelog"></a>
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/changelog-v1.20.0-lightgrey?style=flat-square" alt="Changelog"></a>
   <a href="https://www.npmjs.com/package/@jungherz-de/glasskit-elements"><img src="https://img.shields.io/badge/npm-%40jungherz--de%2Fglasskit--elements-cb3837?style=flat-square&logo=npm" alt="npm"></a>
 </p>
 
 <p align="center">
   <strong>Drop-in Web Components for <a href="https://github.com/JUNGHERZ/GlassKit">GlassKit CSS</a></strong><br>
-  29 vanilla JavaScript custom elements wrapping GlassKit's glassmorphism components.<br>
+  36 vanilla JavaScript custom elements wrapping GlassKit's glassmorphism components.<br>
   Shadow DOM &middot; Native form participation &middot; Zero dependencies.
 </p>
 
@@ -26,7 +26,7 @@
 
 ## ✨ What is GlassKit Elements?
 
-GlassKit Elements is a companion library to [GlassKit CSS](https://github.com/JUNGHERZ/GlassKit). It provides **29 Web Components** (incl. the iOS 26-style floating Tab-Bar + Accessory) that encapsulate the verbose HTML markup required by GlassKit into simple, declarative custom elements.
+GlassKit Elements is a companion library to [GlassKit CSS](https://github.com/JUNGHERZ/GlassKit). It provides **36 Web Components** (incl. the iOS 26-style floating Tab-Bar + Accessory) that encapsulate the verbose HTML markup required by GlassKit into simple, declarative custom elements.
 
 It is the **app layer** of the GlassKit family — three layers, one design language: [GlassKit](https://glasskit.jungherz.com) is the pure-CSS foundation, GlassKit Elements wraps it into web components for application UIs, and [GlassKit Web](https://glasskit-web.jungherz.com) is the official Astro template for complete websites on top of the same foundation.
 
@@ -51,10 +51,10 @@ It is the **app layer** of the GlassKit family — three layers, one design lang
 | Feature | Details |
 |---|---|
 | 🔌 **Shadow DOM** | Style encapsulation via `adoptedStyleSheets` — no CSS leaking |
-| 🧩 **33 Components** | Buttons, cards, toggles, modals, accordions, lists, popovers, tab bars (incl. floating + accessory), and more |
-| 🪶 **Lightweight** | 117 KB raw / 92 KB minified / 15 KB gzipped (IIFE bundle), no external dependencies |
+| 🧩 **36 Components** | Buttons, cards, toggles, modals, accordions, lists, popovers, tab bars (incl. floating + accessory), and more |
+| 🪶 **Lightweight** | 156 KB minified / 28 KB gzipped (IIFE bundle, GlassKit's component rules included), no external dependencies |
 | 📦 **Three bundle formats** | IIFE for `<script>`, minified IIFE for production, ESM for bundlers & tree-shaking |
-| 🎛️ **Form Participation** | Input, toggle, checkbox, radio, select — all work natively with `<form>` via `ElementInternals` |
+| 🎛️ **Form Participation** | Input, toggle, checkbox, radio, select — all work natively with `<form>` via `ElementInternals`: value, reset and, since 1.20.0, validity; `<glk-button type="submit">` submits |
 | 🌗 **Theme Sync** | Automatic dark/light mode sync via `data-theme` on `<html>` |
 | 📱 **Mobile-first** | Inherits GlassKit's mobile-optimized design with `safe-area-inset` support |
 
@@ -66,7 +66,7 @@ It is the **app layer** of the GlassKit family — three layers, one design lang
 
 ```html
 <!-- 1. GlassKit CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.19/glasskit.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.20/glasskit.min.css">
 
 <!-- 2. GlassKit Elements -->
 <script src="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"></script>
@@ -104,7 +104,7 @@ The per-component files leave `@jungherz-de/glasskit/glasskit-styles.js` as an e
 <!DOCTYPE html>
 <html data-theme="dark">
 <head>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.19/glasskit.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.20/glasskit.min.css">
   <script src="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"></script>
 </head>
 <body>
@@ -148,21 +148,21 @@ The per-component files leave `@jungherz-de/glasskit/glasskit-styles.js` as an e
 
 | Component | Description | Key Attributes |
 |---|---|---|
-| `<glk-button>` | Glass-styled button | `variant` (primary, secondary, tertiary), `size` (sm, md, lg, auto), `disabled`, `type` |
+| `<glk-button>` | Glass-styled button; `type="submit"` / `"reset"` act on its form | `variant` (primary, secondary, tertiary), `size` (sm, md, lg, auto), `disabled`, `type` (button, submit, reset) |
 
 ### Form Elements
 
-All form components support `name`, `value`, `disabled` and participate in native `<form>` submission via `ElementInternals` — except `<glk-image-picker>`, which hands its result to `glk-change` instead: a data URL is no form value.
+All form components support `name`, `value`, `disabled` and participate in native `<form>` submission via `ElementInternals` — except `<glk-image-picker>`, which hands its result to `glk-change` instead: a data URL is no form value. Since 1.20.0 they also report their validity to the form (`required`, `pattern`, `min`, `type="email"` … stop a submit with the browser's own message), their `label` names the field for screen readers, and a click on it, `element.focus()` or a `<label for>` lands in the field.
 
 | Component | Description | Key Attributes |
 |---|---|---|
 | `<glk-input>` | Text input with label & hint | `label`, `type`, `placeholder`, `hint`, `error`, `required`, `min`, `max`, `step`, `maxlength`, `pattern`, `autocomplete`, `inputmode` |
-| `<glk-textarea>` | Multi-line text input | `label`, `rows`, `placeholder` |
-| `<glk-select>` | Dropdown select | `label` (children: `<option>`) |
-| `<glk-search>` | Search input with icon | `placeholder` |
-| `<glk-toggle>` | Switch toggle | `label`, `checked`, `disabled` |
-| `<glk-checkbox>` | Checkbox | `label`, `checked`, `disabled` |
-| `<glk-radio>` | Radio button | `label`, `name`, `value`, `checked` |
+| `<glk-textarea>` | Multi-line text input | `label`, `rows`, `placeholder`, `required` |
+| `<glk-select>` | Dropdown select | `label`, `required` (children: `<option>`) |
+| `<glk-search>` | Search input with icon | `placeholder`, `label` (accessible name) |
+| `<glk-toggle>` | Switch toggle (`role="switch"` on its native checkbox) | `label`, `checked`, `disabled`, `required` |
+| `<glk-checkbox>` | Checkbox | `label`, `checked`, `disabled`, `required` |
+| `<glk-radio>` | Radio button | `label`, `name`, `value`, `checked`, `required` (per group) |
 | `<glk-range>` | Range slider | `label`, `min`, `max`, `value`, `step` |
 | `<glk-segmented>` | Small exclusive choice as one control; form-associated | `options` (JSON), `value`, `full`, `overflow` (scroll, wrap), `label`, `name` |
 | `<glk-calendar>` | One month with a day to pick; keyboard navigation, `Intl` names; form-associated | `month`, `value`, `today`, `min`, `max`, `marks`, `locale`, `week-start`, `label`, `name` |
@@ -173,7 +173,7 @@ All form components support `name`, `value`, `disabled` and participate in nativ
 | Component | Description | Key Attributes |
 |---|---|---|
 | `<glk-progress>` | Progress bar | `value`, `label`, `variant` (success, error), `size` (sm, lg) |
-| `<glk-modal>` | Modal dialog | `open`, `title` |
+| `<glk-modal>` | Modal dialog — a native `<dialog>`: page behind inert, focus in and back | `open`, `title` |
 | `<glk-toast>` | Notification that hides itself, or an offer with one action and an × | `message`, `variant` (success, error, warning), `duration`, `action-label`, `action-value`, `dismissible` |
 | `<glk-popover>` | Anchored dropdown / menu | `open`, `placement` (top, bottom, start, end) |
 | `<glk-sheet>` | Bottom sheet, the mobile sibling of the modal | `open`, `inline`, `title` |
@@ -239,6 +239,18 @@ inherits them — no JavaScript, no per-element setup:
 Token defaults are placed on the document once, inside `@layer glasskit-defaults`, so
 pages that never load `glasskit.css` still work and your brand file always wins.
 
+Since 1.20.0 that layer carries the `--gl-*` tokens only — GlassKit's `color-scheme` stays
+off the page. Each element sets it on its own theme wrapper, so a select's list or a date
+picker inside matches the element while the page keeps its scheme. (Before, importing the
+elements turned the whole page to `color-scheme: dark`: unstyled text white, links light
+blue, native controls dark.) The token names are still global, so a component of yours
+that reads `var(--gl-…, fallback)` gets GlassKit's value. A page that declares the tokens
+itself, or wants them on part of the page only, switches the defaults off:
+
+```html
+<html data-glk-defaults="off">   <!-- watched: may be set or removed later -->
+```
+
 ---
 
 ## 🛠️ Architecture
@@ -247,7 +259,8 @@ pages that never load `glasskit.css` still work and your brand file always wins.
 - **Theme wrapper** with `display: contents` — layout-transparent `<div>` for `data-theme` CSS selectors
 - **Global `MutationObserver`** — single observer watches `data-theme` changes and syncs all instances
 - **`GlkElement`** base class — handles Shadow DOM setup, theme sync, attribute reflection
-- **`GlkFormElement`** extends `GlkElement` — adds `ElementInternals` for native form participation
+- **`GlkFormElement`** extends `GlkElement` — adds `ElementInternals` for native form participation, delegates focus to its field and reports the field's validity
+- **Native semantics** — labels tied to their fields, the toggle's `role="switch"` on its native checkbox, `<glk-modal>` a native `<dialog>`, `aria-expanded` on accordion and popover triggers
 
 ### Build your own element
 
@@ -274,7 +287,7 @@ class DemoCounter extends GlkElement {
 customElements.define('demo-counter', DemoCounter);
 ```
 
-Hooks: `render()` builds into `this._wrapper`, `setupEvents()` / `teardownEvents()` run on every connect / disconnect, `onAttributeChanged(name, old, value)` after the first render. `static get displayInline()` → `true` for inline elements; `static get observesLightDom()` → `true` re-runs `projectLightDom()` whenever light-DOM children change. `GlkFormElement` adds `setFormValue()`, `setValidity()`, `resetValue()` / `restoreValue()`.
+Hooks: `render()` builds into `this._wrapper`, `setupEvents()` / `teardownEvents()` run on every connect / disconnect, `onAttributeChanged(name, old, value)` after the first render. `static get displayInline()` → `true` for inline elements; `static get observesLightDom()` → `true` re-runs `projectLightDom()` whenever light-DOM children change. `GlkFormElement` adds `setFormValue()`, `setValidity()`, `resetValue()` / `restoreValue()`; since 1.20.0 it delegates focus (`static get delegatesFocus()`) and, when `get _validityField()` returns your native field, reports that field's validity on the host after every `setFormValue()` and attribute change.
 
 ---
 
@@ -293,9 +306,9 @@ glasskit-elements/
       feedback/           # glk-progress, glk-modal, glk-toast, glk-popover
       containers/         # glk-accordion, glk-accordion-item, glk-list, glk-list-item
   dist/
-    glasskit-elements.js      # IIFE bundle (117 KB raw / 18 KB gzipped)
-    glasskit-elements.min.js  # IIFE minified (92 KB raw / 15 KB gzipped)
-    glasskit-elements.esm.js  # ES module bundle (112 KB raw / 17 KB gzipped)
+    glasskit-elements.js      # IIFE bundle (229 KB raw / 46 KB gzipped)
+    glasskit-elements.min.js  # IIFE minified (156 KB raw / 28 KB gzipped)
+    glasskit-elements.esm.js  # ES module bundle (221 KB raw / 45 KB gzipped)
     components/               # one ESM file per element + base.js (GlkElement, GlkFormElement)
   index.html                  # Landing page
   docs.html                   # Documentation
@@ -309,12 +322,12 @@ glasskit-elements/
 
 | Browser | Support |
 |---|---|
-| Chrome | 90+ |
-| Edge | 90+ |
+| Chrome | 111+ |
+| Edge | 111+ |
 | Safari | 16.4+ |
-| Firefox | 103+ |
+| Firefox | 113+ |
 
-Requires `adoptedStyleSheets`, `ElementInternals`, and `customElements` v1.
+The floor is GlassKit's: its tokens are derived with `color-mix()`. The elements also need constructable stylesheets, `ElementInternals`, `delegatesFocus`, `<dialog>` and `inert` — all inside that floor. A few refinements come later and fall back quietly: first-line alignment of toggle, checkbox and radio (`lh`, Firefox 120), the divider of list rows without icon (`:has()`, Firefox 121), right-to-left mirroring of select chevron, toggle thumb and progress fill (`:dir()`, Chrome 120).
 
 ---
 

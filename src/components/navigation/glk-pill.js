@@ -1,8 +1,12 @@
 import { GlkElement } from '../../base.js';
 
+// Handed down to the native button, which is what assistive technology reads —
+// <glk-popover> sets aria-expanded on its trigger.
+const FORWARDED_ARIA = ['aria-expanded', 'aria-haspopup', 'aria-pressed'];
+
 class GlkPill extends GlkElement {
   static get observedAttributes() {
-    return ['label', 'disabled'];
+    return ['label', 'disabled', ...FORWARDED_ARIA];
   }
 
   render() {
@@ -12,6 +16,7 @@ class GlkPill extends GlkElement {
 
     const ariaLabel = this.getAttribute('label');
     if (ariaLabel) this._btn.setAttribute('aria-label', ariaLabel);
+    for (const attr of FORWARDED_ARIA) this._forward(attr);
 
     // Slotted content (SVG icons, text)
     this._btn.appendChild(document.createElement('slot'));
@@ -40,7 +45,15 @@ class GlkPill extends GlkElement {
       case 'disabled':
         this._btn.disabled = this.getBoolAttr('disabled');
         break;
+      default:
+        if (FORWARDED_ARIA.includes(name)) this._forward(name);
     }
+  }
+
+  _forward(attr) {
+    const value = this.getAttribute(attr);
+    if (value === null) this._btn.removeAttribute(attr);
+    else this._btn.setAttribute(attr, value);
   }
 }
 

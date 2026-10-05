@@ -11,7 +11,8 @@ class GlkRange extends GlkFormElement {
 
     const header = this.createElement('div', ['glass-range-header']);
 
-    this._labelEl = this.createElement('label', []);
+    // Tied to the slider by an id that only has to be unique in this shadow root.
+    this._labelEl = this.createElement('label', [], { for: 'field' });
     this._labelEl.textContent = this.getAttribute('label') || '';
 
     this._valueEl = this.createElement('span', ['glass-range-value']);
@@ -20,6 +21,7 @@ class GlkRange extends GlkFormElement {
     header.appendChild(this._valueEl);
 
     this._input = this.createElement('input', ['glass-range'], {
+      id: 'field',
       type: 'range',
       min: this.getAttribute('min') || '0',
       max: this.getAttribute('max') || '100',

@@ -1,12 +1,14 @@
-import { GlkFormElement } from './base.js';
+import { GlkFormElement, checkControlSheet, forwardHostClicks } from './base.js';
 import '@jungherz-de/glasskit/glasskit-styles.js';
 
 const CHECKMARK_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
 
 class GlkCheckbox extends GlkFormElement {
   static get observedAttributes() {
-    return ['checked', 'disabled', 'label', 'name', 'value'];
+    return ['checked', 'disabled', 'label', 'name', 'value', 'required'];
   }
+
+  static get hostStyles() { return checkControlSheet; }
 
   render() {
     const label = this.createElement('label', ['glass-checkbox']);
@@ -30,6 +32,7 @@ class GlkCheckbox extends GlkFormElement {
 
     if (this.getBoolAttr('checked')) this._input.checked = true;
     if (this.getBoolAttr('disabled')) this._input.disabled = true;
+    if (this.getBoolAttr('required')) this._input.required = true;
 
     this._defaultChecked = this.getBoolAttr('checked');
     this._wrapper.appendChild(label);
@@ -46,10 +49,12 @@ class GlkCheckbox extends GlkFormElement {
       this.dispatchEvent(new Event('change', { bubbles: true }));
     };
     this._input.addEventListener('change', this._onChange);
+    this._unforwardClicks = forwardHostClicks(this, () => this._input);
   }
 
   teardownEvents() {
     this._input?.removeEventListener('change', this._onChange);
+    this._unforwardClicks?.();
   }
 
   onAttributeChanged(name) {
@@ -69,8 +74,13 @@ class GlkCheckbox extends GlkFormElement {
       case 'name':
         this._input.setAttribute('name', this.getAttribute('name') || '');
         break;
+      case 'required':
+        this._input.required = this.getBoolAttr('required');
+        break;
     }
   }
+
+  get _validityField() { return this._input; }
 
   _syncFormValue() {
     const val = this.getAttribute('value') || 'on';

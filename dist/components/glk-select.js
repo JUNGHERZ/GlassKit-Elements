@@ -11,10 +11,11 @@ class GlkSelect extends GlkFormElement {
   render() {
     const group = this.createElement('div', ['glass-input-group']);
 
-    this._labelEl = this.createElement('label', ['glass-label']);
+    // Tied to the field by an id that only has to be unique in this shadow root.
+    this._labelEl = this.createElement('label', ['glass-label'], { for: 'field' });
     this._labelEl.textContent = this.getAttribute('label') || '';
 
-    this._select = this.createElement('select', ['glass-select']);
+    this._select = this.createElement('select', ['glass-select'], { id: 'field' });
 
     const name = this.getAttribute('name');
     if (name) this._select.setAttribute('name', name);
@@ -102,8 +103,13 @@ class GlkSelect extends GlkFormElement {
         this._applyValue(this.getAttribute('value'));
         this._syncFormValue();
         break;
+      case 'required':
+        this._select.required = this.getBoolAttr('required');
+        break;
     }
   }
+
+  get _validityField() { return this._select; }
 
   _syncFormValue() {
     this.setFormValue(this._select.value);

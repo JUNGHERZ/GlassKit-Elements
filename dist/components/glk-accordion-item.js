@@ -10,17 +10,19 @@ class GlkAccordionItem extends GlkElement {
 
   render() {
     this._item = this.createElement('div', ['glass-accordion__item']);
-    if (this.getBoolAttr('open')) this._item.classList.add('is-open');
 
-    // Trigger button
-    this._trigger = this.createElement('button', ['glass-accordion__trigger']);
+    // Trigger button — says whether its section is open, and which one it is
+    this._trigger = this.createElement('button', ['glass-accordion__trigger'], {
+      type: 'button',
+      'aria-controls': 'content'
+    });
     this.takeTitle();
     this._triggerText = document.createTextNode(this._title || '');
     this._trigger.appendChild(this._triggerText);
     this._trigger.insertAdjacentHTML('beforeend', CHEVRON_SVG);
 
     // Content
-    this._content = this.createElement('div', ['glass-accordion__content']);
+    this._content = this.createElement('div', ['glass-accordion__content'], { id: 'content' });
     const body = this.createElement('div', ['glass-accordion__body']);
     body.appendChild(document.createElement('slot'));
     this._content.appendChild(body);
@@ -29,6 +31,19 @@ class GlkAccordionItem extends GlkElement {
     this._item.appendChild(this._content);
 
     this._wrapper.appendChild(this._item);
+    this._applyOpen();
+  }
+
+  /**
+   * A closed section is only squeezed to zero height; its links and fields
+   * stayed in the tab order. inert takes them out, and out of the
+   * accessibility tree, until the section opens.
+   */
+  _applyOpen() {
+    const open = this.getBoolAttr('open');
+    this._item.classList.toggle('is-open', open);
+    this._trigger.setAttribute('aria-expanded', String(open));
+    this._content.inert = !open;
   }
 
   setupEvents() {
@@ -47,7 +62,7 @@ class GlkAccordionItem extends GlkElement {
     if (!this._item) return;
     switch (name) {
       case 'open':
-        this._item.classList.toggle('is-open', this.getBoolAttr('open'));
+        this._applyOpen();
         break;
       case 'title':
         if (this.takeTitle(value)) this._applyTitle();

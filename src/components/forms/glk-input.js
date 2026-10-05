@@ -14,12 +14,15 @@ class GlkInput extends GlkFormElement {
   render() {
     const group = this.createElement('div', ['glass-input-group']);
 
-    // Label
-    this._labelEl = this.createElement('label', ['glass-label']);
+    // Label — tied to the field by id, which only has to be unique inside
+    // this shadow root. That gives the field its accessible name, and a click
+    // on the label text focuses it.
+    this._labelEl = this.createElement('label', ['glass-label'], { for: 'field' });
     this._labelEl.textContent = this.getAttribute('label') || '';
 
     // Input
     this._input = this.createElement('input', this._computeInputClasses(), {
+      id: 'field',
       type: this.getAttribute('type') || 'text'
     });
 
@@ -36,8 +39,8 @@ class GlkInput extends GlkFormElement {
     if (this.getBoolAttr('required')) this._input.required = true;
     for (const attr of FORWARDED) this._forward(attr);
 
-    // Hint
-    this._hintEl = this.createElement('span', this._computeHintClasses());
+    // Hint — read out with the field as its description
+    this._hintEl = this.createElement('span', this._computeHintClasses(), { id: 'hint' });
     this._hintEl.textContent = this.getAttribute('hint') || '';
 
     group.appendChild(this._labelEl);
@@ -47,6 +50,7 @@ class GlkInput extends GlkFormElement {
     this._group = group;
     this._wrapper.appendChild(group);
 
+    this._applyDescription();
     this._syncFormValue();
   }
 
@@ -84,12 +88,14 @@ class GlkInput extends GlkFormElement {
       case 'error':
         this._input.className = this._computeInputClasses().join(' ');
         this._hintEl.className = this._computeHintClasses().join(' ');
+        this._applyDescription();
         break;
       case 'hint':
         this._hintEl.textContent = this.getAttribute('hint') || '';
         if (this.getAttribute('hint') && !this._hintEl.parentNode) {
           this._group.appendChild(this._hintEl);
         }
+        this._applyDescription();
         break;
       case 'disabled':
         this._input.disabled = this.getBoolAttr('disabled');
@@ -109,6 +115,19 @@ class GlkInput extends GlkFormElement {
     }
   }
 
+  /**
+   * The hint describes the field; with `error` set it is the error message
+   * and the field is marked invalid. Server-side errors arrive this way, so
+   * `error` stays a marker for assistive technology and does not block the
+   * form — only the field's own constraints (required, pattern …) do.
+   */
+  _applyDescription() {
+    if (this.getAttribute('hint')) this._input.setAttribute('aria-describedby', 'hint');
+    else this._input.removeAttribute('aria-describedby');
+    if (this.getBoolAttr('error')) this._input.setAttribute('aria-invalid', 'true');
+    else this._input.removeAttribute('aria-invalid');
+  }
+
   _forward(attr) {
     const value = this.getAttribute(attr);
     if (value === null) this._input.removeAttribute(attr);
@@ -126,6 +145,8 @@ class GlkInput extends GlkFormElement {
     if (this.getBoolAttr('error')) classes.push('glass-hint--error');
     return classes;
   }
+
+  get _validityField() { return this._input; }
 
   _syncFormValue() {
     this.setFormValue(this._input.value);

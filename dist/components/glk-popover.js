@@ -11,9 +11,9 @@ class GlkPopover extends GlkElement {
   render() {
     this._anchor = this.createElement('div', ['glass-popover-anchor']);
 
-    const triggerSlot = document.createElement('slot');
-    triggerSlot.setAttribute('name', 'trigger');
-    this._anchor.appendChild(triggerSlot);
+    this._triggerSlot = document.createElement('slot');
+    this._triggerSlot.setAttribute('name', 'trigger');
+    this._anchor.appendChild(this._triggerSlot);
 
     this._popover = this.createElement('div', ['glass-popover']);
     this._applyPlacement();
@@ -37,7 +37,23 @@ class GlkPopover extends GlkElement {
     }
   }
 
+  /**
+   * The trigger says whether the popover is open. It lives in the light DOM,
+   * so aria-expanded goes on it directly; <glk-button> and <glk-pill> hand
+   * it on to their native button. Runs again when the trigger is swapped.
+   */
+  _applyExpanded() {
+    const open = String(this.getBoolAttr('open'));
+    for (const trigger of this._triggerSlot.assignedElements()) {
+      trigger.setAttribute('aria-expanded', open);
+    }
+  }
+
   setupEvents() {
+    this._onSlotChange = () => this._applyExpanded();
+    this._triggerSlot.addEventListener('slotchange', this._onSlotChange);
+    this._applyExpanded();
+
     // Toggle when the slotted trigger is clicked.
     this._onTriggerClick = (e) => {
       const path = e.composedPath();
@@ -69,6 +85,7 @@ class GlkPopover extends GlkElement {
   }
 
   teardownEvents() {
+    this._triggerSlot?.removeEventListener('slotchange', this._onSlotChange);
     this.removeEventListener('click', this._onTriggerClick);
     document.removeEventListener('click', this._onDocClick);
     document.removeEventListener('keydown', this._onKeydown);
@@ -80,6 +97,7 @@ class GlkPopover extends GlkElement {
       case 'open': {
         const isOpen = this.getBoolAttr('open');
         this._popover.classList.toggle('is-open', isOpen);
+        this._applyExpanded();
         this.emit(isOpen ? 'glk-open' : 'glk-close');
         break;
       }

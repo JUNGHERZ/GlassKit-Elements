@@ -9,10 +9,11 @@ class GlkTextarea extends GlkFormElement {
   render() {
     const group = this.createElement('div', ['glass-input-group']);
 
-    this._labelEl = this.createElement('label', ['glass-label']);
+    // Tied to the field by an id that only has to be unique in this shadow root.
+    this._labelEl = this.createElement('label', ['glass-label'], { for: 'field' });
     this._labelEl.textContent = this.getAttribute('label') || '';
 
-    this._textarea = this.createElement('textarea', ['glass-textarea']);
+    this._textarea = this.createElement('textarea', ['glass-textarea'], { id: 'field' });
     const placeholder = this.getAttribute('placeholder');
     if (placeholder) this._textarea.setAttribute('placeholder', placeholder);
 
@@ -70,8 +71,13 @@ class GlkTextarea extends GlkFormElement {
         this._textarea.value = this.getAttribute('value') || '';
         this._syncFormValue();
         break;
+      case 'required':
+        this._textarea.required = this.getBoolAttr('required');
+        break;
     }
   }
+
+  get _validityField() { return this._textarea; }
 
   _syncFormValue() {
     this.setFormValue(this._textarea.value);

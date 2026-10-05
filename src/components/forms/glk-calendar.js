@@ -45,6 +45,9 @@ class GlkCalendar extends GlkFormElement {
     return ['month', 'value', 'today', 'min', 'max', 'marks', 'locale', 'week-start', 'label', 'prev-label', 'next-label'];
   }
 
+  // Delegated focus would land on the month arrow, not on the chosen day.
+  static get delegatesFocus() { return false; }
+
   render() {
     this._root = this.createElement('div', ['glass-calendar'], { part: 'calendar' });
     const head = this.createElement('div', ['glass-calendar__head'], { part: 'head' });

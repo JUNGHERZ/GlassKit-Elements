@@ -1,4 +1,4 @@
-import { GlkFormElement } from './base.js';
+import { GlkFormElement, checkControlSheet, forwardHostClicks } from './base.js';
 import '@jungherz-de/glasskit/glasskit-styles.js';
 
 // ── Grouping ──
@@ -30,8 +30,10 @@ function syncGroupTabIndex(group) {
 
 class GlkRadio extends GlkFormElement {
   static get observedAttributes() {
-    return ['checked', 'disabled', 'label', 'name', 'value'];
+    return ['checked', 'disabled', 'label', 'name', 'value', 'required'];
   }
+
+  static get hostStyles() { return checkControlSheet; }
 
   render() {
     const label = this.createElement('label', ['glass-radio']);
@@ -87,11 +89,13 @@ class GlkRadio extends GlkFormElement {
 
     this._input.addEventListener('change', this._onChange);
     this._input.addEventListener('keydown', this._onKeyDown);
+    this._unforwardClicks = forwardHostClicks(this, () => this._input);
   }
 
   teardownEvents() {
     this._input?.removeEventListener('change', this._onChange);
     this._input?.removeEventListener('keydown', this._onKeyDown);
+    this._unforwardClicks?.();
   }
 
   /** Shared by user change and arrow-key selection, so both look identical. */
@@ -123,6 +127,26 @@ class GlkRadio extends GlkFormElement {
   _uncheckPeers() {
     for (const el of this._group()) {
       if (el !== this && el.checked) el.checked = false;
+    }
+  }
+
+  get _validityField() { return this._input; }
+
+  /**
+   * Radios are missing a value as a group: one required radio makes the
+   * whole group required, and any checked one satisfies it. Each input here
+   * sits alone in its shadow root, so the group's verdict is worked out across
+   * the elements and handed to every member. The inner input carries
+   * `required` only while the group lacks a value — that way it produces the
+   * browser's own message for it.
+   */
+  syncValidity() {
+    const group = this._group();
+    const missing = group.some(el => el.hasAttribute('required')) && !group.some(el => el.checked);
+    for (const el of group) {
+      if (!el._input) continue;            // not rendered yet; syncs when it is
+      el._input.required = missing;
+      super.syncValidity.call(el);
     }
   }
 

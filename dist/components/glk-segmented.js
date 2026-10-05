@@ -40,6 +40,10 @@ function parseList(json) {
 class GlkSegmented extends GlkFormElement {
   static get observedAttributes() { return ['options', 'value', 'full', 'overflow', 'label']; }
 
+  // A row of buttons with one tab stop: delegated focus would land on the
+  // first button, not the chosen one.
+  static get delegatesFocus() { return false; }
+
   render() {
     this._group = this.createElement('div', ['glass-segmented'], { role: 'group', part: 'group' });
     this._wrapper.appendChild(this._group);

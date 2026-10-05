@@ -5,7 +5,7 @@ const SEARCH_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" s
 
 class GlkSearch extends GlkFormElement {
   static get observedAttributes() {
-    return ['placeholder', 'name', 'value', 'disabled'];
+    return ['placeholder', 'name', 'value', 'disabled', 'label'];
   }
 
   render() {
@@ -20,6 +20,10 @@ class GlkSearch extends GlkFormElement {
 
     const placeholder = this.getAttribute('placeholder');
     if (placeholder) this._input.setAttribute('placeholder', placeholder);
+
+    // The search field has no visible label; `label` names it for assistive
+    // technology. Without it the placeholder is all a screen reader can say.
+    this._applyLabel();
 
     const name = this.getAttribute('name');
     if (name) this._input.setAttribute('name', name);
@@ -65,7 +69,16 @@ class GlkSearch extends GlkFormElement {
       case 'disabled':
         this._input.disabled = this.getBoolAttr('disabled');
         break;
+      case 'label':
+        this._applyLabel();
+        break;
     }
+  }
+
+  _applyLabel() {
+    const label = this.getAttribute('label');
+    if (label) this._input.setAttribute('aria-label', label);
+    else this._input.removeAttribute('aria-label');
   }
 
   _syncFormValue() {

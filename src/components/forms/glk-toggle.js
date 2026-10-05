@@ -1,15 +1,22 @@
-import { GlkFormElement } from '../../base.js';
+import { GlkFormElement, checkControlSheet, forwardHostClicks } from '../../base.js';
 
 class GlkToggle extends GlkFormElement {
   static get observedAttributes() {
-    return ['checked', 'disabled', 'label', 'name', 'value'];
+    return ['checked', 'disabled', 'label', 'name', 'value', 'required'];
   }
+
+  static get hostStyles() { return checkControlSheet; }
 
   render() {
     const label = this.createElement('label', ['glass-toggle']);
 
+    // The native checkbox is the switch: role, checked state and name (from
+    // the label around it) all sit on one control. The host has no role of
+    // its own — it used to carry role="switch" as well, and screen readers met
+    // a switch with a checkbox inside.
     this._input = this.createElement('input', ['glass-toggle__input'], {
-      type: 'checkbox'
+      type: 'checkbox',
+      role: 'switch'
     });
 
     const name = this.getAttribute('name');
@@ -28,14 +35,12 @@ class GlkToggle extends GlkFormElement {
 
     if (this.getBoolAttr('checked')) this._input.checked = true;
     if (this.getBoolAttr('disabled')) this._input.disabled = true;
+    if (this.getBoolAttr('required')) this._input.required = true;
 
     this._defaultChecked = this.getBoolAttr('checked');
     this._wrapper.appendChild(label);
 
     this._syncFormValue();
-    this.setAttribute('role', 'switch');
-    this.setAttribute('aria-checked', String(this._input.checked));
-    if (this.getBoolAttr('disabled')) this.setAttribute('aria-disabled', 'true');
   }
 
   setupEvents() {
@@ -43,16 +48,17 @@ class GlkToggle extends GlkFormElement {
       this._syncing = true;
       this.setBoolAttr('checked', this._input.checked);
       this._syncing = false;
-      this.setAttribute('aria-checked', String(this._input.checked));
       this._syncFormValue();
       this.emit('glk-change', { checked: this._input.checked });
       this.dispatchEvent(new Event('change', { bubbles: true }));
     };
     this._input.addEventListener('change', this._onChange);
+    this._unforwardClicks = forwardHostClicks(this, () => this._input);
   }
 
   teardownEvents() {
     this._input?.removeEventListener('change', this._onChange);
+    this._unforwardClicks?.();
   }
 
   onAttributeChanged(name) {
@@ -61,12 +67,10 @@ class GlkToggle extends GlkFormElement {
     switch (name) {
       case 'checked':
         this._input.checked = this.getBoolAttr('checked');
-        this.setAttribute('aria-checked', String(this._input.checked));
         this._syncFormValue();
         break;
       case 'disabled':
         this._input.disabled = this.getBoolAttr('disabled');
-        this.setAttribute('aria-disabled', String(this.getBoolAttr('disabled')));
         break;
       case 'label':
         this._labelEl.textContent = this.getAttribute('label') || '';
@@ -74,8 +78,13 @@ class GlkToggle extends GlkFormElement {
       case 'name':
         this._input.setAttribute('name', this.getAttribute('name') || '');
         break;
+      case 'required':
+        this._input.required = this.getBoolAttr('required');
+        break;
     }
   }
+
+  get _validityField() { return this._input; }
 
   _syncFormValue() {
     const val = this.getAttribute('value') || 'on';
@@ -85,7 +94,6 @@ class GlkToggle extends GlkFormElement {
   resetValue() {
     this._input.checked = this._defaultChecked;
     this.setBoolAttr('checked', this._defaultChecked);
-    this.setAttribute('aria-checked', String(this._defaultChecked));
     this._syncFormValue();
   }
 
@@ -100,7 +108,6 @@ class GlkToggle extends GlkFormElement {
   set checked(v) {
     if (this._input) this._input.checked = v;
     this.setBoolAttr('checked', v);
-    this.setAttribute('aria-checked', String(v));
     this._syncFormValue();
   }
 

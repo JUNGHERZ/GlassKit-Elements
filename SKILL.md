@@ -555,6 +555,10 @@ stop the submit with the browser's message; the submit event's `submitter` is th
 `.form` is its form; `element.click()` acts like a click. No implicit submission: Enter in a
 `<glk-input>` does not submit the form.
 
+**Upgrading from ≤ 1.19:** code that set `type="submit"` and did the work in a `glk-click`
+handler now gets a real submit as well — handle the form's `submit` event (with
+`preventDefault()` in an SPA) or drop `type="submit"`, or the browser reloads the page.
+
 `aria-expanded`, `aria-haspopup` and `aria-pressed` set on the element are handed on to the
 native button inside, which is what screen readers read (since 1.20.0).
 

@@ -89,6 +89,14 @@ function toggleTheme() {
 
 A single module-level `MutationObserver` watches `data-theme` on `<html>` and syncs every live GlassKit Element instance — you never set `data-theme` on individual elements.
 
+### Density
+
+```html
+<html data-theme="dark" data-density="compact">
+```
+
+Denser controls for admin screens, desktop layouts and narrow forms: fields and buttons 40px instead of 52 and 56, smaller toggles, checkboxes and radios, denser list rows and modal actions. Without the attribute nothing changes; `removeAttribute('data-density')` switches back at runtime. The sizes are GlassKit's density tokens (GlassKit 1.21.0 or later), so they reach every shadow root by inheritance, and a project's own values do too (`[data-density='compact'] { --gl-btn-height: 36px; }`); with `data-glk-defaults="off"` the preset comes from `glasskit.css` on the page, like every other token. The same observer mirrors `data-density` onto each element's theme wrapper — set it on `<html>` only, never on individual elements.
+
 ---
 
 ## 2. Core Concepts
@@ -98,7 +106,7 @@ A single module-level `MutationObserver` watches `data-theme` on `<html>` and sy
 | Tag prefix | `glk-*` (analogous to the `glass-*` CSS prefix) |
 | Rendering | Shadow DOM (`mode: 'open'`) with `adoptedStyleSheets` |
 | Stylesheet sharing | GlassKit's `componentsSheet` is the same `CSSStyleSheet` object in every element — no CSS duplication. Token declarations live on the document, not in the shadow roots |
-| Theme sync | Global MutationObserver on `<html data-theme>` |
+| Theme sync | Global MutationObserver on `<html data-theme>` and `<html data-density>` |
 | Events | Custom `glk-*` events, all `bubbles: true, composed: true` |
 | Form participation | `GlkFormElement` uses `ElementInternals` (`static formAssociated = true`): value, reset and — since 1.20.0 — the inner field's validity |
 | Focus | Form elements with one field delegate focus (since 1.20.0): `element.focus()`, a click on the label, a `<label for>` land in the field |
@@ -108,7 +116,7 @@ Custom properties (`--gl-*`) defined on `:root` or `<html>` pass through shadow 
 
 ### Building your own element (since 1.14.0)
 
-`GlkElement` and `GlkFormElement` are exported — from the bundle (`import { GlkElement } from '@jungherz-de/glasskit-elements'`), from the stable subpath `@jungherz-de/glasskit-elements/base.js` (the very module the components import, so `instanceof GlkElement` holds across both), and as `GlassKitElements.GlkElement` from the CDN `<script>` bundle. A subclass inherits the whole setup: open shadow root with GlassKit's stylesheet adopted (`.glass-*` classes work inside), the theme wrapper following `data-theme`, listeners re-armed when the element moves, `emit()` for bubbling, composed events.
+`GlkElement` and `GlkFormElement` are exported — from the bundle (`import { GlkElement } from '@jungherz-de/glasskit-elements'`), from the stable subpath `@jungherz-de/glasskit-elements/base.js` (the very module the components import, so `instanceof GlkElement` holds across both), and as `GlassKitElements.GlkElement` from the CDN `<script>` bundle. A subclass inherits the whole setup: open shadow root with GlassKit's stylesheet adopted (`.glass-*` classes work inside), the theme wrapper following `data-theme` and `data-density`, listeners re-armed when the element moves, `emit()` for bubbling, composed events.
 
 ```js
 class DemoCounter extends GlkElement {
@@ -131,7 +139,7 @@ customElements.define('demo-counter', DemoCounter);
 
 Which import to take depends on how the elements are loaded, and mixing them is the one mistake to avoid: the `<script>` / ESM **bundle** carries its own copy of `GlkElement`, so a subclass built on `base.js` next to it is a different class — `instanceof` fails across the two, and the GlassKit stylesheet lives twice. Bundle loaded → take `GlassKitElements.GlkElement` or `import { GlkElement } from '@jungherz-de/glasskit-elements'`. Per-component files loaded → `base.js`, which the components import themselves. The per-component files leave `@jungherz-de/glasskit/glasskit-styles.js` external, so a bundler resolves it from `node_modules` and an import-map project maps it to the one copy it already loads for its own elements.
 
-Rules for a subclass: build only inside `this._wrapper` (it carries `data-theme`); keep listeners in `setupEvents()` / `teardownEvents()`, never in `render()`, or a moved element loses them; use `emit()` instead of `dispatchEvent()` so the event bubbles and crosses the shadow boundary — `emit(name, detail, { cancelable: true })` lets a listener call `preventDefault()`, and `emit()` returns `false` then (since 1.19.0); return `true` from `static get displayInline()` for inline elements; set `static get observesLightDom()` to `true` and implement `projectLightDom()` when copying light-DOM children into the shadow tree. `GlkFormElement` adds `setFormValue()`, `setValidity()`, `resetValue()` / `restoreValue()` and `static formAssociated = true`.
+Rules for a subclass: build only inside `this._wrapper` (it carries `data-theme`, and `data-density` while `<html>` has one); keep listeners in `setupEvents()` / `teardownEvents()`, never in `render()`, or a moved element loses them; use `emit()` instead of `dispatchEvent()` so the event bubbles and crosses the shadow boundary — `emit(name, detail, { cancelable: true })` lets a listener call `preventDefault()`, and `emit()` returns `false` then (since 1.19.0); return `true` from `static get displayInline()` for inline elements; set `static get observesLightDom()` to `true` and implement `projectLightDom()` when copying light-DOM children into the shadow tree. `GlkFormElement` adds `setFormValue()`, `setValidity()`, `resetValue()` / `restoreValue()` and `static formAssociated = true`.
 
 ### Light-DOM children (since 1.12.0)
 
@@ -153,6 +161,8 @@ Moving a `<glk-*>` element in the DOM disconnects and reconnects it. Its event
 listeners and its theme-sync registration are re-armed on every connect, so it keeps
 working. Before 1.12.0 they were torn down on disconnect and never restored: the
 element still looked right but no longer fired events.
+
+An element that was out of the document while `data-theme` or `data-density` changed on `<html>` catches up when it is connected again (since 1.21.0); before, its wrapper kept the old value — and since 1.20.0 that value also sets the `color-scheme` of the native parts inside.
 
 ### Branding (since 1.9.0)
 
@@ -1433,7 +1443,7 @@ All `glk-*` events bubble and are `composed: true`, so they pierce shadow bounda
 
 ### Always follow
 
-1. **`data-theme` on `<html>`** — never on `<body>` or individual elements; the global MutationObserver only watches `<html>`.
+1. **`data-theme` and `data-density` on `<html>`** — never on `<body>` or individual elements; the global MutationObserver only watches `<html>`.
 2. **Form elements belong inside a `<form>`** — otherwise `ElementInternals.setFormValue()` has no effect and `new FormData()` will be empty.
 3. **`<glk-list-item>` must be a direct child of `<glk-list>`** — nested deeper, it won't be observed for the auto-divider last-item detection.
 4. **Popover trigger via `slot="trigger"`** — don't reference external elements by ID. The popover's built-in click handler listens on the trigger slot.
@@ -1452,6 +1462,7 @@ All `glk-*` events bubble and are `composed: true`, so they pierce shadow bounda
 | `<glk-list>` inside `<glk-popover>` without `bare` | Add `bare` to the inner list so only the popover surface has glass. |
 | `document.querySelector('.glass-modal').classList.add('is-active')` | Set `<glk-modal>.open = true` instead — the element manages `.is-active` internally. |
 | `data-theme` directly on a `<glk-*>` element | Set it on `<html>`; theme propagates automatically through the MutationObserver. |
+| Shrinking elements one by one (`::part`, host heights) for a denser UI | `data-density="compact"` on `<html>`, or a density token such as `--gl-btn-height` on `:root` — GlassKit 1.21.0 or later. |
 | Form element outside `<form>` | Wrap in a `<form>`; `ElementInternals` needs a form owner. |
 | Overriding shadow styles with external CSS | Use CSS custom properties (`--gl-color-primary`, etc.) — they pierce shadow roots. Hard-coded selectors inside shadow roots cannot be targeted externally. |
 | Forgetting `slot="trigger"` on the popover trigger element | Without it, the popover's internal click handler can't identify the trigger and never toggles. |

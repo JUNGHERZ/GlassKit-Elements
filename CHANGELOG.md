@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [Unreleased]
+
+### Added
+
+- **`data-density` on `<html>` reaches the elements, like `data-theme`.** GlassKit 1.21.0 turns the sizes of fields, buttons, toggles, checkboxes, radios, list rows and modal actions into density tokens, with `data-density="compact"` on `<html>` as a denser preset for admin screens, desktop layouts and narrow forms. The values arrive in every shadow root by inheritance — GlassKit puts the preset into `tokensCss`, which the elements place on the document in `@layer glasskit-defaults` — so a project's own density values (`[data-density='compact'] { --gl-btn-height: 36px; }`) reach the elements too; with `data-glk-defaults="off"` the preset comes from `glasskit.css` on the page, like every other token. The global `MutationObserver` now watches `data-density` next to `data-theme` and `data-glk-defaults` and mirrors it onto every element's `.glk-wrapper`: set when the wrapper is created, updated when `<html>` changes, removed when `<html>` has none. A rule keyed on the attribute — a GlassKit component rule, the `hostStyles` of a project's own `GlkElement` — therefore matches inside the shadow root, as it does for the theme. `GlkElement` gains `_syncDensity(density)` next to `_syncTheme(theme)`; the observer calls each only for the attribute that changed. The compact sizes need GlassKit 1.21.0: the bundles carry the GlassKit sheet they were built against, which in `dist/` is still the lockfile's 1.20.0 — rebuilt against 1.21.0, they bring the tokens along; the per-component files use the GlassKit the project installs.
+
+### Fixed
+
+- **An element that was out of the document while the theme changed came back with the old theme on its wrapper.** The observer only reaches connected elements, and the wrapper took `data-theme` once, when it was created; an element removed and re-inserted after a theme switch — a cached view, a list a framework re-sorts — kept the old value. Since 1.20.0 that value also sets the wrapper's `color-scheme`, so such an element drew its native parts — a select's list, a date picker, scrollbars — in the other scheme. It now takes `data-theme` and `data-density` from `<html>` again whenever it is connected anew.
+
+Verified in Chromium and WebKit (Playwright 1.63), the elements built against the GlassKit branch with the density tokens: without `data-density` every element measures as with 1.20.0, and the elements' index, showcase and docs (EN/DE) render pixel-identical, apart from regions that also differ between two renders of 1.20.0; with `data-density="compact"` on `<html>`, at load and switched at runtime, `<glk-input>`, `<glk-select>` and `<glk-search>` measure 40 px with 12 px inner padding, `<glk-button>` 40 / 32 / 48 px, `<glk-textarea>` 88 px, `<glk-list-item>` 48 px, `<glk-toggle>` 44 × 26 px with an 18 px thumb, `<glk-checkbox>` and `<glk-radio>` 20 px, the `<glk-modal>` actions 44 px — with and without `glasskit.css` on the page, left to right and right to left. Every wrapper carries `data-density="compact"` and loses it with `<html>`; an element created after the switch starts with it, one detached during the switch catches up when it is inserted again, its `color-scheme` included.
+
+---
+
 ## [1.20.0] – 2026-10-05
 
 Versions realign with GlassKit at 1.20.0, which this release needs (peer dependency `>=1.20.0`). The first batch of findings filed as GitHub issues, from a product that is adopting GlassKit at full depth — mostly accessibility and forms. Everything below was measured in Chromium and WebKit.
@@ -735,6 +749,7 @@ Starting with this release, GlassKit Elements version numbers are aligned with G
 
 ---
 
+[Unreleased]: https://github.com/JUNGHERZ/GlassKit-Elements/compare/v1.20.0...HEAD
 [1.20.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.20.0
 [1.19.2]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.19.2
 [1.19.1]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.19.1

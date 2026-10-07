@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.22.1] – 2026-10-08
+
+### Fixed
+
+- **`<glk-input type="date">` and `type="time"` fit narrow columns again in Chrome and Edge.** Rebuilt against GlassKit 1.22.1. Since 1.22.0 the field sits in GlassKit's `.glass-input-wrap`, whose grid column held a Chromium date or time input at its whole intrinsic width: two date fields side by side in a phone-width card overlapped each other and ran past the card's edge (in a 300 px row the second ended at x = 339), time fields likewise; Safari was not affected. The column shrinks now, and every field ends at its column again — measured in Chromium and WebKit, with and without a suffix, which keeps its padding. The `glk-input::part(box) { grid-template-columns: minmax(0, 1fr) }` workaround can go. The peer dependency moves to `>=1.22.1`. ([GlassKit #8](https://github.com/JUNGHERZ/GlassKit/issues/8))
+
+---
+
 ## [1.22.0] – 2026-10-07
 
 Versions realign with GlassKit at 1.22.0, which this release needs (peer dependency `>=1.22.0`) for the input affixes.
@@ -791,7 +799,8 @@ Starting with this release, GlassKit Elements version numbers are aligned with G
 
 ---
 
-[Unreleased]: https://github.com/JUNGHERZ/GlassKit-Elements/compare/v1.22.0...HEAD
+[Unreleased]: https://github.com/JUNGHERZ/GlassKit-Elements/compare/v1.22.1...HEAD
+[1.22.1]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.22.1
 [1.22.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.22.0
 [1.21.2]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.21.2
 [1.21.1]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.21.1

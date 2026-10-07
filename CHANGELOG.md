@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.22.0] – 2026-10-07
+
+Versions realign with GlassKit at 1.22.0, which this release needs (peer dependency `>=1.22.0`) for the input affixes.
+
+### Added
+
+- **`<glk-input>` has `prefix` and `suffix` slots.** It had no slot at all, so a currency, a unit, an icon or a button inside the field's box had to be laid over it from outside, with the field's padding changed through the shadow root to keep the text clear. Now `<span slot="suffix">EUR</span>` sits inside the box at the end, a `slot="prefix"` icon at the start — right to left they swap sides —, both centred on the field. An affix shows only while something is slotted into it, and its width is measured, so the text keeps clear of a unit of any length and the room is there from the first frame, without sliding. A click on slotted text or an icon focuses the field; a slotted button or link takes its own click. Their text is read with the field as its description. New parts: `box`, `prefix`, `suffix`. Built on GlassKit 1.22.0's `.glass-input-wrap`. Without slotted content a field renders exactly as before — the docs, showcase and landing pages are pixel-identical in Chromium and WebKit. Measured: "EUR" 16 px from the end with the field's padding at 16 + 29 + 8 px, "https://" as prefix 48 px with the text after it, an 18 px icon giving 42 px; an affix added later shows and makes room, removed, the field is back to 16 px. ([#12](https://github.com/JUNGHERZ/GlassKit-Elements/issues/12))
+- **`readonly` on `<glk-input>` and `<glk-textarea>`,** with a `readOnly` property. The attribute did not reach the field: a record shown before an edit mode was switched on stayed editable, and typing emitted `glk-input` and `glk-change`. The inner field is read-only now — focusable, selectable and submitted with the form, not editable, and barred from validation like a native read-only field. Measured in Chromium and WebKit: typing into `<glk-input readonly value="Ada">` leaves "Ada", the field takes the focus, the form submits "Ada"; `readOnly = false` makes it editable again. ([#11](https://github.com/JUNGHERZ/GlassKit-Elements/issues/11))
+
+### Fixed
+
+- **A value set as a property survives, whatever the moment.** Frameworks bind values as properties right after creating an element — hybrids whenever the name is a property, lit's `.value`, Vue —, before it is connected and before `<glk-select>` has copied its options in. Measured across the elements, before this release: setting `value` on `<glk-select>`, `<glk-input>`, `<glk-textarea>`, `<glk-search>` or `<glk-range>`, or `checked` on `<glk-checkbox>`, `<glk-toggle>` or `<glk-radio>`, before connecting threw a `TypeError`; a `<glk-select>` given its value after connecting but before the options were copied showed its first option while the app held the other value, and saving kept the value the user had not seen. Now every such setter keeps what it cannot apply yet and `render()` takes it up, the getters read it back meanwhile, and `<glk-select>` keeps a value naming no option yet as the wanted value — selected as soon as an option carries it, until the user picks another. That also makes good the documented promise that a `value` attribute whose option arrives later is selected then: a surviving default selection used to win. A form reset returns `<glk-select>` to its `value` attribute instead of the first option. ([#13](https://github.com/JUNGHERZ/GlassKit-Elements/issues/13))
+- **Properties set before the element was defined are no longer lost.** A property a framework sets while the bundle is still loading lands on the element itself and hides the class's setter — `<glk-list header>`, `<glk-progress value>`, `<glk-image-picker label>` and the form values above showed nothing of it. On first connect such a value is taken off the instance and set again through the setter. Checked for all nineteen settable properties, set before connecting, before the definition and after connecting: each one shows and reads back. ([#13](https://github.com/JUNGHERZ/GlassKit-Elements/issues/13))
+
+### Documentation
+
+- Docs (English and German), README and SKILL.md describe the slots, `readonly`, the wanted value of `<glk-select>` and that properties set early are kept. The prose that 1.20.0 to 1.21.2 added to SKILL.md and README is on one line per paragraph now, as the rest of the new text.
+
+---
+
 ## [1.21.2] – 2026-10-05
 
 ### Fixed
@@ -771,7 +791,8 @@ Starting with this release, GlassKit Elements version numbers are aligned with G
 
 ---
 
-[Unreleased]: https://github.com/JUNGHERZ/GlassKit-Elements/compare/v1.21.2...HEAD
+[Unreleased]: https://github.com/JUNGHERZ/GlassKit-Elements/compare/v1.22.0...HEAD
+[1.22.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.22.0
 [1.21.2]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.21.2
 [1.21.1]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.21.1
 [1.21.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.21.0

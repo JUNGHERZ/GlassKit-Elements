@@ -20,7 +20,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="GlassKit Elements — Documentation">
   <meta name="twitter:description" content="Complete documentation for all 29 GlassKit Elements web components with live examples.">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.21/glasskit.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.22/glasskit.min.css">
   <script src="/dist/glasskit-elements.min.js"></script>
   <style>
     html { scroll-behavior: smooth; }
@@ -253,7 +253,7 @@
     <aside class="docs-sidebar">
       <div class="docs-sidebar__title">&#129482; <a href="/">GlassKit Elements</a></div>
       <div class="docs-sidebar__subtitle">Web Components for GlassKit CSS.</div>
-      <div class="docs-sidebar__version">v1.21.2 &ndash; Jungherz GmbH</div>
+      <div class="docs-sidebar__version">v1.22.0 &ndash; Jungherz GmbH</div>
 
       <div class="docs-sidebar__group">
         <div class="docs-sidebar__group-title">Basics</div>
@@ -339,7 +339,7 @@
         <h1>GlassKit Elements</h1>
         <p>Complete reference for all 36 web components &ndash; built by Jungherz GmbH. Vanilla JS, Shadow DOM, native form participation.</p>
         <div class="docs-hero__badges">
-          <span class="docs-hero__badge">v1.21.2</span>
+          <span class="docs-hero__badge">v1.22.0</span>
           <span class="docs-hero__badge">Shadow DOM</span>
           <span class="docs-hero__badge">36 Components</span>
           <span class="docs-hero__badge">Vanilla JS</span>
@@ -352,7 +352,7 @@
 
         <h3>CDN (quickest)</h3>
         <div class="docs-code"><span class="cmt">&lt;!-- 1. GlassKit CSS --&gt;</span>
-<span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span> <span class="attr">href</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.21/glasskit.min.css"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span> <span class="attr">href</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.22/glasskit.min.css"</span><span class="tag">&gt;</span>
 
 <span class="cmt">&lt;!-- 2. GlassKit Elements --&gt;</span>
 <span class="tag">&lt;script</span> <span class="attr">src</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"</span><span class="tag">&gt;&lt;/script&gt;</span></div>
@@ -579,6 +579,7 @@ addEventListener(<span class="val">'afterprint'</span>, () =&gt; {
             <glk-input label="Username" placeholder="Enter name"></glk-input>
             <glk-input label="Email" type="email" hint="Required" error></glk-input>
             <glk-input label="Hide from" type="date" min="2026-09-22" max="2026-12-31" hint="min and max reach the picker"></glk-input>
+            <glk-input label="Price" inputmode="decimal" value="49.90"><span slot="suffix">EUR</span></glk-input>
           </div>
           <div class="docs-code"><span class="tag">&lt;glk-input</span> <span class="attr">label</span>=<span class="val">"Email"</span> <span class="attr">type</span>=<span class="val">"email"</span>
   <span class="attr">placeholder</span>=<span class="val">"you@example.com"</span>
@@ -592,18 +593,23 @@ addEventListener(<span class="val">'afterprint'</span>, () =&gt; {
             <tr><td><code>hint</code></td><td>String</td><td>Helper text, read as the field&rsquo;s description</td></tr>
             <tr><td><code>error</code></td><td>Boolean</td><td>Error styling; marks the field invalid for screen readers (<code>aria-invalid</code>, since 1.20.0). It does not block the form &mdash; a server&rsquo;s verdict arrives this way</td></tr>
             <tr><td><code>required</code></td><td>Boolean</td><td>Required field; while it is empty the form does not submit (since 1.20.0)</td></tr>
+            <tr><td><code>readonly</code></td><td>Boolean</td><td>Read-only: focusable, selectable and submitted, but not editable; property <code>readOnly</code> (since 1.22.0)</td></tr>
             <tr><td><code>min</code>, <code>max</code>, <code>step</code></td><td>String</td><td>Passed to the inner field: range and step of the picker for dates, times and numbers (since 1.17.0)</td></tr>
             <tr><td><code>minlength</code>, <code>maxlength</code>, <code>pattern</code></td><td>String</td><td>Passed to the inner field (since 1.17.0)</td></tr>
             <tr><td><code>autocomplete</code>, <code>inputmode</code></td><td>String</td><td>Autofill and on-screen keyboard, passed to the inner field (since 1.17.0)</td></tr>
           </table>
           <p><strong>Events:</strong> <code>glk-input</code>, <code>glk-change</code></p>
+          <p><strong>Slots</strong> (since 1.22.0): <code>prefix</code> and <code>suffix</code> put an icon, a currency, a unit or a button inside the field&rsquo;s box, at its start and end &mdash; right to left they swap sides. Each shows only while something is slotted into it; its width is measured and the text keeps clear of it. A click on slotted text or an icon focuses the field, a slotted button takes its own click. Their text is read with the field as its description. The box is the part <code>box</code>, the affixes <code>prefix</code> and <code>suffix</code>.</p>
+          <div class="docs-code"><span class="tag">&lt;glk-input</span> <span class="attr">label</span>=<span class="val">"Price"</span> <span class="attr">inputmode</span>=<span class="val">"decimal"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;span</span> <span class="attr">slot</span>=<span class="val">"suffix"</span><span class="tag">&gt;</span>EUR<span class="tag">&lt;/span&gt;</span>
+<span class="tag">&lt;/glk-input&gt;</span></div>
         </div>
 
         <div class="docs-component" id="glk-textarea">
           <h3><code>&lt;glk-textarea&gt;</code></h3>
           <div class="docs-preview"><glk-textarea label="Message" placeholder="Type here..." rows="3"></glk-textarea></div>
           <div class="docs-code"><span class="tag">&lt;glk-textarea</span> <span class="attr">label</span>=<span class="val">"Message"</span> <span class="attr">rows</span>=<span class="val">"4"</span><span class="tag">&gt;&lt;/glk-textarea&gt;</span></div>
-          <p>Attributes: <code>label</code>, <code>rows</code>, <code>placeholder</code>, <code>required</code>, <code>name</code>, <code>value</code>, <code>disabled</code>. The label names the field.</p>
+          <p>Attributes: <code>label</code>, <code>rows</code>, <code>placeholder</code>, <code>required</code>, <code>readonly</code> (since 1.22.0), <code>name</code>, <code>value</code>, <code>disabled</code>. The label names the field.</p>
         </div>
 
         <div class="docs-component" id="glk-select">
@@ -619,7 +625,7 @@ addEventListener(<span class="val">'afterprint'</span>, () =&gt; {
   <span class="tag">&lt;option</span> <span class="attr">value</span>=<span class="val">"free"</span><span class="tag">&gt;</span>Free<span class="tag">&lt;/option&gt;</span>
   <span class="tag">&lt;option</span> <span class="attr">value</span>=<span class="val">"pro"</span><span class="tag">&gt;</span>Pro<span class="tag">&lt;/option&gt;</span>
 <span class="tag">&lt;/glk-select&gt;</span></div>
-          <p>Children: native <code>&lt;option&gt;</code> elements. With <code>required</code> and an empty first option (<code>value=""</code>) the form does not submit until a choice is made (since 1.20.0). The label names the field.</p>
+          <p>Children: native <code>&lt;option&gt;</code> elements. With <code>required</code> and an empty first option (<code>value=""</code>) the form does not submit until a choice is made (since 1.20.0). The label names the field. A <code>value</code> &mdash; attribute or property &mdash; that names no option yet is kept and selected once its option arrives, until the user picks another (since 1.22.0; before, a value set as a property before the options were copied was lost). A form reset returns to the <code>value</code> attribute.</p>
         </div>
 
         <div class="docs-component" id="glk-search">

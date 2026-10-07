@@ -225,6 +225,9 @@ export class GlkElement extends HTMLElement {
 
   connectedCallback() {
     if (!this._initialized) {
+      // Before _initialized: setters that set attributes must not reach
+      // onAttributeChanged yet — render() reads the attributes anyway.
+      this._upgradeProperties();
       this._initialized = true;
 
       // Create theme wrapper (display:contents makes it layout-transparent)
@@ -256,6 +259,30 @@ export class GlkElement extends HTMLElement {
       this._lightDomObserver.observe(this, {
         childList: true, subtree: true, characterData: true
       });
+    }
+  }
+
+  /**
+   * A property set on the element before its class was defined — markup a
+   * framework fills before the bundle has loaded — lands on the instance
+   * and hides the class's accessor: the setter never ran, and the value was
+   * lost (a glk-select kept its first option, a glk-progress stayed at 0).
+   * Such a value is taken off the instance and set again through the
+   * setter, which keeps what it cannot apply before render().
+   */
+  _upgradeProperties() {
+    for (const key of Object.keys(this)) {
+      let proto = Object.getPrototypeOf(this);
+      let setter = null;
+      while (proto && proto !== HTMLElement.prototype) {
+        const desc = Object.getOwnPropertyDescriptor(proto, key);
+        if (desc) { setter = desc.set; break; }
+        proto = Object.getPrototypeOf(proto);
+      }
+      if (!setter) continue;
+      const value = this[key];
+      delete this[key];
+      this[key] = value;
     }
   }
 

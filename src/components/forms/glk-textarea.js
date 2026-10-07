@@ -2,7 +2,7 @@ import { GlkFormElement } from '../../base.js';
 
 class GlkTextarea extends GlkFormElement {
   static get observedAttributes() {
-    return ['label', 'placeholder', 'rows', 'disabled', 'name', 'value', 'required'];
+    return ['label', 'placeholder', 'rows', 'disabled', 'readonly', 'name', 'value', 'required'];
   }
 
   render() {
@@ -22,10 +22,13 @@ class GlkTextarea extends GlkFormElement {
     const name = this.getAttribute('name');
     if (name) this._textarea.setAttribute('name', name);
 
-    const value = this.getAttribute('value');
+    // A value set as a property before render() has waited for it.
+    const value = this._pendingValue ?? this.getAttribute('value');
+    this._pendingValue = undefined;
     if (value) this._textarea.value = value;
 
     if (this.getBoolAttr('disabled')) this._textarea.disabled = true;
+    if (this.getBoolAttr('readonly')) this._textarea.readOnly = true;
     if (this.getBoolAttr('required')) this._textarea.required = true;
 
     group.appendChild(this._labelEl);
@@ -63,6 +66,9 @@ class GlkTextarea extends GlkFormElement {
       case 'disabled':
         this._textarea.disabled = this.getBoolAttr('disabled');
         break;
+      case 'readonly':
+        this._textarea.readOnly = this.getBoolAttr('readonly');
+        break;
       case 'name':
         this._textarea.setAttribute('name', this.getAttribute('name') || '');
         break;
@@ -87,14 +93,21 @@ class GlkTextarea extends GlkFormElement {
     this._syncFormValue();
   }
 
-  get value() { return this._textarea?.value ?? ''; }
+  get value() { return this._textarea ? this._textarea.value : (this._pendingValue ?? this.getAttribute('value') ?? ''); }
   set value(v) {
-    if (this._textarea) this._textarea.value = v;
+    const value = v == null ? '' : String(v);
+    // Frameworks set properties right after creating the element. Before
+    // render() the value waits for it — it used to throw.
+    if (!this._textarea) { this._pendingValue = value; return; }
+    this._textarea.value = value;
     this._syncFormValue();
   }
 
   get disabled() { return this.getBoolAttr('disabled'); }
   set disabled(v) { this.setBoolAttr('disabled', v); }
+
+  get readOnly() { return this.getBoolAttr('readonly'); }
+  set readOnly(v) { this.setBoolAttr('readonly', v); }
 }
 
 customElements.define('glk-textarea', GlkTextarea);

@@ -5,7 +5,7 @@
   <a href="#"><img src="https://img.shields.io/badge/vanilla_JS-no_dependencies-44cc11?style=flat-square" alt="Vanilla JS"></a>
   <a href="#"><img src="https://img.shields.io/badge/components-36-7ec8e3?style=flat-square" alt="36 Components"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="MIT License"></a>
-  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/changelog-v1.21.2-lightgrey?style=flat-square" alt="Changelog"></a>
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/changelog-v1.22.0-lightgrey?style=flat-square" alt="Changelog"></a>
   <a href="https://www.npmjs.com/package/@jungherz-de/glasskit-elements"><img src="https://img.shields.io/badge/npm-%40jungherz--de%2Fglasskit--elements-cb3837?style=flat-square&logo=npm" alt="npm"></a>
 </p>
 
@@ -66,7 +66,7 @@ It is the **app layer** of the GlassKit family — three layers, one design lang
 
 ```html
 <!-- 1. GlassKit CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.21/glasskit.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.22/glasskit.min.css">
 
 <!-- 2. GlassKit Elements -->
 <script src="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"></script>
@@ -104,7 +104,7 @@ The per-component files leave `@jungherz-de/glasskit/glasskit-styles.js` as an e
 <!DOCTYPE html>
 <html data-theme="dark">
 <head>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.21/glasskit.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.22/glasskit.min.css">
   <script src="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"></script>
 </head>
 <body>
@@ -156,8 +156,8 @@ All form components support `name`, `value`, `disabled` and participate in nativ
 
 | Component | Description | Key Attributes |
 |---|---|---|
-| `<glk-input>` | Text input with label & hint | `label`, `type`, `placeholder`, `hint`, `error`, `required`, `min`, `max`, `step`, `maxlength`, `pattern`, `autocomplete`, `inputmode` |
-| `<glk-textarea>` | Multi-line text input | `label`, `rows`, `placeholder`, `required` |
+| `<glk-input>` | Text input with label & hint; slots `prefix` / `suffix` for an icon, unit or button in the field | `label`, `type`, `placeholder`, `hint`, `error`, `required`, `readonly`, `min`, `max`, `step`, `maxlength`, `pattern`, `autocomplete`, `inputmode` |
+| `<glk-textarea>` | Multi-line text input | `label`, `rows`, `placeholder`, `required`, `readonly` |
 | `<glk-select>` | Dropdown select | `label`, `required` (children: `<option>`) |
 | `<glk-search>` | Search input with icon | `placeholder`, `label` (accessible name) |
 | `<glk-toggle>` | Switch toggle (`role="switch"` on its native checkbox) | `label`, `checked`, `disabled`, `required` |
@@ -267,13 +267,7 @@ inherits them — no JavaScript, no per-element setup:
 Token defaults are placed on the document once, inside `@layer glasskit-defaults`, so
 pages that never load `glasskit.css` still work and your brand file always wins.
 
-Since 1.20.0 that layer carries the `--gl-*` tokens only — GlassKit's `color-scheme` stays
-off the page. Each element sets it on its own theme wrapper, so a select's list or a date
-picker inside matches the element while the page keeps its scheme. (Before, importing the
-elements turned the whole page to `color-scheme: dark`: unstyled text white, links light
-blue, native controls dark.) The token names are still global, so a component of yours
-that reads `var(--gl-…, fallback)` gets GlassKit's value. A page that declares the tokens
-itself, or wants them on part of the page only, switches the defaults off:
+Since 1.20.0 that layer carries the `--gl-*` tokens only — GlassKit's `color-scheme` stays off the page. Each element sets it on its own theme wrapper, so a select's list or a date picker inside matches the element while the page keeps its scheme. (Before, importing the elements turned the whole page to `color-scheme: dark`: unstyled text white, links light blue, native controls dark.) The token names are still global, so a component of yours that reads `var(--gl-…, fallback)` gets GlassKit's value. A page that declares the tokens itself, or wants them on part of the page only, switches the defaults off:
 
 ```html
 <html data-glk-defaults="off">   <!-- watched: may be set or removed later -->

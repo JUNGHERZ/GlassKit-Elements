@@ -1,5 +1,15 @@
 import { GlkFormElement } from '../../base.js';
 
+// The wanted value. A select can show a value only once an option carries it,
+// and the options arrive late: they are copied in a frame after connecting,
+// and a framework may add them later still — while it sets `value` as a
+// property right after creating the element. So the value the attribute or
+// the property asks for is kept as wanted until an option carries it; a
+// choice of the user replaces it. Before 1.22.0 only the attribute was kept:
+// a property set before connecting threw, and one set before the options
+// were copied was lost — the select showed its first option while the app
+// held the other value.
+
 class GlkSelect extends GlkFormElement {
   static get observedAttributes() {
     return ['label', 'disabled', 'name', 'value', 'required'];
@@ -15,6 +25,8 @@ class GlkSelect extends GlkFormElement {
     this._labelEl.textContent = this.getAttribute('label') || '';
 
     this._select = this.createElement('select', ['glass-select'], { id: 'field' });
+    // A value set as a property before render() is wanted already.
+    if (this._wanted === undefined) this._wanted = this.getAttribute('value');
 
     const name = this.getAttribute('name');
     if (name) this._select.setAttribute('name', name);
@@ -46,10 +58,10 @@ class GlkSelect extends GlkFormElement {
 
     this._moveOptions();
 
-    // Keep the live selection when it survived the rebuild; otherwise fall back
-    // to the value attribute. Without this the selection jumps back to the first
-    // entry every time the list is updated.
-    if (!this._applyValue(previous)) this._applyValue(this.getAttribute('value'));
+    // The wanted value first, then the live selection if it survived the
+    // rebuild — without that, the selection would jump back to the first entry
+    // every time the list is updated.
+    if (!this._applyValue(this._wanted)) this._applyValue(previous);
     this._syncFormValue();
   }
 
@@ -75,6 +87,7 @@ class GlkSelect extends GlkFormElement {
 
   setupEvents() {
     this._onChange = () => {
+      this._wanted = null;            // the user's choice replaces it
       this._syncFormValue();
       this.emit('glk-change', { value: this._select.value });
       this.dispatchEvent(new Event('change', { bubbles: true }));
@@ -99,7 +112,8 @@ class GlkSelect extends GlkFormElement {
         this._select.setAttribute('name', this.getAttribute('name') || '');
         break;
       case 'value':
-        this._applyValue(this.getAttribute('value'));
+        this._wanted = this.getAttribute('value');
+        this._applyValue(this._wanted);
         this._syncFormValue();
         break;
       case 'required':
@@ -115,13 +129,22 @@ class GlkSelect extends GlkFormElement {
   }
 
   resetValue() {
-    this._select.selectedIndex = 0;
+    // Back to what the markup asked for, else the first option.
+    this._wanted = this.getAttribute('value');
+    if (!this._applyValue(this._wanted)) this._select.selectedIndex = 0;
     this._syncFormValue();
   }
 
-  get value() { return this._select?.value ?? ''; }
+  get value() {
+    // Until options are there, the wanted value is the answer: a framework
+    // reads back what it has just set.
+    if (!this._select?.options.length) return this._wanted ?? this.getAttribute('value') ?? '';
+    return this._select.value;
+  }
   set value(v) {
-    if (this._select) this._select.value = v;
+    this._wanted = v == null ? '' : String(v);
+    if (!this._select) return;        // render() takes it from here
+    this._applyValue(this._wanted);
     this._syncFormValue();
   }
 

@@ -92,11 +92,12 @@ class GlkCheckbox extends GlkFormElement {
     this._syncFormValue();
   }
 
-  get checked() { return this._input?.checked ?? false; }
+  // Before render() the attribute carries the state: render() reads it.
+  get checked() { return this._input ? this._input.checked : this.getBoolAttr('checked'); }
   set checked(v) {
     if (this._input) this._input.checked = v;
     this.setBoolAttr('checked', v);
-    this._syncFormValue();
+    if (this._input) this._syncFormValue();
   }
 
   get disabled() { return this.getBoolAttr('disabled'); }

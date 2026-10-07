@@ -1,6 +1,6 @@
 ---
 name: glasskit-elements
-description: GlassKit Elements is a vanilla-JS Web Components library (v1.21.2) wrapping GlassKit CSS v1.21.2. It provides 36 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
+description: GlassKit Elements is a vanilla-JS Web Components library (v1.22.0) wrapping GlassKit CSS v1.22.0. It provides 36 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
 ---
 
 # GlassKit Elements – AI Component Reference
@@ -18,7 +18,7 @@ description: GlassKit Elements is a vanilla-JS Web Components library (v1.21.2) 
 npm install @jungherz-de/glasskit-elements @jungherz-de/glasskit
 ```
 
-Peer dependency `@jungherz-de/glasskit >=1.21.2` is required — 1.21.2 gives disabled controls their look, 1.21.1 keeps the controls' state on paper, 1.21.0 brings the density tokens behind `data-density`, 1.20.0 the rules the elements build on since then (the dialog overlay, hidden list slots, empty control labels, control inputs on top); 1.9.0 is the release that made the stylesheet splittable, which is what lets document-level branding reach the elements at all.
+Peer dependency `@jungherz-de/glasskit >=1.22.0` is required — 1.22.0 brings the input affixes behind the `prefix` / `suffix` slots, 1.21.2 gives disabled controls their look, 1.21.1 keeps the controls' state on paper, 1.21.0 brings the density tokens behind `data-density`, 1.20.0 the rules the elements build on since then (the dialog overlay, hidden list slots, empty control labels, control inputs on top); 1.9.0 is the release that made the stylesheet splittable, which is what lets document-level branding reach the elements at all.
 
 ### Import (ES modules)
 
@@ -36,11 +36,7 @@ import '@jungherz-de/glasskit-elements/components/glk-button.js';
 import { GlkButton } from '@jungherz-de/glasskit-elements/components/glk-button.js';
 ```
 
-Every element has its own entry at `components/glk-{name}.js`; they import `./base.js` and leave `@jungherz-de/glasskit/glasskit-styles.js` external (bundler or import map resolves it). Importing one pulls that
-file plus `base.js` (~16 KB, shared by all of them) and GlassKit's `glasskit-styles.js`
-(~70 KB, resolved once by your project) rather than the 221 KB full bundle; several imports
-share both. Each module registers its
-custom element as a side effect, so a bare `import '…'` is enough.
+Every element has its own entry at `components/glk-{name}.js`; they import `./base.js` and leave `@jungherz-de/glasskit/glasskit-styles.js` external (bundler or import map resolves it). Importing one pulls that file plus `base.js` (~16 KB, shared by all of them) and GlassKit's `glasskit-styles.js` (~70 KB, resolved once by your project) rather than the 221 KB full bundle; several imports share both. Each module registers its custom element as a side effect, so a bare `import '…'` is enough.
 
 ### CDN
 
@@ -214,22 +210,15 @@ this module puts them on the document once, wrapped in `@layer glasskit-defaults
 If your app assigns `document.adoptedStyleSheets = [...]` wholesale at some later point,
 re-append the existing entries rather than replacing them, or the defaults are lost.
 
-**Only the tokens, not `color-scheme` (since 1.20.0).** GlassKit's token blocks also set
-`color-scheme`; on the document that switched the whole page to dark — unstyled text white,
-links light blue, native controls dark — on pages that never asked for GlassKit's theme. The
-layer now carries the `--gl-*` tokens only, and every element sets `color-scheme` on its own
-theme wrapper, so native parts inside it (a select's list, a date picker) match the element.
+**Only the tokens, not `color-scheme` (since 1.20.0).** GlassKit's token blocks also set `color-scheme`; on the document that switched the whole page to dark — unstyled text white, links light blue, native controls dark — on pages that never asked for GlassKit's theme. The layer now carries the `--gl-*` tokens only, and every element sets `color-scheme` on its own theme wrapper, so native parts inside it (a select's list, a date picker) match the element.
 
-**Opting out.** The token names are global, so a component of the page that reads
-`var(--gl-…, fallback)` sees GlassKit's values. A page that declares the tokens itself, or
-wants them in part of the page only, switches the defaults off — the attribute is watched:
+**Opting out.** The token names are global, so a component of the page that reads `var(--gl-…, fallback)` sees GlassKit's values. A page that declares the tokens itself, or wants them in part of the page only, switches the defaults off — the attribute is watched:
 
 ```html
 <html data-glk-defaults="off">
 ```
 
-The elements then inherit the tokens from `glasskit.css` or from a block of the page's own,
-for instance on a container around them.
+The elements then inherit the tokens from `glasskit.css` or from a block of the page's own, for instance on a container around them.
 
 ### Passing icons (fixed in 1.10.0)
 
@@ -323,8 +312,7 @@ Default slot: icon SVG (24×24).
 
 Events: `glk-click` when clicked.
 
-`aria-expanded`, `aria-haspopup` and `aria-pressed` set on the element are handed on to the
-native button inside (since 1.20.0) — `<glk-popover>` sets `aria-expanded` on its trigger.
+`aria-expanded`, `aria-haspopup` and `aria-pressed` set on the element are handed on to the native button inside (since 1.20.0) — `<glk-popover>` sets `aria-expanded` on its trigger.
 
 ---
 
@@ -574,20 +562,11 @@ Full-width glass button (56 px). Three variants, four sizes.
 
 Events: `glk-click` (suppressed when disabled).
 
-**Submitting (since 1.20.0).** The element is form-associated: `type="submit"` submits the
-form it sits in and `type="reset"` resets it. Before 1.20.0 both did nothing — the native
-button lives in the shadow root, outside every form. It acts once the click has finished
-bubbling, so `preventDefault()` on the click stops it, as on a native button; invalid fields
-stop the submit with the browser's message; the submit event's `submitter` is the element;
-`.form` is its form; `element.click()` acts like a click. No implicit submission: Enter in a
-`<glk-input>` does not submit the form.
+**Submitting (since 1.20.0).** The element is form-associated: `type="submit"` submits the form it sits in and `type="reset"` resets it. Before 1.20.0 both did nothing — the native button lives in the shadow root, outside every form. It acts once the click has finished bubbling, so `preventDefault()` on the click stops it, as on a native button; invalid fields stop the submit with the browser's message; the submit event's `submitter` is the element; `.form` is its form; `element.click()` acts like a click. No implicit submission: Enter in a `<glk-input>` does not submit the form.
 
-**Upgrading from ≤ 1.19:** code that set `type="submit"` and did the work in a `glk-click`
-handler now gets a real submit as well — handle the form's `submit` event (with
-`preventDefault()` in an SPA) or drop `type="submit"`, or the browser reloads the page.
+**Upgrading from ≤ 1.19:** code that set `type="submit"` and did the work in a `glk-click` handler now gets a real submit as well — handle the form's `submit` event (with `preventDefault()` in an SPA) or drop `type="submit"`, or the browser reloads the page.
 
-`aria-expanded`, `aria-haspopup` and `aria-pressed` set on the element are handed on to the
-native button inside, which is what screen readers read (since 1.20.0).
+`aria-expanded`, `aria-haspopup` and `aria-pressed` set on the element are handed on to the native button inside, which is what screen readers read (since 1.20.0).
 
 Default slot: button label (text or SVG + text).
 
@@ -613,9 +592,7 @@ Form-associated checkbox with glass styling.
 
 Events: `glk-change` → `{ checked }`; also dispatches native `change`. Property: `.checked`.
 
-`element.click()` and a `<label>` around the element or naming it tick it, as they do a
-native checkbox (since 1.20.0). A press on the element's empty width (it is a block, the
-control narrower) still does nothing.
+`element.click()` and a `<label>` around the element or naming it tick it, as they do a native checkbox (since 1.20.0). A press on the element's empty width (it is a block, the control narrower) still does nothing.
 
 ---
 
@@ -638,6 +615,7 @@ Text input with label + hint.
 | `error` | Boolean | Error styling (red border + red hint) and `aria-invalid` on the field — it does not block the form |
 | `disabled` | Boolean | Disabled state |
 | `required` | Boolean | Required field — the form does not submit while it is empty (since 1.20.0) |
+| `readonly` | Boolean | Read-only: focusable, selectable and submitted, not editable, barred from validation like a native field; property `.readOnly` (since 1.22.0) |
 | `name` | String | Form field name |
 | `value` | String | Current value |
 | `min`, `max`, `step` | String | Passed to the inner field — range and step of the picker for dates, times and numbers (since 1.17.0) |
@@ -646,18 +624,20 @@ Text input with label + hint.
 
 Events: `glk-input` → `{ value }`, `glk-change` → `{ value }`. Native `input` / `change` also dispatched. Property: `.value`.
 
-**Validity (since 1.20.0).** The element reports its inner field's validity to the form:
-`required`, `pattern`, `min`/`max`, `minlength`, `type="email"` … make `form.checkValidity()`
-false and stop a submit at the first invalid field with the browser's own message;
-`reportValidity()` focuses the field. `element.validity`, `.validationMessage`,
-`.willValidate`, `.checkValidity()` and `.reportValidity()` answer on the element. Before
-1.20.0 none of this reached the form. `error` stays a marker: a server's verdict arrives that
-way, and it must not block the next attempt.
+**Slots `prefix` and `suffix` (since 1.22.0)** put an icon, a currency, a unit or a button inside the field's box, at its start and end (they swap sides under `dir="rtl"`). Each shows only while something is slotted; its width is measured and the field's padding grows by it, so the text keeps clear of a unit of any length. A click on slotted text or an icon focuses the field; a slotted button or link takes its own click. Their text is read as part of the field's description. Parts: `box`, `prefix`, `suffix`. Built on GlassKit's `.glass-input-wrap` (GlassKit 1.22.0).
 
-**Label and focus (since 1.20.0).** The `label` is tied to the field: it names it for screen
-readers, and a click on it focuses it — as do `element.focus()` and a `<label for>` naming the
-element. An outer `<label for>` focuses, but cannot name, the field inside the shadow root;
-use `label` for the name.
+```html
+<glk-input label="Price" inputmode="decimal">
+  <span slot="suffix">EUR</span>
+</glk-input>
+<glk-input label="Search" type="search">
+  <svg slot="prefix" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+</glk-input>
+```
+
+**Validity (since 1.20.0).** The element reports its inner field's validity to the form: `required`, `pattern`, `min`/`max`, `minlength`, `type="email"` … make `form.checkValidity()` false and stop a submit at the first invalid field with the browser's own message; `reportValidity()` focuses the field. `element.validity`, `.validationMessage`, `.willValidate`, `.checkValidity()` and `.reportValidity()` answer on the element. Before 1.20.0 none of this reached the form. `error` stays a marker: a server's verdict arrives that way, and it must not block the next attempt.
+
+**Label and focus (since 1.20.0).** The `label` is tied to the field: it names it for screen readers, and a click on it focuses it — as do `element.focus()` and a `<label for>` naming the element. An outer `<label for>` focuses, but cannot name, the field inside the shadow root; use `label` for the name.
 
 ---
 
@@ -797,6 +777,8 @@ it happens to be first.
 A `value` naming no existing option leaves the current selection alone rather than
 clearing it — when the matching option arrives later, it is selected then.
 
+**Set as a property (since 1.22.0).** The same holds for `select.value = 'b'`: a value set before the element is connected, before its options are copied in, or before the options exist at all is kept as the wanted value and selected as soon as an option carries it — until the user picks another, which replaces it. `select.value` reads it back meanwhile. Before 1.22.0 such a value threw before connecting and was lost afterwards — the select showed its first option while the app held the other value. A form reset returns to the `value` attribute.
+
 ---
 
 ### 3.17 `<glk-textarea>`
@@ -816,6 +798,7 @@ Multi-line text input.
 | `value` | String | Current value |
 | `disabled` | Boolean | Disabled state |
 | `required` | Boolean | Required field |
+| `readonly` | Boolean | Read-only, property `.readOnly` (since 1.22.0) |
 
 Events: `glk-input`, `glk-change`.
 
@@ -842,13 +825,7 @@ Switch-style toggle (form-associated).
 
 Events: `glk-change` → `{ checked }`. Property: `.checked`.
 
-**One control (since 1.20.0).** The switch is the native checkbox inside, with
-`role="switch"`, named by `label`. The element itself no longer carries `role`,
-`aria-checked` or `aria-disabled` — before 1.20.0 screen readers met a switch with a checkbox
-inside. Select and style on `[checked]` / `[disabled]`; in tests,
-`getByRole('switch', { name })` finds the input and `.click()`, `.check()` work on it.
-`element.click()` and a `<label>` around the element or naming it toggle it, like a native
-checkbox. Without `label` the element is exactly its track, 52 × 30 px (it was 64 × 34).
+**One control (since 1.20.0).** The switch is the native checkbox inside, with `role="switch"`, named by `label`. The element itself no longer carries `role`, `aria-checked` or `aria-disabled` — before 1.20.0 screen readers met a switch with a checkbox inside. Select and style on `[checked]` / `[disabled]`; in tests, `getByRole('switch', { name })` finds the input and `.click()`, `.check()` work on it. `element.click()` and a `<label>` around the element or naming it toggle it, like a native checkbox. Without `label` the element is exactly its track, 52 × 30 px (it was 64 × 34).
 
 ---
 
@@ -883,17 +860,11 @@ Slots:
 
 Methods: `.show()`, `.close()`. Property: `.open`. Events: `glk-close`.
 
-Closes automatically on overlay click and <kbd>Escape</kbd>, with its fade, and emits
-`glk-close` then; `.close()` and removing `open` do not emit.
+Closes automatically on overlay click and <kbd>Escape</kbd>, with its fade, and emits `glk-close` then; `.close()` and removing `open` do not emit.
 
-**A native `<dialog>` (since 1.20.0).** The overlay is opened with `showModal()`: it lies in
-the top layer, the page behind it is inert for pointer, keyboard and screen readers, focus
-moves in and returns to where it came from on close, and the content is out of reach while
-closed. Chrome focuses the first field of the content, Safari the first action — put
-`autofocus` on the element that should get the focus, in the content or on an action.
+**A native `<dialog>` (since 1.20.0).** The overlay is opened with `showModal()`: it lies in the top layer, the page behind it is inert for pointer, keyboard and screen readers, focus moves in and returns to where it came from on close, and the content is out of reach while closed. Chrome focuses the first field of the content, Safari the first action — put `autofocus` on the element that should get the focus, in the content or on an action.
 
-While it is open, **everything outside is inert** — a `<glk-toast>` shown then is neither
-clickable nor announced. Give feedback inside the modal, or close it first.
+While it is open, **everything outside is inert** — a `<glk-toast>` shown then is neither clickable nor announced. Give feedback inside the modal, or close it first.
 
 ---
 
@@ -924,8 +895,7 @@ Slots:
 Methods: `.show()`, `.close()`, `.toggle()`. Property: `.open`.
 Events: `glk-open`, `glk-close`.
 
-The trigger gets `aria-expanded`, kept in step with `open` and set again when the trigger is
-swapped (since 1.20.0); `<glk-button>` and `<glk-pill>` hand it on to their native button.
+The trigger gets `aria-expanded`, kept in step with `open` and set again when the trigger is swapped (since 1.20.0); `<glk-button>` and `<glk-pill>` hand it on to their native button.
 
 **Naming warning:** the toggle method is deliberately called `.toggle()`, **not** `.togglePopover()` — the latter collides with the native `HTMLElement.togglePopover()` API from the HTML Popover specification.
 
@@ -1013,9 +983,7 @@ Collapsible sections.
 
 Default slot: body content. Events: `glk-toggle` → `{ open }`. Property: `.open`.
 
-The trigger carries `aria-expanded` and `aria-controls`; a closed section is `inert`, so its
-links and fields are out of the tab order and the accessibility tree until it opens (since
-1.20.0 — before, they were only squeezed to zero height and Tab still reached them).
+The trigger carries `aria-expanded` and `aria-controls`; a closed section is `inert`, so its links and fields are out of the tab order and the accessibility tree until it opens (since 1.20.0 — before, they were only squeezed to zero height and Tab still reached them).
 
 ---
 
@@ -1518,12 +1486,12 @@ All `glk-*` events bubble and are `composed: true`, so they pierce shadow bounda
 | `<glk-title>` | Content | — | default | — |
 | `<glk-button>` | Buttons | `variant`, `size`, `disabled`, `type` | default | `glk-click` |
 | `<glk-checkbox>` | Forms | `label`, `checked`, `disabled`, `name`, `value`, `required` | — | `glk-change` |
-| `<glk-input>` | Forms | `label`, `type`, `placeholder`, `hint`, `error`, `disabled`, `required`, `name`, `value`, `min`, `max`, `step`, `minlength`, `maxlength`, `pattern`, `autocomplete`, `inputmode` | — | `glk-input`, `glk-change` |
+| `<glk-input>` | Forms | `label`, `type`, `placeholder`, `hint`, `error`, `disabled`, `readonly`, `required`, `name`, `value`, `min`, `max`, `step`, `minlength`, `maxlength`, `pattern`, `autocomplete`, `inputmode` | `prefix`, `suffix` | `glk-input`, `glk-change` |
 | `<glk-radio>` | Forms | `label`, `name`, `value`, `checked`, `disabled`, `required` | — | `glk-change` |
 | `<glk-range>` | Forms | `label`, `min`, `max`, `value`, `step`, `name`, `disabled` | — | `glk-input`, `glk-change` |
 | `<glk-search>` | Forms | `placeholder`, `label`, `value`, `name`, `disabled` | — | `glk-input`, `glk-change` |
 | `<glk-select>` | Forms | `label`, `name`, `value`, `disabled`, `required` | default (`<option>`) | `glk-change` |
-| `<glk-textarea>` | Forms | `label`, `rows`, `placeholder`, `name`, `value`, `disabled`, `required` | — | `glk-input`, `glk-change` |
+| `<glk-textarea>` | Forms | `label`, `rows`, `placeholder`, `name`, `value`, `disabled`, `readonly`, `required` | — | `glk-input`, `glk-change` |
 | `<glk-toggle>` | Forms | `label`, `checked`, `disabled`, `name`, `value`, `required` | — | `glk-change` |
 | `<glk-modal>` | Feedback | `open`, `title` | default, `actions` | `glk-close` |
 | `<glk-popover>` | Feedback | `open`, `placement` | `trigger`, default | `glk-open`, `glk-close` |
@@ -1539,6 +1507,8 @@ All `glk-*` events bubble and are `composed: true`, so they pierce shadow bounda
 ## 8. Framework Integration
 
 GlassKit Elements are standards-compliant Custom Elements. They work in every major framework:
+
+**Properties set early are kept (since 1.22.0).** Frameworks bind values as properties right after creating an element — before it is connected, and sometimes before the bundle has even defined it. A property set before the element rendered waits for it (`value`, `checked` and the rest no longer throw), and one set before the class was defined, which lands on the instance and hides the setter, is taken over through the setter on first connect.
 
 ### Vanilla HTML / JS
 

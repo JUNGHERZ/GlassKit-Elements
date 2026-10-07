@@ -27,7 +27,9 @@ class GlkSearch extends GlkFormElement {
     const name = this.getAttribute('name');
     if (name) this._input.setAttribute('name', name);
 
-    const value = this.getAttribute('value');
+    // A value set as a property before render() has waited for it.
+    const value = this._pendingValue ?? this.getAttribute('value');
+    this._pendingValue = undefined;
     if (value) this._input.value = value;
 
     if (this.getBoolAttr('disabled')) this._input.disabled = true;
@@ -89,9 +91,13 @@ class GlkSearch extends GlkFormElement {
     this._syncFormValue();
   }
 
-  get value() { return this._input?.value ?? ''; }
+  get value() { return this._input ? this._input.value : (this._pendingValue ?? this.getAttribute('value') ?? ''); }
   set value(v) {
-    if (this._input) this._input.value = v;
+    const value = v == null ? '' : String(v);
+    // Frameworks set properties right after creating the element. Before
+    // render() the value waits for it — it used to throw.
+    if (!this._input) { this._pendingValue = value; return; }
+    this._input.value = value;
     this._syncFormValue();
   }
 }

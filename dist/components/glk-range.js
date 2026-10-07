@@ -36,13 +36,17 @@ class GlkRange extends GlkFormElement {
 
     if (this.getBoolAttr('disabled')) this._input.disabled = true;
 
+    // The reset value is the attribute's; a value set as a property before
+    // render() has waited for it and comes on top.
+    this._defaultValue = this._input.value;
+    if (this._pendingValue !== undefined) this._input.value = this._pendingValue;
+    this._pendingValue = undefined;
     this._updateValueDisplay();
 
     group.appendChild(header);
     group.appendChild(this._input);
 
     this._wrapper.appendChild(group);
-    this._defaultValue = this._input.value;
     this._syncFormValue();
   }
 
@@ -103,9 +107,13 @@ class GlkRange extends GlkFormElement {
     this._syncFormValue();
   }
 
-  get value() { return this._input?.value ?? ''; }
+  get value() { return this._input ? this._input.value : (this._pendingValue ?? this.getAttribute('value') ?? '50'); }
   set value(v) {
-    if (this._input) this._input.value = v;
+    const value = v == null ? '' : String(v);
+    // Frameworks set properties right after creating the element. Before
+    // render() the value waits for it — it used to throw.
+    if (!this._input) { this._pendingValue = value; return; }
+    this._input.value = value;
     this._updateValueDisplay();
     this._syncFormValue();
   }

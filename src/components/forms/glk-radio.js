@@ -189,14 +189,15 @@ class GlkRadio extends GlkFormElement {
     syncGroupTabIndex(this._group());
   }
 
-  get checked() { return this._input?.checked ?? false; }
+  // Before render() the attribute carries the state: render() reads it.
+  get checked() { return this._input ? this._input.checked : this.getBoolAttr('checked'); }
   set checked(v) {
     if (this._input) this._input.checked = v;
     // Also covers the case where the attribute is already present, so
     // setBoolAttr stays silent and onAttributeChanged never runs.
     if (v) this._uncheckPeers();
     this.setBoolAttr('checked', v);
-    this._syncFormValue();
+    if (this._input) this._syncFormValue();
     syncGroupTabIndex(this._group());
   }
 

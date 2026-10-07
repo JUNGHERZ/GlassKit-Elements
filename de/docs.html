@@ -20,7 +20,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="GlassKit Elements — Dokumentation">
   <meta name="twitter:description" content="Vollständige Dokumentation aller 29 GlassKit Elements Web Components mit Live-Beispielen.">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.21/glasskit.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.22/glasskit.min.css">
   <script src="/dist/glasskit-elements.min.js"></script>
   <style>
     html { scroll-behavior: smooth; }
@@ -255,7 +255,7 @@
     <aside class="docs-sidebar">
       <div class="docs-sidebar__title">&#129482; <a href="../de/">GlassKit Elements</a></div>
       <div class="docs-sidebar__subtitle">Web Components f&uuml;r GlassKit CSS.</div>
-      <div class="docs-sidebar__version">v1.21.2 &ndash; Jungherz GmbH</div>
+      <div class="docs-sidebar__version">v1.22.0 &ndash; Jungherz GmbH</div>
 
       <div class="docs-sidebar__group">
         <div class="docs-sidebar__group-title">Grundlagen</div>
@@ -341,7 +341,7 @@
         <h1>GlassKit Elements</h1>
         <p>Vollst&auml;ndige Referenz f&uuml;r alle 36 Web Components &ndash; entwickelt von Jungherz GmbH. Vanilla JS, Shadow DOM, native Formular-Teilnahme.</p>
         <div class="docs-hero__badges">
-          <span class="docs-hero__badge">v1.21.2</span>
+          <span class="docs-hero__badge">v1.22.0</span>
           <span class="docs-hero__badge">Shadow DOM</span>
           <span class="docs-hero__badge">36 Komponenten</span>
           <span class="docs-hero__badge">Vanilla JS</span>
@@ -354,7 +354,7 @@
 
         <h3>CDN (schnellste Variante)</h3>
         <div class="docs-code"><span class="cmt">&lt;!-- 1. GlassKit CSS --&gt;</span>
-<span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span> <span class="attr">href</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.21/glasskit.min.css"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span> <span class="attr">href</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.22/glasskit.min.css"</span><span class="tag">&gt;</span>
 
 <span class="cmt">&lt;!-- 2. GlassKit Elements --&gt;</span>
 <span class="tag">&lt;script</span> <span class="attr">src</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"</span><span class="tag">&gt;&lt;/script&gt;</span></div>
@@ -581,6 +581,7 @@ addEventListener(<span class="val">'afterprint'</span>, () =&gt; {
             <glk-input label="Username" placeholder="Enter name"></glk-input>
             <glk-input label="Email" type="email" hint="Required" error></glk-input>
             <glk-input label="Ausblenden ab" type="date" min="2026-09-22" max="2026-12-31" hint="min und max erreichen den Picker"></glk-input>
+            <glk-input label="Preis" inputmode="decimal" value="49,90"><span slot="suffix">EUR</span></glk-input>
           </div>
           <div class="docs-code"><span class="tag">&lt;glk-input</span> <span class="attr">label</span>=<span class="val">"Email"</span> <span class="attr">type</span>=<span class="val">"email"</span>
   <span class="attr">placeholder</span>=<span class="val">"you@example.com"</span>
@@ -594,18 +595,23 @@ addEventListener(<span class="val">'afterprint'</span>, () =&gt; {
             <tr><td><code>hint</code></td><td>String</td><td>Hilfetext, als Beschreibung des Feldes vorgelesen</td></tr>
             <tr><td><code>error</code></td><td>Boolean</td><td>Fehlerdarstellung; markiert das Feld f&uuml;r Screenreader als ung&uuml;ltig (<code>aria-invalid</code>, seit 1.20.0). Blockiert das Formular nicht &mdash; so kommt das Urteil eines Servers an</td></tr>
             <tr><td><code>required</code></td><td>Boolean</td><td>Pflichtfeld; solange es leer ist, sendet das Formular nicht (seit 1.20.0)</td></tr>
+            <tr><td><code>readonly</code></td><td>Boolean</td><td>Nur lesbar: fokussierbar, markierbar und wird abgeschickt, aber nicht editierbar; Property <code>readOnly</code> (seit 1.22.0)</td></tr>
             <tr><td><code>min</code>, <code>max</code>, <code>step</code></td><td>String</td><td>An das innere Feld durchgereicht: Bereich und Schrittweite des Pickers f&uuml;r Datum, Zeit und Zahlen (seit 1.17.0)</td></tr>
             <tr><td><code>minlength</code>, <code>maxlength</code>, <code>pattern</code></td><td>String</td><td>An das innere Feld durchgereicht (seit 1.17.0)</td></tr>
             <tr><td><code>autocomplete</code>, <code>inputmode</code></td><td>String</td><td>Autofill und Bildschirmtastatur, an das innere Feld durchgereicht (seit 1.17.0)</td></tr>
           </table>
           <p><strong>Events:</strong> <code>glk-input</code>, <code>glk-change</code></p>
+          <p><strong>Slots</strong> (seit 1.22.0): <code>prefix</code> und <code>suffix</code> setzen ein Icon, eine W&auml;hrung, eine Einheit oder einen Button in den Kasten des Feldes, an seinen Anfang und sein Ende &mdash; von rechts nach links tauschen sie die Seiten. Jeder erscheint nur, solange etwas darin steckt; seine Breite wird gemessen, und der Text h&auml;lt Abstand. Ein Klick auf Text oder Icon im Slot fokussiert das Feld, ein Button im Slot nimmt seinen eigenen Klick. Ihr Text wird als Beschreibung des Feldes vorgelesen. Der Kasten ist der Part <code>box</code>, die Affixe sind <code>prefix</code> und <code>suffix</code>.</p>
+          <div class="docs-code"><span class="tag">&lt;glk-input</span> <span class="attr">label</span>=<span class="val">"Preis"</span> <span class="attr">inputmode</span>=<span class="val">"decimal"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;span</span> <span class="attr">slot</span>=<span class="val">"suffix"</span><span class="tag">&gt;</span>EUR<span class="tag">&lt;/span&gt;</span>
+<span class="tag">&lt;/glk-input&gt;</span></div>
         </div>
 
         <div class="docs-component" id="glk-textarea">
           <h3><code>&lt;glk-textarea&gt;</code></h3>
           <div class="docs-preview"><glk-textarea label="Message" placeholder="Type here..." rows="3"></glk-textarea></div>
           <div class="docs-code"><span class="tag">&lt;glk-textarea</span> <span class="attr">label</span>=<span class="val">"Message"</span> <span class="attr">rows</span>=<span class="val">"4"</span><span class="tag">&gt;&lt;/glk-textarea&gt;</span></div>
-          <p>Attribute: <code>label</code>, <code>rows</code>, <code>placeholder</code>, <code>required</code>, <code>name</code>, <code>value</code>, <code>disabled</code>. Das Label benennt das Feld.</p>
+          <p>Attribute: <code>label</code>, <code>rows</code>, <code>placeholder</code>, <code>required</code>, <code>readonly</code> (seit 1.22.0), <code>name</code>, <code>value</code>, <code>disabled</code>. Das Label benennt das Feld.</p>
         </div>
 
         <div class="docs-component" id="glk-select">
@@ -621,7 +627,7 @@ addEventListener(<span class="val">'afterprint'</span>, () =&gt; {
   <span class="tag">&lt;option</span> <span class="attr">value</span>=<span class="val">"free"</span><span class="tag">&gt;</span>Free<span class="tag">&lt;/option&gt;</span>
   <span class="tag">&lt;option</span> <span class="attr">value</span>=<span class="val">"pro"</span><span class="tag">&gt;</span>Pro<span class="tag">&lt;/option&gt;</span>
 <span class="tag">&lt;/glk-select&gt;</span></div>
-          <p>Kinder: native <code>&lt;option&gt;</code>-Elemente. Mit <code>required</code> und einer leeren ersten Option (<code>value=""</code>) sendet das Formular erst, wenn gew&auml;hlt wurde (seit 1.20.0). Das Label benennt das Feld.</p>
+          <p>Kinder: native <code>&lt;option&gt;</code>-Elemente. Mit <code>required</code> und einer leeren ersten Option (<code>value=""</code>) sendet das Formular erst, wenn gew&auml;hlt wurde (seit 1.20.0). Das Label benennt das Feld. Ein <code>value</code> &mdash; als Attribut oder Property &mdash;, f&uuml;r den es noch keine Option gibt, bleibt erhalten und wird gew&auml;hlt, sobald seine Option kommt, bis der Nutzer etwas anderes w&auml;hlt (seit 1.22.0; vorher ging ein als Property gesetzter Wert verloren, wenn die Optionen noch nicht kopiert waren). Ein Formular-Reset kehrt zum <code>value</code>-Attribut zur&uuml;ck.</p>
         </div>
 
         <div class="docs-component" id="glk-search">

@@ -10,14 +10,25 @@ const FORWARDED = ['min', 'max', 'step', 'minlength', 'maxlength', 'pattern', 'a
 // Prefix and suffix (since 1.22.0): two slots inside the field's box, on
 // GlassKit's .glass-input-wrap. An affix shows only while something is
 // slotted into it, and its width is measured, so the text keeps clear of a
-// unit of any length. GlassKit lets clicks through an affix to the field;
-// slotted elements take them here instead — a button or a link inside
-// works — and a click on slotted text or an icon still lands in the field,
-// because the shadow root delegates focus to it.
+// unit of any length. As in GlassKit, a click on text, an icon or a disabled
+// control goes through to the field, and what can be used takes its own: an
+// enabled control (<glk-button>, <glk-select> … are form-associated, so they
+// count), a link, an element with tabindex. GlassKit's own rule cannot reach
+// slotted elements, hence this one. ::slotted() sees the slotted element,
+// not what is inside it: a button wrapped in a slotted <span> needs
+// pointer-events: auto from the page. Until 1.22.1 every slotted element took
+// the pointer — a unit caught the click meant for the field, a disabled
+// button took it and moved the focus into the field, read-only and locked
+// or not. Simple selectors only inside ::slotted(), so that no browser drops
+// the rule.
 const affixSheet = new CSSStyleSheet();
 affixSheet.replaceSync(`
-  .glass-input-wrap__prefix ::slotted(*),
-  .glass-input-wrap__suffix ::slotted(*) { pointer-events: auto; }
+  .glass-input-wrap__prefix ::slotted(:enabled),
+  .glass-input-wrap__prefix ::slotted(a[href]),
+  .glass-input-wrap__prefix ::slotted([tabindex]:not(:disabled)),
+  .glass-input-wrap__suffix ::slotted(:enabled),
+  .glass-input-wrap__suffix ::slotted(a[href]),
+  .glass-input-wrap__suffix ::slotted([tabindex]:not(:disabled)) { pointer-events: auto; }
 `);
 
 class GlkInput extends GlkFormElement {

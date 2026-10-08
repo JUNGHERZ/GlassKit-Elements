@@ -255,7 +255,7 @@
     <aside class="docs-sidebar">
       <div class="docs-sidebar__title">&#129482; <a href="../de/">GlassKit Elements</a></div>
       <div class="docs-sidebar__subtitle">Web Components f&uuml;r GlassKit CSS.</div>
-      <div class="docs-sidebar__version">v1.22.1 &ndash; Jungherz GmbH</div>
+      <div class="docs-sidebar__version">v1.22.2 &ndash; Jungherz GmbH</div>
 
       <div class="docs-sidebar__group">
         <div class="docs-sidebar__group-title">Grundlagen</div>
@@ -341,7 +341,7 @@
         <h1>GlassKit Elements</h1>
         <p>Vollst&auml;ndige Referenz f&uuml;r alle 36 Web Components &ndash; entwickelt von Jungherz GmbH. Vanilla JS, Shadow DOM, native Formular-Teilnahme.</p>
         <div class="docs-hero__badges">
-          <span class="docs-hero__badge">v1.22.1</span>
+          <span class="docs-hero__badge">v1.22.2</span>
           <span class="docs-hero__badge">Shadow DOM</span>
           <span class="docs-hero__badge">36 Komponenten</span>
           <span class="docs-hero__badge">Vanilla JS</span>
@@ -601,7 +601,7 @@ addEventListener(<span class="val">'afterprint'</span>, () =&gt; {
             <tr><td><code>autocomplete</code>, <code>inputmode</code></td><td>String</td><td>Autofill und Bildschirmtastatur, an das innere Feld durchgereicht (seit 1.17.0)</td></tr>
           </table>
           <p><strong>Events:</strong> <code>glk-input</code>, <code>glk-change</code></p>
-          <p><strong>Slots</strong> (seit 1.22.0): <code>prefix</code> und <code>suffix</code> setzen ein Icon, eine W&auml;hrung, eine Einheit oder einen Button in den Kasten des Feldes, an seinen Anfang und sein Ende &mdash; von rechts nach links tauschen sie die Seiten. Jeder erscheint nur, solange etwas darin steckt; seine Breite wird gemessen, und der Text h&auml;lt Abstand. Ein Klick auf Text oder Icon im Slot fokussiert das Feld, ein Button im Slot nimmt seinen eigenen Klick. Ihr Text wird als Beschreibung des Feldes vorgelesen. Der Kasten ist der Part <code>box</code>, die Affixe sind <code>prefix</code> und <code>suffix</code>.</p>
+          <p><strong>Slots</strong> (seit 1.22.0): <code>prefix</code> und <code>suffix</code> setzen ein Icon, eine W&auml;hrung, eine Einheit oder einen Button in den Kasten des Feldes, an seinen Anfang und sein Ende &mdash; von rechts nach links tauschen sie die Seiten. Jeder erscheint nur, solange etwas darin steckt; seine Breite wird gemessen, und der Text h&auml;lt Abstand. Ein Klick auf Text, ein Icon oder ein deaktiviertes Bedienelement im Slot geht durch ins Feld; aktive Bedienelemente, <code>&lt;glk-button&gt;</code> und <code>&lt;glk-select&gt;</code> eingeschlossen, Links und Elemente mit <code>tabindex</code> nehmen ihren eigenen (seit 1.22.2 &mdash; vorher nahm jedes Element im Slot den Klick). Das Bedienelement selbst in den Slot setzen: steckt es in einem anderen Element, braucht es <code>pointer-events: auto</code> von der Seite. Ein Container, der mit <code>pointer-events: none</code> sperrt, h&auml;lt ein Bedienelement nicht; ihn mit <code>inert</code> sperren oder das Bedienelement deaktivieren. Ihr Text wird als Beschreibung des Feldes vorgelesen. Der Kasten ist der Part <code>box</code>, die Affixe sind <code>prefix</code> und <code>suffix</code>.</p>
           <div class="docs-code"><span class="tag">&lt;glk-input</span> <span class="attr">label</span>=<span class="val">"Preis"</span> <span class="attr">inputmode</span>=<span class="val">"decimal"</span><span class="tag">&gt;</span>
   <span class="tag">&lt;span</span> <span class="attr">slot</span>=<span class="val">"suffix"</span><span class="tag">&gt;</span>EUR<span class="tag">&lt;/span&gt;</span>
 <span class="tag">&lt;/glk-input&gt;</span></div>

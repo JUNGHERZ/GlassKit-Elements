@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.22.2] – 2026-10-08
+
+### Fixed
+
+- **In a `<glk-input>` affix, only what can be used takes the click.** Since 1.22.0 `::slotted(*)` gave pointer events back to everything slotted into `prefix` and `suffix`. A unit or an icon caught the click instead of the field. A disabled button took it, and focus delegation then moved the focus into the field — also into a read-only field whose container locks it with `pointer-events: none`, because the explicit `auto` outweighed the inherited `none`. Now the slots follow GlassKit: enabled controls, `<glk-button>`, `<glk-select>` and the other form elements included, links and elements with `tabindex` take the click; text, icons and disabled controls let it through to the field. A control has to sit in the slot itself: one wrapped in a slotted element needs `pointer-events: auto` from the page. A control passed on through another component's `<slot>` counts as slotted. Measured in Chromium and WebKit on the issue's page and 21 more cases: the unit, the icon and the disabled button hand the click to the field; in the locked container nothing reacts and the focus stays out; an enabled button, a link, a `<glk-button>` and a `<glk-select>` take their own. Docs, showcase and landing pages render pixel-identical to 1.22.1. Rebuilt against GlassKit 1.22.2, which applies the same rule to plain markup; the peer dependency moves to `>=1.22.2`. ([#14](https://github.com/JUNGHERZ/GlassKit-Elements/issues/14))
+
+---
+
 ## [1.22.1] – 2026-10-08
 
 ### Fixed
@@ -799,7 +807,8 @@ Starting with this release, GlassKit Elements version numbers are aligned with G
 
 ---
 
-[Unreleased]: https://github.com/JUNGHERZ/GlassKit-Elements/compare/v1.22.1...HEAD
+[Unreleased]: https://github.com/JUNGHERZ/GlassKit-Elements/compare/v1.22.2...HEAD
+[1.22.2]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.22.2
 [1.22.1]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.22.1
 [1.22.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.22.0
 [1.21.2]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.21.2

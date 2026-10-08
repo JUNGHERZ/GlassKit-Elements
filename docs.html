@@ -253,7 +253,7 @@
     <aside class="docs-sidebar">
       <div class="docs-sidebar__title">&#129482; <a href="/">GlassKit Elements</a></div>
       <div class="docs-sidebar__subtitle">Web Components for GlassKit CSS.</div>
-      <div class="docs-sidebar__version">v1.22.1 &ndash; Jungherz GmbH</div>
+      <div class="docs-sidebar__version">v1.22.2 &ndash; Jungherz GmbH</div>
 
       <div class="docs-sidebar__group">
         <div class="docs-sidebar__group-title">Basics</div>
@@ -339,7 +339,7 @@
         <h1>GlassKit Elements</h1>
         <p>Complete reference for all 36 web components &ndash; built by Jungherz GmbH. Vanilla JS, Shadow DOM, native form participation.</p>
         <div class="docs-hero__badges">
-          <span class="docs-hero__badge">v1.22.1</span>
+          <span class="docs-hero__badge">v1.22.2</span>
           <span class="docs-hero__badge">Shadow DOM</span>
           <span class="docs-hero__badge">36 Components</span>
           <span class="docs-hero__badge">Vanilla JS</span>
@@ -599,7 +599,7 @@ addEventListener(<span class="val">'afterprint'</span>, () =&gt; {
             <tr><td><code>autocomplete</code>, <code>inputmode</code></td><td>String</td><td>Autofill and on-screen keyboard, passed to the inner field (since 1.17.0)</td></tr>
           </table>
           <p><strong>Events:</strong> <code>glk-input</code>, <code>glk-change</code></p>
-          <p><strong>Slots</strong> (since 1.22.0): <code>prefix</code> and <code>suffix</code> put an icon, a currency, a unit or a button inside the field&rsquo;s box, at its start and end &mdash; right to left they swap sides. Each shows only while something is slotted into it; its width is measured and the text keeps clear of it. A click on slotted text or an icon focuses the field, a slotted button takes its own click. Their text is read with the field as its description. The box is the part <code>box</code>, the affixes <code>prefix</code> and <code>suffix</code>.</p>
+          <p><strong>Slots</strong> (since 1.22.0): <code>prefix</code> and <code>suffix</code> put an icon, a currency, a unit or a button inside the field&rsquo;s box, at its start and end &mdash; right to left they swap sides. Each shows only while something is slotted into it; its width is measured and the text keeps clear of it. A click on slotted text, an icon or a disabled control goes through to the field; enabled controls, <code>&lt;glk-button&gt;</code> and <code>&lt;glk-select&gt;</code> included, links and elements with <code>tabindex</code> take their own (since 1.22.2 &mdash; before, every slotted element took the click). Slot the control itself: one wrapped in a slotted element needs <code>pointer-events: auto</code> from the page. A container locked with <code>pointer-events: none</code> does not hold a control; lock it with <code>inert</code>, or disable the control. Their text is read with the field as its description. The box is the part <code>box</code>, the affixes <code>prefix</code> and <code>suffix</code>.</p>
           <div class="docs-code"><span class="tag">&lt;glk-input</span> <span class="attr">label</span>=<span class="val">"Price"</span> <span class="attr">inputmode</span>=<span class="val">"decimal"</span><span class="tag">&gt;</span>
   <span class="tag">&lt;span</span> <span class="attr">slot</span>=<span class="val">"suffix"</span><span class="tag">&gt;</span>EUR<span class="tag">&lt;/span&gt;</span>
 <span class="tag">&lt;/glk-input&gt;</span></div>

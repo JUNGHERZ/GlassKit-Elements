@@ -1,6 +1,6 @@
 ---
 name: glasskit-elements
-description: GlassKit Elements is a vanilla-JS Web Components library (v1.22.1) wrapping GlassKit CSS v1.22.1. It provides 36 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
+description: GlassKit Elements is a vanilla-JS Web Components library (v1.22.2) wrapping GlassKit CSS v1.22.2. It provides 36 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
 ---
 
 # GlassKit Elements – AI Component Reference
@@ -18,7 +18,7 @@ description: GlassKit Elements is a vanilla-JS Web Components library (v1.22.1) 
 npm install @jungherz-de/glasskit-elements @jungherz-de/glasskit
 ```
 
-Peer dependency `@jungherz-de/glasskit >=1.22.1` is required — 1.22.1 lets date and time fields shrink in narrow columns, 1.22.0 brings the input affixes behind the `prefix` / `suffix` slots, 1.21.2 gives disabled controls their look, 1.21.1 keeps the controls' state on paper, 1.21.0 brings the density tokens behind `data-density`, 1.20.0 the rules the elements build on since then (the dialog overlay, hidden list slots, empty control labels, control inputs on top); 1.9.0 is the release that made the stylesheet splittable, which is what lets document-level branding reach the elements at all.
+Peer dependency `@jungherz-de/glasskit >=1.22.2` is required — 1.22.2 hands a click on a disabled control in an input affix to the field, 1.22.1 lets date and time fields shrink in narrow columns, 1.22.0 brings the input affixes behind the `prefix` / `suffix` slots, 1.21.2 gives disabled controls their look, 1.21.1 keeps the controls' state on paper, 1.21.0 brings the density tokens behind `data-density`, 1.20.0 the rules the elements build on since then (the dialog overlay, hidden list slots, empty control labels, control inputs on top); 1.9.0 is the release that made the stylesheet splittable, which is what lets document-level branding reach the elements at all.
 
 ### Import (ES modules)
 
@@ -624,7 +624,7 @@ Text input with label + hint.
 
 Events: `glk-input` → `{ value }`, `glk-change` → `{ value }`. Native `input` / `change` also dispatched. Property: `.value`.
 
-**Slots `prefix` and `suffix` (since 1.22.0)** put an icon, a currency, a unit or a button inside the field's box, at its start and end (they swap sides under `dir="rtl"`). Each shows only while something is slotted; its width is measured and the field's padding grows by it, so the text keeps clear of a unit of any length. A click on slotted text or an icon focuses the field; a slotted button or link takes its own click. Their text is read as part of the field's description. Parts: `box`, `prefix`, `suffix`. Built on GlassKit's `.glass-input-wrap` (GlassKit 1.22.0).
+**Slots `prefix` and `suffix` (since 1.22.0)** put an icon, a currency, a unit or a button inside the field's box, at its start and end (they swap sides under `dir="rtl"`). Each shows only while something is slotted; its width is measured and the field's padding grows by it, so the text keeps clear of a unit of any length. A click on slotted text, an icon or a disabled control goes through to the field; enabled controls (`<glk-button>`, `<glk-select>` … included — they are form-associated), links and elements with `tabindex` take their own (since 1.22.2 — before, every slotted element took the click). Slot the control itself: one wrapped in a slotted element needs `pointer-events: auto` from the page. A container locked with `pointer-events: none` does not hold a control; lock it with `inert`, or disable the control. Their text is read as part of the field's description. Parts: `box`, `prefix`, `suffix`. Built on GlassKit's `.glass-input-wrap` (GlassKit 1.22.0).
 
 ```html
 <glk-input label="Price" inputmode="decimal">

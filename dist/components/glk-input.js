@@ -33,7 +33,7 @@ affixSheet.replaceSync(`
 
 class GlkInput extends GlkFormElement {
   static get observedAttributes() {
-    return ['label', 'type', 'placeholder', 'error', 'hint', 'disabled', 'readonly', 'name', 'value', 'required', ...FORWARDED];
+    return ['label', 'type', 'placeholder', 'error', 'hint', 'readonly', 'name', 'value', 'required', ...FORWARDED];
   }
 
   static get hostStyles() { return affixSheet; }
@@ -64,7 +64,6 @@ class GlkInput extends GlkFormElement {
     this._pendingValue = undefined;
     if (value) this._input.value = value;
 
-    if (this.getBoolAttr('disabled')) this._input.disabled = true;
     if (this.getBoolAttr('readonly')) this._input.readOnly = true;
     if (this.getBoolAttr('required')) this._input.required = true;
     for (const attr of FORWARDED) this._forward(attr);
@@ -154,9 +153,6 @@ class GlkInput extends GlkFormElement {
         }
         this._applyDescription();
         break;
-      case 'disabled':
-        this._input.disabled = this.getBoolAttr('disabled');
-        break;
       case 'readonly':
         this._input.readOnly = this.getBoolAttr('readonly');
         break;
@@ -174,6 +170,8 @@ class GlkInput extends GlkFormElement {
         if (FORWARDED.includes(name)) this._forward(name);
     }
   }
+
+  applyDisabled(disabled) { this._input.disabled = disabled; }
 
   /** An affix shows, and makes room in the field, only while something is slotted. */
   _applyAffixes() {
@@ -239,9 +237,6 @@ class GlkInput extends GlkFormElement {
     this._input.value = value;
     this._syncFormValue();
   }
-
-  get disabled() { return this.getBoolAttr('disabled'); }
-  set disabled(v) { this.setBoolAttr('disabled', v); }
 
   get readOnly() { return this.getBoolAttr('readonly'); }
   set readOnly(v) { this.setBoolAttr('readonly', v); }

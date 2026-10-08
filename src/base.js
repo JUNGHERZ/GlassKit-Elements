@@ -238,6 +238,7 @@ export class GlkElement extends HTMLElement {
       this._shadow.appendChild(this._wrapper);
 
       this.render();
+      if (this.constructor.formAssociated) this._syncDisabled();
     } else {
       // Back in the document. While it was out, the observer did not reach
       // it, so a theme or density switched in the meantime is caught up here
@@ -340,6 +341,28 @@ export class GlkElement extends HTMLElement {
    */
   refresh() { this.projectLightDom(); }
 
+  /**
+   * Form-associated elements only. Such an element is disabled by its own
+   * `disabled` attribute or by a <fieldset disabled> around it: the browser
+   * counts both — :disabled, left out of the form data — and calls
+   * formDisabledCallback() on every change, also when the element moves into
+   * or out of such a fieldset. The native controls sit in the shadow root,
+   * out of every fieldset's reach, so the state is handed on to them through
+   * applyDisabled(). Until 1.22.2 only the element's own attribute reached
+   * them: inside a disabled fieldset every field stayed usable, and a submit
+   * button sent the form.
+   */
+  get _actuallyDisabled() { return this.matches(':disabled'); }
+
+  formDisabledCallback() {
+    if (this._initialized) this._syncDisabled();
+  }
+
+  _syncDisabled() { this.applyDisabled(this._actuallyDisabled); }
+
+  /** Form-associated subclasses override to disable their native controls. */
+  applyDisabled(disabled) {}
+
   // ── Utility Methods ──
 
   /**
@@ -415,6 +438,17 @@ export class GlkFormElement extends GlkElement {
     super.attributeChangedCallback(name, oldValue, newValue);
     // required, min, pattern, type … all change what counts as valid.
     if (this._initialized) this.syncValidity();
+  }
+
+  // Reflects the attribute, as on a native control: a disabled fieldset
+  // around the element disables it without changing this.
+  get disabled() { return this.getBoolAttr('disabled'); }
+  set disabled(v) { this.setBoolAttr('disabled', v); }
+
+  _syncDisabled() {
+    super._syncDisabled();
+    // A disabled field is barred from validation; enabled again, it counts.
+    this.syncValidity();
   }
 
   get form() { return this._internals.form; }

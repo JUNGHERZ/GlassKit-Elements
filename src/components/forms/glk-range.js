@@ -2,7 +2,7 @@ import { GlkFormElement } from '../../base.js';
 
 class GlkRange extends GlkFormElement {
   static get observedAttributes() {
-    return ['label', 'min', 'max', 'value', 'step', 'name', 'disabled'];
+    return ['label', 'min', 'max', 'value', 'step', 'name'];
   }
 
   render() {
@@ -32,8 +32,6 @@ class GlkRange extends GlkFormElement {
 
     const name = this.getAttribute('name');
     if (name) this._input.setAttribute('name', name);
-
-    if (this.getBoolAttr('disabled')) this._input.disabled = true;
 
     // The reset value is the attribute's; a value set as a property before
     // render() has waited for it and comes on top.
@@ -86,11 +84,10 @@ class GlkRange extends GlkFormElement {
       case 'name':
         this._input.setAttribute('name', this.getAttribute('name') || '');
         break;
-      case 'disabled':
-        this._input.disabled = this.getBoolAttr('disabled');
-        break;
     }
   }
+
+  applyDisabled(disabled) { this._input.disabled = disabled; }
 
   _updateValueDisplay() {
     this._valueEl.textContent = `${this._input.value}%`;

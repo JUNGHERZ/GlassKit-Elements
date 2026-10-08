@@ -4,7 +4,7 @@ const CHECKMARK_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor
 
 class GlkCheckbox extends GlkFormElement {
   static get observedAttributes() {
-    return ['checked', 'disabled', 'label', 'name', 'value', 'required'];
+    return ['checked', 'label', 'name', 'value', 'required'];
   }
 
   static get hostStyles() { return checkControlSheet; }
@@ -30,7 +30,6 @@ class GlkCheckbox extends GlkFormElement {
     label.appendChild(this._labelEl);
 
     if (this.getBoolAttr('checked')) this._input.checked = true;
-    if (this.getBoolAttr('disabled')) this._input.disabled = true;
     if (this.getBoolAttr('required')) this._input.required = true;
 
     this._defaultChecked = this.getBoolAttr('checked');
@@ -64,9 +63,6 @@ class GlkCheckbox extends GlkFormElement {
         this._input.checked = this.getBoolAttr('checked');
         this._syncFormValue();
         break;
-      case 'disabled':
-        this._input.disabled = this.getBoolAttr('disabled');
-        break;
       case 'label':
         this._labelEl.textContent = this.getAttribute('label') || '';
         break;
@@ -78,6 +74,8 @@ class GlkCheckbox extends GlkFormElement {
         break;
     }
   }
+
+  applyDisabled(disabled) { this._input.disabled = disabled; }
 
   get _validityField() { return this._input; }
 
@@ -99,9 +97,6 @@ class GlkCheckbox extends GlkFormElement {
     this.setBoolAttr('checked', v);
     if (this._input) this._syncFormValue();
   }
-
-  get disabled() { return this.getBoolAttr('disabled'); }
-  set disabled(v) { this.setBoolAttr('disabled', v); }
 
   get name() { return this.getAttribute('name'); }
   set name(v) { this.setAttribute('name', v); }

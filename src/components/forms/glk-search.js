@@ -4,7 +4,7 @@ const SEARCH_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" s
 
 class GlkSearch extends GlkFormElement {
   static get observedAttributes() {
-    return ['placeholder', 'name', 'value', 'disabled', 'label'];
+    return ['placeholder', 'name', 'value', 'label'];
   }
 
   render() {
@@ -31,8 +31,6 @@ class GlkSearch extends GlkFormElement {
     const value = this._pendingValue ?? this.getAttribute('value');
     this._pendingValue = undefined;
     if (value) this._input.value = value;
-
-    if (this.getBoolAttr('disabled')) this._input.disabled = true;
 
     container.appendChild(icon);
     container.appendChild(this._input);
@@ -67,14 +65,13 @@ class GlkSearch extends GlkFormElement {
         this._input.value = this.getAttribute('value') || '';
         this._syncFormValue();
         break;
-      case 'disabled':
-        this._input.disabled = this.getBoolAttr('disabled');
-        break;
       case 'label':
         this._applyLabel();
         break;
     }
   }
+
+  applyDisabled(disabled) { this._input.disabled = disabled; }
 
   _applyLabel() {
     const label = this.getAttribute('label');

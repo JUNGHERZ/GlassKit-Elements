@@ -258,6 +258,7 @@ class GlkElement extends HTMLElement {
       this._shadow.appendChild(this._wrapper);
 
       this.render();
+      if (this.constructor.formAssociated) this._syncDisabled();
     } else {
       // Back in the document. While it was out, the observer did not reach
       // it, so a theme or density switched in the meantime is caught up here
@@ -360,6 +361,28 @@ class GlkElement extends HTMLElement {
    */
   refresh() { this.projectLightDom(); }
 
+  /**
+   * Form-associated elements only. Such an element is disabled by its own
+   * `disabled` attribute or by a <fieldset disabled> around it: the browser
+   * counts both — :disabled, left out of the form data — and calls
+   * formDisabledCallback() on every change, also when the element moves into
+   * or out of such a fieldset. The native controls sit in the shadow root,
+   * out of every fieldset's reach, so the state is handed on to them through
+   * applyDisabled(). Until 1.22.2 only the element's own attribute reached
+   * them: inside a disabled fieldset every field stayed usable, and a submit
+   * button sent the form.
+   */
+  get _actuallyDisabled() { return this.matches(':disabled'); }
+
+  formDisabledCallback() {
+    if (this._initialized) this._syncDisabled();
+  }
+
+  _syncDisabled() { this.applyDisabled(this._actuallyDisabled); }
+
+  /** Form-associated subclasses override to disable their native controls. */
+  applyDisabled(disabled) {}
+
   // ── Utility Methods ──
 
   /**
@@ -435,6 +458,17 @@ class GlkFormElement extends GlkElement {
     super.attributeChangedCallback(name, oldValue, newValue);
     // required, min, pattern, type … all change what counts as valid.
     if (this._initialized) this.syncValidity();
+  }
+
+  // Reflects the attribute, as on a native control: a disabled fieldset
+  // around the element disables it without changing this.
+  get disabled() { return this.getBoolAttr('disabled'); }
+  set disabled(v) { this.setBoolAttr('disabled', v); }
+
+  _syncDisabled() {
+    super._syncDisabled();
+    // A disabled field is barred from validation; enabled again, it counts.
+    this.syncValidity();
   }
 
   get form() { return this._internals.form; }
@@ -1520,12 +1554,13 @@ const FORWARDED_ARIA = ['aria-expanded', 'aria-haspopup', 'aria-pressed'];
 
 class GlkButton extends GlkElement {
   static get observedAttributes() {
-    return ['variant', 'size', 'disabled', 'type', ...FORWARDED_ARIA];
+    return ['variant', 'size', 'type', ...FORWARDED_ARIA];
   }
 
   // The native button sits in the shadow root, outside every form. Form
   // association gives the element its form, so type="submit" and "reset"
-  // can act on it (see _activateForm).
+  // can act on it (see _activateForm), and a disabled fieldset around it
+  // disables it (since 1.22.3; before, it still sent the form).
   static formAssociated = true;
 
   constructor() {
@@ -1538,9 +1573,6 @@ class GlkButton extends GlkElement {
       type: this.getAttribute('type') || 'button'
     });
 
-    if (this.getBoolAttr('disabled')) {
-      this._btn.disabled = true;
-    }
     for (const attr of FORWARDED_ARIA) this._forward(attr);
 
     this._btn.appendChild(document.createElement('slot'));
@@ -1549,7 +1581,7 @@ class GlkButton extends GlkElement {
 
   setupEvents() {
     this._onClick = (e) => {
-      if (this.getBoolAttr('disabled')) {
+      if (this._actuallyDisabled) {
         e.preventDefault();
         e.stopPropagation();
         return;
@@ -1608,9 +1640,6 @@ class GlkButton extends GlkElement {
       case 'size':
         this._btn.className = this._computeClasses().join(' ');
         break;
-      case 'disabled':
-        this._btn.disabled = this.getBoolAttr('disabled');
-        break;
       case 'type':
         this._btn.setAttribute('type', this.getAttribute('type') || 'button');
         break;
@@ -1618,6 +1647,8 @@ class GlkButton extends GlkElement {
         if (FORWARDED_ARIA.includes(name)) this._forward(name);
     }
   }
+
+  applyDisabled(disabled) { this._btn.disabled = disabled; }
 
   _forward(attr) {
     const value = this.getAttribute(attr);
@@ -1687,7 +1718,7 @@ affixSheet.replaceSync(`
 
 class GlkInput extends GlkFormElement {
   static get observedAttributes() {
-    return ['label', 'type', 'placeholder', 'error', 'hint', 'disabled', 'readonly', 'name', 'value', 'required', ...FORWARDED];
+    return ['label', 'type', 'placeholder', 'error', 'hint', 'readonly', 'name', 'value', 'required', ...FORWARDED];
   }
 
   static get hostStyles() { return affixSheet; }
@@ -1718,7 +1749,6 @@ class GlkInput extends GlkFormElement {
     this._pendingValue = undefined;
     if (value) this._input.value = value;
 
-    if (this.getBoolAttr('disabled')) this._input.disabled = true;
     if (this.getBoolAttr('readonly')) this._input.readOnly = true;
     if (this.getBoolAttr('required')) this._input.required = true;
     for (const attr of FORWARDED) this._forward(attr);
@@ -1808,9 +1838,6 @@ class GlkInput extends GlkFormElement {
         }
         this._applyDescription();
         break;
-      case 'disabled':
-        this._input.disabled = this.getBoolAttr('disabled');
-        break;
       case 'readonly':
         this._input.readOnly = this.getBoolAttr('readonly');
         break;
@@ -1828,6 +1855,8 @@ class GlkInput extends GlkFormElement {
         if (FORWARDED.includes(name)) this._forward(name);
     }
   }
+
+  applyDisabled(disabled) { this._input.disabled = disabled; }
 
   /** An affix shows, and makes room in the field, only while something is slotted. */
   _applyAffixes() {
@@ -1894,9 +1923,6 @@ class GlkInput extends GlkFormElement {
     this._syncFormValue();
   }
 
-  get disabled() { return this.getBoolAttr('disabled'); }
-  set disabled(v) { this.setBoolAttr('disabled', v); }
-
   get readOnly() { return this.getBoolAttr('readonly'); }
   set readOnly(v) { this.setBoolAttr('readonly', v); }
 
@@ -1908,7 +1934,7 @@ customElements.define('glk-input', GlkInput);
 
 class GlkTextarea extends GlkFormElement {
   static get observedAttributes() {
-    return ['label', 'placeholder', 'rows', 'disabled', 'readonly', 'name', 'value', 'required'];
+    return ['label', 'placeholder', 'rows', 'readonly', 'name', 'value', 'required'];
   }
 
   render() {
@@ -1933,7 +1959,6 @@ class GlkTextarea extends GlkFormElement {
     this._pendingValue = undefined;
     if (value) this._textarea.value = value;
 
-    if (this.getBoolAttr('disabled')) this._textarea.disabled = true;
     if (this.getBoolAttr('readonly')) this._textarea.readOnly = true;
     if (this.getBoolAttr('required')) this._textarea.required = true;
 
@@ -1969,9 +1994,6 @@ class GlkTextarea extends GlkFormElement {
       case 'rows':
         this._textarea.setAttribute('rows', this.getAttribute('rows') || '');
         break;
-      case 'disabled':
-        this._textarea.disabled = this.getBoolAttr('disabled');
-        break;
       case 'readonly':
         this._textarea.readOnly = this.getBoolAttr('readonly');
         break;
@@ -1987,6 +2009,8 @@ class GlkTextarea extends GlkFormElement {
         break;
     }
   }
+
+  applyDisabled(disabled) { this._textarea.disabled = disabled; }
 
   get _validityField() { return this._textarea; }
 
@@ -2009,9 +2033,6 @@ class GlkTextarea extends GlkFormElement {
     this._syncFormValue();
   }
 
-  get disabled() { return this.getBoolAttr('disabled'); }
-  set disabled(v) { this.setBoolAttr('disabled', v); }
-
   get readOnly() { return this.getBoolAttr('readonly'); }
   set readOnly(v) { this.setBoolAttr('readonly', v); }
 }
@@ -2030,7 +2051,7 @@ customElements.define('glk-textarea', GlkTextarea);
 
 class GlkSelect extends GlkFormElement {
   static get observedAttributes() {
-    return ['label', 'disabled', 'name', 'value', 'required'];
+    return ['label', 'name', 'value', 'required'];
   }
 
   static get observesLightDom() { return true; }
@@ -2049,7 +2070,6 @@ class GlkSelect extends GlkFormElement {
     const name = this.getAttribute('name');
     if (name) this._select.setAttribute('name', name);
 
-    if (this.getBoolAttr('disabled')) this._select.disabled = true;
     if (this.getBoolAttr('required')) this._select.required = true;
 
     group.appendChild(this._labelEl);
@@ -2123,9 +2143,6 @@ class GlkSelect extends GlkFormElement {
       case 'label':
         this._labelEl.textContent = this.getAttribute('label') || '';
         break;
-      case 'disabled':
-        this._select.disabled = this.getBoolAttr('disabled');
-        break;
       case 'name':
         this._select.setAttribute('name', this.getAttribute('name') || '');
         break;
@@ -2139,6 +2156,8 @@ class GlkSelect extends GlkFormElement {
         break;
     }
   }
+
+  applyDisabled(disabled) { this._select.disabled = disabled; }
 
   get _validityField() { return this._select; }
 
@@ -2165,9 +2184,6 @@ class GlkSelect extends GlkFormElement {
     this._applyValue(this._wanted);
     this._syncFormValue();
   }
-
-  get disabled() { return this.getBoolAttr('disabled'); }
-  set disabled(v) { this.setBoolAttr('disabled', v); }
 }
 
 customElements.define('glk-select', GlkSelect);
@@ -2176,7 +2192,7 @@ const SEARCH_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" s
 
 class GlkSearch extends GlkFormElement {
   static get observedAttributes() {
-    return ['placeholder', 'name', 'value', 'disabled', 'label'];
+    return ['placeholder', 'name', 'value', 'label'];
   }
 
   render() {
@@ -2203,8 +2219,6 @@ class GlkSearch extends GlkFormElement {
     const value = this._pendingValue ?? this.getAttribute('value');
     this._pendingValue = undefined;
     if (value) this._input.value = value;
-
-    if (this.getBoolAttr('disabled')) this._input.disabled = true;
 
     container.appendChild(icon);
     container.appendChild(this._input);
@@ -2239,14 +2253,13 @@ class GlkSearch extends GlkFormElement {
         this._input.value = this.getAttribute('value') || '';
         this._syncFormValue();
         break;
-      case 'disabled':
-        this._input.disabled = this.getBoolAttr('disabled');
-        break;
       case 'label':
         this._applyLabel();
         break;
     }
   }
+
+  applyDisabled(disabled) { this._input.disabled = disabled; }
 
   _applyLabel() {
     const label = this.getAttribute('label');
@@ -2278,7 +2291,7 @@ customElements.define('glk-search', GlkSearch);
 
 class GlkToggle extends GlkFormElement {
   static get observedAttributes() {
-    return ['checked', 'disabled', 'label', 'name', 'value', 'required'];
+    return ['checked', 'label', 'name', 'value', 'required'];
   }
 
   static get hostStyles() { return checkControlSheet; }
@@ -2310,7 +2323,6 @@ class GlkToggle extends GlkFormElement {
     label.appendChild(this._labelEl);
 
     if (this.getBoolAttr('checked')) this._input.checked = true;
-    if (this.getBoolAttr('disabled')) this._input.disabled = true;
     if (this.getBoolAttr('required')) this._input.required = true;
 
     this._defaultChecked = this.getBoolAttr('checked');
@@ -2345,9 +2357,6 @@ class GlkToggle extends GlkFormElement {
         this._input.checked = this.getBoolAttr('checked');
         this._syncFormValue();
         break;
-      case 'disabled':
-        this._input.disabled = this.getBoolAttr('disabled');
-        break;
       case 'label':
         this._labelEl.textContent = this.getAttribute('label') || '';
         break;
@@ -2359,6 +2368,8 @@ class GlkToggle extends GlkFormElement {
         break;
     }
   }
+
+  applyDisabled(disabled) { this._input.disabled = disabled; }
 
   get _validityField() { return this._input; }
 
@@ -2388,9 +2399,6 @@ class GlkToggle extends GlkFormElement {
     if (this._input) this._syncFormValue();
   }
 
-  get disabled() { return this.getBoolAttr('disabled'); }
-  set disabled(v) { this.setBoolAttr('disabled', v); }
-
   get name() { return this.getAttribute('name'); }
   set name(v) { this.setAttribute('name', v); }
 
@@ -2407,7 +2415,7 @@ const CHECKMARK_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor
 
 class GlkCheckbox extends GlkFormElement {
   static get observedAttributes() {
-    return ['checked', 'disabled', 'label', 'name', 'value', 'required'];
+    return ['checked', 'label', 'name', 'value', 'required'];
   }
 
   static get hostStyles() { return checkControlSheet; }
@@ -2433,7 +2441,6 @@ class GlkCheckbox extends GlkFormElement {
     label.appendChild(this._labelEl);
 
     if (this.getBoolAttr('checked')) this._input.checked = true;
-    if (this.getBoolAttr('disabled')) this._input.disabled = true;
     if (this.getBoolAttr('required')) this._input.required = true;
 
     this._defaultChecked = this.getBoolAttr('checked');
@@ -2467,9 +2474,6 @@ class GlkCheckbox extends GlkFormElement {
         this._input.checked = this.getBoolAttr('checked');
         this._syncFormValue();
         break;
-      case 'disabled':
-        this._input.disabled = this.getBoolAttr('disabled');
-        break;
       case 'label':
         this._labelEl.textContent = this.getAttribute('label') || '';
         break;
@@ -2481,6 +2485,8 @@ class GlkCheckbox extends GlkFormElement {
         break;
     }
   }
+
+  applyDisabled(disabled) { this._input.disabled = disabled; }
 
   get _validityField() { return this._input; }
 
@@ -2502,9 +2508,6 @@ class GlkCheckbox extends GlkFormElement {
     this.setBoolAttr('checked', v);
     if (this._input) this._syncFormValue();
   }
-
-  get disabled() { return this.getBoolAttr('disabled'); }
-  set disabled(v) { this.setBoolAttr('disabled', v); }
 
   get name() { return this.getAttribute('name'); }
   set name(v) { this.setAttribute('name', v); }
@@ -2534,7 +2537,7 @@ function ownerForm(el) {
 
 /** Only the selected radio is a tab stop; arrow keys move within the group. */
 function syncGroupTabIndex(group) {
-  const enabled = group.filter(el => !el.disabled);
+  const enabled = group.filter(el => !el._actuallyDisabled);
   if (!enabled.length) return;
   const focusable = enabled.find(el => el.checked) || enabled[0];
   for (const el of group) {
@@ -2544,7 +2547,7 @@ function syncGroupTabIndex(group) {
 
 class GlkRadio extends GlkFormElement {
   static get observedAttributes() {
-    return ['checked', 'disabled', 'label', 'name', 'value', 'required'];
+    return ['checked', 'label', 'name', 'value', 'required'];
   }
 
   static get hostStyles() { return checkControlSheet; }
@@ -2574,7 +2577,6 @@ class GlkRadio extends GlkFormElement {
     label.appendChild(this._labelEl);
 
     if (this.getBoolAttr('checked')) this._input.checked = true;
-    if (this.getBoolAttr('disabled')) this._input.disabled = true;
 
     this._defaultChecked = this.getBoolAttr('checked');
     this._wrapper.appendChild(label);
@@ -2592,7 +2594,7 @@ class GlkRadio extends GlkFormElement {
     this._onKeyDown = (e) => {
       const dir = ARROW_KEYS[e.key];
       if (!dir || e.ctrlKey || e.metaKey || e.altKey) return;
-      const group = this._group().filter(el => !el.disabled);
+      const group = this._group().filter(el => !el._actuallyDisabled);
       if (group.length < 2) return;
       e.preventDefault();
       const next = group[(group.indexOf(this) + dir + group.length) % group.length];
@@ -2674,10 +2676,6 @@ class GlkRadio extends GlkFormElement {
         this._syncFormValue();
         syncGroupTabIndex(this._group());
         break;
-      case 'disabled':
-        this._input.disabled = this.getBoolAttr('disabled');
-        syncGroupTabIndex(this._group());
-        break;
       case 'label':
         this._labelEl.textContent = this.getAttribute('label') || '';
         break;
@@ -2690,6 +2688,11 @@ class GlkRadio extends GlkFormElement {
         this._syncFormValue();
         break;
     }
+  }
+
+  applyDisabled(disabled) {
+    this._input.disabled = disabled;
+    syncGroupTabIndex(this._group());
   }
 
   _syncFormValue() {
@@ -2716,9 +2719,6 @@ class GlkRadio extends GlkFormElement {
     syncGroupTabIndex(this._group());
   }
 
-  get disabled() { return this.getBoolAttr('disabled'); }
-  set disabled(v) { this.setBoolAttr('disabled', v); }
-
   get name() { return this.getAttribute('name'); }
   set name(v) { this.setAttribute('name', v); }
 
@@ -2730,7 +2730,7 @@ customElements.define('glk-radio', GlkRadio);
 
 class GlkRange extends GlkFormElement {
   static get observedAttributes() {
-    return ['label', 'min', 'max', 'value', 'step', 'name', 'disabled'];
+    return ['label', 'min', 'max', 'value', 'step', 'name'];
   }
 
   render() {
@@ -2760,8 +2760,6 @@ class GlkRange extends GlkFormElement {
 
     const name = this.getAttribute('name');
     if (name) this._input.setAttribute('name', name);
-
-    if (this.getBoolAttr('disabled')) this._input.disabled = true;
 
     // The reset value is the attribute's; a value set as a property before
     // render() has waited for it and comes on top.
@@ -2814,11 +2812,10 @@ class GlkRange extends GlkFormElement {
       case 'name':
         this._input.setAttribute('name', this.getAttribute('name') || '');
         break;
-      case 'disabled':
-        this._input.disabled = this.getBoolAttr('disabled');
-        break;
     }
   }
+
+  applyDisabled(disabled) { this._input.disabled = disabled; }
 
   _updateValueDisplay() {
     this._valueEl.textContent = `${this._input.value}%`;
@@ -2854,8 +2851,11 @@ customElements.define('glk-range', GlkRange);
 // Attributes: options (JSON [{value,label,tone?,disabled?}]), value, full,
 //             overflow ("scroll" | "wrap": what happens when the options
 //             do not fit — without it the row stays one line and runs past
-//             the edge), label (aria-label of the group), name (form field)
-// Properties: value, options (array or JSON text), full, overflow, label
+//             the edge), label (aria-label of the group), name (form field),
+//             disabled (the whole row; since 1.22.3, as is a disabled
+//             fieldset around it)
+// Properties: value, options (array or JSON text), full, overflow, label,
+//             disabled
 // Event:      glk-change { value } — only on a change made by the user
 // Part:       group
 //
@@ -2908,11 +2908,19 @@ class GlkSegmented extends GlkFormElement {
         button.classList.add(`glass-segmented__item--${option.tone}`);
         button.appendChild(this.createElement('span', ['glass-segmented__dot']));
       }
-      if (option.disabled) button.disabled = true;
       button.appendChild(document.createTextNode(option.label ?? value));
       this._group.appendChild(button);
     }
+    this.applyDisabled(this._actuallyDisabled);
     this._syncValue();
+  }
+
+  /** The whole row is disabled, or an option by its own `disabled`. */
+  applyDisabled(disabled) {
+    const options = this.options;
+    this._group.querySelectorAll('button[data-value]').forEach((button, i) => {
+      button.disabled = disabled || Boolean(options[i]?.disabled);
+    });
   }
 
   _syncValue() {
@@ -3017,8 +3025,9 @@ customElements.define('glk-segmented', GlkSegmented);
 //             the page language, else the browser's), week-start (0 = Sunday … 6 = Saturday;
 //             default from the locale, Monday where the browser cannot say),
 //             label (aria-label of the day group), prev-label / next-label
-//             (names of the nav buttons, English by default)
-// Properties: month, value, marks, locale, label
+//             (names of the nav buttons, English by default), disabled
+//             (since 1.22.3, as is a disabled fieldset around it)
+// Properties: month, value, marks, locale, label, disabled
 // Form:       associated — a surrounding <form> receives name=value, reset
 //             restores the initial value, like <glk-segmented>
 // Events:     glk-change { value } — on a pick by the user
@@ -3110,7 +3119,14 @@ class GlkCalendar extends GlkFormElement {
       day.append(num, dots);
       this._grid.appendChild(day);
     }
+    this.applyDisabled(this._actuallyDisabled);
     this._syncValue();
+  }
+
+  // Disabled as a whole: the arrows and every day. The days of another month
+  // are built again, so _build() hands the state on to them too.
+  applyDisabled(disabled) {
+    for (const button of [this._prev, this._next, ...this._days()]) button.disabled = disabled;
   }
 
   _days() { return [...this._grid.querySelectorAll('button[data-value]')]; }

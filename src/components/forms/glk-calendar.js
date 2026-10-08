@@ -10,8 +10,9 @@ import { isoDate, parseIso, addDays, parseJsonObject, resolveLocale, formatters,
 //             the page language, else the browser's), week-start (0 = Sunday … 6 = Saturday;
 //             default from the locale, Monday where the browser cannot say),
 //             label (aria-label of the day group), prev-label / next-label
-//             (names of the nav buttons, English by default)
-// Properties: month, value, marks, locale, label
+//             (names of the nav buttons, English by default), disabled
+//             (since 1.22.3, as is a disabled fieldset around it)
+// Properties: month, value, marks, locale, label, disabled
 // Form:       associated — a surrounding <form> receives name=value, reset
 //             restores the initial value, like <glk-segmented>
 // Events:     glk-change { value } — on a pick by the user
@@ -103,7 +104,14 @@ class GlkCalendar extends GlkFormElement {
       day.append(num, dots);
       this._grid.appendChild(day);
     }
+    this.applyDisabled(this._actuallyDisabled);
     this._syncValue();
+  }
+
+  // Disabled as a whole: the arrows and every day. The days of another month
+  // are built again, so _build() hands the state on to them too.
+  applyDisabled(disabled) {
+    for (const button of [this._prev, this._next, ...this._days()]) button.disabled = disabled;
   }
 
   _days() { return [...this._grid.querySelectorAll('button[data-value]')]; }

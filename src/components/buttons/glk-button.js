@@ -10,12 +10,13 @@ const FORWARDED_ARIA = ['aria-expanded', 'aria-haspopup', 'aria-pressed'];
 
 class GlkButton extends GlkElement {
   static get observedAttributes() {
-    return ['variant', 'size', 'disabled', 'type', ...FORWARDED_ARIA];
+    return ['variant', 'size', 'type', ...FORWARDED_ARIA];
   }
 
   // The native button sits in the shadow root, outside every form. Form
   // association gives the element its form, so type="submit" and "reset"
-  // can act on it (see _activateForm).
+  // can act on it (see _activateForm), and a disabled fieldset around it
+  // disables it (since 1.22.3; before, it still sent the form).
   static formAssociated = true;
 
   constructor() {
@@ -28,9 +29,6 @@ class GlkButton extends GlkElement {
       type: this.getAttribute('type') || 'button'
     });
 
-    if (this.getBoolAttr('disabled')) {
-      this._btn.disabled = true;
-    }
     for (const attr of FORWARDED_ARIA) this._forward(attr);
 
     this._btn.appendChild(document.createElement('slot'));
@@ -39,7 +37,7 @@ class GlkButton extends GlkElement {
 
   setupEvents() {
     this._onClick = (e) => {
-      if (this.getBoolAttr('disabled')) {
+      if (this._actuallyDisabled) {
         e.preventDefault();
         e.stopPropagation();
         return;
@@ -98,9 +96,6 @@ class GlkButton extends GlkElement {
       case 'size':
         this._btn.className = this._computeClasses().join(' ');
         break;
-      case 'disabled':
-        this._btn.disabled = this.getBoolAttr('disabled');
-        break;
       case 'type':
         this._btn.setAttribute('type', this.getAttribute('type') || 'button');
         break;
@@ -108,6 +103,8 @@ class GlkButton extends GlkElement {
         if (FORWARDED_ARIA.includes(name)) this._forward(name);
     }
   }
+
+  applyDisabled(disabled) { this._btn.disabled = disabled; }
 
   _forward(attr) {
     const value = this.getAttribute(attr);

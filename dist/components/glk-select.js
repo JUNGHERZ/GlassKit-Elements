@@ -13,7 +13,7 @@ import '@jungherz-de/glasskit/glasskit-styles.js';
 
 class GlkSelect extends GlkFormElement {
   static get observedAttributes() {
-    return ['label', 'disabled', 'name', 'value', 'required'];
+    return ['label', 'name', 'value', 'required'];
   }
 
   static get observesLightDom() { return true; }
@@ -32,7 +32,6 @@ class GlkSelect extends GlkFormElement {
     const name = this.getAttribute('name');
     if (name) this._select.setAttribute('name', name);
 
-    if (this.getBoolAttr('disabled')) this._select.disabled = true;
     if (this.getBoolAttr('required')) this._select.required = true;
 
     group.appendChild(this._labelEl);
@@ -106,9 +105,6 @@ class GlkSelect extends GlkFormElement {
       case 'label':
         this._labelEl.textContent = this.getAttribute('label') || '';
         break;
-      case 'disabled':
-        this._select.disabled = this.getBoolAttr('disabled');
-        break;
       case 'name':
         this._select.setAttribute('name', this.getAttribute('name') || '');
         break;
@@ -122,6 +118,8 @@ class GlkSelect extends GlkFormElement {
         break;
     }
   }
+
+  applyDisabled(disabled) { this._select.disabled = disabled; }
 
   get _validityField() { return this._select; }
 
@@ -148,9 +146,6 @@ class GlkSelect extends GlkFormElement {
     this._applyValue(this._wanted);
     this._syncFormValue();
   }
-
-  get disabled() { return this.getBoolAttr('disabled'); }
-  set disabled(v) { this.setBoolAttr('disabled', v); }
 }
 
 customElements.define('glk-select', GlkSelect);

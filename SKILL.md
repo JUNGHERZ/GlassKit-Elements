@@ -1,6 +1,6 @@
 ---
 name: glasskit-elements
-description: GlassKit Elements is a vanilla-JS Web Components library (v1.22.2) wrapping GlassKit CSS v1.22.2. It provides 36 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
+description: GlassKit Elements is a vanilla-JS Web Components library (v1.22.3) wrapping GlassKit CSS v1.22.2. It provides 36 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
 ---
 
 # GlassKit Elements – AI Component Reference
@@ -123,6 +123,7 @@ addEventListener('afterprint', () => {
 | Events | Custom `glk-*` events, all `bubbles: true, composed: true` |
 | Form participation | `GlkFormElement` uses `ElementInternals` (`static formAssociated = true`): value, reset and — since 1.20.0 — the inner field's validity |
 | Focus | Form elements with one field delegate focus (since 1.20.0): `element.focus()`, a click on the label, a `<label for>` land in the field |
+| Disabled | Form elements follow their own `disabled` and a `<fieldset disabled>` around them, as native controls do (since 1.22.3); the `disabled` property reflects the attribute |
 | API style | Declarative HTML attributes + reflected JS properties |
 
 Custom properties (`--gl-*`) defined on `:root` or `<html>` pass through shadow boundaries by inheritance, so custom theming works with a single global stylesheet.
@@ -152,7 +153,7 @@ customElements.define('demo-counter', DemoCounter);
 
 Which import to take depends on how the elements are loaded, and mixing them is the one mistake to avoid: the `<script>` / ESM **bundle** carries its own copy of `GlkElement`, so a subclass built on `base.js` next to it is a different class — `instanceof` fails across the two, and the GlassKit stylesheet lives twice. Bundle loaded → take `GlassKitElements.GlkElement` or `import { GlkElement } from '@jungherz-de/glasskit-elements'`. Per-component files loaded → `base.js`, which the components import themselves. The per-component files leave `@jungherz-de/glasskit/glasskit-styles.js` external, so a bundler resolves it from `node_modules` and an import-map project maps it to the one copy it already loads for its own elements.
 
-Rules for a subclass: build only inside `this._wrapper` (it carries `data-theme`, and `data-density` while `<html>` has one); keep listeners in `setupEvents()` / `teardownEvents()`, never in `render()`, or a moved element loses them; use `emit()` instead of `dispatchEvent()` so the event bubbles and crosses the shadow boundary — `emit(name, detail, { cancelable: true })` lets a listener call `preventDefault()`, and `emit()` returns `false` then (since 1.19.0); return `true` from `static get displayInline()` for inline elements; set `static get observesLightDom()` to `true` and implement `projectLightDom()` when copying light-DOM children into the shadow tree. `GlkFormElement` adds `setFormValue()`, `setValidity()`, `resetValue()` / `restoreValue()` and `static formAssociated = true`.
+Rules for a subclass: build only inside `this._wrapper` (it carries `data-theme`, and `data-density` while `<html>` has one); keep listeners in `setupEvents()` / `teardownEvents()`, never in `render()`, or a moved element loses them; use `emit()` instead of `dispatchEvent()` so the event bubbles and crosses the shadow boundary — `emit(name, detail, { cancelable: true })` lets a listener call `preventDefault()`, and `emit()` returns `false` then (since 1.19.0); return `true` from `static get displayInline()` for inline elements; set `static get observesLightDom()` to `true` and implement `projectLightDom()` when copying light-DOM children into the shadow tree. `GlkFormElement` adds `setFormValue()`, `setValidity()`, `resetValue()` / `restoreValue()`, a `disabled` property and `static formAssociated = true`. Override `applyDisabled(disabled)` to disable your native controls (since 1.22.3): it runs after the first render and whenever the element's own `disabled` or a `<fieldset disabled>` around it changes — no fieldset reaches into the shadow root by itself.
 
 ### Light-DOM children (since 1.12.0)
 
@@ -706,7 +707,7 @@ Slider input.
 | `name` | String | Form field name |
 | `disabled` | Boolean | Disabled state |
 
-Events: `glk-input`, `glk-change`. Property: `.value`.
+Events: `glk-input`, `glk-change`. Properties: `.value`, `.disabled` (since 1.22.3).
 
 ---
 
@@ -726,7 +727,7 @@ Search input with leading icon.
 | `name` | String | Form field name |
 | `disabled` | Boolean | Disabled state |
 
-Events: `glk-input`, `glk-change`.
+Events: `glk-input`, `glk-change`. Properties: `.value`, `.disabled` (since 1.22.3).
 
 ---
 
@@ -1086,8 +1087,9 @@ A small, exclusive choice as one control (since 1.15.0) — traffic light, morni
 | `overflow` | String | What happens when the options do not fit: `scroll` — one row that scrolls sideways, the chosen option kept in view; `wrap` — breaks into lines. Without it the row stays one line (since 1.17.0) |
 | `label` | String | `aria-label` of the group (no default — set it) |
 | `name` | String | Form field name |
+| `disabled` | Boolean | The whole row (since 1.22.3); a `<fieldset disabled>` around it disables it too |
 
-Properties: `value`, `options` (array or JSON text), `full`, `overflow`, `label`. Events: `glk-change` `{ value }` — only on a change made by the user, not on `.value = …`. Part: `group`.
+Properties: `value`, `options` (array or JSON text), `full`, `overflow`, `label`, `disabled`. Events: `glk-change` `{ value }` — only on a change made by the user, not on `.value = …`. Part: `group`.
 
 With `overflow="scroll"` the chosen option is centred in the row after the first layout, on every value change and when the row's width changes — the row scrolls, never the page. Seven areas on a phone:
 
@@ -1202,8 +1204,9 @@ One month with a day to pick (since 1.16.0). The days are buttons in a `role="gr
 | `label` | String | `aria-label` of the day group |
 | `prev-label`, `next-label` | String | Names of the nav buttons ("Previous month" / "Next month") |
 | `name` | String | Form field name |
+| `disabled` | Boolean | Arrows and days (since 1.22.3); a `<fieldset disabled>` around it disables it too |
 
-Events: `glk-change { value }` on a pick by the user; `glk-month { month }` when the user moves to another month. Properties: `month`, `value`, `marks`, `locale`, `label`. Parts: `calendar`, `head`, `title`, `grid`.
+Events: `glk-change { value }` on a pick by the user; `glk-month { month }` when the user moves to another month. Properties: `month`, `value`, `marks`, `locale`, `label`, `disabled`. Parts: `calendar`, `head`, `title`, `grid`.
 
 ---
 

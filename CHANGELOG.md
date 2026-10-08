@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.22.3] – 2026-10-08
+
+GlassKit is unchanged; the peer dependency stays `>=1.22.2`.
+
+### Fixed
+
+- **A `<fieldset disabled>` disables the form elements inside it.** The browser already counted them as disabled — `:disabled`, left out of `FormData` — but their native controls live in the shadow root, where no fieldset reaches, and stayed enabled: every field was reachable with Tab, typing and clicks changed the values, and `<glk-button type="submit">` fired `glk-click` and sent the form, empty. The elements now take the state from `formDisabledCallback`, which the browser calls for the element's own `disabled` attribute and for a fieldset alike, also when an element moves into or out of one. Inside a disabled fieldset they look disabled, drop out of the tab order, take no input and send nothing; a required empty field is barred from validation and counts again once the fieldset is enabled. The `disabled` property still reflects the attribute only, as on a native control. Radios skip a fieldset-disabled member of their group with the arrow keys, and the tab stop moves off it. ([#15](https://github.com/JUNGHERZ/GlassKit-Elements/issues/15))
+- **`<glk-segmented disabled>` and `<glk-calendar disabled>` work.** Neither handled the attribute: the browser counted them as disabled and left them out of the form data, but a click still changed the value. Now the segmented row and the calendar's arrows and days are disabled; an option's own `disabled` stays as it is. ([#15](https://github.com/JUNGHERZ/GlassKit-Elements/issues/15))
+
+### Added
+
+- **A `disabled` property on every form element.** `<glk-search>`, `<glk-range>`, `<glk-segmented>` and `<glk-calendar>` had none; it sits on `GlkFormElement` now. A subclass of `GlkFormElement` overrides `applyDisabled(disabled)` to hand the state to its native controls; it runs after the first render and on every change.
+
+Measured in Chromium and WebKit with every form element inside `<form><fieldset disabled>`, 21 checks per engine: all native controls disabled with GlassKit's disabled look, Tab passes them, clicks and typing change nothing, no submit, no `glk-click`; enabled again, everything works and the button submits once; own attribute and fieldset combine in every order; an element moved in or created inside is disabled from the start; a calendar month shown while disabled stays disabled. Docs, showcase and landing pages render pixel-identical to 1.22.2.
+
+---
+
 ## [1.22.2] – 2026-10-08
 
 ### Fixed
@@ -807,7 +824,8 @@ Starting with this release, GlassKit Elements version numbers are aligned with G
 
 ---
 
-[Unreleased]: https://github.com/JUNGHERZ/GlassKit-Elements/compare/v1.22.2...HEAD
+[Unreleased]: https://github.com/JUNGHERZ/GlassKit-Elements/compare/v1.22.3...HEAD
+[1.22.3]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.22.3
 [1.22.2]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.22.2
 [1.22.1]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.22.1
 [1.22.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.22.0

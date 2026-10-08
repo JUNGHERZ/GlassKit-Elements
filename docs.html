@@ -253,7 +253,7 @@
     <aside class="docs-sidebar">
       <div class="docs-sidebar__title">&#129482; <a href="/">GlassKit Elements</a></div>
       <div class="docs-sidebar__subtitle">Web Components for GlassKit CSS.</div>
-      <div class="docs-sidebar__version">v1.22.2 &ndash; Jungherz GmbH</div>
+      <div class="docs-sidebar__version">v1.22.3 &ndash; Jungherz GmbH</div>
 
       <div class="docs-sidebar__group">
         <div class="docs-sidebar__group-title">Basics</div>
@@ -339,7 +339,7 @@
         <h1>GlassKit Elements</h1>
         <p>Complete reference for all 36 web components &ndash; built by Jungherz GmbH. Vanilla JS, Shadow DOM, native form participation.</p>
         <div class="docs-hero__badges">
-          <span class="docs-hero__badge">v1.22.2</span>
+          <span class="docs-hero__badge">v1.22.3</span>
           <span class="docs-hero__badge">Shadow DOM</span>
           <span class="docs-hero__badge">36 Components</span>
           <span class="docs-hero__badge">Vanilla JS</span>
@@ -411,6 +411,7 @@ addEventListener(<span class="val">'afterprint'</span>, () =&gt; {
         <h2>Form Integration</h2>
         <p>All form components participate in native forms via <code>ElementInternals</code>: their value goes into <code>FormData</code>, and a reset restores it. Since 1.20.0 the form also learns whether they are valid. The inner field checks <code>required</code>, <code>pattern</code>, <code>min</code>, <code>type="email"</code> and the like, and the element reports its verdict: <code>form.checkValidity()</code> is false while a required field is empty, a submit stops at the first invalid field with the browser&rsquo;s own message, <code>reportValidity()</code> focuses it, and <code>validity</code>, <code>validationMessage</code> and <code>willValidate</code> answer on the element. <code>&lt;glk-button type="submit"&gt;</code> submits its form and <code>type="reset"</code> resets it &mdash; before 1.20.0 both did nothing.</p>
         <p>Labels are tied to their fields: a screen reader names the field by its <code>label</code>, and a click on the label text focuses it &mdash; as do <code>element.focus()</code> and a click on a <code>&lt;label for&gt;</code> that names the element. The <code>hint</code> of <code>&lt;glk-input&gt;</code> is read as the field&rsquo;s description.</p>
+        <p>Disabled (since 1.22.3): every form element follows its own <code>disabled</code> and a <code>&lt;fieldset disabled&gt;</code> around it, as native controls do &mdash; dimmed, out of the tab order, no input, a submit button sends nothing, and <code>FormData</code> leaves it out. Before, a fieldset reached only the form data: the fields inside stayed usable, and a submit button sent the form empty. The <code>disabled</code> property reflects the attribute, as on a native control.</p>
         <div class="docs-code"><span class="tag">&lt;form</span> <span class="attr">id</span>=<span class="val">"settings"</span><span class="tag">&gt;</span>
   <span class="tag">&lt;glk-input</span> <span class="attr">name</span>=<span class="val">"username"</span> <span class="attr">label</span>=<span class="val">"Username"</span><span class="tag">&gt;&lt;/glk-input&gt;</span>
   <span class="tag">&lt;glk-toggle</span> <span class="attr">name</span>=<span class="val">"notify"</span> <span class="attr">label</span>=<span class="val">"Notifications"</span> <span class="attr">checked</span><span class="tag">&gt;&lt;/glk-toggle&gt;</span>
@@ -709,6 +710,7 @@ addEventListener(<span class="val">'afterprint'</span>, () =&gt; {
             <tr><td><code>overflow</code></td><td>String</td><td><code>scroll</code> &mdash; one row that scrolls sideways, the chosen option kept in view; <code>wrap</code> &mdash; breaks into lines. Without it the row stays one line (since 1.17.0)</td></tr>
             <tr><td><code>label</code></td><td>String</td><td><code>aria-label</code> of the group</td></tr>
             <tr><td><code>name</code></td><td>String</td><td>Form field name (form-associated)</td></tr>
+            <tr><td><code>disabled</code></td><td>Boolean</td><td>The whole row (since 1.22.3); a <code>&lt;fieldset disabled&gt;</code> around it disables it too</td></tr>
           </table>
           <p><strong>Events:</strong> <code>glk-change</code> <code>{ value }</code> — only on a change made by the user. <strong>Part:</strong> <code>group</code>.</p>
           <script>
@@ -736,8 +738,9 @@ addEventListener(<span class="val">'afterprint'</span>, () =&gt; {
             <tr><td><code>label</code></td><td>String</td><td><code>aria-label</code> of the day group</td></tr>
             <tr><td><code>prev-label</code>, <code>next-label</code></td><td>String</td><td>Names of the nav buttons; &ldquo;Previous month&rdquo; / &ldquo;Next month&rdquo; by default</td></tr>
             <tr><td><code>name</code></td><td>String</td><td>Form field name (form-associated)</td></tr>
+            <tr><td><code>disabled</code></td><td>Boolean</td><td>Arrows and days (since 1.22.3); a <code>&lt;fieldset disabled&gt;</code> around it disables it too</td></tr>
           </table>
-          <p><strong>Events:</strong> <code>glk-change</code> <code>{ value }</code> on a pick by the user; <code>glk-month</code> <code>{ month }</code> when the user moves to another month. <strong>Properties:</strong> <code>month</code>, <code>value</code>, <code>marks</code>, <code>locale</code>, <code>label</code>. <strong>Parts:</strong> <code>calendar</code>, <code>head</code>, <code>title</code>, <code>grid</code>.</p>
+          <p><strong>Events:</strong> <code>glk-change</code> <code>{ value }</code> on a pick by the user; <code>glk-month</code> <code>{ month }</code> when the user moves to another month. <strong>Properties:</strong> <code>month</code>, <code>value</code>, <code>marks</code>, <code>locale</code>, <code>label</code>, <code>disabled</code>. <strong>Parts:</strong> <code>calendar</code>, <code>head</code>, <code>title</code>, <code>grid</code>.</p>
           <script>
             (() => { const cal = document.getElementById('docs-cal'), out = document.querySelector('[data-docs-cal-out]');
               cal.addEventListener('glk-change', e => { out.textContent = 'glk-change → ' + e.detail.value; });
@@ -1161,7 +1164,7 @@ customElements.define(<span class="val">'demo-counter'</span>, DemoCounter);</di
           <tr><td>Per component</td><td><code>import { GlkElement } from '@jungherz-de/glasskit-elements/base.js';</code> &mdash; the very module the components import, so <code>instanceof GlkElement</code> holds across both. The per-component files leave <code>@jungherz-de/glasskit/glasskit-styles.js</code> external: a bundler resolves it, an import map needs an entry for it. Never next to the <code>&lt;script&gt;</code> bundle &mdash; that carries its own copy of the class.</td></tr>
           <tr><td>CDN / <code>&lt;script&gt;</code></td><td><code>const { GlkElement } = GlassKitElements;</code></td></tr>
         </table>
-        <p><strong>Hooks:</strong> <code>render()</code> builds into <code>this._wrapper</code>; <code>setupEvents()</code> / <code>teardownEvents()</code> run on every connect / disconnect; <code>onAttributeChanged(name, old, value)</code> fires after the first render. <strong>Helpers:</strong> <code>createElement(tag, classes, attrs)</code>, <code>getBoolAttr()</code> / <code>setBoolAttr()</code>, <code>emit(name, detail)</code>. Return <code>true</code> from <code>static get displayInline()</code> for an inline element, and set <code>static get observesLightDom()</code> to have <code>projectLightDom()</code> re-run whenever light-DOM children change. Since 1.20.0, <code>static get delegatesFocus()</code> returning <code>true</code> hands the focus to the first field inside (on for <code>GlkFormElement</code>), and a <code>GlkFormElement</code> whose <code>get _validityField()</code> returns its native field reports that field&rsquo;s validity on the host after every <code>setFormValue()</code> and attribute change.</p>
+        <p><strong>Hooks:</strong> <code>render()</code> builds into <code>this._wrapper</code>; <code>setupEvents()</code> / <code>teardownEvents()</code> run on every connect / disconnect; <code>onAttributeChanged(name, old, value)</code> fires after the first render. <strong>Helpers:</strong> <code>createElement(tag, classes, attrs)</code>, <code>getBoolAttr()</code> / <code>setBoolAttr()</code>, <code>emit(name, detail)</code>. Return <code>true</code> from <code>static get displayInline()</code> for an inline element, and set <code>static get observesLightDom()</code> to have <code>projectLightDom()</code> re-run whenever light-DOM children change. Since 1.20.0, <code>static get delegatesFocus()</code> returning <code>true</code> hands the focus to the first field inside (on for <code>GlkFormElement</code>), and a <code>GlkFormElement</code> whose <code>get _validityField()</code> returns its native field reports that field&rsquo;s validity on the host after every <code>setFormValue()</code> and attribute change. Since 1.22.3, <code>applyDisabled(disabled)</code> hands the disabled state to the native controls: override it in a <code>GlkFormElement</code>. It runs after the first render and whenever the element&rsquo;s own <code>disabled</code> or a <code>&lt;fieldset disabled&gt;</code> around it changes &mdash; no fieldset reaches into the shadow root by itself.</p>
         <script>
   // A project element on the exported base class: shadow root with GlassKit's
   // stylesheet adopted, theme sync, re-armed listeners, emit() — all inherited.

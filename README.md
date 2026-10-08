@@ -5,7 +5,7 @@
   <a href="#"><img src="https://img.shields.io/badge/vanilla_JS-no_dependencies-44cc11?style=flat-square" alt="Vanilla JS"></a>
   <a href="#"><img src="https://img.shields.io/badge/components-36-7ec8e3?style=flat-square" alt="36 Components"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="MIT License"></a>
-  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/changelog-v1.22.2-lightgrey?style=flat-square" alt="Changelog"></a>
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/changelog-v1.22.3-lightgrey?style=flat-square" alt="Changelog"></a>
   <a href="https://www.npmjs.com/package/@jungherz-de/glasskit-elements"><img src="https://img.shields.io/badge/npm-%40jungherz--de%2Fglasskit--elements-cb3837?style=flat-square&logo=npm" alt="npm"></a>
 </p>
 
@@ -152,7 +152,7 @@ The per-component files leave `@jungherz-de/glasskit/glasskit-styles.js` as an e
 
 ### Form Elements
 
-All form components support `name`, `value`, `disabled` and participate in native `<form>` submission via `ElementInternals` — except `<glk-image-picker>`, which hands its result to `glk-change` instead: a data URL is no form value. Since 1.20.0 they also report their validity to the form (`required`, `pattern`, `min`, `type="email"` … stop a submit with the browser's own message), their `label` names the field for screen readers, and a click on it, `element.focus()` or a `<label for>` lands in the field.
+All form components support `name`, `value`, `disabled` and participate in native `<form>` submission via `ElementInternals` — except `<glk-image-picker>`, which hands its result to `glk-change` instead: a data URL is no form value. Since 1.20.0 they also report their validity to the form (`required`, `pattern`, `min`, `type="email"` … stop a submit with the browser's own message), their `label` names the field for screen readers, and a click on it, `element.focus()` or a `<label for>` lands in the field. Since 1.22.3 a `<fieldset disabled>` around them disables them, as it does native controls.
 
 | Component | Description | Key Attributes |
 |---|---|---|

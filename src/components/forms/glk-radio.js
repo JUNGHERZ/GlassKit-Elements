@@ -19,7 +19,7 @@ function ownerForm(el) {
 
 /** Only the selected radio is a tab stop; arrow keys move within the group. */
 function syncGroupTabIndex(group) {
-  const enabled = group.filter(el => !el.disabled);
+  const enabled = group.filter(el => !el._actuallyDisabled);
   if (!enabled.length) return;
   const focusable = enabled.find(el => el.checked) || enabled[0];
   for (const el of group) {
@@ -29,7 +29,7 @@ function syncGroupTabIndex(group) {
 
 class GlkRadio extends GlkFormElement {
   static get observedAttributes() {
-    return ['checked', 'disabled', 'label', 'name', 'value', 'required'];
+    return ['checked', 'label', 'name', 'value', 'required'];
   }
 
   static get hostStyles() { return checkControlSheet; }
@@ -59,7 +59,6 @@ class GlkRadio extends GlkFormElement {
     label.appendChild(this._labelEl);
 
     if (this.getBoolAttr('checked')) this._input.checked = true;
-    if (this.getBoolAttr('disabled')) this._input.disabled = true;
 
     this._defaultChecked = this.getBoolAttr('checked');
     this._wrapper.appendChild(label);
@@ -77,7 +76,7 @@ class GlkRadio extends GlkFormElement {
     this._onKeyDown = (e) => {
       const dir = ARROW_KEYS[e.key];
       if (!dir || e.ctrlKey || e.metaKey || e.altKey) return;
-      const group = this._group().filter(el => !el.disabled);
+      const group = this._group().filter(el => !el._actuallyDisabled);
       if (group.length < 2) return;
       e.preventDefault();
       const next = group[(group.indexOf(this) + dir + group.length) % group.length];
@@ -159,10 +158,6 @@ class GlkRadio extends GlkFormElement {
         this._syncFormValue();
         syncGroupTabIndex(this._group());
         break;
-      case 'disabled':
-        this._input.disabled = this.getBoolAttr('disabled');
-        syncGroupTabIndex(this._group());
-        break;
       case 'label':
         this._labelEl.textContent = this.getAttribute('label') || '';
         break;
@@ -175,6 +170,11 @@ class GlkRadio extends GlkFormElement {
         this._syncFormValue();
         break;
     }
+  }
+
+  applyDisabled(disabled) {
+    this._input.disabled = disabled;
+    syncGroupTabIndex(this._group());
   }
 
   _syncFormValue() {
@@ -200,9 +200,6 @@ class GlkRadio extends GlkFormElement {
     if (this._input) this._syncFormValue();
     syncGroupTabIndex(this._group());
   }
-
-  get disabled() { return this.getBoolAttr('disabled'); }
-  set disabled(v) { this.setBoolAttr('disabled', v); }
 
   get name() { return this.getAttribute('name'); }
   set name(v) { this.setAttribute('name', v); }

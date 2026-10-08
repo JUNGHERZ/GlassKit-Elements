@@ -7,8 +7,11 @@ import { revealCentered } from '../../reveal.js';
 // Attributes: options (JSON [{value,label,tone?,disabled?}]), value, full,
 //             overflow ("scroll" | "wrap": what happens when the options
 //             do not fit — without it the row stays one line and runs past
-//             the edge), label (aria-label of the group), name (form field)
-// Properties: value, options (array or JSON text), full, overflow, label
+//             the edge), label (aria-label of the group), name (form field),
+//             disabled (the whole row; since 1.22.3, as is a disabled
+//             fieldset around it)
+// Properties: value, options (array or JSON text), full, overflow, label,
+//             disabled
 // Event:      glk-change { value } — only on a change made by the user
 // Part:       group
 //
@@ -61,11 +64,19 @@ class GlkSegmented extends GlkFormElement {
         button.classList.add(`glass-segmented__item--${option.tone}`);
         button.appendChild(this.createElement('span', ['glass-segmented__dot']));
       }
-      if (option.disabled) button.disabled = true;
       button.appendChild(document.createTextNode(option.label ?? value));
       this._group.appendChild(button);
     }
+    this.applyDisabled(this._actuallyDisabled);
     this._syncValue();
+  }
+
+  /** The whole row is disabled, or an option by its own `disabled`. */
+  applyDisabled(disabled) {
+    const options = this.options;
+    this._group.querySelectorAll('button[data-value]').forEach((button, i) => {
+      button.disabled = disabled || Boolean(options[i]?.disabled);
+    });
   }
 
   _syncValue() {

@@ -1,6 +1,6 @@
 ---
 name: glasskit-elements
-description: GlassKit Elements is a vanilla-JS Web Components library (v1.23.0) wrapping GlassKit CSS v1.23.0. It provides 36 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
+description: GlassKit Elements is a vanilla-JS Web Components library (v1.24.0) wrapping GlassKit CSS v1.24.0. It provides 36 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
 ---
 
 # GlassKit Elements – AI Component Reference
@@ -18,7 +18,7 @@ description: GlassKit Elements is a vanilla-JS Web Components library (v1.23.0) 
 npm install @jungherz-de/glasskit-elements @jungherz-de/glasskit
 ```
 
-Peer dependency `@jungherz-de/glasskit >=1.23.0` is required — 1.23.0 lets list text wrap app-wide through tokens, 1.22.2 hands a click on a disabled control in an input affix to the field, 1.22.1 lets date and time fields shrink in narrow columns, 1.22.0 brings the input affixes behind the `prefix` / `suffix` slots, 1.21.2 gives disabled controls their look, 1.21.1 keeps the controls' state on paper, 1.21.0 brings the density tokens behind `data-density`, 1.20.0 the rules the elements build on since then (the dialog overlay, hidden list slots, empty control labels, control inputs on top); 1.9.0 is the release that made the stylesheet splittable, which is what lets document-level branding reach the elements at all.
+Peer dependency `@jungherz-de/glasskit >=1.24.0` is required — 1.24.0 brings the solid surface preset behind `data-surface`, 1.23.0 lets list text wrap app-wide through tokens, 1.22.2 hands a click on a disabled control in an input affix to the field, 1.22.1 lets date and time fields shrink in narrow columns, 1.22.0 brings the input affixes behind the `prefix` / `suffix` slots, 1.21.2 gives disabled controls their look, 1.21.1 keeps the controls' state on paper, 1.21.0 brings the density tokens behind `data-density`, 1.20.0 the rules the elements build on since then (the dialog overlay, hidden list slots, empty control labels, control inputs on top); 1.9.0 is the release that made the stylesheet splittable, which is what lets document-level branding reach the elements at all.
 
 ### Import (ES modules)
 
@@ -93,6 +93,14 @@ A single module-level `MutationObserver` watches `data-theme` on `<html>` and sy
 
 Denser controls for admin screens, desktop layouts and narrow forms: fields and buttons 40px instead of 52 and 56, smaller toggles, checkboxes and radios, denser list rows and modal actions. Without the attribute nothing changes; `removeAttribute('data-density')` switches back at runtime. The sizes are GlassKit's density tokens (GlassKit 1.21.0 or later), so they reach every shadow root by inheritance, and a project's own values do too (`[data-density='compact'] { --gl-btn-height: 36px; }`); with `data-glk-defaults="off"` the preset comes from `glasskit.css` on the page, like every other token. The same observer mirrors `data-density` onto each element's theme wrapper — set it on `<html>` only, never on individual elements.
 
+### Solid surfaces (since 1.24.0)
+
+```html
+<html data-theme="dark" data-surface="solid">
+```
+
+Opaque surfaces without blur and gloss, for admin screens, forms on a plain background and designs without glass: every surface in the colour the glass shows over the theme's middle background. Without the attribute nothing changes; `removeAttribute('data-surface')` switches back at runtime. It is GlassKit's solid surface preset (GlassKit 1.24.0 or later): tokens only, so it reaches every shadow root by inheritance, and a project's own values do too (`[data-surface='solid'] { --gl-surface-2: … }`); with `data-glk-defaults="off"` it comes from `glasskit.css` on the page. The observer mirrors `data-surface` onto each element's theme wrapper, like `data-theme` and `data-density`, so a rule keyed on it (a subclass's `hostStyles`) matches inside the shadow root — set it on `<html>` only.
+
 
 ### Printing (since 1.21.1)
 
@@ -119,7 +127,7 @@ addEventListener('afterprint', () => {
 | Tag prefix | `glk-*` (analogous to the `glass-*` CSS prefix) |
 | Rendering | Shadow DOM (`mode: 'open'`) with `adoptedStyleSheets` |
 | Stylesheet sharing | GlassKit's `componentsSheet` is the same `CSSStyleSheet` object in every element — no CSS duplication. Token declarations live on the document, not in the shadow roots |
-| Theme sync | Global MutationObserver on `<html data-theme>` and `<html data-density>` |
+| Theme sync | Global MutationObserver on `<html data-theme>`, `<html data-density>` and `<html data-surface>` (since 1.24.0) |
 | Events | Custom `glk-*` events, all `bubbles: true, composed: true` |
 | Form participation | `GlkFormElement` uses `ElementInternals` (`static formAssociated = true`): value, reset and — since 1.20.0 — the inner field's validity |
 | Focus | Form elements with one field delegate focus (since 1.20.0): `element.focus()`, a click on the label, a `<label for>` land in the field |

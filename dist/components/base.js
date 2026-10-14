@@ -53,16 +53,16 @@ function syncDefaultTokens() {
 
 injectDefaultTokens();
 
-// ── Global Theme & Density Sync ──
-// Single MutationObserver that watches data-theme and data-density on <html>
-// and notifies all GlkElement instances.
+// ── Global Theme, Density & Surface Sync ──
+// Single MutationObserver that watches data-theme, data-density and
+// data-surface on <html> and notifies all GlkElement instances.
 //
-// The density tokens themselves arrive from <html> by inheritance, like every
-// other token: GlassKit's [data-density="compact"] preset is part of
-// tokensCss, not of the components sheet. The wrapper mirrors the attribute
-// anyway, as it mirrors data-theme — a rule keyed on it (a component rule, a
-// subclass's hostStyles) can match inside a shadow root only on an element
-// there.
+// The density and surface tokens themselves arrive from <html> by
+// inheritance, like every other token: GlassKit's [data-density="compact"]
+// and [data-surface="solid"] presets are part of tokensCss, not of the
+// components sheet. The wrapper mirrors the attributes anyway, as it mirrors
+// data-theme — a rule keyed on one (a component rule, a subclass's
+// hostStyles) can match inside a shadow root only on an element there.
 
 const instances = new Set();
 
@@ -73,6 +73,11 @@ function getCurrentTheme() {
 /** The density on <html>, or null — there is no default to fall back to. */
 function getCurrentDensity() {
   return document.documentElement.getAttribute('data-density');
+}
+
+/** The surface preset on <html> (since 1.24.0), or null, like the density. */
+function getCurrentSurface() {
+  return document.documentElement.getAttribute('data-surface');
 }
 
 function syncAllThemes() {
@@ -89,15 +94,23 @@ function syncAllDensities() {
   }
 }
 
+function syncAllSurfaces() {
+  const surface = getCurrentSurface();
+  for (const instance of instances) {
+    instance._syncSurface(surface);
+  }
+}
+
 if (typeof window !== 'undefined' && typeof MutationObserver !== 'undefined') {
   const observer = new MutationObserver(records => {
     if (records.some(r => r.attributeName === 'data-theme')) syncAllThemes();
     if (records.some(r => r.attributeName === 'data-density')) syncAllDensities();
+    if (records.some(r => r.attributeName === 'data-surface')) syncAllSurfaces();
     if (records.some(r => r.attributeName === DEFAULTS_ATTR)) syncDefaultTokens();
   });
   observer.observe(document.documentElement, {
     attributes: true,
-    attributeFilter: ['data-theme', 'data-density', DEFAULTS_ATTR]
+    attributeFilter: ['data-theme', 'data-density', 'data-surface', DEFAULTS_ATTR]
   });
 }
 
@@ -235,17 +248,19 @@ class GlkElement extends HTMLElement {
       this._wrapper.className = 'glk-wrapper';
       this._wrapper.setAttribute('data-theme', getCurrentTheme());
       this._syncDensity(getCurrentDensity());
+      this._syncSurface(getCurrentSurface());
       this._shadow.appendChild(this._wrapper);
 
       this.render();
       if (this.constructor.formAssociated) this._syncDisabled();
     } else {
       // Back in the document. While it was out, the observer did not reach
-      // it, so a theme or density switched in the meantime is caught up here
-      // — the wrapper's data-theme also sets the color-scheme of the native
-      // parts inside.
+      // it, so a theme, density or surface switched in the meantime is
+      // caught up here — the wrapper's data-theme also sets the color-scheme
+      // of the native parts inside.
       this._syncTheme(getCurrentTheme());
       this._syncDensity(getCurrentDensity());
+      this._syncSurface(getCurrentSurface());
     }
 
     // Everything below runs on every connect, not just the first. Moving an
@@ -312,6 +327,16 @@ class GlkElement extends HTMLElement {
       this._wrapper.setAttribute('data-density', density);
     } else {
       this._wrapper.removeAttribute('data-density');
+    }
+  }
+
+  /** Mirrors data-surface from <html> (since 1.24.0), like the density. */
+  _syncSurface(surface) {
+    if (!this._wrapper) return;
+    if (surface) {
+      this._wrapper.setAttribute('data-surface', surface);
+    } else {
+      this._wrapper.removeAttribute('data-surface');
     }
   }
 

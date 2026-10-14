@@ -20,7 +20,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="GlassKit Elements — Documentation">
   <meta name="twitter:description" content="Complete documentation for all 29 GlassKit Elements web components with live examples.">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.23/glasskit.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.24/glasskit.min.css">
   <script src="/dist/glasskit-elements.min.js"></script>
   <style>
     html { scroll-behavior: smooth; }
@@ -253,7 +253,7 @@
     <aside class="docs-sidebar">
       <div class="docs-sidebar__title">&#129482; <a href="/">GlassKit Elements</a></div>
       <div class="docs-sidebar__subtitle">Web Components for GlassKit CSS.</div>
-      <div class="docs-sidebar__version">v1.23.0 &ndash; Jungherz GmbH</div>
+      <div class="docs-sidebar__version">v1.24.0 &ndash; Jungherz GmbH</div>
 
       <div class="docs-sidebar__group">
         <div class="docs-sidebar__group-title">Basics</div>
@@ -339,7 +339,7 @@
         <h1>GlassKit Elements</h1>
         <p>Complete reference for all 36 web components &ndash; built by Jungherz GmbH. Vanilla JS, Shadow DOM, native form participation.</p>
         <div class="docs-hero__badges">
-          <span class="docs-hero__badge">v1.23.0</span>
+          <span class="docs-hero__badge">v1.24.0</span>
           <span class="docs-hero__badge">Shadow DOM</span>
           <span class="docs-hero__badge">36 Components</span>
           <span class="docs-hero__badge">Vanilla JS</span>
@@ -352,7 +352,7 @@
 
         <h3>CDN (quickest)</h3>
         <div class="docs-code"><span class="cmt">&lt;!-- 1. GlassKit CSS --&gt;</span>
-<span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span> <span class="attr">href</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.23/glasskit.min.css"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span> <span class="attr">href</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.24/glasskit.min.css"</span><span class="tag">&gt;</span>
 
 <span class="cmt">&lt;!-- 2. GlassKit Elements --&gt;</span>
 <span class="tag">&lt;script</span> <span class="attr">src</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"</span><span class="tag">&gt;&lt;/script&gt;</span></div>
@@ -393,6 +393,9 @@
   <span class="cmt">// Back to the default density</span>
   document.documentElement.removeAttribute(<span class="val">'data-density'</span>);
 <span class="tag">&lt;/script&gt;</span></div>
+        <h3>Solid surfaces</h3>
+        <p>Not every screen wants glass. <code>data-surface="solid"</code> on the <code>&lt;html&gt;</code> element makes every surface opaque and turns blur and gloss off &mdash; cards, fields, buttons, lists, sheets &mdash; each in the colour the glass shows over the theme&rsquo;s middle background. It is GlassKit&rsquo;s solid surface preset (GlassKit 1.24.0): tokens only, so it reaches every shadow root by inheritance, and a project&rsquo;s own values do too; with <code>data-glk-defaults="off"</code> it comes from <code>glasskit.css</code> on the page. Since 1.24.0 the observer mirrors this attribute onto each element&rsquo;s theme wrapper as well, so a rule keyed on it matches inside the shadow roots.</p>
+        <div class="docs-code"><span class="tag">&lt;html</span> <span class="attr">data-theme</span>=<span class="val">"dark"</span> <span class="attr">data-surface</span>=<span class="val">"solid"</span><span class="tag">&gt;</span></div>
         <h3>Printing</h3>
         <p>Print dialogs leave out background graphics by default. With GlassKit 1.21.1 the parts that carry a state keep their colours on paper &mdash; checkbox, radio, toggle, progress, the current step, the chosen day, the slider thumb, the tone dots &mdash; inside the elements as well. A dark page prints its light text and surfaces on white paper; a page meant for printing switches to the light theme for it, and the elements follow:</p>
         <div class="docs-code">let printTheme = null;

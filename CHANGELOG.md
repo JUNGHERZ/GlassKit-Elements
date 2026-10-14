@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.24.0] – 2026-10-14
+
+Versions stay aligned with GlassKit at 1.24.0, which this release is built against (peer dependency `>=1.24.0`).
+
+### Added
+
+- **Solid surfaces: `data-surface="solid"` on `<html>`.** GlassKit 1.24.0's preset makes every surface opaque and turns blur and gloss off. Its tokens reach the shadow roots by inheritance, also on a page that loads only these elements, because the preset is part of the tokens the bundle puts on the document. The theme wrapper of each element mirrors the attribute, as it mirrors `data-theme` and `data-density`: set from the start, followed on every change, removed with the attribute, and caught up when a moved element comes back. Measured in Chromium, WebKit and Firefox: card, buttons, field, select, textarea, toggle, checkbox, radio, list, segmented control, search and accordion item each show the same pixels inside over a red and over a blue page, and blur computes to `0px` in every shadow root. ([GlassKit #9](https://github.com/JUNGHERZ/GlassKit/issues/9))
+
+Without the attribute, docs, showcase and landing pages render pixel-identical to 1.23.0.
+
+---
+
 ## [1.23.0] – 2026-10-14
 
 Versions realign with GlassKit at 1.23.0, which this release is built against (peer dependency `>=1.23.0`).
@@ -840,7 +852,8 @@ Starting with this release, GlassKit Elements version numbers are aligned with G
 
 ---
 
-[Unreleased]: https://github.com/JUNGHERZ/GlassKit-Elements/compare/v1.23.0...HEAD
+[Unreleased]: https://github.com/JUNGHERZ/GlassKit-Elements/compare/v1.24.0...HEAD
+[1.24.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.24.0
 [1.23.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.23.0
 [1.22.3]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.22.3
 [1.22.2]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.22.2

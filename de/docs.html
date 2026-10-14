@@ -20,7 +20,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="GlassKit Elements — Dokumentation">
   <meta name="twitter:description" content="Vollständige Dokumentation aller 29 GlassKit Elements Web Components mit Live-Beispielen.">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.22/glasskit.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.23/glasskit.min.css">
   <script src="/dist/glasskit-elements.min.js"></script>
   <style>
     html { scroll-behavior: smooth; }
@@ -255,7 +255,7 @@
     <aside class="docs-sidebar">
       <div class="docs-sidebar__title">&#129482; <a href="../de/">GlassKit Elements</a></div>
       <div class="docs-sidebar__subtitle">Web Components f&uuml;r GlassKit CSS.</div>
-      <div class="docs-sidebar__version">v1.22.3 &ndash; Jungherz GmbH</div>
+      <div class="docs-sidebar__version">v1.23.0 &ndash; Jungherz GmbH</div>
 
       <div class="docs-sidebar__group">
         <div class="docs-sidebar__group-title">Grundlagen</div>
@@ -341,7 +341,7 @@
         <h1>GlassKit Elements</h1>
         <p>Vollst&auml;ndige Referenz f&uuml;r alle 36 Web Components &ndash; entwickelt von Jungherz GmbH. Vanilla JS, Shadow DOM, native Formular-Teilnahme.</p>
         <div class="docs-hero__badges">
-          <span class="docs-hero__badge">v1.22.3</span>
+          <span class="docs-hero__badge">v1.23.0</span>
           <span class="docs-hero__badge">Shadow DOM</span>
           <span class="docs-hero__badge">36 Komponenten</span>
           <span class="docs-hero__badge">Vanilla JS</span>
@@ -354,7 +354,7 @@
 
         <h3>CDN (schnellste Variante)</h3>
         <div class="docs-code"><span class="cmt">&lt;!-- 1. GlassKit CSS --&gt;</span>
-<span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span> <span class="attr">href</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.22/glasskit.min.css"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span> <span class="attr">href</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.23/glasskit.min.css"</span><span class="tag">&gt;</span>
 
 <span class="cmt">&lt;!-- 2. GlassKit Elements --&gt;</span>
 <span class="tag">&lt;script</span> <span class="attr">src</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"</span><span class="tag">&gt;&lt;/script&gt;</span></div>
@@ -1129,6 +1129,12 @@ document.querySelector(<span class="val">'glk-popover'</span>).toggle();</div>
             <tr><td><code>trailing</code></td><td>glk-list-item</td><td>Chevron, Badge oder Button (gerendert nach <code>detail</code>-Wert)</td></tr>
           </table>
           <p><strong>Events:</strong> <code>glk-click</code> auf <code>&lt;glk-list-item&gt;</code>, sobald <code>interactive</code> gesetzt ist.</p>
+          <p><strong>Umbrechender Text</strong> (seit 1.23.0): Titel und Untertitel bleiben einzeilig, und <code>wrap</code> begrenzt den Untertitel auf drei Zeilen. GlassKits Listen-Tokens &auml;ndern das f&uuml;r eine ganze App, eine Liste oder eine Zeile &mdash; sie werden in das Element vererbt: <code>--gl-list-title-white-space</code> und <code>--gl-list-subtitle-white-space</code> (<code>normal</code> bricht um) und <code>--gl-list-subtitle-lines</code> (die Grenze von <code>wrap</code>, <code>none</code> zeigt alle Zeilen). Ein Wort, das breiter ist als die Spalte, bricht um, statt aus der Zeile zu laufen, und <code>hyphens</code> auf <code>glk-list</code> oder der Seite erreicht den Text ebenso.</p>
+          <div class="docs-code"><span class="cls">:root</span> {
+  <span class="attr">--gl-list-title-white-space</span>: <span class="val">normal</span>;
+  <span class="attr">--gl-list-subtitle-white-space</span>: <span class="val">normal</span>;
+  <span class="attr">--gl-list-subtitle-lines</span>: <span class="val">none</span>;
+}</div>
           <p><strong>Framework-sicher:</strong> beide Elemente nutzen pures Shadow DOM mit Slot-Projection — kein Clonen von Kinder-Knoten — und komponieren sauber in lit-html-Templates, HybridsJS, React, Vue und Svelte.</p>
         </div>
       </section>

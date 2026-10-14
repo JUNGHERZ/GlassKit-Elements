@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.23.0] – 2026-10-14
+
+Versions realign with GlassKit at 1.23.0, which this release is built against (peer dependency `>=1.23.0`).
+
+### Added
+
+- **List text in `<glk-list-item>` can wrap, decided once for a whole app.** Title and subtitle were cut on a phone — one line with an ellipsis, `wrap` clamped at three lines — and the rules sat in the shadow root, out of a project's reach. GlassKit 1.23.0's list tokens reach into the element by inheritance: `--gl-list-title-white-space` and `--gl-list-subtitle-white-space` (`normal` wraps) and `--gl-list-subtitle-lines` (the clamp of `wrap`, `none` shows every line), set on `:root`, one `<glk-list>` or one row. Unset, every row renders as before. A workaround through the `hostStyles` hook can go. ([GlassKit #10](https://github.com/JUNGHERZ/GlassKit/issues/10))
+
+### Fixed
+
+- **A long word in a `wrap` subtitle breaks instead of being clipped, and a `wrap` row without a subtitle keeps its title centred** — both from GlassKit 1.23.0. An e-mail address ran 310 px wide out of a 198 px column; an empty subtitle hidden with `hidden` still took a line's gap. ([GlassKit #10](https://github.com/JUNGHERZ/GlassKit/issues/10))
+
+Measured in Chromium, WebKit and Firefox at a 360 px viewport: `<glk-list-item>` gives the same line counts and row heights as plain GlassKit markup, with and without the tokens. Docs, showcase and landing pages render pixel-identical to 1.22.3.
+
+---
+
 ## [1.22.3] – 2026-10-08
 
 GlassKit is unchanged; the peer dependency stays `>=1.22.2`.
@@ -824,7 +840,8 @@ Starting with this release, GlassKit Elements version numbers are aligned with G
 
 ---
 
-[Unreleased]: https://github.com/JUNGHERZ/GlassKit-Elements/compare/v1.22.3...HEAD
+[Unreleased]: https://github.com/JUNGHERZ/GlassKit-Elements/compare/v1.23.0...HEAD
+[1.23.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.23.0
 [1.22.3]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.22.3
 [1.22.2]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.22.2
 [1.22.1]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.22.1

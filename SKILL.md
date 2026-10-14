@@ -1,6 +1,6 @@
 ---
 name: glasskit-elements
-description: GlassKit Elements is a vanilla-JS Web Components library (v1.22.3) wrapping GlassKit CSS v1.22.2. It provides 36 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
+description: GlassKit Elements is a vanilla-JS Web Components library (v1.23.0) wrapping GlassKit CSS v1.23.0. It provides 36 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
 ---
 
 # GlassKit Elements – AI Component Reference
@@ -18,7 +18,7 @@ description: GlassKit Elements is a vanilla-JS Web Components library (v1.22.3) 
 npm install @jungherz-de/glasskit-elements @jungherz-de/glasskit
 ```
 
-Peer dependency `@jungherz-de/glasskit >=1.22.2` is required — 1.22.2 hands a click on a disabled control in an input affix to the field, 1.22.1 lets date and time fields shrink in narrow columns, 1.22.0 brings the input affixes behind the `prefix` / `suffix` slots, 1.21.2 gives disabled controls their look, 1.21.1 keeps the controls' state on paper, 1.21.0 brings the density tokens behind `data-density`, 1.20.0 the rules the elements build on since then (the dialog overlay, hidden list slots, empty control labels, control inputs on top); 1.9.0 is the release that made the stylesheet splittable, which is what lets document-level branding reach the elements at all.
+Peer dependency `@jungherz-de/glasskit >=1.23.0` is required — 1.23.0 lets list text wrap app-wide through tokens, 1.22.2 hands a click on a disabled control in an input affix to the field, 1.22.1 lets date and time fields shrink in narrow columns, 1.22.0 brings the input affixes behind the `prefix` / `suffix` slots, 1.21.2 gives disabled controls their look, 1.21.1 keeps the controls' state on paper, 1.21.0 brings the density tokens behind `data-density`, 1.20.0 the rules the elements build on since then (the dialog overlay, hidden list slots, empty control labels, control inputs on top); 1.9.0 is the release that made the stylesheet splittable, which is what lets document-level branding reach the elements at all.
 
 ### Import (ES modules)
 
@@ -1058,6 +1058,18 @@ iOS-style grouped settings list. Items carry a leading icon, title + optional su
 |---|---|
 | `leading` | Icon slot (24×24 SVG recommended, or 32×32 with `leading-lg`; use `stroke: currentColor`) |
 | `trailing` | Chevron, badge, or button — rendered after `detail` value |
+
+#### Wrapping text (since 1.23.0)
+
+Title and subtitle keep to one line, and `wrap` clamps the subtitle at three lines. GlassKit's list tokens change that for a whole app, one list or one row; they are inherited into the element's shadow root: `--gl-list-title-white-space` and `--gl-list-subtitle-white-space` (`nowrap` by default, `normal` wraps) and `--gl-list-subtitle-lines` (the clamp of `wrap`, `3` unless set, `none` = every line). A word wider than the column (an e-mail address) breaks instead of running out of the row. For breaks at syllables set `hyphens: auto; -webkit-hyphens: auto` on `glk-list` or the page; it is inherited too.
+
+```css
+:root {
+  --gl-list-title-white-space: normal;
+  --gl-list-subtitle-white-space: normal;
+  --gl-list-subtitle-lines: none;
+}
+```
 
 #### Events
 

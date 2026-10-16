@@ -5,7 +5,7 @@
   <a href="#"><img src="https://img.shields.io/badge/vanilla_JS-no_dependencies-44cc11?style=flat-square" alt="Vanilla JS"></a>
   <a href="#"><img src="https://img.shields.io/badge/components-36-7ec8e3?style=flat-square" alt="36 Components"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="MIT License"></a>
-  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/changelog-v1.24.0-lightgrey?style=flat-square" alt="Changelog"></a>
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/changelog-v1.25.0-lightgrey?style=flat-square" alt="Changelog"></a>
   <a href="https://www.npmjs.com/package/@jungherz-de/glasskit-elements"><img src="https://img.shields.io/badge/npm-%40jungherz--de%2Fglasskit--elements-cb3837?style=flat-square&logo=npm" alt="npm"></a>
 </p>
 
@@ -66,7 +66,7 @@ It is the **app layer** of the GlassKit family — three layers, one design lang
 
 ```html
 <!-- 1. GlassKit CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.24/glasskit.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.25/glasskit.min.css">
 
 <!-- 2. GlassKit Elements -->
 <script src="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"></script>
@@ -104,7 +104,7 @@ The per-component files leave `@jungherz-de/glasskit/glasskit-styles.js` as an e
 <!DOCTYPE html>
 <html data-theme="dark">
 <head>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.24/glasskit.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.25/glasskit.min.css">
   <script src="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"></script>
 </head>
 <body>
@@ -216,7 +216,7 @@ Fields and buttons become 40px high instead of 52 and 56, toggles, checkboxes an
 
 > **Requires GlassKit CSS >= 1.21.0.** The sizes are GlassKit's density tokens, so they reach every shadow root by inheritance, like the brand colors below — and so do your own: `[data-density='compact'] { --gl-btn-height: 36px; }`. With `data-glk-defaults="off"` the preset comes from `glasskit.css` on the page, like every other token. The global observer mirrors `data-density` onto each element's theme wrapper as well, so a rule keyed on the attribute matches inside the shadow root too.
 
-### Solid surfaces
+### Solid and tint surfaces
 
 Not every screen wants glass. Set `data-surface="solid"` on `<html>`, next to `data-theme` (since 1.24.0):
 
@@ -227,6 +227,8 @@ Not every screen wants glass. Set `data-surface="solid"` on `<html>`, next to `d
 Every surface becomes opaque, in the colour the glass shows over the theme's middle background, and blur and gloss are off; `removeAttribute('data-surface')` switches back at runtime. Without the attribute nothing changes.
 
 > **Requires GlassKit CSS >= 1.24.0.** The preset is tokens only, so it reaches every shadow root by inheritance, and so do your own values: `[data-surface='solid'] { --gl-surface-2: #17313d; }`. With `data-glk-defaults="off"` it comes from `glasskit.css` on the page. The observer mirrors `data-surface` onto each element's theme wrapper, like `data-theme` and `data-density`.
+
+On a page with a background of its own — a brand colour, a photo — use `data-surface="tint"` (GlassKit 1.25.0): the surfaces in the flow become see-through tints of the text colour, while modal, sheet, popover, toast, the tab bars and the secondary button keep the solid values, inside the shadow roots too.
 
 ### Printing
 

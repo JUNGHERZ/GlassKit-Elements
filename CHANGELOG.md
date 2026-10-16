@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.25.0] – 2026-10-16
+
+Versions stay aligned with GlassKit at 1.25.0, which this release is built against (peer dependency `>=1.25.0`).
+
+### Added
+
+- **Tint surfaces: `data-surface="tint"` on `<html>`.** GlassKit 1.25.0's preset for a page with a background of its own: the surfaces in the flow become see-through tints of the text colour, nothing blurred, while what lies over other content keeps the solid values. That holds inside the shadow roots as well — the panels of `<glk-modal>`, `<glk-sheet>`, `<glk-popover>`, `<glk-toast>`, `<glk-tab-bar>` and `<glk-tab-accessory>`, with the fields inside them — because GlassKit's panel rule matches on the theme wrapper, which mirrors `data-surface` with any value. Measured in Chromium, WebKit and Firefox: `<glk-card>` and `<glk-input>` show the page through, `<glk-button variant="secondary">` and the panel of an open `<glk-modal>` do not. ([GlassKit #11](https://github.com/JUNGHERZ/GlassKit/issues/11))
+- **GlassKit's new tokens reach the elements by inheritance:** `--gl-blur-overlay` for the dimmer of `<glk-modal>` and `<glk-sheet>`, `--gl-toggle-track-bg` / `-checked` for `<glk-toggle>`, the `--gl-radio-*` tokens for `<glk-radio>`, `--gl-textarea-field-sizing` for `<glk-textarea>` and `--gl-input-picker-icon` for date and time fields in `<glk-input>`. Measured: set on `:root`, each arrives inside the shadow root. ([GlassKit #11](https://github.com/JUNGHERZ/GlassKit/issues/11))
+
+### Fixed
+
+- **A form element without a label keeps no gap above its field.** `<glk-input>`, `<glk-select>` and `<glk-textarea>` render their label element even when `label` is empty, and it kept the input group's 8px gap; GlassKit 1.25.0 hides an empty label. With it, a long value in `<glk-input>` ends in an ellipsis, and a read-only `<glk-textarea>` has no resize handle. ([GlassKit #11](https://github.com/JUNGHERZ/GlassKit/issues/11))
+
+With the presets and tokens unset, docs, showcase and landing pages render pixel-identical to 1.24.0.
+
+---
+
 ## [1.24.0] – 2026-10-14
 
 Versions stay aligned with GlassKit at 1.24.0, which this release is built against (peer dependency `>=1.24.0`).
@@ -852,7 +869,8 @@ Starting with this release, GlassKit Elements version numbers are aligned with G
 
 ---
 
-[Unreleased]: https://github.com/JUNGHERZ/GlassKit-Elements/compare/v1.24.0...HEAD
+[Unreleased]: https://github.com/JUNGHERZ/GlassKit-Elements/compare/v1.25.0...HEAD
+[1.25.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.25.0
 [1.24.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.24.0
 [1.23.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.23.0
 [1.22.3]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.22.3

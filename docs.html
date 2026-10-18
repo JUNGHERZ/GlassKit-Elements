@@ -20,7 +20,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="GlassKit Elements — Documentation">
   <meta name="twitter:description" content="Complete documentation for all 29 GlassKit Elements web components with live examples.">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.26/glasskit.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.27/glasskit.min.css">
   <script src="/dist/glasskit-elements.min.js"></script>
   <style>
     html { scroll-behavior: smooth; }
@@ -253,7 +253,7 @@
     <aside class="docs-sidebar">
       <div class="docs-sidebar__title">&#129482; <a href="/">GlassKit Elements</a></div>
       <div class="docs-sidebar__subtitle">Web Components for GlassKit CSS.</div>
-      <div class="docs-sidebar__version">v1.26.0 &ndash; Jungherz GmbH</div>
+      <div class="docs-sidebar__version">v1.27.0 &ndash; Jungherz GmbH</div>
 
       <div class="docs-sidebar__group">
         <div class="docs-sidebar__group-title">Basics</div>
@@ -339,7 +339,7 @@
         <h1>GlassKit Elements</h1>
         <p>Complete reference for all 36 web components &ndash; built by Jungherz GmbH. Vanilla JS, Shadow DOM, native form participation.</p>
         <div class="docs-hero__badges">
-          <span class="docs-hero__badge">v1.26.0</span>
+          <span class="docs-hero__badge">v1.27.0</span>
           <span class="docs-hero__badge">Shadow DOM</span>
           <span class="docs-hero__badge">36 Components</span>
           <span class="docs-hero__badge">Vanilla JS</span>
@@ -352,7 +352,7 @@
 
         <h3>CDN (quickest)</h3>
         <div class="docs-code"><span class="cmt">&lt;!-- 1. GlassKit CSS --&gt;</span>
-<span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span> <span class="attr">href</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.26/glasskit.min.css"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span> <span class="attr">href</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.27/glasskit.min.css"</span><span class="tag">&gt;</span>
 
 <span class="cmt">&lt;!-- 2. GlassKit Elements --&gt;</span>
 <span class="tag">&lt;script</span> <span class="attr">src</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"</span><span class="tag">&gt;&lt;/script&gt;</span></div>
@@ -724,8 +724,18 @@ addEventListener(<span class="val">'afterprint'</span>, () =&gt; {
             <tr><td><code>label</code></td><td>String</td><td><code>aria-label</code> of the group</td></tr>
             <tr><td><code>name</code></td><td>String</td><td>Form field name (form-associated)</td></tr>
             <tr><td><code>disabled</code></td><td>Boolean</td><td>The whole row (since 1.22.3); a <code>&lt;fieldset disabled&gt;</code> around it disables it too</td></tr>
+            <tr><td><code>droplet</code></td><td>Boolean</td><td>The chosen option sits on a drop of glass that glides to the next one and can be dragged (since 1.27.0)</td></tr>
           </table>
           <p><strong>Events:</strong> <code>glk-change</code> <code>{ value }</code> — only on a change made by the user. <strong>Part:</strong> <code>group</code>.</p>
+          <p><strong>Droplet (since 1.27.0).</strong> <code>droplet</code> gives the chosen option the drop of the tab bar: it runs to a new option, stretches on the way and settles, the text it passes lights up, and a finger can drag it. A drag that ends on an option selects it like a tap &mdash; <code>value</code>, <code>glk-change</code> and the form value follow; disabled options are skipped. With <code>overflow="scroll"</code> a swipe still scrolls the row: only the drop itself is dragged, and the row scrolls along at its edges. Recommended wherever a segmented control is used:</p>
+          <div class="docs-preview" style="display:flex;flex-direction:column;gap:10px;align-items:flex-start;">
+            <glk-segmented droplet label="Mode" options='[{"value":"context","label":"Contextual"},{"value":"page","label":"Help page"},{"value":"inline","label":"Inline"}]' value="context"></glk-segmented>
+            <glk-segmented droplet full label="Status" style="width:100%" options='[{"value":"g","label":"Green","tone":"success"},{"value":"y","label":"Yellow","tone":"warning"},{"value":"r","label":"Red","tone":"error"},{"value":"x","label":"Locked","disabled":true}]' value="y"></glk-segmented>
+            <div style="width:100%;max-width:320px">
+              <glk-segmented droplet full overflow="scroll" label="Area" value="a" options='[{"value":"a","label":"General"},{"value":"b","label":"Hours"},{"value":"c","label":"Dogs"},{"value":"d","label":"Team"},{"value":"e","label":"Texts"},{"value":"f","label":"Notifications"},{"value":"g","label":"Privacy"}]'></glk-segmented>
+            </div>
+          </div>
+          <div class="docs-code"><span class="tag">&lt;glk-segmented</span> <span class="attr">droplet full overflow</span>=<span class="val">"scroll"</span> <span class="attr">label</span>=<span class="val">"Area"</span> <span class="attr">value</span>=<span class="val">"a"</span> <span class="attr">options</span>=<span class="val">'[…]'</span><span class="tag">&gt;&lt;/glk-segmented&gt;</span></div>
           <script>
             document.getElementById('docs-seg').addEventListener('glk-change', e => { document.querySelector('[data-docs-seg-out]').textContent = 'glk-change → ' + e.detail.value; });
           </script>
@@ -860,6 +870,7 @@ addEventListener(<span class="val">'afterprint'</span>, () =&gt; {
           <table class="docs-table">
             <tr><th>Attribute</th><th>Component</th><th>Description</th></tr>
             <tr><td><code>floating</code></td><td>glk-tab-bar</td><td>Pill-shaped Liquid Glass variant — Spotlight halo on the active item</td></tr>
+            <tr><td><code>droplet</code></td><td>glk-tab-bar</td><td>The active item sits on a drop of glass that glides to the next one and can be dragged (since 1.27.0)</td></tr>
             <tr><td><code>accessory-left</code></td><td>glk-tab-dock</td><td>Place the accessory on the left of the bar (default is right)</td></tr>
             <tr><td><code>label</code></td><td>glk-tab-accessory</td><td>aria-label for accessibility</td></tr>
             <tr><td><code>variant</code></td><td>glk-tab-accessory</td><td><code>accent</code> | <code>success</code> | <code>error</code> &mdash; filled colored capsule with white icon</td></tr>
@@ -867,6 +878,22 @@ addEventListener(<span class="val">'afterprint'</span>, () =&gt; {
           </table>
           <p><strong>Events:</strong> <code>&lt;glk-tab-accessory&gt;</code> emits <code>glk-click</code> when clicked (suppressed when disabled).</p>
           <p><strong>Tip:</strong> Use <code>.glass-bg--has-tab-bar-floating</code> on the outer <code>.glass-bg</code> instead of <code>--has-tab-bar</code> to reserve the right amount of bottom padding.</p>
+          <p><strong>Droplet (since 1.27.0).</strong> <code>droplet</code> makes the selection fluid, as in iOS 26. The active item sits on a drop of glass that floats a little above the bar; a tap sends it to the new tab like water on a pane &mdash; the leading edge goes first, the trailing one follows, it runs flatter on the way and settles with a small wobble, and the icons it passes grow as under a lens. A finger can drag it along the bar; let go, and the tab below is selected exactly as by a tap, <code>glk-tab-change</code> included. Recommended for every floating bar: one attribute, nothing else changes. Try it &mdash; tap a tab, or drag the drop:</p>
+          <div class="docs-preview" style="height:96px;align-items:center;">
+            <glk-tab-dock static>
+              <glk-tab-bar floating droplet>
+                <glk-tab-item label="Home" active><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></glk-tab-item>
+                <glk-tab-item label="Docs" badge="3"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></glk-tab-item>
+                <glk-tab-item label="Upload"><svg viewBox="0 0 24 24"><path d="M12 16V4"/><polyline points="8 8 12 4 16 8"/><path d="M20 17v1a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-1"/></svg></glk-tab-item>
+                <glk-tab-item label="Profile"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></glk-tab-item>
+              </glk-tab-bar>
+            </glk-tab-dock>
+          </div>
+          <div class="docs-code"><span class="tag">&lt;glk-tab-bar</span> <span class="attr">floating droplet</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;glk-tab-item</span> <span class="attr">label</span>=<span class="val">"Home"</span> <span class="attr">active</span><span class="tag">&gt;</span><span class="tag">&lt;svg&gt;</span>...<span class="tag">&lt;/svg&gt;&lt;/glk-tab-item&gt;</span>
+  <span class="cmt">&lt;!-- more items --&gt;</span>
+<span class="tag">&lt;/glk-tab-bar&gt;</span></div>
+          <p>It is GlassKit&rsquo;s <code>.glass-tab-bar--droplet</code>, moved by GlassKit&rsquo;s <code>glasskit-droplet.js</code>, which the bundles and the per-component files carry &mdash; an import map needs no new entry. Spotlight, dot and glow are off on a droplet bar; with <code>prefers-reduced-motion</code> the drop jumps, solid and tint surfaces make it opaque. GlassKit&rsquo;s tokens for a capsule behind the active tab (<code>--gl-tab-bar-active-bg</code>, <code>-shadow</code>, <code>--gl-tab-bar-spotlight-opacity</code>, <code>--gl-tab-bar-active-glow</code>) reach the items by inheritance, and the drop takes that surface. Since 1.27.0 the items of a floating bar also really take the floating look: spotlight and pill, no dot.</p>
         </div>
         <div class="docs-component" id="glk-steps">
           <h3><code>&lt;glk-steps&gt;</code></h3>

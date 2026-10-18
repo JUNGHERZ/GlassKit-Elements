@@ -20,7 +20,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="GlassKit Elements — Dokumentation">
   <meta name="twitter:description" content="Vollständige Dokumentation aller 29 GlassKit Elements Web Components mit Live-Beispielen.">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.26/glasskit.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.27/glasskit.min.css">
   <script src="/dist/glasskit-elements.min.js"></script>
   <style>
     html { scroll-behavior: smooth; }
@@ -255,7 +255,7 @@
     <aside class="docs-sidebar">
       <div class="docs-sidebar__title">&#129482; <a href="../de/">GlassKit Elements</a></div>
       <div class="docs-sidebar__subtitle">Web Components f&uuml;r GlassKit CSS.</div>
-      <div class="docs-sidebar__version">v1.26.0 &ndash; Jungherz GmbH</div>
+      <div class="docs-sidebar__version">v1.27.0 &ndash; Jungherz GmbH</div>
 
       <div class="docs-sidebar__group">
         <div class="docs-sidebar__group-title">Grundlagen</div>
@@ -341,7 +341,7 @@
         <h1>GlassKit Elements</h1>
         <p>Vollst&auml;ndige Referenz f&uuml;r alle 36 Web Components &ndash; entwickelt von Jungherz GmbH. Vanilla JS, Shadow DOM, native Formular-Teilnahme.</p>
         <div class="docs-hero__badges">
-          <span class="docs-hero__badge">v1.26.0</span>
+          <span class="docs-hero__badge">v1.27.0</span>
           <span class="docs-hero__badge">Shadow DOM</span>
           <span class="docs-hero__badge">36 Komponenten</span>
           <span class="docs-hero__badge">Vanilla JS</span>
@@ -354,7 +354,7 @@
 
         <h3>CDN (schnellste Variante)</h3>
         <div class="docs-code"><span class="cmt">&lt;!-- 1. GlassKit CSS --&gt;</span>
-<span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span> <span class="attr">href</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.26/glasskit.min.css"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span> <span class="attr">href</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.27/glasskit.min.css"</span><span class="tag">&gt;</span>
 
 <span class="cmt">&lt;!-- 2. GlassKit Elements --&gt;</span>
 <span class="tag">&lt;script</span> <span class="attr">src</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"</span><span class="tag">&gt;&lt;/script&gt;</span></div>
@@ -726,8 +726,18 @@ addEventListener(<span class="val">'afterprint'</span>, () =&gt; {
             <tr><td><code>label</code></td><td>String</td><td><code>aria-label</code> der Gruppe</td></tr>
             <tr><td><code>name</code></td><td>String</td><td>Feldname im Formular (form-assoziiert)</td></tr>
             <tr><td><code>disabled</code></td><td>Boolean</td><td>Die ganze Reihe (seit 1.22.3); ein <code>&lt;fieldset disabled&gt;</code> um sie herum deaktiviert sie ebenso</td></tr>
+            <tr><td><code>droplet</code></td><td>Boolean</td><td>Die gewählte Option sitzt auf einem Glastropfen, der zur nächsten gleitet und sich ziehen lässt (seit 1.27.0)</td></tr>
           </table>
           <p><strong>Events:</strong> <code>glk-change</code> <code>{ value }</code> — nur bei einer Änderung durch den Nutzer. <strong>Part:</strong> <code>group</code>.</p>
+          <p><strong>Droplet (seit 1.27.0).</strong> <code>droplet</code> gibt der gewählten Option den Tropfen der Tab-Leiste: Er läuft zur neuen Option, dehnt sich unterwegs und kommt zur Ruhe, die Schrift, über die er läuft, leuchtet auf, und ein Finger kann ihn ziehen. Endet ein Ziehen auf einer Option, wird sie gewählt wie per Tipp &mdash; <code>value</code>, <code>glk-change</code> und der Formularwert folgen; deaktivierte Optionen werden übersprungen. Mit <code>overflow="scroll"</code> scrollt ein Wischen weiterhin die Reihe: Gezogen wird nur der Tropfen selbst, und an den Rändern scrollt die Reihe mit. Empfohlen, wo immer eine Segmentwahl im Einsatz ist:</p>
+          <div class="docs-preview" style="display:flex;flex-direction:column;gap:10px;align-items:flex-start;">
+            <glk-segmented droplet label="Modus" options='[{"value":"context","label":"Kontextuell"},{"value":"page","label":"Hilfeseite"},{"value":"inline","label":"Inline"}]' value="context"></glk-segmented>
+            <glk-segmented droplet full label="Status" style="width:100%" options='[{"value":"g","label":"Grün","tone":"success"},{"value":"y","label":"Gelb","tone":"warning"},{"value":"r","label":"Rot","tone":"error"},{"value":"x","label":"Gesperrt","disabled":true}]' value="y"></glk-segmented>
+            <div style="width:100%;max-width:320px">
+              <glk-segmented droplet full overflow="scroll" label="Bereich" value="a" options='[{"value":"a","label":"Allgemein"},{"value":"b","label":"Zeiten"},{"value":"c","label":"Hunde"},{"value":"d","label":"Team"},{"value":"e","label":"Texte"},{"value":"f","label":"Benachrichtigungen"},{"value":"g","label":"Datenschutz"}]'></glk-segmented>
+            </div>
+          </div>
+          <div class="docs-code"><span class="tag">&lt;glk-segmented</span> <span class="attr">droplet full overflow</span>=<span class="val">"scroll"</span> <span class="attr">label</span>=<span class="val">"Bereich"</span> <span class="attr">value</span>=<span class="val">"a"</span> <span class="attr">options</span>=<span class="val">'[…]'</span><span class="tag">&gt;&lt;/glk-segmented&gt;</span></div>
           <script>
             document.getElementById('docs-seg').addEventListener('glk-change', e => { document.querySelector('[data-docs-seg-out]').textContent = 'glk-change → ' + e.detail.value; });
           </script>
@@ -862,6 +872,7 @@ addEventListener(<span class="val">'afterprint'</span>, () =&gt; {
           <table class="docs-table">
             <tr><th>Attribut</th><th>Komponente</th><th>Beschreibung</th></tr>
             <tr><td><code>floating</code></td><td>glk-tab-bar</td><td>Pillenfoermige Liquid-Glass-Variante &mdash; Spotlight-Halo am aktiven Item</td></tr>
+            <tr><td><code>droplet</code></td><td>glk-tab-bar</td><td>Das aktive Item sitzt auf einem Glastropfen, der zum nächsten gleitet und sich ziehen lässt (seit 1.27.0)</td></tr>
             <tr><td><code>accessory-left</code></td><td>glk-tab-dock</td><td>Accessory links statt rechts neben der Bar</td></tr>
             <tr><td><code>label</code></td><td>glk-tab-accessory</td><td>aria-label fuer Barrierefreiheit</td></tr>
             <tr><td><code>variant</code></td><td>glk-tab-accessory</td><td><code>accent</code> | <code>success</code> | <code>error</code> &mdash; gefuellte farbige Kapsel mit weissem Icon</td></tr>
@@ -869,6 +880,22 @@ addEventListener(<span class="val">'afterprint'</span>, () =&gt; {
           </table>
           <p><strong>Events:</strong> <code>&lt;glk-tab-accessory&gt;</code> sendet <code>glk-click</code> beim Klick (unterdrueckt im disabled-Zustand).</p>
           <p><strong>Tipp:</strong> Nutze <code>.glass-bg--has-tab-bar-floating</code> auf dem aeusseren <code>.glass-bg</code> statt <code>--has-tab-bar</code>, damit das Padding zur schwebenden Variante passt.</p>
+          <p><strong>Droplet (seit 1.27.0).</strong> <code>droplet</code> macht die Auswahl flüssig, wie in iOS 26. Das aktive Item sitzt auf einem Glastropfen, der ein wenig über der Leiste schwebt; ein Tipp schickt ihn zum neuen Tab wie Wasser über eine Scheibe &mdash; die Vorderkante läuft voraus, die Hinterkante folgt, unterwegs wird er flacher, am Ziel wippt er kurz nach, und die Icons, über die er läuft, wachsen wie unter einer Lupe. Ein Finger kann ihn über die Leiste ziehen; beim Loslassen wird der Tab darunter gewählt, genau wie per Tipp, samt <code>glk-tab-change</code>. Empfohlen für jede schwebende Leiste: ein Attribut, sonst ändert sich nichts. Probier es &mdash; tippe einen Tab an oder zieh den Tropfen:</p>
+          <div class="docs-preview" style="height:96px;align-items:center;">
+            <glk-tab-dock static>
+              <glk-tab-bar floating droplet>
+                <glk-tab-item label="Start" active><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></glk-tab-item>
+                <glk-tab-item label="Doku" badge="3"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></glk-tab-item>
+                <glk-tab-item label="Upload"><svg viewBox="0 0 24 24"><path d="M12 16V4"/><polyline points="8 8 12 4 16 8"/><path d="M20 17v1a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-1"/></svg></glk-tab-item>
+                <glk-tab-item label="Profil"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></glk-tab-item>
+              </glk-tab-bar>
+            </glk-tab-dock>
+          </div>
+          <div class="docs-code"><span class="tag">&lt;glk-tab-bar</span> <span class="attr">floating droplet</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;glk-tab-item</span> <span class="attr">label</span>=<span class="val">"Start"</span> <span class="attr">active</span><span class="tag">&gt;</span><span class="tag">&lt;svg&gt;</span>...<span class="tag">&lt;/svg&gt;&lt;/glk-tab-item&gt;</span>
+  <span class="cmt">&lt;!-- weitere Items --&gt;</span>
+<span class="tag">&lt;/glk-tab-bar&gt;</span></div>
+          <p>Das ist GlassKits <code>.glass-tab-bar--droplet</code>, bewegt von GlassKits <code>glasskit-droplet.js</code>, das die Bundles und die Einzeldateien mitbringen &mdash; eine Import-Map braucht keinen neuen Eintrag. Spotlight, Punkt und Leuchten sind auf einer Droplet-Leiste aus; mit <code>prefers-reduced-motion</code> springt der Tropfen, Solid- und Tint-Flächen machen ihn deckend. GlassKits Tokens für eine Kapsel hinter dem aktiven Tab (<code>--gl-tab-bar-active-bg</code>, <code>-shadow</code>, <code>--gl-tab-bar-spotlight-opacity</code>, <code>--gl-tab-bar-active-glow</code>) erreichen die Items durch Vererbung, und der Tropfen nimmt diese Fläche. Seit 1.27.0 bekommen die Items einer schwebenden Leiste außerdem wirklich deren Aussehen: Spotlight und Pille statt des Punkts.</p>
         </div>
         <div class="docs-component" id="glk-steps">
           <h3><code>&lt;glk-steps&gt;</code></h3>

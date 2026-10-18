@@ -5,7 +5,7 @@
   <a href="#"><img src="https://img.shields.io/badge/vanilla_JS-no_dependencies-44cc11?style=flat-square" alt="Vanilla JS"></a>
   <a href="#"><img src="https://img.shields.io/badge/components-36-7ec8e3?style=flat-square" alt="36 Components"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="MIT License"></a>
-  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/changelog-v1.26.0-lightgrey?style=flat-square" alt="Changelog"></a>
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/changelog-v1.27.0-lightgrey?style=flat-square" alt="Changelog"></a>
   <a href="https://www.npmjs.com/package/@jungherz-de/glasskit-elements"><img src="https://img.shields.io/badge/npm-%40jungherz--de%2Fglasskit--elements-cb3837?style=flat-square&logo=npm" alt="npm"></a>
 </p>
 
@@ -56,6 +56,7 @@ It is the **app layer** of the GlassKit family — three layers, one design lang
 | 📦 **Three bundle formats** | IIFE for `<script>`, minified IIFE for production, ESM for bundlers & tree-shaking |
 | 🎛️ **Form Participation** | Input, toggle, checkbox, radio, select — all work natively with `<form>` via `ElementInternals`: value, reset and, since 1.20.0, validity; `<glk-button type="submit">` submits |
 | 🌗 **Theme Sync** | Automatic dark/light mode sync via `data-theme` on `<html>`, compact controls via `data-density`, opaque surfaces via `data-surface` |
+| 💧 **Fluid selection** | `droplet` on `<glk-tab-bar>` and `<glk-segmented>`: the chosen item rides a drop of glass that glides to the next one and can be dragged (since 1.27.0) |
 | 📱 **Mobile-first** | Inherits GlassKit's mobile-optimized design with `safe-area-inset` support |
 
 ---
@@ -66,7 +67,7 @@ It is the **app layer** of the GlassKit family — three layers, one design lang
 
 ```html
 <!-- 1. GlassKit CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.26/glasskit.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.27/glasskit.min.css">
 
 <!-- 2. GlassKit Elements -->
 <script src="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"></script>
@@ -104,7 +105,7 @@ The per-component files leave `@jungherz-de/glasskit/glasskit-styles.js` as an e
 <!DOCTYPE html>
 <html data-theme="dark">
 <head>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.26/glasskit.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.27/glasskit.min.css">
   <script src="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"></script>
 </head>
 <body>
@@ -125,7 +126,7 @@ The per-component files leave `@jungherz-de/glasskit/glasskit-styles.js` as an e
 |---|---|---|
 | `<glk-nav>` | Horizontal navigation bar | — |
 | `<glk-pill>` | Circular icon button (46×46px) | `label`, `disabled` |
-| `<glk-tab-bar>` | Bottom tab bar navigation | `static`, `floating` |
+| `<glk-tab-bar>` | Bottom tab bar navigation | `static`, `floating`, `droplet` |
 | `<glk-tab-item>` | Tab bar item | `label`, `active`, `badge` |
 | `<glk-tab-dock>` | Wrapper for floating tab bar + optional accessory | `accessory-left` |
 | `<glk-tab-accessory>` | Standalone glass capsule (search, compose…) | `label`, `variant` (accent, success, error), `disabled` |
@@ -164,7 +165,7 @@ All form components support `name`, `value`, `disabled` and participate in nativ
 | `<glk-checkbox>` | Checkbox | `label`, `checked`, `disabled`, `required` |
 | `<glk-radio>` | Radio button | `label`, `name`, `value`, `checked`, `required` (per group) |
 | `<glk-range>` | Range slider | `label`, `min`, `max`, `value`, `step` |
-| `<glk-segmented>` | Small exclusive choice as one control; form-associated | `options` (JSON), `value`, `full`, `overflow` (scroll, wrap), `label`, `name` |
+| `<glk-segmented>` | Small exclusive choice as one control; form-associated | `options` (JSON), `value`, `full`, `overflow` (scroll, wrap), `droplet`, `label`, `name` |
 | `<glk-calendar>` | One month with a day to pick; keyboard navigation, `Intl` names; form-associated | `month`, `value`, `today`, `min`, `max`, `marks`, `locale`, `week-start`, `label`, `name` |
 | `<glk-image-picker>` | One image with preview, resized on the client, EXIF rotation applied; not form-associated | `src`, `label`, `hint`, `round`, `max`, `type`, `quality`, `accept` |
 
@@ -215,6 +216,27 @@ Admin screens, desktop layouts and narrow forms want denser controls. Set `data-
 Fields and buttons become 40px high instead of 52 and 56, toggles, checkboxes and radios smaller, list rows and modal actions denser; `removeAttribute('data-density')` switches back at runtime. Without the attribute nothing changes.
 
 > **Requires GlassKit CSS >= 1.21.0.** The sizes are GlassKit's density tokens, so they reach every shadow root by inheritance, like the brand colors below — and so do your own: `[data-density='compact'] { --gl-btn-height: 36px; }`. With `data-glk-defaults="off"` the preset comes from `glasskit.css` on the page, like every other token. The global observer mirrors `data-density` onto each element's theme wrapper as well, so a rule keyed on the attribute matches inside the shadow root too.
+
+### Droplet: a fluid selection
+
+Since 1.27.0 one attribute makes the selection of a tab bar or a segmented control fluid, as in iOS 26:
+
+```html
+<glk-tab-dock>
+  <glk-tab-bar floating droplet>
+    <glk-tab-item label="Home" active>…</glk-tab-item>
+    <glk-tab-item label="Search">…</glk-tab-item>
+  </glk-tab-bar>
+</glk-tab-dock>
+
+<glk-segmented droplet overflow="scroll" value="general" options='[…]'></glk-segmented>
+```
+
+The chosen item sits on a drop of glass that floats a little above the row. A tap sends it to the new item like water on a pane: the leading edge goes first, the trailing one follows, it runs flatter on the way and settles with a small wobble, and what it passes grows or lights up as under a lens. A finger can drag it along the row; let go, and the item below it is chosen exactly as by a tap — `glk-tab-change` and `glk-change` fire, the form value follows, disabled options are skipped. With `overflow="scroll"` a swipe still scrolls the row: only the drop itself is dragged, and the row scrolls along at its edges. `droplet` is also a property and may be switched at runtime.
+
+**Already using the elements?** Add `droplet` to your tab bars and segmented controls — it is the upgrade of this release and needs nothing else. It is GlassKit's `--droplet` and its module `glasskit-droplet.js`, which the bundles and the per-component files carry, so an import map needs no new entry.
+
+> **Requires GlassKit CSS >= 1.27.0.** The tokens for a capsule behind the active tab (`--gl-tab-bar-active-bg`, `--gl-tab-bar-active-shadow`, `--gl-tab-bar-spotlight-opacity`, `--gl-tab-bar-active-glow`) reach `<glk-tab-item>` by inheritance; the drop takes the same surface. Since 1.27.0 the items of `<glk-tab-bar floating>` also take the floating look — spotlight and pill instead of the fixed bar's dot.
 
 ### Solid and tint surfaces
 

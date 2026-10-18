@@ -1,5 +1,6 @@
 import { GlkFormElement } from '../../base.js';
 import { revealCentered } from '../../reveal.js';
+import { attachDroplet } from '@jungherz-de/glasskit/glasskit-droplet.js';
 
 // One button per option, the chosen one marked aria-pressed="true" — GlassKit
 // styles exactly that attribute. Came back from EhrenPfoten in 1.15.0.
@@ -9,9 +10,11 @@ import { revealCentered } from '../../reveal.js';
 //             do not fit — without it the row stays one line and runs past
 //             the edge), label (aria-label of the group), name (form field),
 //             disabled (the whole row; since 1.22.3, as is a disabled
-//             fieldset around it)
+//             fieldset around it), droplet (since 1.27.0: the chosen option
+//             sits on a drop of glass that glides to the next one and can be
+//             dragged — GlassKit's .glass-segmented--droplet)
 // Properties: value, options (array or JSON text), full, overflow, label,
-//             disabled
+//             disabled, droplet
 // Event:      glk-change { value } — only on a change made by the user
 // Part:       group
 //
@@ -40,7 +43,7 @@ function parseList(json) {
 }
 
 class GlkSegmented extends GlkFormElement {
-  static get observedAttributes() { return ['options', 'value', 'full', 'overflow', 'label']; }
+  static get observedAttributes() { return ['options', 'value', 'full', 'overflow', 'label', 'droplet']; }
 
   // A row of buttons with one tab stop: delegated focus would land on the
   // first button, not the chosen one.
@@ -91,6 +94,7 @@ class GlkSegmented extends GlkFormElement {
   _applyLayout() {
     const overflow = this.overflow;
     this._group.classList.toggle('glass-segmented--full', this.getBoolAttr('full'));
+    this._group.classList.toggle('glass-segmented--droplet', this.getBoolAttr('droplet'));
     for (const mode of OVERFLOWS) this._group.classList.toggle(`glass-segmented--${mode}`, overflow === mode);
     this._reveal('instant');
   }
@@ -120,12 +124,23 @@ class GlkSegmented extends GlkFormElement {
     this._group.addEventListener('click', this._onClick);
     this._resizeObserver = new ResizeObserver(this._onResize);
     this._resizeObserver.observe(this._group);
+    this._applyDroplet();
   }
 
   teardownEvents() {
     this._group?.removeEventListener('click', this._onClick);
     this._resizeObserver?.disconnect();
     this._resizeObserver = null;
+    this._droplet?.destroy();
+    this._droplet = null;
+  }
+
+  // The drop follows aria-pressed inside this shadow root by itself; a drag
+  // that ends on an option clicks it, the same path as a tap.
+  _applyDroplet() {
+    const on = this.getBoolAttr('droplet') && this.isConnected;
+    if (on && !this._droplet) this._droplet = attachDroplet(this._group);
+    else if (!on && this._droplet) { this._droplet.destroy(); this._droplet = null; }
   }
 
   onAttributeChanged(name) {
@@ -135,6 +150,7 @@ class GlkSegmented extends GlkFormElement {
       case 'options': this._build(); break;
       case 'full':
       case 'overflow': this._applyLayout(); break;
+      case 'droplet': this._applyLayout(); this._applyDroplet(); break;
       case 'label': this._applyLabel(); break;
     }
   }
@@ -153,6 +169,9 @@ class GlkSegmented extends GlkFormElement {
 
   get full() { return this.getBoolAttr('full'); }
   set full(v) { this.setBoolAttr('full', v); }
+
+  get droplet() { return this.getBoolAttr('droplet'); }
+  set droplet(v) { this.setBoolAttr('droplet', v); }
 
   get overflow() {
     const v = this.getAttribute('overflow');

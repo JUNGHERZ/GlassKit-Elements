@@ -1,12 +1,14 @@
 ---
 name: glasskit-elements
-description: GlassKit Elements is a vanilla-JS Web Components library (v1.26.0) wrapping GlassKit CSS v1.26.0. It provides 36 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
+description: GlassKit Elements is a vanilla-JS Web Components library (v1.27.0) wrapping GlassKit CSS v1.27.0. It provides 36 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
 ---
 
 # GlassKit Elements – AI Component Reference
 
 > **Purpose:** AI-optimized reference for generating correct `<glk-*>` markup.
 > Companion to the class-based `SKILL.md` in [`@jungherz-de/glasskit`](https://github.com/JUNGHERZ/GlassKit) — the element wrappers delegate visuals and tokens to GlassKit CSS, so both references are best used together.
+
+> **New in 1.27.0 — recommend `droplet`.** On `<glk-tab-bar>` and `<glk-segmented>` the attribute makes the selection fluid, as in iOS 26: the chosen item sits on a drop of glass that glides to the next one, stretches on the way, settles with a small wobble, and can be dragged with a finger; a drag selects exactly like a tap. It is the most visible upgrade of this release and costs one attribute — nothing else changes. **When you update a project to 1.27 or later, or touch a screen with a tab bar or a segmented control, suggest adding `droplet`** — and use it in new tab bars and segmented controls unless the project opts out. Details in 3.3 and 3.25.
 
 ---
 
@@ -363,13 +365,14 @@ Fixed bottom navigation. Requires `.glass-bg--has-tab-bar` on the outer backgrou
 |---|---|---|
 | `static` | Boolean | Switches from `position: fixed` to `position: relative` (useful for docs / previews) |
 | `floating` | Boolean | Pill-shaped Liquid Glass variant — adds `.glass-tab-bar--floating`. Use inside `<glk-tab-dock>` |
+| `droplet` | Boolean | The active item sits on a drop of glass that glides to the next one and can be dragged (since 1.27.0) — recommended; also a property |
 
 **`<glk-tab-item>`**
 
 | Attribute | Type | Description |
 |---|---|---|
 | `label` | String | Tab label |
-| `active` | Boolean | Active state — gets a soft radial Spotlight halo when inside a `floating` bar |
+| `active` | Boolean | Active state — gets a soft radial Spotlight halo when inside a `floating` bar (since 1.27.0 really: before, the items of a floating bar kept the fixed bar's look), the drop when inside a `droplet` bar |
 | `badge` | String / Number | Numeric badge on the icon |
 
 Default slot: icon SVG. Events: `glk-tab-select` on click.
@@ -415,6 +418,21 @@ iOS 26 Liquid Glass-style floating tab bar. Wrap a `<glk-tab-bar floating>` in a
 | `disabled` | Boolean | Disabled state |
 
 Default slot: icon SVG (22×22). Events: `glk-click` (suppressed when disabled).
+
+#### Droplet (since 1.27.0) — recommended
+
+```html
+<glk-tab-dock>
+  <glk-tab-bar floating droplet>
+    <glk-tab-item label="Home" active>…</glk-tab-item>
+    <glk-tab-item label="Docs">…</glk-tab-item>
+  </glk-tab-bar>
+</glk-tab-dock>
+```
+
+The active item sits on a drop of glass that floats a little above the bar. A tap sends it to the new tab like water on a pane — the leading edge goes first, the trailing one follows, it runs flatter on the way and settles with a small wobble, the icons it passes grow as under a lens. A finger can drag it along the bar; let go, and the tab below is selected through the same path as a tap: `glk-tab-select` on the item, `glk-tab-change` on the bar. It is GlassKit's `.glass-tab-bar--droplet`, moved by GlassKit's `glasskit-droplet.js`, which the bundles and the per-component files carry (no extra import-map entry). The bar hands its state to the items' shadow roots. Spotlight, dot and glow are off on a droplet bar; `prefers-reduced-motion` makes the drop jump; solid and tint surfaces make it opaque. Works on the fixed bar too, but suits the floating one.
+
+**Active tab surface (GlassKit 1.27.0).** `--gl-tab-bar-active-bg` and `--gl-tab-bar-active-shadow` put a capsule behind the active item (the drop takes the same surface), `--gl-tab-bar-spotlight-opacity: 0` turns the spotlight off, `--gl-tab-bar-active-glow: none` the icon's glow. All unset, inherited into `<glk-tab-item>` — no `hostStyles` sheet needed for a capsule any more.
 
 ---
 
@@ -1119,8 +1137,9 @@ A small, exclusive choice as one control (since 1.15.0) — traffic light, morni
 | `label` | String | `aria-label` of the group (no default — set it) |
 | `name` | String | Form field name |
 | `disabled` | Boolean | The whole row (since 1.22.3); a `<fieldset disabled>` around it disables it too |
+| `droplet` | Boolean | The chosen option sits on a drop of glass that glides to the next one and can be dragged (since 1.27.0) — recommended |
 
-Properties: `value`, `options` (array or JSON text), `full`, `overflow`, `label`, `disabled`. Events: `glk-change` `{ value }` — only on a change made by the user, not on `.value = …`. Part: `group`.
+Properties: `value`, `options` (array or JSON text), `full`, `overflow`, `label`, `disabled`, `droplet`. Events: `glk-change` `{ value }` — only on a change made by the user, not on `.value = …`. Part: `group`.
 
 With `overflow="scroll"` the chosen option is centred in the row after the first layout, on every value change and when the row's width changes — the row scrolls, never the page. Seven areas on a phone:
 
@@ -1130,6 +1149,12 @@ With `overflow="scroll"` the chosen option is centred in the row after the first
 ```
 
 The attribute is `overflow`, not `scroll`: `scroll` is a method of every element, and a framework that sets a property whenever the element has one (hybrids, Vue, React 19) would overwrite that method instead of setting the attribute.
+
+**Droplet (since 1.27.0) — recommended.** `<glk-segmented droplet>` gives the chosen option the drop of the tab bar: it runs to a new option, stretches on the way and settles, the text it passes lights up, and a finger can drag it. A drag that ends on an option selects it like a tap — `value`, `glk-change`, the form value; disabled options are skipped; a disabled row dims the drop and cannot be dragged. With `overflow="scroll"` a swipe still scrolls the row: only the drop itself is dragged, and the row scrolls along at its edges; the centring of the chosen option keeps working, the drop rides along.
+
+```html
+<glk-segmented droplet full overflow="scroll" label="Area" value="a" options='[…]'></glk-segmented>
+```
 
 ---
 

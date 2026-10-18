@@ -1,9 +1,16 @@
 import { GlkElement } from './base.js';
+import { a as attachDroplet } from './shared/glasskit-droplet-C3k1mxn4.js';
 import '@jungherz-de/glasskit/glasskit-styles.js';
+
+// droplet (since 1.27.0): the active item sits on a drop of glass that glides
+// to the next one and can be dragged — GlassKit's .glass-tab-bar--droplet,
+// moved by its glasskit-droplet.js. The items live in shadow roots of their
+// own, so the bar hands its state down to them (see glk-tab-item _syncBar)
+// and tells the drop when the active item changed.
 
 class GlkTabBar extends GlkElement {
   static get observedAttributes() {
-    return ['static', 'floating'];
+    return ['static', 'floating', 'droplet'];
   }
 
   render() {
@@ -15,6 +22,7 @@ class GlkTabBar extends GlkElement {
     if (this.getBoolAttr('floating')) {
       nav.classList.add('glass-tab-bar--floating');
     }
+    nav.classList.toggle('glass-tab-bar--droplet', this.getBoolAttr('droplet'));
 
     if (this.getBoolAttr('static')) {
       this._applyStatic();
@@ -27,12 +35,52 @@ class GlkTabBar extends GlkElement {
       this._applyStatic();
     } else if (name === 'floating') {
       this._nav.classList.toggle('glass-tab-bar--floating', this.getBoolAttr('floating'));
+      this._syncItems();
+    } else if (name === 'droplet') {
+      this._nav.classList.toggle('glass-tab-bar--droplet', this.getBoolAttr('droplet'));
+      this._applyDroplet();
     }
   }
 
   _applyStatic() {
     this._nav.style.position = 'relative';
     this._nav.style.borderRadius = '16px';
+  }
+
+  _items() {
+    return [...this.children].filter(el => el.localName === 'glk-tab-item');
+  }
+
+  /** Hands the bar's floating and droplet state to every item's wrapper. */
+  _syncItems() {
+    const state = {
+      floating: this.getBoolAttr('floating'),
+      droplet: this.getBoolAttr('droplet'),
+      placed: Boolean(this._nav?.hasAttribute('data-droplet')),
+      drag: Boolean(this._nav?.hasAttribute('data-droplet-drag')),
+    };
+    for (const item of this._items()) item._syncBar?.(state);
+  }
+
+  /** Called by an item that rendered or changed its active state. */
+  _itemChanged() {
+    this._syncItems();
+    this._droplet?.update();
+  }
+
+  _applyDroplet() {
+    const on = this.getBoolAttr('droplet') && this.isConnected;
+    if (on && !this._droplet) {
+      // The drop measures and marks the items' own buttons; picking one clicks
+      // it, which is what a tap does.
+      this._droplet = attachDroplet(this._nav, {
+        items: () => this._items().map(item => item._btn).filter(Boolean),
+      });
+    } else if (!on && this._droplet) {
+      this._droplet.destroy();
+      this._droplet = null;
+    }
+    this._syncItems();
   }
 
   setupEvents() {
@@ -48,10 +96,22 @@ class GlkTabBar extends GlkElement {
       this.emit('glk-tab-change', { tab: e.target });
     };
     this.addEventListener('glk-tab-select', this._onTabSelect);
+
+    // The drop's state lives on the nav; the items carry it on their wrappers.
+    this._navObserver = new MutationObserver(() => this._syncItems());
+    this._navObserver.observe(this._nav, { attributes: true, attributeFilter: ['data-droplet', 'data-droplet-drag'] });
+    // Items added or removed.
+    this._itemObserver = new MutationObserver(() => this._itemChanged());
+    this._itemObserver.observe(this, { childList: true });
+    this._applyDroplet();
   }
 
   teardownEvents() {
     this.removeEventListener('glk-tab-select', this._onTabSelect);
+    this._navObserver?.disconnect();
+    this._itemObserver?.disconnect();
+    this._droplet?.destroy();
+    this._droplet = null;
   }
 }
 

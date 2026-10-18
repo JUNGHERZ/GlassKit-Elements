@@ -67,6 +67,27 @@ class GlkTabItem extends GlkElement {
       this.emit('glk-tab-select');
     };
     this._btn.addEventListener('click', this._onClick);
+    this._tellBar();
+  }
+
+  /**
+   * The bar's look reaches the item through its wrapper. GlassKit's rules for
+   * floating and droplet items are descendant selectors of the bar's classes,
+   * and this button sits in a shadow root of its own, so <glk-tab-bar> hands
+   * its state down and the wrapper carries it. Before 1.27.0 the items of a
+   * floating bar kept the fixed bar's look: no spotlight, no pill, the dot.
+   */
+  _syncBar({ floating, droplet, placed, drag }) {
+    if (!this._wrapper) return;
+    this._wrapper.classList.toggle('glass-tab-bar--floating', floating);
+    this._wrapper.classList.toggle('glass-tab-bar--droplet', droplet);
+    this._wrapper.toggleAttribute('data-droplet', placed);
+    this._wrapper.toggleAttribute('data-droplet-drag', drag);
+  }
+
+  /** Tells the bar that this item rendered or changed its active state. */
+  _tellBar() {
+    this.closest('glk-tab-bar')?._itemChanged?.();
   }
 
   teardownEvents() {
@@ -78,6 +99,7 @@ class GlkTabItem extends GlkElement {
     switch (name) {
       case 'active':
         this._btn.classList.toggle('is-active', this.getBoolAttr('active'));
+        this._tellBar();
         break;
       case 'label':
         this._labelEl.textContent = this.getAttribute('label') || '';

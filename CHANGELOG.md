@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.27.0] – 2026-10-18
+
+Versions stay aligned with GlassKit at 1.27.0, which this release is built against (peer dependency `>=1.27.0`).
+
+### Added
+
+- **`droplet` on `<glk-tab-bar>` and `<glk-segmented>`: a fluid selection.** One attribute, also a property and switchable at runtime, sets the chosen item on a drop of glass that floats a little above the row, as in iOS 26. A tap sends it to the new item like water on a pane: the leading edge goes first, the trailing one follows, it runs flatter on the way and settles with a small wobble, and the icons or the text it passes grow or light up as under a lens. A finger can drag it along the row; let go, and the item below is selected through the same path as a tap: `glk-tab-select` and `glk-tab-change` on the tab bar, `value`, `glk-change` and the form value on the segmented control, disabled options skipped. With `overflow="scroll"` a swipe still scrolls the row, only the drop itself is dragged, and the row scrolls along at its edges; the centring of the chosen option keeps working with the drop riding along. It is GlassKit 1.27.0's `--droplet`, moved by its `glasskit-droplet.js`. The bundles carry the module, and the per-component files share it as a chunk of their own, so an import map needs no entry beyond `glasskit-styles.js`. Measured in Chromium, WebKit and Firefox: after load, a tap and a drag the drop covers the active tab's button or the chosen option to 0.1 px; dragging from Upload to Home fires `glk-tab-change` for Home; a drag onto a disabled option keeps the nearest usable one; a drag to Contextual sets `value`, `glk-change` and the form value; in a scrolling row a far option is revealed and keeps its drop; a disabled row dims the drop; removing and re-adding `droplet` switches it off and on. ([GlassKit #13](https://github.com/JUNGHERZ/GlassKit/issues/13))
+- **GlassKit's tokens for the active tab reach `<glk-tab-item>`:** `--gl-tab-bar-active-bg` and `--gl-tab-bar-active-shadow` for a capsule behind it, `--gl-tab-bar-spotlight-opacity` and `--gl-tab-bar-active-glow`. A capsule no longer needs a sheet of its own through `hostStyles`. Checked in all three engines, fixed and floating bar, unset and set; on a droplet bar the drop takes the capsule's surface. ([GlassKit #13](https://github.com/JUNGHERZ/GlassKit/issues/13))
+
+### Fixed
+
+- **The items of `<glk-tab-bar floating>` take the floating look.** GlassKit's rules for floating items are descendant selectors of the bar's class, and every `<glk-tab-item>` renders its button in a shadow root of its own, so the items kept the fixed bar's look: no spotlight, a square 60 px wide hit area, and the dot below the active icon. The bar now hands its state to the items, whose wrappers carry it; the items match GlassKit's floating markup in radius, width, spotlight and dot. On the docs, showcase and landing pages as they were in 1.26.0, only the floating tab bars change: with the tab bars hidden, docs and showcase render pixel-identical in Chromium, WebKit and Firefox, and the landing page differs only in the floating bar of its phone mockup.
+
+---
+
 ## [1.26.0] – 2026-10-18
 
 Versions stay aligned with GlassKit at 1.26.0, which this release is built against (peer dependency `>=1.26.0`).
@@ -882,6 +897,7 @@ Starting with this release, GlassKit Elements version numbers are aligned with G
 ---
 
 [Unreleased]: https://github.com/JUNGHERZ/GlassKit-Elements/compare/v1.25.0...HEAD
+[1.27.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.27.0
 [1.26.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.26.0
 [1.25.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.25.0
 [1.24.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.24.0

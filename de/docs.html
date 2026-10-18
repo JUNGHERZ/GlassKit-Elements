@@ -20,7 +20,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="GlassKit Elements — Dokumentation">
   <meta name="twitter:description" content="Vollständige Dokumentation aller 29 GlassKit Elements Web Components mit Live-Beispielen.">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.25/glasskit.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.26/glasskit.min.css">
   <script src="/dist/glasskit-elements.min.js"></script>
   <style>
     html { scroll-behavior: smooth; }
@@ -255,7 +255,7 @@
     <aside class="docs-sidebar">
       <div class="docs-sidebar__title">&#129482; <a href="../de/">GlassKit Elements</a></div>
       <div class="docs-sidebar__subtitle">Web Components f&uuml;r GlassKit CSS.</div>
-      <div class="docs-sidebar__version">v1.25.0 &ndash; Jungherz GmbH</div>
+      <div class="docs-sidebar__version">v1.26.0 &ndash; Jungherz GmbH</div>
 
       <div class="docs-sidebar__group">
         <div class="docs-sidebar__group-title">Grundlagen</div>
@@ -341,7 +341,7 @@
         <h1>GlassKit Elements</h1>
         <p>Vollst&auml;ndige Referenz f&uuml;r alle 36 Web Components &ndash; entwickelt von Jungherz GmbH. Vanilla JS, Shadow DOM, native Formular-Teilnahme.</p>
         <div class="docs-hero__badges">
-          <span class="docs-hero__badge">v1.25.0</span>
+          <span class="docs-hero__badge">v1.26.0</span>
           <span class="docs-hero__badge">Shadow DOM</span>
           <span class="docs-hero__badge">36 Komponenten</span>
           <span class="docs-hero__badge">Vanilla JS</span>
@@ -354,7 +354,7 @@
 
         <h3>CDN (schnellste Variante)</h3>
         <div class="docs-code"><span class="cmt">&lt;!-- 1. GlassKit CSS --&gt;</span>
-<span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span> <span class="attr">href</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.25/glasskit.min.css"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span> <span class="attr">href</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.26/glasskit.min.css"</span><span class="tag">&gt;</span>
 
 <span class="cmt">&lt;!-- 2. GlassKit Elements --&gt;</span>
 <span class="tag">&lt;script</span> <span class="attr">src</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"</span><span class="tag">&gt;&lt;/script&gt;</span></div>
@@ -399,6 +399,15 @@
         <p>Nicht jede Oberfl&auml;che soll Glas sein. <code>data-surface="solid"</code> auf dem <code>&lt;html&gt;</code>-Element macht jede Fl&auml;che deckend und schaltet Blur und Glanz ab &mdash; Cards, Felder, Buttons, Listen, Sheets &mdash;, jede in der Farbe, die das Glas &uuml;ber dem mittleren Hintergrund des Themes zeigt. Es ist das Solid-Preset von GlassKit (GlassKit 1.24.0): nur Tokens, es erreicht also jeden Shadow Root durch Vererbung, die eigenen Werte eines Projekts ebenso; mit <code>data-glk-defaults="off"</code> kommt es aus <code>glasskit.css</code> auf der Seite. Seit 1.24.0 spiegelt der Observer auch dieses Attribut auf den Theme-Wrapper jedes Elements, sodass eine Regel, die darauf reagiert, in den Shadow Roots greift.</p>
         <div class="docs-code"><span class="tag">&lt;html</span> <span class="attr">data-theme</span>=<span class="val">"dark"</span> <span class="attr">data-surface</span>=<span class="val">"solid"</span><span class="tag">&gt;</span></div>
         <p>Auf einer Seite mit eigenem Hintergrund &mdash; einer Markenfarbe, einem Foto &mdash; macht <code>data-surface="tint"</code> (GlassKit 1.25.0) die Fl&auml;chen im Fluss stattdessen zu durchscheinenden T&ouml;nungen der Textfarbe, ohne Blur. Was &uuml;ber anderem Inhalt liegt, beh&auml;lt die Solid-Werte, auch in den Shadow Roots: die Paneele von <code>&lt;glk-modal&gt;</code>, <code>&lt;glk-sheet&gt;</code>, <code>&lt;glk-popover&gt;</code>, <code>&lt;glk-toast&gt;</code> und der Tab-Bars samt der Felder darin, und der Secondary-Button. Der Wrapper spiegelt auch diesen Wert.</p>
+        <h3>Prim&auml;rfarbe als Text</h3>
+        <p>GlassKit 1.26.0 gibt der Prim&auml;rfarbe ein zweites Token: <code>--gl-color-primary</code> f&uuml;llt Fl&auml;chen, <code>--gl-color-primary-text</code> f&auml;rbt Text und Linien-Icons auf der Seite oder dem Glas. In den Elementen sind das Icon und Label des aktiven <code>&lt;glk-tab-item&gt;</code>, <code>&lt;glk-list-item variant="accent"&gt;</code>, der Wert von <code>&lt;glk-range&gt;</code>, die prim&auml;re Aktion von <code>&lt;glk-modal&gt;</code> sowie der Ausl&ouml;ser unter dem Zeiger und der Chevron eines ge&ouml;ffneten <code>&lt;glk-accordion-item&gt;</code>. Ohne eigenen Wert ist es die Prim&auml;rfarbe. Eine Marke, die ihre Prim&auml;rfarbe f&uuml;r wei&szlig;e Button-Schrift abdunkelt, hellt die Schrift im dunklen Theme auf, und die Buttons behalten ihre Farbe; das Token erreicht jede Shadow Root durch Vererbung. Die helle Regel steht nach der dunklen, weil <code>:root</code> auch eine Seite im hellen Theme trifft:</p>
+        <div class="docs-code"><span class="cls">:root</span>, [data-theme=<span class="val">'dark'</span>] {
+  <span class="attr">--gl-color-primary-text</span>: <span class="val">color-mix(in srgb, var(--gl-color-primary) 18%, #ffffff)</span>;
+}
+[data-theme=<span class="val">'light'</span>] {
+  <span class="attr">--gl-color-primary-text</span>: <span class="val">var(--gl-color-primary)</span>;
+}</div>
+        <p><code>--gl-tab-bar-active-color</code> f&auml;rbt Icon und Label des aktiven Tabs allein, wo das Spotlight einen noch helleren Ton braucht; ohne eigenen Wert nehmen sie <code>--gl-color-primary-text</code>.</p>
         <h3>Drucken</h3>
         <p>Druckdialoge lassen Hintergrundgrafiken standardm&auml;&szlig;ig weg. Mit GlassKit 1.21.1 behalten die Teile, die einen Zustand tragen, auf Papier ihre Farben &mdash; Checkbox, Radio, Toggle, Fortschritt, der aktuelle Schritt, der gew&auml;hlte Tag, der Knopf des Schiebereglers, die Tonpunkte &mdash;, auch in den Elementen. Eine dunkle Seite druckt ihre helle Schrift und ihre Fl&auml;chen auf wei&szlig;es Papier; eine Seite, die gedruckt werden soll, wechselt daf&uuml;r ins helle Theme, und die Elemente folgen:</p>
         <div class="docs-code">let printTheme = null;

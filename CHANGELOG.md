@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.26.0] – 2026-10-18
+
+Versions stay aligned with GlassKit at 1.26.0, which this release is built against (peer dependency `>=1.26.0`).
+
+### Added
+
+- **Primary-coloured text has a token of its own: `--gl-color-primary-text`.** GlassKit 1.26.0 separates the primary as text from the primary as fill. In the elements, the icon and label of the active `<glk-tab-item>`, `<glk-list-item variant="accent">`, the value of `<glk-range>`, the primary action of `<glk-modal>`, and the trigger on hover and the chevron of an open `<glk-accordion-item>` take it; buttons, toggles, steps and the chosen days of `<glk-date-strip>` and `<glk-calendar>` keep the primary. A brand that darkens its primary for white button text lightens the text in its dark theme without changing a button, and `--gl-tab-bar-active-color` colours the active tab alone. Both reach every shadow root by inheritance, also on a page that loads only these elements: the token blocks the bundle puts on the document declare `--gl-color-primary-text` in both themes. Measured in Chromium, WebKit and Firefox: set in the dark theme, both arrive in every element listed; in a nested `data-theme="light"` scope `--gl-color-primary-text` keeps the light primary; the fill of `<glk-button variant="primary">` stays as it was. ([GlassKit #12](https://github.com/JUNGHERZ/GlassKit/issues/12))
+
+With the tokens unset, docs, showcase and landing pages render pixel-identical to 1.25.0 in Chromium, WebKit and Firefox.
+
+---
+
 ## [1.25.0] – 2026-10-16
 
 Versions stay aligned with GlassKit at 1.25.0, which this release is built against (peer dependency `>=1.25.0`).
@@ -870,6 +882,7 @@ Starting with this release, GlassKit Elements version numbers are aligned with G
 ---
 
 [Unreleased]: https://github.com/JUNGHERZ/GlassKit-Elements/compare/v1.25.0...HEAD
+[1.26.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.26.0
 [1.25.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.25.0
 [1.24.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.24.0
 [1.23.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.23.0

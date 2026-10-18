@@ -5,7 +5,7 @@
   <a href="#"><img src="https://img.shields.io/badge/vanilla_JS-no_dependencies-44cc11?style=flat-square" alt="Vanilla JS"></a>
   <a href="#"><img src="https://img.shields.io/badge/components-36-7ec8e3?style=flat-square" alt="36 Components"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="MIT License"></a>
-  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/changelog-v1.25.0-lightgrey?style=flat-square" alt="Changelog"></a>
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/changelog-v1.26.0-lightgrey?style=flat-square" alt="Changelog"></a>
   <a href="https://www.npmjs.com/package/@jungherz-de/glasskit-elements"><img src="https://img.shields.io/badge/npm-%40jungherz--de%2Fglasskit--elements-cb3837?style=flat-square&logo=npm" alt="npm"></a>
 </p>
 
@@ -66,7 +66,7 @@ It is the **app layer** of the GlassKit family — three layers, one design lang
 
 ```html
 <!-- 1. GlassKit CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.25/glasskit.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.26/glasskit.min.css">
 
 <!-- 2. GlassKit Elements -->
 <script src="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"></script>
@@ -104,7 +104,7 @@ The per-component files leave `@jungherz-de/glasskit/glasskit-styles.js` as an e
 <!DOCTYPE html>
 <html data-theme="dark">
 <head>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.25/glasskit.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.26/glasskit.min.css">
   <script src="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"></script>
 </head>
 <body>
@@ -277,6 +277,15 @@ inherits them — no JavaScript, no per-element setup:
 > still applying to plain `.glass-*` markup — projects came out half-branded. If you are
 > upgrading from ≤1.8.0 and already ship a brand stylesheet, expect your components to
 > change to the colors you intended all along.
+
+**Primary as text (GlassKit 1.26.0).** The active `<glk-tab-item>`, `<glk-list-item variant="accent">`, the value of `<glk-range>`, the primary action of `<glk-modal>` and `<glk-accordion-item>` draw text and line icons in `--gl-color-primary-text`, which is the primary unless you set it. A brand that darkens its primary for white button text lightens the text in its dark theme, and the buttons keep their colour — the light rule after the dark one, because `:root` matches a page in the light theme too:
+
+```css
+:root, [data-theme='dark'] { --gl-color-primary-text: color-mix(in srgb, var(--gl-color-primary) 18%, #ffffff); }
+[data-theme='light']       { --gl-color-primary-text: var(--gl-color-primary); }
+```
+
+`--gl-tab-bar-active-color` colours the icon and label of the active tab alone; unset, they take `--gl-color-primary-text`.
 
 Token defaults are placed on the document once, inside `@layer glasskit-defaults`, so
 pages that never load `glasskit.css` still work and your brand file always wins.

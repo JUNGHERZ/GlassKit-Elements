@@ -1,6 +1,6 @@
 ---
 name: glasskit-elements
-description: GlassKit Elements is a vanilla-JS Web Components library (v1.25.0) wrapping GlassKit CSS v1.25.0. It provides 36 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
+description: GlassKit Elements is a vanilla-JS Web Components library (v1.26.0) wrapping GlassKit CSS v1.26.0. It provides 36 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
 ---
 
 # GlassKit Elements – AI Component Reference
@@ -18,7 +18,7 @@ description: GlassKit Elements is a vanilla-JS Web Components library (v1.25.0) 
 npm install @jungherz-de/glasskit-elements @jungherz-de/glasskit
 ```
 
-Peer dependency `@jungherz-de/glasskit >=1.25.0` is required — 1.25.0 brings the tint surface preset and the toggle, radio and field tokens, 1.24.0 the solid surface preset behind `data-surface`, 1.23.0 lets list text wrap app-wide through tokens, 1.22.2 hands a click on a disabled control in an input affix to the field, 1.22.1 lets date and time fields shrink in narrow columns, 1.22.0 brings the input affixes behind the `prefix` / `suffix` slots, 1.21.2 gives disabled controls their look, 1.21.1 keeps the controls' state on paper, 1.21.0 brings the density tokens behind `data-density`, 1.20.0 the rules the elements build on since then (the dialog overlay, hidden list slots, empty control labels, control inputs on top); 1.9.0 is the release that made the stylesheet splittable, which is what lets document-level branding reach the elements at all.
+Peer dependency `@jungherz-de/glasskit >=1.26.0` is required — 1.26.0 brings `--gl-color-primary-text` and `--gl-tab-bar-active-color` for primary-coloured text, 1.25.0 the tint surface preset and the toggle, radio and field tokens, 1.24.0 the solid surface preset behind `data-surface`, 1.23.0 lets list text wrap app-wide through tokens, 1.22.2 hands a click on a disabled control in an input affix to the field, 1.22.1 lets date and time fields shrink in narrow columns, 1.22.0 brings the input affixes behind the `prefix` / `suffix` slots, 1.21.2 gives disabled controls their look, 1.21.1 keeps the controls' state on paper, 1.21.0 brings the density tokens behind `data-density`, 1.20.0 the rules the elements build on since then (the dialog overlay, hidden list slots, empty control labels, control inputs on top); 1.9.0 is the release that made the stylesheet splittable, which is what lets document-level branding reach the elements at all.
 
 ### Import (ES modules)
 
@@ -201,6 +201,15 @@ inline on `<html>`. Every `<glk-*>` element inherits them:
 
 No JavaScript, no `::part`, no per-element setup. Both `.glass-btn--primary` in the
 document and `<glk-button variant="primary">` end up the same color.
+
+**Primary as text (since 1.26.0, GlassKit 1.26.0).** Text and line icons in the primary take `--gl-color-primary-text`, which defaults to the primary: the icon and label of the active `<glk-tab-item>`, `<glk-list-item variant="accent">`, the value of `<glk-range>`, the primary action of `<glk-modal>` (`.glass-modal__action--primary`), and the trigger on hover and the chevron of an open `<glk-accordion-item>`. A brand that darkens its primary for white button text lightens the text in its dark theme without touching a button. Write the light rule after the dark one, because `:root` matches a page in the light theme too:
+
+```css
+:root, [data-theme='dark'] { --gl-color-primary-text: color-mix(in srgb, var(--gl-color-primary) 18%, #ffffff); }
+[data-theme='light']       { --gl-color-primary-text: var(--gl-color-primary); }
+```
+
+`--gl-tab-bar-active-color` colours the icon and label of the active tab alone (unset → `--gl-color-primary-text`); glow and dot stay in the primary, the spotlight in `--gl-tab-bar-spotlight-color`. Both tokens are inherited into the shadow roots, with or without `glasskit.css` on the page.
 
 **This did not work before 1.9.0.** Up to and including 1.8.0 every element adopted the
 full GlassKit sheet, whose `[data-theme]` blocks matched the element's own theme wrapper

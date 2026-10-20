@@ -141,7 +141,10 @@ class GlkSegmented extends GlkFormElement {
 
   setupEvents() {
     this._onClick = (event) => {
-      const button = event.target.closest('button[data-value]');
+      // The option's button from the event's path. A click on a slotted icon
+      // has that icon as its target, in the light DOM, where closest() never
+      // meets the button — until 1.28.1 such a tap chose nothing.
+      const button = event.composedPath().find(node => node.parentNode === this._group);
       if (!button || button.disabled) return;
       const { value } = button.dataset;
       if (value === this.value) return;

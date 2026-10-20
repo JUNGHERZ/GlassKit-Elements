@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.28.1] – 2026-10-20
+
+GlassKit is unchanged; the peer dependency stays `>=1.28.0`.
+
+### Fixed
+
+- **A tap on a slotted icon chooses the `<glk-segmented>` option.** The row found the option's button with `event.target.closest('button[data-value]')`. A click on an icon from `slot="icon-<value>"` has that icon as its target, in the light DOM, where `closest()` walks the light-DOM ancestors and never meets the button in the shadow root. In an `icon-only` row, where the 18px icon covers the middle of every 34px option, most taps chose nothing. The button now comes from the event's composed path. Slotted SVGs, font icons and custom elements were affected alike; text labels were not, they live in the shadow root. Measured in Chromium 153, WebKit 26.6 and Firefox 151: a tap on the centre of a slotted SVG, a font icon or a custom element chooses its option and emits `glk-change` once — in 1.28.0 it chose nothing; the icon of a disabled option chooses nothing; label text, the keyboard and a drag of the drop work as before, and so does an icon with `pointer-events: none`, a workaround that can go now. ([#18](https://github.com/JUNGHERZ/GlassKit-Elements/issues/18))
+
+---
+
 ## [1.28.0] – 2026-10-20
 
 Versions stay aligned with GlassKit at 1.28.0, which this release is built against (peer dependency `>=1.28.0`).
@@ -925,7 +935,8 @@ Starting with this release, GlassKit Elements version numbers are aligned with G
 
 ---
 
-[Unreleased]: https://github.com/JUNGHERZ/GlassKit-Elements/compare/v1.28.0...HEAD
+[Unreleased]: https://github.com/JUNGHERZ/GlassKit-Elements/compare/v1.28.1...HEAD
+[1.28.1]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.28.1
 [1.28.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.28.0
 [1.27.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.27.0
 [1.26.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.26.0

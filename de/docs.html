@@ -20,7 +20,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="GlassKit Elements — Dokumentation">
   <meta name="twitter:description" content="Vollständige Dokumentation aller 29 GlassKit Elements Web Components mit Live-Beispielen.">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.28/glasskit.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.29/glasskit.min.css">
   <script src="/dist/glasskit-elements.min.js"></script>
   <style>
     html { scroll-behavior: smooth; }
@@ -255,7 +255,7 @@
     <aside class="docs-sidebar">
       <div class="docs-sidebar__title">&#129482; <a href="../de/">GlassKit Elements</a></div>
       <div class="docs-sidebar__subtitle">Web Components f&uuml;r GlassKit CSS.</div>
-      <div class="docs-sidebar__version">v1.28.1 &ndash; Jungherz GmbH</div>
+      <div class="docs-sidebar__version">v1.29.0 &ndash; Jungherz GmbH</div>
 
       <div class="docs-sidebar__group">
         <div class="docs-sidebar__group-title">Grundlagen</div>
@@ -341,7 +341,7 @@
         <h1>GlassKit Elements</h1>
         <p>Vollst&auml;ndige Referenz f&uuml;r alle 36 Web Components &ndash; entwickelt von Jungherz GmbH. Vanilla JS, Shadow DOM, native Formular-Teilnahme.</p>
         <div class="docs-hero__badges">
-          <span class="docs-hero__badge">v1.28.1</span>
+          <span class="docs-hero__badge">v1.29.0</span>
           <span class="docs-hero__badge">Shadow DOM</span>
           <span class="docs-hero__badge">36 Komponenten</span>
           <span class="docs-hero__badge">Vanilla JS</span>
@@ -354,7 +354,7 @@
 
         <h3>CDN (schnellste Variante)</h3>
         <div class="docs-code"><span class="cmt">&lt;!-- 1. GlassKit CSS --&gt;</span>
-<span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span> <span class="attr">href</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.28/glasskit.min.css"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span> <span class="attr">href</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.29/glasskit.min.css"</span><span class="tag">&gt;</span>
 
 <span class="cmt">&lt;!-- 2. GlassKit Elements --&gt;</span>
 <span class="tag">&lt;script</span> <span class="attr">src</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"</span><span class="tag">&gt;&lt;/script&gt;</span></div>
@@ -719,7 +719,7 @@ addEventListener(<span class="val">'afterprint'</span>, () =&gt; {
   <span class="attr">options</span>=<span class="val">'[{"value":"g","label":"Grün","tone":"success"}, {"value":"y","label":"Gelb","tone":"warning"}, {"value":"x","label":"Gesperrt","disabled":true}]'</span><span class="tag">&gt;&lt;/glk-segmented&gt;</span></div>
           <table class="docs-table">
             <tr><th>Attribut</th><th>Typ</th><th>Werte</th></tr>
-            <tr><td><code>options</code></td><td>JSON</td><td><code>[{ value, label, tone?, disabled? }]</code> &mdash; <code>tone</code>: <code>success</code> | <code>warning</code> | <code>error</code></td></tr>
+            <tr><td><code>options</code></td><td>JSON</td><td><code>[{ value, label, tone?, disabled?, badge?, badgeLabel? }]</code> &mdash; <code>tone</code>: <code>success</code> | <code>warning</code> | <code>error</code>; <code>badge</code>: eine Zahl nach dem Label (seit 1.29.0)</td></tr>
             <tr><td><code>value</code></td><td>String</td><td>Wert der gewählten Option</td></tr>
             <tr><td><code>full</code></td><td>Boolean</td><td>Knöpfe teilen sich die Breite</td></tr>
             <tr><td><code>overflow</code></td><td>String</td><td><code>scroll</code> &mdash; eine Zeile, die seitw&auml;rts scrollt, die gew&auml;hlte Option bleibt im Blick; <code>wrap</code> &mdash; bricht um. Ohne bleibt die Zeile einzeilig (seit 1.17.0)</td></tr>
@@ -750,6 +750,20 @@ addEventListener(<span class="val">'afterprint'</span>, () =&gt; {
   <span class="tag">&lt;span</span> <span class="attr">slot</span>=<span class="val">"icon-dark"</span> <span class="attr">class</span>=<span class="val">"material-icons"</span><span class="tag">&gt;</span>dark_mode<span class="tag">&lt;/span&gt;</span>
   <span class="tag">&lt;svg</span> <span class="attr">slot</span>=<span class="val">"icon-auto"</span> <span class="attr">viewBox</span>=<span class="val">"0 0 24 24"</span><span class="tag">&gt;</span>...<span class="tag">&lt;/svg&gt;</span>
 <span class="tag">&lt;/glk-segmented&gt;</span></div>
+          <p><strong>Zähler (seit 1.29.0).</strong> <code>badge</code> an einer Option zeigt, wie viel dahinter wartet &mdash; offene Rechnungen, neue Tickets &mdash;, als kleine Pille nach dem Label, in Tabellenziffern; wo der Punkt nur sagt, dass etwas da ist, sagt das Badge, wie viel. Eine Zahl oder ein kurzer Text; fehlt er, ist er leer oder <code>0</code>, erscheint keins. Ohne Ton ist die Pille neutral, mit einem nimmt sie dessen Farbe. Der Name nennt sie mit dem Label, &bdquo;Tickets, 1&ldquo;, und <code>badgeLabel</code> fasst sie in Worte, &bdquo;Tickets, 1 offen&ldquo;. In einer <code>icon-only</code>-Zeile sitzt das Badge an der Ecke des Icons, wie bei <code>&lt;glk-tab-item&gt;</code>, und auch der <code>title</code> des Knopfs trägt es. Neue Optionen mit denselben Werten in derselben Reihenfolge füllen die Knöpfe an Ort und Stelle: Ein Zähler, der sich ändert, lässt Fokus und Tropfen, wo sie sind.</p>
+          <div class="docs-preview" style="display:flex;flex-direction:column;gap:10px;align-items:flex-start;">
+            <div style="width:100%;max-width:420px">
+              <glk-segmented droplet overflow="scroll" label="Kunde" value="invoices" options='[{"value":"payments","label":"Zahlungen"},{"value":"invoices","label":"Rechnungen","badge":2},{"value":"tickets","label":"Tickets","tone":"warning","badge":1,"badgeLabel":"1 offen"},{"value":"mails","label":"Mails","badge":12},{"value":"notes","label":"Notizen"}]'></glk-segmented>
+            </div>
+            <glk-segmented droplet icon-only label="Posteingang" value="mail" options='[{"value":"mail","label":"Mail","badge":3},{"value":"chat","label":"Chat","badge":12},{"value":"alerts","label":"Hinweise","tone":"error","badge":1,"badgeLabel":"1 neu"}]'><svg slot="icon-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg><svg slot="icon-chat" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><svg slot="icon-alerts" viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></glk-segmented>
+          </div>
+          <div class="docs-code"><span class="tag">&lt;glk-segmented</span> <span class="attr">droplet overflow</span>=<span class="val">"scroll"</span> <span class="attr">label</span>=<span class="val">"Kunde"</span> <span class="attr">value</span>=<span class="val">"invoices"</span> <span class="attr">options</span>=<span class="val">'[
+  {"value":"payments","label":"Zahlungen"},
+  {"value":"invoices","label":"Rechnungen","badge":2},
+  {"value":"tickets","label":"Tickets","tone":"warning","badge":1,"badgeLabel":"1 offen"}]'</span><span class="tag">&gt;&lt;/glk-segmented&gt;</span>
+
+<span class="cmt">// Ein Zähler hat sich geändert: dieselben Werte, die Knöpfe bleiben</span>
+segmented.options = segmented.options.map(o =&gt; o.value === <span class="val">'tickets'</span> ? { ...o, badge: 2, badgeLabel: <span class="val">'2 offen'</span> } : o);</div>
           <p>GlassKits Tokens für die gewählte Option erreichen das Element durch Vererbung (GlassKit 1.28.0): <code>--gl-segmented-active-bg</code>, <code>--gl-segmented-active-shadow</code> und <code>--gl-segmented-active-color</code> &mdash; für eine dunkle Marke, auf der die helle Fläche ein weißes Label unter 4,5:1 lässt. Der Tropfen nimmt dieselbe Fläche.</p>
           <script>
             document.getElementById('docs-seg').addEventListener('glk-change', e => { document.querySelector('[data-docs-seg-out]').textContent = 'glk-change → ' + e.detail.value; });

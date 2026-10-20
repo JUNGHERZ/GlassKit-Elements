@@ -1,6 +1,6 @@
 ---
 name: glasskit-elements
-description: GlassKit Elements is a vanilla-JS Web Components library (v1.28.1) wrapping GlassKit CSS v1.28.0. It provides 36 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
+description: GlassKit Elements is a vanilla-JS Web Components library (v1.29.0) wrapping GlassKit CSS v1.29.0. It provides 36 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
 ---
 
 # GlassKit Elements – AI Component Reference
@@ -1153,7 +1153,7 @@ A small, exclusive choice as one control (since 1.15.0) — traffic light, morni
 
 | Attribute | Type | Description |
 |---|---|---|
-| `options` | JSON | `[{ value, label, tone?, disabled? }]`; `tone` is `success` \| `warning` \| `error` and puts a dot in that colour before the label |
+| `options` | JSON | `[{ value, label, tone?, disabled?, badge?, badgeLabel? }]`; `tone` is `success` \| `warning` \| `error` and puts a dot in that colour before the label; `badge` is a count after the label (since 1.29.0), `badgeLabel` words it for the name |
 | `value` | String | Value of the chosen option (reflected property) |
 | `full` | Boolean | Buttons share the width |
 | `overflow` | String | What happens when the options do not fit: `scroll` — one row that scrolls sideways, the chosen option kept in view; `wrap` — breaks into lines. Without it the row stays one line (since 1.17.0) |
@@ -1177,6 +1177,14 @@ Properties: `value`, `options` (array or JSON text), `full`, `overflow`, `label`
 ```
 
 GlassKit 1.28.0's tokens for the chosen option reach the element by inheritance: `--gl-segmented-active-bg`, `--gl-segmented-active-shadow` and `--gl-segmented-active-color` — for a dark brand, on which the light surface leaves a white label below 4.5:1. The drop takes the same surface.
+
+**Counts (since 1.29.0).** `badge` on an option shows how much waits behind it — open invoices, new tickets — as a pill after the label (GlassKit's `.glass-segmented__badge`, tabular figures), neutral without a tone and in the tone's colour with one. A number or a short text; missing, empty or `0` shows none. Use it instead of a count in the label: `"Tickets (1)"` reads as part of the label and can be neither styled nor announced apart. The button's name says both, `"Tickets, 1"`; `badgeLabel` words it, `"Tickets, 1 open"`. With `icon-only` the badge sits at the icon's corner, as on `<glk-tab-item>`, and the button's `title` carries it too. Setting `options` again with the same values in the same order fills the buttons in place, so a live count keeps the focus and the drop; other values rebuild the row.
+
+```html
+<glk-segmented droplet overflow="scroll" label="Customer" value="invoices"
+  options='[{"value":"payments","label":"Payments"},{"value":"invoices","label":"Invoices","badge":2},{"value":"tickets","label":"Tickets","tone":"warning","badge":1,"badgeLabel":"1 open"}]'>
+</glk-segmented>
+```
 
 With `overflow="scroll"` the chosen option is centred in the row after the first layout, on every value change and when the row's width changes — the row scrolls, never the page. Seven areas on a phone:
 

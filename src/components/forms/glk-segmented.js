@@ -5,7 +5,11 @@ import { attachDroplet } from '@jungherz-de/glasskit/glasskit-droplet.js';
 // One button per option, the chosen one marked aria-pressed="true" — GlassKit
 // styles exactly that attribute. Came back from EhrenPfoten in 1.15.0.
 //
-// Attributes: options (JSON [{value,label,tone?,disabled?}]), value, full,
+// Attributes: options (JSON [{value,label,tone?,disabled?,badge?,badgeLabel?}]
+//             — badge since 1.29.0: a count after the label, GlassKit's
+//             .glass-segmented__badge, in the tone's colour where one is
+//             set; missing, empty or 0 shows none; badgeLabel words it for
+//             the name, "1 open"), value, full,
 //             overflow ("scroll" | "wrap": what happens when the options
 //             do not fit — without it the row stays one line and runs past
 //             the edge), label (aria-label of the group), name (form field),
@@ -27,7 +31,9 @@ import { attachDroplet } from '@jungherz-de/glasskit/glasskit-droplet.js';
 //
 // Form-associated: a surrounding <form> receives name=value, reset restores
 // the initial value. A value change only re-sets aria-pressed, never rebuilds,
-// so focus stays on the button that was pressed.
+// so focus stays on the button that was pressed. New options with the same
+// values in the same order — a count that changed — fill the buttons in
+// place (since 1.29.0), so the focus and the drop stay as well.
 //
 // overflow="scroll" keeps the chosen option in view: it is centred in the
 // row after the first layout, on every value change and when the row's width
@@ -49,6 +55,13 @@ function parseList(json) {
   }
 }
 
+/** The text of an option's count; empty when there is none to show. */
+function badgeText(badge) {
+  if (badge == null || badge === false) return '';
+  const text = String(badge).trim();
+  return text === '0' ? '' : text;
+}
+
 class GlkSegmented extends GlkFormElement {
   static get observedAttributes() { return ['options', 'value', 'full', 'overflow', 'label', 'droplet', 'icon-only']; }
 
@@ -66,31 +79,52 @@ class GlkSegmented extends GlkFormElement {
   }
 
   _build() {
-    this._group.replaceChildren();
+    const list = parseList(this.getAttribute('options'));
     const iconOnly = this.iconOnly;
-    for (const option of parseList(this.getAttribute('options'))) {
-      const value = String(option.value ?? '');
-      const label = String(option.label ?? value);
-      const button = this.createElement('button', ['glass-segmented__item'], { type: 'button', 'data-value': value });
-      if (TONES.includes(option.tone)) {
-        button.classList.add(`glass-segmented__item--${option.tone}`);
-        button.appendChild(this.createElement('span', ['glass-segmented__dot']));
-      }
-      // The label names the button; an icon font's text must not join it.
-      const icon = this.createElement('span', ['glass-segmented__icon'], { 'aria-hidden': 'true' });
-      icon.appendChild(this.createElement('slot', [], { name: `icon-${value}` }));
-      button.appendChild(icon);
-      if (iconOnly) {
-        button.setAttribute('aria-label', label);
-        button.title = label;
-      } else {
-        button.appendChild(document.createTextNode(label));
-      }
-      this._group.appendChild(button);
-    }
+    // The same values in the same order keep their buttons; anything else
+    // starts the row afresh.
+    const buttons = [...this._group.children];
+    const same = buttons.length === list.length
+      && list.every((option, i) => buttons[i].dataset.value === String(option.value ?? ''));
+    if (!same) this._group.replaceChildren(...list.map(() => this.createElement('button', [], { type: 'button' })));
+    [...this._group.children].forEach((button, i) => this._fill(button, list[i], iconOnly));
     this._syncIcons();
     this.applyDisabled(this._actuallyDisabled);
     this._syncValue();
+  }
+
+  /** Gives an option's button its tone, icon box, label and count. */
+  _fill(button, option, iconOnly) {
+    const value = String(option.value ?? '');
+    const label = String(option.label ?? value);
+    const parts = [];
+    button.className = 'glass-segmented__item';
+    button.dataset.value = value;
+    if (TONES.includes(option.tone)) {
+      button.classList.add(`glass-segmented__item--${option.tone}`);
+      parts.push(this.createElement('span', ['glass-segmented__dot']));
+    }
+    // The label names the button; an icon font's text must not join it.
+    const icon = this.createElement('span', ['glass-segmented__icon'], { 'aria-hidden': 'true' });
+    icon.appendChild(this.createElement('slot', [], { name: `icon-${value}` }));
+    parts.push(icon);
+    if (!iconOnly) parts.push(document.createTextNode(label));
+    // The count after the label, or at the icon's corner in an icon-only row;
+    // the name says it in words — "Tickets, 1 open".
+    const badge = badgeText(option.badge);
+    let name = label;
+    if (badge) {
+      const pill = this.createElement('span', ['glass-segmented__badge']);
+      pill.textContent = badge;
+      if (iconOnly) icon.appendChild(pill);
+      else parts.push(pill);
+      name = `${label}, ${option.badgeLabel ? String(option.badgeLabel) : badge}`;
+    }
+    button.replaceChildren(...parts);
+    if (iconOnly || badge) button.setAttribute('aria-label', name);
+    else button.removeAttribute('aria-label');
+    if (iconOnly) button.title = name;
+    else button.removeAttribute('title');
   }
 
   /** An option shows its icon box only while an icon is slotted into it. */

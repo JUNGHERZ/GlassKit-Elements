@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.29.0] – 2026-10-21
+
+Versions stay aligned with GlassKit at 1.29.0, which this release is built against (peer dependency `>=1.29.0`).
+
+### Added
+
+- **A count per option in `<glk-segmented>`: `badge` and `badgeLabel`.** In an admin area a customer record has a row of tabs — payments, subscriptions, invoices, tickets — and a tab should say that something waits there, and how much. `tone` puts a dot before the label, which says that, not how much, so the count went into the label ("Current (2)"), where it read as part of it and could be neither styled nor announced apart. An option is `{ value, label, tone?, disabled?, badge?, badgeLabel? }` now. `badge`, a number or a short text, shows as GlassKit 1.29.0's `.glass-segmented__badge` after the label, neutral or in the tone's colour; missing, empty or `0` shows none. The button's name says it with the label, "Tickets, 1", and `badgeLabel` words it, "Tickets, 1 open". With `icon-only` the badge sits at the icon's corner, as on `<glk-tab-item>`, and the button's `title` carries it as well. Measured in Chromium 153, WebKit 26.6 and Firefox 151: the badges stand after their labels, or 4px above and 8px beyond the icon in an icon-only row; the names read "Payments, 2", "Invoices, 12 open", "Alerts, 1 new", and "Mails" for a `0`; the drop covers the chosen option with its badge, and in a scrolling row the option stays centred; a tap on a badge chooses its option. ([#19](https://github.com/JUNGHERZ/GlassKit-Elements/issues/19))
+- **New options with the same values in the same order fill the buttons in place.** Setting `options` rebuilt every button, so a keyboard user on the row lost the focus whenever a count changed, and the drop was handed a new element. Now the buttons stay and take their new label, tone, icon box and count; other values or another order rebuild the row as before. Measured in all three engines: after three counts changed, the six buttons are the same nodes, the focus stays on the focused option, the drop stays where it was, and no `glk-change` fires; in 1.28.1 the buttons were new and the focus was gone. ([#19](https://github.com/JUNGHERZ/GlassKit-Elements/issues/19))
+
+---
+
 ## [1.28.1] – 2026-10-20
 
 GlassKit is unchanged; the peer dependency stays `>=1.28.0`.
@@ -935,7 +946,8 @@ Starting with this release, GlassKit Elements version numbers are aligned with G
 
 ---
 
-[Unreleased]: https://github.com/JUNGHERZ/GlassKit-Elements/compare/v1.28.1...HEAD
+[Unreleased]: https://github.com/JUNGHERZ/GlassKit-Elements/compare/v1.29.0...HEAD
+[1.29.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.29.0
 [1.28.1]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.28.1
 [1.28.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.28.0
 [1.27.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.27.0

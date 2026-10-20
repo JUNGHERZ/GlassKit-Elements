@@ -5,7 +5,7 @@
   <a href="#"><img src="https://img.shields.io/badge/vanilla_JS-no_dependencies-44cc11?style=flat-square" alt="Vanilla JS"></a>
   <a href="#"><img src="https://img.shields.io/badge/components-36-7ec8e3?style=flat-square" alt="36 Components"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="MIT License"></a>
-  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/changelog-v1.27.0-lightgrey?style=flat-square" alt="Changelog"></a>
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/changelog-v1.28.0-lightgrey?style=flat-square" alt="Changelog"></a>
   <a href="https://www.npmjs.com/package/@jungherz-de/glasskit-elements"><img src="https://img.shields.io/badge/npm-%40jungherz--de%2Fglasskit--elements-cb3837?style=flat-square&logo=npm" alt="npm"></a>
 </p>
 
@@ -67,7 +67,7 @@ It is the **app layer** of the GlassKit family — three layers, one design lang
 
 ```html
 <!-- 1. GlassKit CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.27/glasskit.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.28/glasskit.min.css">
 
 <!-- 2. GlassKit Elements -->
 <script src="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"></script>
@@ -105,7 +105,7 @@ The per-component files leave `@jungherz-de/glasskit/glasskit-styles.js` as an e
 <!DOCTYPE html>
 <html data-theme="dark">
 <head>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.27/glasskit.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.28/glasskit.min.css">
   <script src="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"></script>
 </head>
 <body>
@@ -127,7 +127,7 @@ The per-component files leave `@jungherz-de/glasskit/glasskit-styles.js` as an e
 | `<glk-nav>` | Horizontal navigation bar | — |
 | `<glk-pill>` | Circular icon button (46×46px) | `label`, `disabled` |
 | `<glk-tab-bar>` | Bottom tab bar navigation | `static`, `floating`, `droplet` |
-| `<glk-tab-item>` | Tab bar item | `label`, `active`, `badge` |
+| `<glk-tab-item>` | Tab bar item; any icon in `slot="icon"`, a cancelable `glk-tab-select` | `label`, `active`, `badge` |
 | `<glk-tab-dock>` | Wrapper for floating tab bar + optional accessory | `accessory-left` |
 | `<glk-tab-accessory>` | Standalone glass capsule (search, compose…) | `label`, `variant` (accent, success, error), `disabled` |
 | `<glk-steps>` | Progress through a short flow | `steps`, `current`, `label` |
@@ -165,7 +165,7 @@ All form components support `name`, `value`, `disabled` and participate in nativ
 | `<glk-checkbox>` | Checkbox | `label`, `checked`, `disabled`, `required` |
 | `<glk-radio>` | Radio button | `label`, `name`, `value`, `checked`, `required` (per group) |
 | `<glk-range>` | Range slider | `label`, `min`, `max`, `value`, `step` |
-| `<glk-segmented>` | Small exclusive choice as one control; form-associated | `options` (JSON), `value`, `full`, `overflow` (scroll, wrap), `droplet`, `label`, `name` |
+| `<glk-segmented>` | Small exclusive choice as one control, icons per option in `slot="icon-<value>"`; form-associated | `options` (JSON), `value`, `full`, `overflow` (scroll, wrap), `droplet`, `icon-only`, `label`, `name` |
 | `<glk-calendar>` | One month with a day to pick; keyboard navigation, `Intl` names; form-associated | `month`, `value`, `today`, `min`, `max`, `marks`, `locale`, `week-start`, `label`, `name` |
 | `<glk-image-picker>` | One image with preview, resized on the client, EXIF rotation applied; not form-associated | `src`, `label`, `hint`, `round`, `max`, `type`, `quality`, `accept` |
 
@@ -237,6 +237,27 @@ The chosen item sits on a drop of glass that floats a little above the row. A ta
 **Already using the elements?** Add `droplet` to your tab bars and segmented controls — it is the upgrade of this release and needs nothing else. It is GlassKit's `--droplet` and its module `glasskit-droplet.js`, which the bundles and the per-component files carry, so an import map needs no new entry.
 
 > **Requires GlassKit CSS >= 1.27.0.** The tokens for a capsule behind the active tab (`--gl-tab-bar-active-bg`, `--gl-tab-bar-active-shadow`, `--gl-tab-bar-spotlight-opacity`, `--gl-tab-bar-active-glow`) reach `<glk-tab-item>` by inheritance; the drop takes the same surface. Since 1.27.0 the items of `<glk-tab-bar floating>` also take the floating look — spotlight and pill instead of the fixed bar's dot.
+
+### Icons of any kind, and a tab that keeps the current one
+
+Since 1.28.0 a tab item and each segmented option take icons that are not inline SVG — Material Icons, an `<img>`, an element of your own — and they follow every state, the drop's lens and the drag:
+
+```html
+<glk-tab-item label="Home" active>
+  <span slot="icon" class="material-icons" aria-hidden="true">home</span>
+</glk-tab-item>
+
+<glk-segmented droplet icon-only label="Theme" value="dark"
+  options='[{"value":"light","label":"Light"},{"value":"dark","label":"Dark"},{"value":"auto","label":"Auto"}]'>
+  <svg slot="icon-light" viewBox="0 0 24 24">…</svg>
+  <span slot="icon-dark" class="material-icons">dark_mode</span>
+  <svg slot="icon-auto" viewBox="0 0 24 24">…</svg>
+</glk-segmented>
+```
+
+`glk-tab-select` is cancelable and comes before `active` changes: `event.preventDefault()` keeps the current tab — for an item that opens a drawer or a link — and the bar, its drop and `glk-tab-change` stay put. `droplet` and `floating` are properties of `<glk-tab-bar>` as well. The action buttons of `<glk-modal>` follow attribute changes of their originals, so a confirm button that starts `disabled` unlocks when the page or a framework enables it.
+
+> **Requires GlassKit CSS >= 1.28.0.** The icon colours come from GlassKit's icon boxes; its new tokens reach the elements by inheritance: `--gl-tab-bar-color`, `--gl-tab-bar-hover-color`, `--gl-tab-bar-label-size`, `--gl-tab-bar-z-index` for the tab bar, `--gl-segmented-active-bg`, `-shadow` and `-color` for the chosen option and its drop.
 
 ### Solid and tint surfaces
 

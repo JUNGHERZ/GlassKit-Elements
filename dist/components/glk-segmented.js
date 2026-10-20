@@ -1,6 +1,6 @@
 import { GlkFormElement } from './base.js';
 import { r as revealCentered } from './shared/reveal-CjjzoxTa.js';
-import { a as attachDroplet } from './shared/glasskit-droplet-C3k1mxn4.js';
+import { a as attachDroplet } from './shared/glasskit-droplet-3vJVXB3u.js';
 import '@jungherz-de/glasskit/glasskit-styles.js';
 
 // One button per option, the chosen one marked aria-pressed="true" — GlassKit
@@ -13,9 +13,16 @@ import '@jungherz-de/glasskit/glasskit-styles.js';
 //             disabled (the whole row; since 1.22.3, as is a disabled
 //             fieldset around it), droplet (since 1.27.0: the chosen option
 //             sits on a drop of glass that glides to the next one and can be
-//             dragged — GlassKit's .glass-segmented--droplet)
+//             dragged — GlassKit's .glass-segmented--droplet), icon-only
+//             (since 1.28.0: the options show their icons alone, each label
+//             becomes the button's aria-label and title — GlassKit's
+//             .glass-segmented--icons)
 // Properties: value, options (array or JSON text), full, overflow, label,
-//             disabled, droplet
+//             disabled, droplet, iconOnly
+// Slots:      icon-<value> (since 1.28.0) — the icon of the option with that
+//             value: an <svg>, a font icon, an <img>. It sits in GlassKit's
+//             .glass-segmented__icon before the label and takes the option's
+//             colour; an option without one has no icon box.
 // Event:      glk-change { value } — only on a change made by the user
 // Part:       group
 //
@@ -44,7 +51,7 @@ function parseList(json) {
 }
 
 class GlkSegmented extends GlkFormElement {
-  static get observedAttributes() { return ['options', 'value', 'full', 'overflow', 'label', 'droplet']; }
+  static get observedAttributes() { return ['options', 'value', 'full', 'overflow', 'label', 'droplet', 'icon-only']; }
 
   // A row of buttons with one tab stop: delegated focus would land on the
   // first button, not the chosen one.
@@ -61,18 +68,37 @@ class GlkSegmented extends GlkFormElement {
 
   _build() {
     this._group.replaceChildren();
+    const iconOnly = this.iconOnly;
     for (const option of parseList(this.getAttribute('options'))) {
       const value = String(option.value ?? '');
+      const label = String(option.label ?? value);
       const button = this.createElement('button', ['glass-segmented__item'], { type: 'button', 'data-value': value });
       if (TONES.includes(option.tone)) {
         button.classList.add(`glass-segmented__item--${option.tone}`);
         button.appendChild(this.createElement('span', ['glass-segmented__dot']));
       }
-      button.appendChild(document.createTextNode(option.label ?? value));
+      // The label names the button; an icon font's text must not join it.
+      const icon = this.createElement('span', ['glass-segmented__icon'], { 'aria-hidden': 'true' });
+      icon.appendChild(this.createElement('slot', [], { name: `icon-${value}` }));
+      button.appendChild(icon);
+      if (iconOnly) {
+        button.setAttribute('aria-label', label);
+        button.title = label;
+      } else {
+        button.appendChild(document.createTextNode(label));
+      }
       this._group.appendChild(button);
     }
+    this._syncIcons();
     this.applyDisabled(this._actuallyDisabled);
     this._syncValue();
+  }
+
+  /** An option shows its icon box only while an icon is slotted into it. */
+  _syncIcons() {
+    for (const slot of this._group.querySelectorAll('.glass-segmented__icon > slot')) {
+      slot.parentElement.hidden = slot.assignedElements().length === 0;
+    }
   }
 
   /** The whole row is disabled, or an option by its own `disabled`. */
@@ -96,6 +122,7 @@ class GlkSegmented extends GlkFormElement {
     const overflow = this.overflow;
     this._group.classList.toggle('glass-segmented--full', this.getBoolAttr('full'));
     this._group.classList.toggle('glass-segmented--droplet', this.getBoolAttr('droplet'));
+    this._group.classList.toggle('glass-segmented--icons', this.iconOnly);
     for (const mode of OVERFLOWS) this._group.classList.toggle(`glass-segmented--${mode}`, overflow === mode);
     this._reveal('instant');
   }
@@ -122,14 +149,18 @@ class GlkSegmented extends GlkFormElement {
       this.emit('glk-change', { value });
     };
     this._onResize = () => { if (this._group.clientWidth !== this._revealedAt) this._reveal('instant'); };
+    this._onSlotChange = () => this._syncIcons();
     this._group.addEventListener('click', this._onClick);
+    this._group.addEventListener('slotchange', this._onSlotChange);
     this._resizeObserver = new ResizeObserver(this._onResize);
     this._resizeObserver.observe(this._group);
+    this._syncIcons();
     this._applyDroplet();
   }
 
   teardownEvents() {
     this._group?.removeEventListener('click', this._onClick);
+    this._group?.removeEventListener('slotchange', this._onSlotChange);
     this._resizeObserver?.disconnect();
     this._resizeObserver = null;
     this._droplet?.destroy();
@@ -152,6 +183,7 @@ class GlkSegmented extends GlkFormElement {
       case 'full':
       case 'overflow': this._applyLayout(); break;
       case 'droplet': this._applyLayout(); this._applyDroplet(); break;
+      case 'icon-only': this._build(); this._applyLayout(); break;
       case 'label': this._applyLabel(); break;
     }
   }
@@ -173,6 +205,9 @@ class GlkSegmented extends GlkFormElement {
 
   get droplet() { return this.getBoolAttr('droplet'); }
   set droplet(v) { this.setBoolAttr('droplet', v); }
+
+  get iconOnly() { return this.getBoolAttr('icon-only'); }
+  set iconOnly(v) { this.setBoolAttr('icon-only', v); }
 
   get overflow() {
     const v = this.getAttribute('overflow');

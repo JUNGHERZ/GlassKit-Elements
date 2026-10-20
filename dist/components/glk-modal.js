@@ -24,6 +24,33 @@ function reducedMotion() {
   return typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
+// The copies carry no inline handlers (onclick="…"): a click on a copy is
+// handed to its original, and until 1.28.0 such a handler ran twice.
+const isHandler = name => name.startsWith('on');
+
+function copyOf(node) {
+  const copy = node.cloneNode(true);
+  if (copy.nodeType === Node.ELEMENT_NODE) {
+    for (const el of [copy, ...copy.querySelectorAll('*')]) {
+      for (const { name } of [...el.attributes]) if (isHandler(name)) el.removeAttribute(name);
+    }
+  }
+  return copy;
+}
+
+/** Gives an action's copy the attributes and the content of its original. */
+function mirror(copy, original) {
+  for (const { name } of [...copy.attributes]) {
+    if (!original.hasAttribute(name)) copy.removeAttribute(name);
+  }
+  for (const { name, value } of original.attributes) {
+    if (!isHandler(name) && copy.getAttribute(name) !== value) copy.setAttribute(name, value);
+  }
+  if (copy.innerHTML !== original.innerHTML) {
+    copy.replaceChildren(...[...original.childNodes].map(copyOf));
+  }
+}
+
 class GlkModal extends GlkElement {
   static get observedAttributes() {
     return ['open', 'title'];
@@ -69,9 +96,18 @@ class GlkModal extends GlkElement {
     if (signature === this._footerSignature) return;
     this._footerSignature = signature;
 
+    // As many actions as copies: each copy takes its original's attributes
+    // and content in place, so the one that has the focus keeps it — a
+    // confirm button that the page enables, or relabels while it works.
+    const copies = [...this._footer.children];
+    if (copies.length === buttons.length) {
+      buttons.forEach((btn, i) => mirror(copies[i], btn));
+      return;
+    }
+
     this._footer.innerHTML = '';
     buttons.forEach((btn, i) => {
-      const clone = btn.cloneNode(true);
+      const clone = copyOf(btn);
       // Look the original up again at click time instead of closing over it: a
       // framework that re-renders replaces the node, and a captured reference
       // would then forward the click to a button no longer in the document.

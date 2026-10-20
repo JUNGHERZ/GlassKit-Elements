@@ -209,8 +209,9 @@ class GlkElement extends HTMLElement {
   /**
    * Opt in when the component copies light-DOM children into its shadow tree.
    * A MutationObserver then calls projectLightDom() again whenever those
-   * children change, so a framework that swaps them keeps the rendered element
-   * in step. Without it the copy is made once and silently goes stale.
+   * children change — their content and, since 1.28.0, their attributes — so
+   * a framework that swaps them or only binds `disabled` keeps the rendered
+   * element in step. Without it the copy is made once and silently goes stale.
    */
   static get observesLightDom() { return false; }
 
@@ -272,8 +273,13 @@ class GlkElement extends HTMLElement {
 
     if (this.constructor.observesLightDom) {
       this._lightDomObserver ??= new MutationObserver(records => this.projectLightDom(records));
+      // Attributes too: the copies show them. Until 1.27.0 a modal action
+      // that started disabled stayed disabled in its copy after the page
+      // enabled it, and the dialog could not be confirmed. The elements'
+      // own projectLightDom() compare a signature first, so a change
+      // elsewhere in the content costs a string comparison.
       this._lightDomObserver.observe(this, {
-        childList: true, subtree: true, characterData: true
+        childList: true, subtree: true, characterData: true, attributes: true
       });
     }
   }

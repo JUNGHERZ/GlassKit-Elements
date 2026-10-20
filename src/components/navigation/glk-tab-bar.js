@@ -82,20 +82,20 @@ class GlkTabBar extends GlkElement {
     this._syncItems();
   }
 
-  setupEvents() {
-    // Listen for tab selection events from child glk-tab-item elements
-    this._onTabSelect = (e) => {
-      // Deactivate all other tabs
-      const items = this.querySelectorAll('glk-tab-item');
-      items.forEach(item => {
-        if (item !== e.target) {
-          item.removeAttribute('active');
-        }
-      });
-      this.emit('glk-tab-change', { tab: e.target });
-    };
-    this.addEventListener('glk-tab-select', this._onTabSelect);
+  /**
+   * Called by an item the user selected once its glk-tab-select went through
+   * uncancelled; the item is active already. Until 1.27.0 the bar did this
+   * while the event was still on its way, so a listener further up could not
+   * have kept the current tab.
+   */
+  _selected(tab) {
+    for (const item of this.querySelectorAll('glk-tab-item')) {
+      if (item !== tab) item.removeAttribute('active');
+    }
+    this.emit('glk-tab-change', { tab });
+  }
 
+  setupEvents() {
     // The drop's state lives on the nav; the items carry it on their wrappers.
     this._navObserver = new MutationObserver(() => this._syncItems());
     this._navObserver.observe(this._nav, { attributes: true, attributeFilter: ['data-droplet', 'data-droplet-drag'] });
@@ -106,12 +106,19 @@ class GlkTabBar extends GlkElement {
   }
 
   teardownEvents() {
-    this.removeEventListener('glk-tab-select', this._onTabSelect);
     this._navObserver?.disconnect();
     this._itemObserver?.disconnect();
     this._droplet?.destroy();
     this._droplet = null;
   }
+
+  // Properties as well (since 1.28.0): `bar.droplet = true` set an own
+  // property before and changed nothing.
+  get floating() { return this.getBoolAttr('floating'); }
+  set floating(v) { this.setBoolAttr('floating', v); }
+
+  get droplet() { return this.getBoolAttr('droplet'); }
+  set droplet(v) { this.setBoolAttr('droplet', v); }
 }
 
 customElements.define('glk-tab-bar', GlkTabBar);

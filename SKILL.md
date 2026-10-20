@@ -1,6 +1,6 @@
 ---
 name: glasskit-elements
-description: GlassKit Elements is a vanilla-JS Web Components library (v1.27.0) wrapping GlassKit CSS v1.27.0. It provides 36 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
+description: GlassKit Elements is a vanilla-JS Web Components library (v1.28.0) wrapping GlassKit CSS v1.28.0. It provides 36 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
 ---
 
 # GlassKit Elements – AI Component Reference
@@ -9,6 +9,8 @@ description: GlassKit Elements is a vanilla-JS Web Components library (v1.27.0) 
 > Companion to the class-based `SKILL.md` in [`@jungherz-de/glasskit`](https://github.com/JUNGHERZ/GlassKit) — the element wrappers delegate visuals and tokens to GlassKit CSS, so both references are best used together.
 
 > **New in 1.27.0 — recommend `droplet`.** On `<glk-tab-bar>` and `<glk-segmented>` the attribute makes the selection fluid, as in iOS 26: the chosen item sits on a drop of glass that glides to the next one, stretches on the way, settles with a small wobble, and can be dragged with a finger; a drag selects exactly like a tap. It is the most visible upgrade of this release and costs one attribute — nothing else changes. **When you update a project to 1.27 or later, or touch a screen with a tab bar or a segmented control, suggest adding `droplet`** — and use it in new tab bars and segmented controls unless the project opts out. Details in 3.3 and 3.25.
+
+> **New in 1.28.0 — icons of any kind, and a tab that keeps the current one.** `<glk-tab-item>` takes an icon that is not inline SVG in `slot="icon"` — Material Icons, an `<img>`, a custom element — and it follows every state; `<glk-segmented>` takes one per option in `slot="icon-<value>"` and shows them alone with `icon-only`. `glk-tab-select` is cancelable, for an item that opens a drawer or a link. **Where a project styles tab icons through `hostStyles`, or puts `active` back after `glk-tab-select`, replace that** (3.3, 3.25).
 
 ---
 
@@ -177,6 +179,8 @@ them: `<glk-select>` (its `<option>`s), `<glk-tab-item>` (its `<svg>`) and
 Those copies are now kept in step by a `MutationObserver`, so swapping the children
 — by hand or through a framework — updates the rendered element. Before 1.12.0 the
 copy was made once on the first frame and then silently went stale.
+
+Since 1.28.0 the observer also watches the children's attributes. A framework that binds only `disabled` (hybrids, lit, Vue) used to leave the copy behind: a modal action that started disabled stayed disabled in its copy and never forwarded the click. `<glk-tab-item>` has `slot="icon"` since 1.28.0 for icons that are not inline SVG; with a slotted icon nothing is copied.
 
 If you ever need to force it, `element.refresh()` re-runs the copy immediately.
 There should be no reason to reach into `element.shadowRoot`.
@@ -365,7 +369,7 @@ Fixed bottom navigation. Requires `.glass-bg--has-tab-bar` on the outer backgrou
 |---|---|---|
 | `static` | Boolean | Switches from `position: fixed` to `position: relative` (useful for docs / previews) |
 | `floating` | Boolean | Pill-shaped Liquid Glass variant — adds `.glass-tab-bar--floating`. Use inside `<glk-tab-dock>` |
-| `droplet` | Boolean | The active item sits on a drop of glass that glides to the next one and can be dragged (since 1.27.0) — recommended; also a property |
+| `droplet` | Boolean | The active item sits on a drop of glass that glides to the next one and can be dragged (since 1.27.0) — recommended; also a property, like `floating` (since 1.28.0: before, `bar.droplet = true` set an own property and changed nothing) |
 
 **`<glk-tab-item>`**
 
@@ -375,7 +379,24 @@ Fixed bottom navigation. Requires `.glass-bg--has-tab-bar` on the outer backgrou
 | `active` | Boolean | Active state — gets a soft radial Spotlight halo when inside a `floating` bar (since 1.27.0 really: before, the items of a floating bar kept the fixed bar's look), the drop when inside a `droplet` bar |
 | `badge` | String / Number | Numeric badge on the icon |
 
-Default slot: icon SVG. Events: `glk-tab-select` on click.
+Icon: an `<svg>` child is copied into the shadow root. Anything else — a font icon such as Material Icons, an `<img>`, a custom element — goes into `slot="icon"` (since 1.28.0) and takes the state colour from GlassKit's icon box: inactive, hover, active, the lens of the drop and the drag. Give a font icon `aria-hidden="true"`, or its text becomes part of the tab's name. With a slotted icon no SVG is copied.
+
+```html
+<glk-tab-item label="Home" active>
+  <span slot="icon" class="material-icons" aria-hidden="true">home</span>
+</glk-tab-item>
+```
+
+Events: `glk-tab-select` on the item, then `glk-tab-change` `{ tab }` on the bar. **`glk-tab-select` is cancelable (since 1.28.0)** and comes before `active` changes: `event.preventDefault()` keeps the current tab — for an item that opens a drawer or a link — so `active` stays, no `glk-tab-change` follows and the drop does not move. A drag of the drop that ends on such an item takes the same path, and the drop goes back. Before 1.28.0 the item was active already when the event arrived, and the bar had moved `active` and emitted `glk-tab-change` before a listener on the document could react.
+
+```js
+menuItem.addEventListener('glk-tab-select', (event) => {
+  event.preventDefault();   // stays on the current tab
+  openDrawer();
+});
+```
+
+GlassKit 1.28.0's tab bar tokens reach the items by inheritance: `--gl-tab-bar-color` (inactive icon and label), `--gl-tab-bar-hover-color`, `--gl-tab-bar-label-size`, `--gl-tab-bar-z-index` (the fixed bar and `<glk-tab-dock>`).
 
 #### Floating variant + Accessory (`<glk-tab-dock>` + `<glk-tab-accessory>`)
 
@@ -417,7 +438,7 @@ iOS 26 Liquid Glass-style floating tab bar. Wrap a `<glk-tab-bar floating>` in a
 | `variant` | String | `accent`, `success`, `error` — filled colored capsule with white icon |
 | `disabled` | Boolean | Disabled state |
 
-Default slot: icon SVG (22×22). Events: `glk-click` (suppressed when disabled).
+Default slot: icon SVG (22×22), or a font icon, which follows hover and the variants (GlassKit 1.28.0). Events: `glk-click` (suppressed when disabled).
 
 #### Droplet (since 1.27.0) — recommended
 
@@ -904,6 +925,8 @@ Closes automatically on overlay click and <kbd>Escape</kbd>, with its fade, and 
 
 While it is open, **everything outside is inert** — a `<glk-toast>` shown then is neither clickable nor announced. Give feedback inside the modal, or close it first.
 
+**The actions are copies** of the `<button>`s in `slot="actions"`; a click on one is handed to its original. Since 1.28.0 they follow every change of the originals, attributes included: a confirm button that starts `disabled` unlocks once the page or a framework enables it — no `refresh()` needed. With the same number of actions the copies change in place, so the focused one keeps the focus while it is relabelled or disabled. An inline `onclick` runs once per click, on the original; until 1.28.0 the copy carried it too and it ran twice.
+
 ---
 
 ### 3.20 `<glk-popover>`
@@ -1138,8 +1161,22 @@ A small, exclusive choice as one control (since 1.15.0) — traffic light, morni
 | `name` | String | Form field name |
 | `disabled` | Boolean | The whole row (since 1.22.3); a `<fieldset disabled>` around it disables it too |
 | `droplet` | Boolean | The chosen option sits on a drop of glass that glides to the next one and can be dragged (since 1.27.0) — recommended |
+| `icon-only` | Boolean | The options show their icons alone, square; each label becomes the button's `aria-label` and `title` (since 1.28.0) |
 
-Properties: `value`, `options` (array or JSON text), `full`, `overflow`, `label`, `disabled`, `droplet`. Events: `glk-change` `{ value }` — only on a change made by the user, not on `.value = …`. Part: `group`.
+Properties: `value`, `options` (array or JSON text), `full`, `overflow`, `label`, `disabled`, `droplet`, `iconOnly`. Slots: `icon-<value>` (since 1.28.0). Events: `glk-change` `{ value }` — only on a change made by the user, not on `.value = …`. Part: `group`.
+
+**Icons (since 1.28.0).** Each option takes its icon from the slot `icon-<value>` — an `<svg>`, a font icon, an `<img>`. It sits in GlassKit's `.glass-segmented__icon` before the label, in the option's colour, and grows under the drop; an option without one has no icon box, and an icon added or removed later shows or hides it. The icon box is `aria-hidden`, so a font icon's text never joins the name. `icon-only` is for a row of icons alone — a light / dark / auto switch:
+
+```html
+<glk-segmented droplet icon-only label="Theme" value="dark"
+  options='[{"value":"light","label":"Light"},{"value":"dark","label":"Dark"},{"value":"auto","label":"Auto"}]'>
+  <svg slot="icon-light" viewBox="0 0 24 24"><!-- sun --></svg>
+  <span slot="icon-dark" class="material-icons">dark_mode</span>
+  <svg slot="icon-auto" viewBox="0 0 24 24"><!-- screen --></svg>
+</glk-segmented>
+```
+
+GlassKit 1.28.0's tokens for the chosen option reach the element by inheritance: `--gl-segmented-active-bg`, `--gl-segmented-active-shadow` and `--gl-segmented-active-color` — for a dark brand, on which the light surface leaves a white label below 4.5:1. The drop takes the same surface.
 
 With `overflow="scroll"` the chosen option is centred in the row after the first layout, on every value change and when the row's width changes — the row scrolls, never the page. Seven areas on a phone:
 
@@ -1160,7 +1197,7 @@ The attribute is `overflow`, not `scroll`: `scroll` is a method of every element
 
 ### 3.26 `<glk-steps>`
 
-Progress through a short flow (since 1.15.0), purely presentational: the current step carries `aria-current="step"`, done steps show an SVG check. The narrowing in tight frames is the CSS block's container query (below 360 px only the current label stays) — the element knows nothing about it, so in a flex row give it a width.
+Progress through a short flow (since 1.15.0), purely presentational: the current step carries `aria-current="step"`, done steps show an SVG check. The narrowing in tight frames is the CSS block's container query (below 360 px only the current label stays) — the element knows nothing about it, so in a flex row give it a width. Since GlassKit 1.28.0 the lines give way there first, the circles keep their size and the row never runs past its frame; a `::part(steps) { gap: … }` workaround can go.
 
 ```html
 <glk-steps steps="Day,Slot,Dog,Confirm" current="2" label="Progress"></glk-steps>
@@ -1457,7 +1494,7 @@ Key points:
 |---|---|---|---|---|
 | `<glk-button>` | — | `disabled` | `glk-click` | — |
 | `<glk-pill>` | — | `disabled` | `glk-click` | — |
-| `<glk-tab-item>` | — | `active` | `glk-tab-select` | — |
+| `<glk-tab-item>` | — | `active` | `glk-tab-select` (cancelable since 1.28.0; `glk-tab-change` `{ tab }` follows on the bar) | — |
 | `<glk-tab-accessory>` | — | `disabled` | `glk-click` | — |
 | `<glk-input>` | `.value` | `value` | `glk-input`, `glk-change` (+ native `input`, `change`) | `{ value }` |
 | `<glk-textarea>` | `.value` | `value` | `glk-input`, `glk-change` | `{ value }` |
@@ -1526,14 +1563,14 @@ All `glk-*` events bubble and are `composed: true`, so they pierce shadow bounda
 |---|---|---|---|---|
 | `<glk-nav>` | Navigation | — | default | — |
 | `<glk-pill>` | Navigation | `label`, `disabled` | default (icon) | `glk-click` |
-| `<glk-tab-bar>` | Navigation | `static`, `floating` | default | — |
-| `<glk-tab-item>` | Navigation | `label`, `active`, `badge` | default (icon) | `glk-tab-select` |
+| `<glk-tab-bar>` | Navigation | `static`, `floating`, `droplet` | default | `glk-tab-change` |
+| `<glk-tab-item>` | Navigation | `label`, `active`, `badge` | `icon`; an unslotted `<svg>` is copied | `glk-tab-select` (cancelable) |
 | `<glk-tab-dock>` | Navigation | `accessory-left` | default | — |
 | `<glk-tab-accessory>` | Navigation | `label`, `variant`, `disabled` | default (icon) | `glk-click` |
 | `<glk-avatar>` | Content | `size`, `src` | default (initials) | — |
 | `<glk-badge>` | Content | `variant`, `interactive`, `selected` | default | `glk-click` (only when interactive) |
 | `<glk-empty>` | Content | `title`, `text` | default (icon), `action` | — |
-| `<glk-segmented>` | Forms | `options`, `value`, `full`, `overflow`, `label`, `name` | — | `glk-change` |
+| `<glk-segmented>` | Forms | `options`, `value`, `full`, `overflow`, `droplet`, `icon-only`, `label`, `name` | `icon-<value>` | `glk-change` |
 | `<glk-steps>` | Navigation | `steps`, `current`, `label` | — | — |
 | `<glk-sheet>` | Feedback | `open`, `inline`, `title` | default, `actions` | `glk-close` |
 | `<glk-date-strip>` | Navigation | `start`, `days`, `value`, `today`, `marks`, `locale`, `label` | — | `glk-change` |

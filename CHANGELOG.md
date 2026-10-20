@@ -7,6 +7,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.28.0] – 2026-10-20
+
+Versions stay aligned with GlassKit at 1.28.0, which this release is built against (peer dependency `>=1.28.0`).
+
+### Added
+
+- **Icons that are not inline SVG in `<glk-tab-item>`: `slot="icon"`.** The item copied the first `<svg>` of its light DOM into its shadow root and showed nothing else, so an app whose tab icons come from Material Icons, a ligature font, or from an element of its own could not use them. Anything slotted as `icon` now sits in GlassKit's `.glass-tab-bar__icon`, before the badge, and takes the state colour from it (GlassKit 1.28.0): inactive, hover, active, the lens of the drop and the drag; on a bar without droplet the active icon carries the glow. An `<svg>` without `slot` is copied as before; with a slotted icon nothing is copied. ([#17](https://github.com/JUNGHERZ/GlassKit-Elements/issues/17))
+- **Icons per option in `<glk-segmented>`: `slot="icon-<value>"`, and `icon-only`.** The options were text only. Each option now takes an icon from the slot named after its value — an `<svg>`, a font icon, an `<img>` — in GlassKit's `.glass-segmented__icon` before the label; an option without one has no icon box, and an icon added or removed later shows or hides it. The icon box is `aria-hidden`, so a font icon's text never joins the name. `icon-only` (property `iconOnly`) shows the icons alone, for a light / dark / auto switch: the row takes `.glass-segmented--icons`, and each label becomes the button's `aria-label` and `title`. ([#17](https://github.com/JUNGHERZ/GlassKit-Elements/issues/17))
+- **`droplet` and `floating` are properties of `<glk-tab-bar>`.** The README called `droplet` "also a property", but `GlkTabBar` had no accessor, so `bar.droplet = true` set an own property and changed nothing; `floating` had the same gap. ([#17](https://github.com/JUNGHERZ/GlassKit-Elements/issues/17))
+- **GlassKit 1.28.0's tokens reach the elements by inheritance:** `--gl-tab-bar-color`, `--gl-tab-bar-hover-color`, `--gl-tab-bar-label-size` and `--gl-tab-bar-z-index` for `<glk-tab-item>`, `<glk-tab-bar>` and `<glk-tab-dock>`; `--gl-segmented-active-bg`, `-shadow` and `-color` for the chosen option of `<glk-segmented>` and its drop. ([GlassKit #17](https://github.com/JUNGHERZ/GlassKit/issues/17), [GlassKit #14](https://github.com/JUNGHERZ/GlassKit/issues/14))
+
+### Changed
+
+- **`glk-tab-select` comes before `active` changes, and it is cancelable.** A bar item that opens a side drawer or an external link must not become active, but the item set `active` before it emitted `glk-tab-select`, and the bar, listening on its way up, removed `active` from the others and emitted `glk-tab-change` before a listener on the document had even seen the event: the page could only put `active` back, and on a droplet bar the drop ran to the item and back. Now `event.preventDefault()` keeps the current tab — no `active`, no `glk-tab-change`, and the drop stays. A drag that ends on such an item takes the same path, because the drop clicks the item, and the drop goes back. Uncancelled, the item becomes active and the bar emits `glk-tab-change` after `glk-tab-select`; in 1.27.0 a listener on the document received `glk-tab-change` first. ([#17](https://github.com/JUNGHERZ/GlassKit-Elements/issues/17))
+
+### Fixed
+
+- **The action buttons of `<glk-modal>` follow attribute changes.** The actions are copies of the buttons in `slot="actions"`, kept in step by the light-DOM observer — which watched content but not attributes. A confirm button that starts `disabled` stayed disabled in its copy after the page enabled it, a disabled copy forwards no click, and with a framework that binds only `disabled` (hybrids, lit, Vue) the dialog could never be confirmed. The observer of every element that copies light-DOM children now watches attributes too, so the copies of `<glk-select>`'s options and `<glk-tab-item>`'s SVG follow them as well. With as many actions as before, the copies change in place, so the one that has the focus keeps it while it is relabelled or disabled. Measured in Chromium 153, WebKit 26.6 and Firefox 151 with the issue's dialog: after typing DELETE the copy of Delete is enabled (in 1.27.0 it stayed disabled) and a click on it runs the original once; relabelled and marked `aria-busy` while focused, the copy stays the same node and keeps the focus; an option of `<glk-select>` disabled after connecting is disabled in the copy. ([#16](https://github.com/JUNGHERZ/GlassKit-Elements/issues/16))
+- **An inline `onclick` on a modal action runs once.** The copy carried the original's `onclick` attribute and ran it, then handed the click to the original, which ran it again: the issue's `alert('deleted')` would have shown twice. The copies carry no inline handlers now. Found while fixing the above. ([#16](https://github.com/JUNGHERZ/GlassKit-Elements/issues/16))
+- **From GlassKit 1.28.0:** under a scaled ancestor the drop of `<glk-tab-bar droplet>` and `<glk-segmented droplet>` lands on the chosen item, at rest, while the transform runs and during a drag ([GlassKit #16](https://github.com/JUNGHERZ/GlassKit/issues/16)); the items of the fixed `<glk-tab-bar>` sit in the middle without a home indicator ([GlassKit #17](https://github.com/JUNGHERZ/GlassKit/issues/17)); seven steps in `<glk-steps>` fit a narrow column, so a `::part(steps)` gap workaround can go ([GlassKit #15](https://github.com/JUNGHERZ/GlassKit/issues/15)).
+
+### Compatibility
+
+- A listener on `glk-tab-select` that read the item's `active` there sees the previous state now; `glk-tab-change` still comes after the change. The bar no longer listens for `glk-tab-select`: the item calls it once the event went through uncancelled, so a `glk-tab-select` dispatched by a page switches no tab.
+
+Measured in Chromium 153, WebKit 26.6 and Firefox 151: a slotted text icon, a custom element and a slotted SVG take the inactive colour, the hover colour, the primary when active and while the dragged drop is over them, and no SVG is copied next to them; `glk-tab-select` cancelled from a listener on the document leaves `active`, the drop and `glk-tab-change` alone on a tap and on a drag, where the drop returns to the current tab; segmented icons are 18 × 18 px, icon-only options 34 × 34 px with `aria-label` and `title`, the icon under a dragged drop scales by 1.15; `bar.droplet = false` removes the attribute, the class and the drop, `true` brings them back; the new GlassKit tokens arrive in every shadow root. Docs, showcase and landing pages render pixel-identical to 1.27.0, except the fixed tab bar of the docs, whose items moved to the middle, and the narrow steps, whose lines reach 2px closer to their circles.
+
+---
+
 ## [1.27.0] – 2026-10-18
 
 Versions stay aligned with GlassKit at 1.27.0, which this release is built against (peer dependency `>=1.27.0`).
@@ -896,7 +925,8 @@ Starting with this release, GlassKit Elements version numbers are aligned with G
 
 ---
 
-[Unreleased]: https://github.com/JUNGHERZ/GlassKit-Elements/compare/v1.25.0...HEAD
+[Unreleased]: https://github.com/JUNGHERZ/GlassKit-Elements/compare/v1.28.0...HEAD
+[1.28.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.28.0
 [1.27.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.27.0
 [1.26.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.26.0
 [1.25.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.25.0

@@ -1,5 +1,18 @@
 import { GlkElement } from '../../base.js';
 
+// The icon: an inline <svg> child is copied into the shadow root, where
+// GlassKit's rules reach it. Anything else — a font icon such as Material
+// Icons, an <img>, an element of the page's own — goes into slot="icon"
+// (since 1.28.0) and takes the state colour from GlassKit's icon box: active,
+// hover, the lens of the drop and the drag. With a slotted icon no SVG is
+// copied.
+//
+// glk-tab-select (cancelable since 1.28.0) comes before `active` changes:
+// preventDefault() keeps the current tab — for an item that opens a drawer
+// or a link — and the bar then neither moves `active` nor its drop, nor
+// emits glk-tab-change. A drag of the drop that ends on the item clicks it,
+// so it takes the same path.
+
 class GlkTabItem extends GlkElement {
   static get observedAttributes() {
     return ['label', 'active', 'badge'];
@@ -11,8 +24,10 @@ class GlkTabItem extends GlkElement {
     this._btn = this.createElement('button', ['glass-tab-bar__item']);
     if (this.getBoolAttr('active')) this._btn.classList.add('is-active');
 
-    // Icon — clone SVG from light DOM into shadow DOM so GlassKit CSS applies
+    // Icon — clone SVG from light DOM into shadow DOM so GlassKit CSS applies,
+    // or show what is slotted as icon
     this._iconEl = this.createElement('span', ['glass-tab-bar__icon']);
+    this._iconEl.appendChild(this.createElement('slot', [], { name: 'icon' }));
 
     // Label
     this._labelEl = this.createElement('span', ['glass-tab-bar__label']);
@@ -36,7 +51,8 @@ class GlkTabItem extends GlkElement {
   }
 
   projectLightDom() {
-    const svg = this.querySelector('svg');
+    // A slotted icon wins; only without one is an <svg> copied.
+    const svg = this.querySelector(':scope > [slot="icon"]') ? null : this.querySelector('svg');
     const signature = svg ? svg.outerHTML : '';
     if (signature === this._iconSignature) return;
     this._iconSignature = signature;
@@ -62,8 +78,9 @@ class GlkTabItem extends GlkElement {
 
   setupEvents() {
     this._onClick = () => {
+      if (!this.emit('glk-tab-select', null, { cancelable: true })) return;
       this.setAttribute('active', '');
-      this.emit('glk-tab-select');
+      this.closest('glk-tab-bar')?._selected?.(this);
     };
     this._btn.addEventListener('click', this._onClick);
     this._tellBar();

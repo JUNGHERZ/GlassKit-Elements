@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.29.1] – 2026-10-21
+
+Rebuilt against GlassKit 1.29.1; the peer dependency moves to `>=1.29.1`.
+
+### Fixed
+
+- **`<glk-list flush>` reaches both edges of its container.** The inner list carries GlassKit's `.glass-list--flush`, which kept `width: 100%` and only moved to the start: in a `<glk-card>` it ended 4px from the left inner edge and 44px from the right. With GlassKit 1.29.1 it spans the card, the body of a `<glk-modal>` and a `<glk-sheet>` from edge to edge; the card and the modal body hand their padding to the list as `--gl-list-flush-inset`, which reaches its shadow root by inheritance. Measured in Chromium 153, WebKit 26.6 and Firefox 151: 0.0px from both inner edges in all three. ([GlassKit #18](https://github.com/JUNGHERZ/GlassKit/issues/18))
+
+---
+
 ## [1.29.0] – 2026-10-21
 
 Versions stay aligned with GlassKit at 1.29.0, which this release is built against (peer dependency `>=1.29.0`).
@@ -946,7 +956,8 @@ Starting with this release, GlassKit Elements version numbers are aligned with G
 
 ---
 
-[Unreleased]: https://github.com/JUNGHERZ/GlassKit-Elements/compare/v1.29.0...HEAD
+[Unreleased]: https://github.com/JUNGHERZ/GlassKit-Elements/compare/v1.29.1...HEAD
+[1.29.1]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.29.1
 [1.29.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.29.0
 [1.28.1]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.28.1
 [1.28.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.28.0

@@ -1,6 +1,6 @@
 ---
 name: glasskit-elements
-description: GlassKit Elements is a vanilla-JS Web Components library (v1.29.0) wrapping GlassKit CSS v1.29.0. It provides 36 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
+description: GlassKit Elements is a vanilla-JS Web Components library (v1.29.1) wrapping GlassKit CSS v1.29.1. It provides 36 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
 ---
 
 # GlassKit Elements – AI Component Reference
@@ -1096,7 +1096,7 @@ iOS-style grouped settings list. Items carry a leading icon, title + optional su
 | Attribute | Type | Description |
 |---|---|---|
 | `header` | String | Section header text — renders as uppercase label above the list |
-| `flush` | Boolean | Edge-to-edge variant — removes side margin and radius |
+| `flush` | Boolean | Edge-to-edge variant — removes side borders and radius and reaches both edges of its container: `<glk-card>`, the body of `<glk-modal>`, `<glk-sheet>` (since 1.29.1, GlassKit 1.29.1; before, it only moved to the start). Elsewhere set `--gl-list-flush-inset` to the container's horizontal padding (unset: 20px) |
 | `bare` | Boolean | Strips background, border, shadow — use inside `<glk-popover>` or `<glk-card>` to avoid double glass surfaces |
 
 **`<glk-list-item>`**

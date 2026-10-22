@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.30.0] – 2026-10-22
+
+Versions stay aligned with GlassKit at 1.30.0, which this release is built against (peer dependency `>=1.30.0`).
+
+### Changed
+
+- **`<glk-sheet>` is a native `<dialog>` in the top layer.** Its overlay was a `div` with `position: fixed` and `z-index: 1000` in its shadow root, so whether it covered the page depended on stacking contexts and on how the browser composites: on an iPhone a fixed bottom tab bar with a backdrop filter and a transform now and then landed above an open sheet. Since 1.30.0 the overlay is a `<dialog>` opened with `showModal()`, as `<glk-modal>`'s has been since 1.20.0: it lies in the top layer, above every fixed or transformed element whatever its `z-index`, the page behind it is inert for pointer, keyboard and screen readers, focus moves in — an `autofocus` element takes it — and Escape arrives as the dialog's `cancel` event and slides it out. The slide and the fade stay as they were, on GlassKit 1.30.0's rules for `dialog.glass-sheet-overlay`; `inline` keeps the panel in the flow, and switching between the two works while open. The part `overlay` is the `<dialog>` now; the title names the dialog through `aria-labelledby`. ([#21](https://github.com/JUNGHERZ/GlassKit-Elements/issues/21))
+
+### Added
+
+- **`glk-open` on `<glk-sheet>` and `<glk-modal>`.** Nobody learned that a sheet had opened: only `glk-close` existed, and only for the visitor's close. Both now emit `glk-open` whenever they open — attribute, property or `show()`, also when they start open — so a page can hide its own fixed bars, for instance. `glk-close` keeps its meaning. ([#21](https://github.com/JUNGHERZ/GlassKit-Elements/issues/21))
+- **The page behind an open sheet or modal does not scroll.** The top layer made the page inert for pointer and keyboard, but a wheel or a finger over the dimmed area still scrolled it, and on a phone touch scrolling moved the page and slid its bars. While either is open, the root scroller takes `overflow: hidden`, and a classic scrollbar keeps its room so the page does not shift; the lock is shared, so it ends only when the last open sheet or modal closes. Scripts of the page can still scroll it. ([#21](https://github.com/JUNGHERZ/GlassKit-Elements/issues/21))
+- **Parts on `<glk-accordion-item>`:** `item`, `trigger`, `content`, `body`. Its shadow root had none, so a page could not reach the content at all. ([#20](https://github.com/JUNGHERZ/GlassKit-Elements/issues/20))
+
+### Fixed
+
+- **An open `<glk-accordion-item>` shows all of its content.** GlassKit capped the open content at `max-height: 500px` with `overflow: hidden`, so a section with 40 rows of 30px showed 500 of 1,220px and the rest, a "show more" row included, could not be reached. GlassKit 1.30.0 slides a grid row from `0fr` to `1fr` instead: the section takes the height of its content, however long, also when the content grows while open, and the slide stays. ([#20](https://github.com/JUNGHERZ/GlassKit-Elements/issues/20))
+- **Escape pressed twice on `<glk-modal>` emitted `glk-close` twice.** The second press arrived while the modal faded out; it is ignored now, on the sheet as well.
+- **A modal or sheet with nothing to focus no longer rings the screen.** `showModal()` then focuses the dialog itself, and Chromium and WebKit drew its focus ring along the edges of the viewport; GlassKit 1.30.0 gives both dialogs no outline. Tab still goes to the first control.
+
+Measured in Chromium 153, WebKit 26.6 and Firefox 151, with the issues' pages: the accordion item shows 1,220 of 1,220px (1.29.1: 500) and has its four parts. The sheet matches `:modal` after `setAttribute('open', '')`, `glk-open` fires once, the `autofocus` field has the focus, the root takes `overflow: hidden` and a wheel over the scrim leaves the page where it was (1.29.1: no event, focus on the body, the page scrolled); Escape and a scrim click slide it out with one `glk-close`, `close()` with none; a modal and a sheet open together keep the lock until the second closes; a sheet moved while open stays modal; an inline sheet opens no dialog and locks nothing, and turned into an overlay while open it becomes modal with `glk-open`. The modal emits `glk-open` and locks the page as well, and two Escapes give one `glk-close` (1.29.1: two). An open sheet renders pixel-identical to the `div` of 1.29.1, light and dark, 390 and 800px wide.
+
+---
+
 ## [1.29.1] – 2026-10-21
 
 Rebuilt against GlassKit 1.29.1; the peer dependency moves to `>=1.29.1`.
@@ -956,7 +980,8 @@ Starting with this release, GlassKit Elements version numbers are aligned with G
 
 ---
 
-[Unreleased]: https://github.com/JUNGHERZ/GlassKit-Elements/compare/v1.29.1...HEAD
+[Unreleased]: https://github.com/JUNGHERZ/GlassKit-Elements/compare/v1.30.0...HEAD
+[1.30.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.30.0
 [1.29.1]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.29.1
 [1.29.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.29.0
 [1.28.1]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.28.1

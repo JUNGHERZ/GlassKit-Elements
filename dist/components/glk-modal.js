@@ -1,4 +1,5 @@
 import { GlkElement } from './base.js';
+import { s as scrollLock } from './shared/scroll-lock-CPPPbHHK.js';
 import '@jungherz-de/glasskit/glasskit-styles.js';
 
 // Since 1.20.0 the overlay is a native <dialog>, opened with showModal(). The
@@ -17,6 +18,10 @@ import '@jungherz-de/glasskit/glasskit-styles.js';
 // Chrome takes the first field of the content, Safari the first action. An
 // element marked autofocus — in the content or among the actions — settles
 // it in both.
+//
+// Since 1.30.0 it emits glk-open whenever it opens — attribute, property or
+// show() — and the page does not scroll while it is open (glk-close stays
+// the user's close only).
 
 const CLOSE_FALLBACK_MS = 400;
 
@@ -86,6 +91,7 @@ class GlkModal extends GlkElement {
 
     this._overlay.appendChild(modal);
     this._wrapper.appendChild(this._overlay);
+    this._scrollLock = scrollLock();
     // `open` is applied in setupEvents, which also runs when a moved element
     // comes back.
   }
@@ -137,6 +143,7 @@ class GlkModal extends GlkElement {
     this._onClose = () => {
       if (this._overlay.open) return;       // a late event from an earlier close
       this._overlay.classList.remove('is-active');
+      this._scrollLock.release();
       if (this.open) this._dismiss();
     };
     this._overlay.addEventListener('close', this._onClose);
@@ -155,6 +162,7 @@ class GlkModal extends GlkElement {
     this._overlay?.removeEventListener('transitionend', this._onFaded);
     this._overlay?.classList.remove('is-active');
     if (this._overlay?.open) this._overlay.close();
+    this._scrollLock?.release();
   }
 
   onAttributeChanged(name, _old, value) {
@@ -177,8 +185,10 @@ class GlkModal extends GlkElement {
     dialog.removeEventListener('transitionend', this._onFaded);
     if (!dialog.open) {
       dialog.showModal();
+      this._scrollLock.hold();
       // The actions are copies in the shadow root; the originals are not shown.
       (this._footer.querySelector('[autofocus]') || this.querySelector('[autofocus]'))?.focus();
+      this.emit('glk-open');
     }
     void dialog.offsetHeight; // reflow, so the fade starts from the closed state
     requestAnimationFrame(() => {
@@ -205,6 +215,7 @@ class GlkModal extends GlkElement {
 
   /** Closed by the user — a click outside, Escape. */
   _dismiss() {
+    if (!this.open) return;               // Escape again while it fades out
     this.removeAttribute('open');
     this.emit('glk-close');
   }

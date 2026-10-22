@@ -2,18 +2,23 @@ import { GlkElement } from '../../base.js';
 
 const CHEVRON_SVG = `<span class="glass-accordion__trigger-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></span>`;
 
+// Open, the content takes its own height (GlassKit 1.30.0: a grid row that
+// slides from 0fr to 1fr; until then it ended at 500 px). Parts since
+// 1.30.0: item, trigger, content, body.
+
 class GlkAccordionItem extends GlkElement {
   static get observedAttributes() {
     return ['title', 'open'];
   }
 
   render() {
-    this._item = this.createElement('div', ['glass-accordion__item']);
+    this._item = this.createElement('div', ['glass-accordion__item'], { part: 'item' });
 
     // Trigger button — says whether its section is open, and which one it is
     this._trigger = this.createElement('button', ['glass-accordion__trigger'], {
       type: 'button',
-      'aria-controls': 'content'
+      'aria-controls': 'content',
+      part: 'trigger'
     });
     this.takeTitle();
     this._triggerText = document.createTextNode(this._title || '');
@@ -21,8 +26,8 @@ class GlkAccordionItem extends GlkElement {
     this._trigger.insertAdjacentHTML('beforeend', CHEVRON_SVG);
 
     // Content
-    this._content = this.createElement('div', ['glass-accordion__content'], { id: 'content' });
-    const body = this.createElement('div', ['glass-accordion__body']);
+    this._content = this.createElement('div', ['glass-accordion__content'], { id: 'content', part: 'content' });
+    const body = this.createElement('div', ['glass-accordion__body'], { part: 'body' });
     body.appendChild(document.createElement('slot'));
     this._content.appendChild(body);
 

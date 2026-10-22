@@ -1,6 +1,6 @@
 ---
 name: glasskit-elements
-description: GlassKit Elements is a vanilla-JS Web Components library (v1.29.1) wrapping GlassKit CSS v1.29.1. It provides 36 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
+description: GlassKit Elements is a vanilla-JS Web Components library (v1.30.0) wrapping GlassKit CSS v1.30.0. It provides 36 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
 ---
 
 # GlassKit Elements – AI Component Reference
@@ -286,6 +286,8 @@ container components are exposed as parts:
 | `<glk-card>` | `card` |
 | `<glk-list>` | `header`, `list` |
 | `<glk-modal>` | `overlay`, `modal`, `header`, `body`, `footer` |
+| `<glk-sheet>` | `overlay`, `sheet`, `title`, `body`, `actions` |
+| `<glk-accordion-item>` | `item`, `trigger`, `content`, `body` (since 1.30.0) |
 
 ```css
 glk-card::part(card) { border-radius: 8px; }
@@ -917,7 +919,9 @@ Slots:
 - default — modal body content
 - `actions` — container for footer buttons (GlassKit expects `<button class="glass-modal__action">`)
 
-Methods: `.show()`, `.close()`. Property: `.open`. Events: `glk-close`.
+Methods: `.show()`, `.close()`. Property: `.open`. Events: `glk-open` — whenever it opens (since 1.30.0); `glk-close` — the user closed it.
+
+While it is open the page behind it does not scroll (since 1.30.0): the top layer kept it inert for pointer and keyboard, but a wheel or a finger over the dimmed area still moved it. The lock is shared with `<glk-sheet>`: it ends when the last of them closes. Scripts of the page can still scroll it.
 
 Closes automatically on overlay click and <kbd>Escape</kbd>, with its fade, and emits `glk-close` then; `.close()` and removing `open` do not emit.
 
@@ -1042,9 +1046,11 @@ Collapsible sections.
 | `title` | String | Trigger label |
 | `open` | Boolean | Expanded state |
 
-Default slot: body content. Events: `glk-toggle` → `{ open }`. Property: `.open`.
+Default slot: body content. Events: `glk-toggle` → `{ open }`. Property: `.open`. Parts: `item`, `trigger`, `content`, `body` (since 1.30.0).
 
 The trigger carries `aria-expanded` and `aria-controls`; a closed section is `inert`, so its links and fields are out of the tab order and the accessibility tree until it opens (since 1.20.0 — before, they were only squeezed to zero height and Tab still reached them).
+
+An open section takes the height of its content, however long, and slides to it (GlassKit 1.30.0: a grid row from `0fr` to `1fr`). Until then it ended at 500px and cut off the rest — a list of 40 rows showed 500 of 1,220px. Never lift a cap with `max-height` of your own; there is none to lift.
 
 ---
 
@@ -1223,7 +1229,7 @@ Part: `steps`.
 
 ### 3.27 `<glk-sheet>`
 
-Bottom sheet (since 1.15.0) — the mobile sibling of `<glk-modal>`, same API shape. Opening and closing are animated by GlassKit's `.glass-sheet` block: `.is-active` is added one frame after the overlay is unhidden, and on closing the overlay is hidden only after `transitionend` (safety net 400 ms), so no blurred layer idles behind the page; under `prefers-reduced-motion` it switches at once. The Escape listener sits on `document` and is removed in `teardownEvents()`.
+Bottom sheet (since 1.15.0) — the mobile sibling of `<glk-modal>`, same API shape. **Since 1.30.0 a native `<dialog>` opened with `showModal()`**, like the modal: it lies in the top layer, above every fixed or transformed element of the page whatever its `z-index` (on iOS a fixed tab bar with a backdrop filter could land above the old fixed `div`), the page behind it is inert and does not scroll, focus moves in (`autofocus` decides where), and Escape arrives as the dialog's `cancel` event. Opening and closing are animated by GlassKit's `.glass-sheet` block: `.is-active` is added one frame after `showModal()`, and on closing the dialog closes only after the panel's `transitionend` (safety net 400 ms); under `prefers-reduced-motion` it switches at once. `inline` keeps the panel in the flow; the dialog stays closed then.
 
 ```html
 <glk-sheet id="sheet" title="Rebook to …">
@@ -1237,9 +1243,9 @@ Bottom sheet (since 1.15.0) — the mobile sibling of `<glk-modal>`, same API sh
 |---|---|---|
 | `open` | Boolean | Shown as an overlay (reflected property) |
 | `inline` | Boolean | In the flow, no overlay, always visible — e.g. inside a phone frame or a card |
-| `title` | String | Heading and `aria-label` of the dialog |
+| `title` | String | Heading; names the dialog |
 
-Methods: `show()`, `close()`. Slots: default (content), `actions`. Events: `glk-close` — only when the user closes it (scrim click, Escape), like `<glk-modal>`; `close()` does not emit. Parts: `overlay`, `sheet`, `title`, `body`, `actions`.
+Methods: `show()`, `close()`. Slots: default (content), `actions`. Events: `glk-open` — whenever it opens, by attribute, property or `show()` (since 1.30.0), for instance to hide a page's own fixed bars; `glk-close` — only when the user closes it (scrim click, Escape), like `<glk-modal>`; `close()` does not emit. Parts: `overlay` (the `<dialog>`), `sheet`, `title`, `body`, `actions`.
 
 ---
 
@@ -1512,12 +1518,12 @@ Key points:
 | `<glk-checkbox>` | `.checked` | `checked` | `glk-change` | `{ checked }` |
 | `<glk-radio>` | `.checked` | `checked` | `glk-change` | `{ checked, value }` |
 | `<glk-range>` | `.value` | `value` | `glk-input`, `glk-change` | `{ value }` |
-| `<glk-modal>` | `.open` | `open` | `glk-close` | — |
+| `<glk-modal>` | `.open` | `open` | `glk-open`, `glk-close` (user close only) | — |
 | `<glk-popover>` | `.open` | `open` | `glk-open`, `glk-close` | — |
 | `<glk-accordion-item>` | `.open` | `open` | `glk-toggle` | `{ open }` |
 | `<glk-list-item>` | — | `interactive` | `glk-click` (only when interactive) | — |
 | `<glk-segmented>` | `.value` | `value` | `glk-change` | `{ value }` |
-| `<glk-sheet>` | `.open` | `open` | `glk-close` (user close only) | — |
+| `<glk-sheet>` | `.open` | `open` | `glk-open`, `glk-close` (user close only) | — |
 | `<glk-date-strip>` | `.value` | `value` | `glk-change` (user only) | `{ value }` |
 | `<glk-calendar>` | `.value`, `.month` | `value`, `month` | `glk-change` (user only), `glk-month` (user only) | `{ value }`, `{ month }` |
 | `<glk-image-picker>` | `.src` (not reflected) | `src` | `glk-change`, `glk-error` | `{ dataUrl, width, height, size }`, `{ message, name }` |
@@ -1580,7 +1586,7 @@ All `glk-*` events bubble and are `composed: true`, so they pierce shadow bounda
 | `<glk-empty>` | Content | `title`, `text` | default (icon), `action` | — |
 | `<glk-segmented>` | Forms | `options`, `value`, `full`, `overflow`, `droplet`, `icon-only`, `label`, `name` | `icon-<value>` | `glk-change` |
 | `<glk-steps>` | Navigation | `steps`, `current`, `label` | — | — |
-| `<glk-sheet>` | Feedback | `open`, `inline`, `title` | default, `actions` | `glk-close` |
+| `<glk-sheet>` | Feedback | `open`, `inline`, `title` | default, `actions` | `glk-open`, `glk-close` |
 | `<glk-date-strip>` | Navigation | `start`, `days`, `value`, `today`, `marks`, `locale`, `label` | — | `glk-change` |
 | `<glk-calendar>` | Forms | `month`, `value`, `today`, `min`, `max`, `marks`, `locale`, `week-start`, `label`, `name` | — | `glk-change`, `glk-month` |
 | `<glk-image-picker>` | Forms | `src`, `label`, `hint`, `round`, `max`, `type`, `quality`, `accept` | — | `glk-change`, `glk-error` |
@@ -1597,7 +1603,7 @@ All `glk-*` events bubble and are `composed: true`, so they pierce shadow bounda
 | `<glk-select>` | Forms | `label`, `name`, `value`, `disabled`, `required` | default (`<option>`) | `glk-change` |
 | `<glk-textarea>` | Forms | `label`, `rows`, `placeholder`, `name`, `value`, `disabled`, `readonly`, `required` | — | `glk-input`, `glk-change` |
 | `<glk-toggle>` | Forms | `label`, `checked`, `disabled`, `name`, `value`, `required` | — | `glk-change` |
-| `<glk-modal>` | Feedback | `open`, `title` | default, `actions` | `glk-close` |
+| `<glk-modal>` | Feedback | `open`, `title` | default, `actions` | `glk-open`, `glk-close` |
 | `<glk-popover>` | Feedback | `open`, `placement` | `trigger`, default | `glk-open`, `glk-close` |
 | `<glk-progress>` | Feedback | `value`, `label`, `variant`, `size` | — | — |
 | `<glk-toast>` | Feedback | `message`, `variant`, `duration`, `visible`, `action-label`, `action-value`, `dismissible`, `close-label` | `icon` | `glk-action`, `glk-close`, `glk-dismiss` |

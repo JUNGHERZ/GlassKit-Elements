@@ -20,7 +20,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="GlassKit Elements — Dokumentation">
   <meta name="twitter:description" content="Vollständige Dokumentation aller 29 GlassKit Elements Web Components mit Live-Beispielen.">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.29/glasskit.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.30/glasskit.min.css">
   <script src="/dist/glasskit-elements.min.js"></script>
   <style>
     html { scroll-behavior: smooth; }
@@ -255,7 +255,7 @@
     <aside class="docs-sidebar">
       <div class="docs-sidebar__title">&#129482; <a href="../de/">GlassKit Elements</a></div>
       <div class="docs-sidebar__subtitle">Web Components f&uuml;r GlassKit CSS.</div>
-      <div class="docs-sidebar__version">v1.29.1 &ndash; Jungherz GmbH</div>
+      <div class="docs-sidebar__version">v1.30.0 &ndash; Jungherz GmbH</div>
 
       <div class="docs-sidebar__group">
         <div class="docs-sidebar__group-title">Grundlagen</div>
@@ -341,7 +341,7 @@
         <h1>GlassKit Elements</h1>
         <p>Vollst&auml;ndige Referenz f&uuml;r alle 36 Web Components &ndash; entwickelt von Jungherz GmbH. Vanilla JS, Shadow DOM, native Formular-Teilnahme.</p>
         <div class="docs-hero__badges">
-          <span class="docs-hero__badge">v1.29.1</span>
+          <span class="docs-hero__badge">v1.30.0</span>
           <span class="docs-hero__badge">Shadow DOM</span>
           <span class="docs-hero__badge">36 Komponenten</span>
           <span class="docs-hero__badge">Vanilla JS</span>
@@ -354,7 +354,7 @@
 
         <h3>CDN (schnellste Variante)</h3>
         <div class="docs-code"><span class="cmt">&lt;!-- 1. GlassKit CSS --&gt;</span>
-<span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span> <span class="attr">href</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.29/glasskit.min.css"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span> <span class="attr">href</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.30/glasskit.min.css"</span><span class="tag">&gt;</span>
 
 <span class="cmt">&lt;!-- 2. GlassKit Elements --&gt;</span>
 <span class="tag">&lt;script</span> <span class="attr">src</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"</span><span class="tag">&gt;&lt;/script&gt;</span></div>
@@ -1025,7 +1025,8 @@ document.getElementById(<span class="val">'my-modal'</span>).close();</div>
             <tr><td><code>open</code></td><td>Boolean</td><td>Show/hide</td></tr>
             <tr><td><code>title</code></td><td>String</td><td>Header title</td></tr>
           </table>
-          <p><strong>Methods:</strong> <code>.show()</code>, <code>.close()</code> &nbsp; <strong>Events:</strong> <code>glk-close</code></p>
+          <p><strong>Methods:</strong> <code>.show()</code>, <code>.close()</code> &nbsp; <strong>Events:</strong> <code>glk-open</code> (bei jedem &Ouml;ffnen, seit 1.30.0), <code>glk-close</code></p>
+          <p>Solange das Modal offen ist, scrollt die Seite dahinter nicht (seit 1.30.0): Der Top Layer hielt sie f&uuml;r Zeiger und Tastatur inert, aber ein Mausrad oder ein Finger &uuml;ber der abgedunkelten Fl&auml;che bewegte sie noch.</p>
           <p>Welches Element beim &Ouml;ffnen den Fokus bekommt, entscheiden die Browser verschieden &mdash; Chrome nimmt das erste Feld des Inhalts, Safari die erste Aktion. Ein <code>autofocus</code> im Inhalt oder an einer Aktion legt es fest. Escape und ein Klick auf die abgedunkelte Fl&auml;che schlie&szlig;en das Modal mit Blende und senden <code>glk-close</code>; <code>.close()</code> sendet nichts. Solange es offen ist, ist alles au&szlig;erhalb inert &mdash; ein <code>&lt;glk-toast&gt;</code>, der dann erscheint, ist weder anklickbar noch wird er vorgelesen. R&uuml;ckmeldungen geh&ouml;ren deshalb ins Modal, oder es schlie&szlig;t zuerst.</p>
           <p>Die Aktionen sind Kopien der Buttons in <code>slot="actions"</code>, und ein Klick darauf geht an das Original. Seit 1.28.0 folgen die Kopien jeder &Auml;nderung der Originale, auch an den Attributen: Ein Best&auml;tigen-Button, der <code>disabled</code> beginnt, wird frei, sobald die Seite ihn freigibt &mdash; auch &uuml;ber ein Framework, das nur <code>disabled</code> bindet. Eine Kopie beh&auml;lt dabei ihren Fokus, und ein Inline-<code>onclick</code> l&auml;uft pro Klick einmal, am Original &mdash; vorher lief es zweimal.</p>
         </div>
@@ -1110,7 +1111,7 @@ document.querySelector(<span class="val">'glk-popover'</span>).toggle();</div>
         </div>
         <div class="docs-component" id="glk-sheet">
           <h3><code>&lt;glk-sheet&gt;</code></h3>
-          <p>Bottom-Sheet — das mobile Geschwister von <code>&lt;glk-modal&gt;</code>. Öffnen und Schließen animiert GlassKits <code>.glass-sheet</code>-Block; das Overlay wird erst nach <code>transitionend</code> versteckt, damit keine Blur-Schicht hinter der Seite stehen bleibt, und unter <code>prefers-reduced-motion</code> schaltet es sofort. Scrim-Klick und Escape schließen und senden <code>glk-close</code>; <code>show()</code> / <code>close()</code> nicht. <code>inline</code> bettet das Panel ohne Overlay ein.</p>
+          <p>Bottom-Sheet — das mobile Geschwister von <code>&lt;glk-modal&gt;</code>. Seit 1.30.0 ist sein Overlay ein natives <code>&lt;dialog&gt;</code>, ge&ouml;ffnet mit <code>showModal()</code>, wie beim Modal: Es liegt im Top Layer, &uuml;ber jedem fixierten oder transformierten Element der Seite, gleich welcher <code>z-index</code> &mdash; eine Tab-Leiste mit Backdrop-Filter kann nicht mehr dar&uuml;ber geraten &mdash;, die Seite dahinter ist inert und scrollt nicht, und der Fokus wandert hinein (ein Element mit <code>autofocus</code> bekommt ihn). Öffnen und Schließen animiert GlassKits <code>.glass-sheet</code>-Block, unter <code>prefers-reduced-motion</code> schaltet es sofort. Es sendet <code>glk-open</code> bei jedem Öffnen &mdash; Attribut, Property oder <code>show()</code> &mdash;, damit eine Seite eigene fixierte Leisten ausblenden kann; Scrim-Klick und Escape schließen und senden <code>glk-close</code>, <code>close()</code> nicht. <code>inline</code> bettet das Panel ohne Overlay in den Fluss ein.</p>
           <div class="docs-preview">
             <glk-sheet inline title="Umbuchen auf …"><p style="margin:0">Inhalt des Sheets: Liste, Text, Formular. Dieses hier ist eingebettet.</p><glk-button slot="actions" variant="primary" size="sm" id="docs-sheet-open">Als Overlay öffnen</glk-button></glk-sheet>
             <glk-sheet id="docs-sheet-el" title="Umbuchen auf …"><p style="margin:0">Tippen außerhalb oder Escape schließt.</p><glk-button slot="actions" variant="secondary" size="sm" id="docs-sheet-close">Schließen</glk-button></glk-sheet>
@@ -1157,8 +1158,8 @@ document.querySelector(<span class="val">'glk-popover'</span>).toggle();</div>
             <tr><td><code>title</code></td><td>glk-accordion-item</td><td>Trigger text</td></tr>
             <tr><td><code>open</code></td><td>glk-accordion-item</td><td>Expanded state</td></tr>
           </table>
-          <p><strong>Events:</strong> <code>glk-toggle</code> &rarr; <code>{ open: boolean }</code></p>
-          <p>Der Trigger tr&auml;gt <code>aria-expanded</code> und <code>aria-controls</code>; ein geschlossener Abschnitt ist inert, seine Links und Felder sind also aus der Tab-Reihenfolge und aus dem Accessibility-Baum, bis er sich &ouml;ffnet (seit 1.20.0).</p>
+          <p><strong>Events:</strong> <code>glk-toggle</code> &rarr; <code>{ open: boolean }</code> &nbsp; <strong>Parts:</strong> <code>item</code>, <code>trigger</code>, <code>content</code>, <code>body</code> (seit 1.30.0)</p>
+          <p>Der Trigger tr&auml;gt <code>aria-expanded</code> und <code>aria-controls</code>; ein geschlossener Abschnitt ist inert, seine Links und Felder sind also aus der Tab-Reihenfolge und aus dem Accessibility-Baum, bis er sich &ouml;ffnet (seit 1.20.0). Ein offener Abschnitt nimmt die H&ouml;he seines Inhalts an, gleich wie lang, und gleitet dorthin (GlassKit 1.30.0) &mdash; bis dahin endete er bei 500&nbsp;px und schnitt den Rest ab.</p>
         </div>
 
         <div class="docs-component" id="glk-list">

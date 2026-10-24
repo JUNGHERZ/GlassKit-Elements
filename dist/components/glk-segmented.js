@@ -6,11 +6,13 @@ import '@jungherz-de/glasskit/glasskit-styles.js';
 // One button per option, the chosen one marked aria-pressed="true" — GlassKit
 // styles exactly that attribute. Came back from EhrenPfoten in 1.15.0.
 //
-// Attributes: options (JSON [{value,label,tone?,disabled?,badge?,badgeLabel?}]
-//             — badge since 1.29.0: a count after the label, GlassKit's
-//             .glass-segmented__badge, in the tone's colour where one is
-//             set; missing, empty or 0 shows none; badgeLabel words it for
-//             the name, "1 open"), value, full,
+// Attributes: options (JSON [{value,label,tone?,disabled?,badge?,badgeLabel?,
+//             badgeTone?}] — badge since 1.29.0: a count after the label,
+//             GlassKit's .glass-segmented__badge, in the tone's colour where
+//             one is set; missing, empty or 0 shows none; badgeLabel words it
+//             for the name, "1 open"; badgeTone since 1.31.0: primary,
+//             success, warning or error colours the count alone, without the
+//             dot a tone puts before the label), value, full,
 //             overflow ("scroll" | "wrap": what happens when the options
 //             do not fit — without it the row stays one line and runs past
 //             the edge), label (aria-label of the group), name (form field),
@@ -28,7 +30,8 @@ import '@jungherz-de/glasskit/glasskit-styles.js';
 //             .glass-segmented__icon before the label and takes the option's
 //             colour; an option without one has no icon box.
 // Event:      glk-change { value } — only on a change made by the user
-// Part:       group
+// Parts:      group, item (each option's button), badge (its count) — item
+//             and badge since 1.31.0
 //
 // Form-associated: a surrounding <form> receives name=value, reset restores
 // the initial value. A value change only re-sets aria-pressed, never rebuilds,
@@ -45,6 +48,7 @@ import '@jungherz-de/glasskit/glasskit-styles.js';
 // attribute.
 
 const TONES = ['success', 'warning', 'error'];
+const BADGE_TONES = ['primary', ...TONES];
 const OVERFLOWS = ['scroll', 'wrap'];
 
 function parseList(json) {
@@ -87,7 +91,7 @@ class GlkSegmented extends GlkFormElement {
     const buttons = [...this._group.children];
     const same = buttons.length === list.length
       && list.every((option, i) => buttons[i].dataset.value === String(option.value ?? ''));
-    if (!same) this._group.replaceChildren(...list.map(() => this.createElement('button', [], { type: 'button' })));
+    if (!same) this._group.replaceChildren(...list.map(() => this.createElement('button', [], { type: 'button', part: 'item' })));
     [...this._group.children].forEach((button, i) => this._fill(button, list[i], iconOnly));
     this._syncIcons();
     this.applyDisabled(this._actuallyDisabled);
@@ -115,7 +119,8 @@ class GlkSegmented extends GlkFormElement {
     const badge = badgeText(option.badge);
     let name = label;
     if (badge) {
-      const pill = this.createElement('span', ['glass-segmented__badge']);
+      const tone = BADGE_TONES.includes(option.badgeTone) ? [`glass-segmented__badge--${option.badgeTone}`] : [];
+      const pill = this.createElement('span', ['glass-segmented__badge', ...tone], { part: 'badge' });
       pill.textContent = badge;
       if (iconOnly) icon.appendChild(pill);
       else parts.push(pill);

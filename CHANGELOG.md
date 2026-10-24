@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.31.0] – 2026-10-25
+
+Versions stay aligned with GlassKit at 1.31.0, which this release is built against (peer dependency `>=1.31.0`).
+
+### Added
+
+- **`size` takes a height and `auto` together: `<glk-button size="sm auto">`.** `size` mapped to exactly one class, so a small button as wide as its text could not be written: `size="sm"` gave the small height without room beside the text, `size="auto"` the room at full height, and `size="sm auto"` no size class at all — a 56px button. Now one height (`sm`, `md` or `lg`; of two, the first counts) and `auto` combine, in either order. The issue offered a list or a boolean `fit`; the list keeps one attribute for the size and reads the way GlassKit's classes combine. ([#23](https://github.com/JUNGHERZ/GlassKit-Elements/issues/23))
+- **Part `button` on `<glk-button>`**, the native button inside, for what the tokens do not reach. ([#23](https://github.com/JUNGHERZ/GlassKit-Elements/issues/23))
+- **`badgeTone` on the options of `<glk-segmented>`.** The count took its colour only from the option's `tone`, which also puts a dot before the label. `badgeTone` — `primary`, `success`, `warning` or `error` — colours the count alone, through GlassKit 1.31.0's `.glass-segmented__badge--*`, without the dot; with both, the count keeps its own colour; an unknown value is ignored. Options filled in place update it, and the focus stays. ([#22](https://github.com/JUNGHERZ/GlassKit-Elements/issues/22))
+- **Parts `item` and `badge` on `<glk-segmented>`**: each option's button and its count. Size and hairline of the count are GlassKit tokens (`--gl-segmented-badge-height`, `-font-size`, `-border`), which reach the element by inheritance. ([#22](https://github.com/JUNGHERZ/GlassKit-Elements/issues/22))
+
+### Changed
+
+- **Small buttons keep room beside their label.** A `size="sm"` button in a flex row, an empty state or a list's trailing slot took its width from its text and kept the browser's padding, 6px (Firefox 4px), so its edges touched the text. GlassKit 1.31.0 gives every button 24px, as `size="auto"` had: in the docs and the showcase "Small" grows from 51 to 87px and "Book" from 48 to 84px, and the showcase's row of three small buttons breaks into two lines in its narrow column. `--gl-btn-padding-x-sm` sets another value. `--gl-btn-radius` rounds the buttons alone, for pill-shaped ones. ([GlassKit #20](https://github.com/JUNGHERZ/GlassKit/issues/20), [#22](https://github.com/JUNGHERZ/GlassKit/issues/22))
+- **GlassKit 1.31.0's contrast:** muted text, card text and icons reach WCAG AA by default, and the elements take the values by inheritance. ([GlassKit #19](https://github.com/JUNGHERZ/GlassKit/issues/19))
+
+Measured in Chromium 153, WebKit 26.6 and Firefox 151 with the issues' pages: `size="sm"` in a flex row has 24px beside its text, which starts 25px from the edge (1.30.0: 6px and 7px, Firefox 4px and 5px); `size="sm auto"` and `"auto sm"` give `--sm --auto` and a 44px button (1.30.0: no size, 56px); `"sm lg"` gives `--sm`; the inner button carries `part="button"`. With `--gl-btn-radius: 9999px` on the page the button is round, the list and the segmented control stay at 16px. In `<glk-segmented>` `badgeTone: "error"` colours the count without a dot, `tone: "success"` with `badgeTone: "warning"` keeps the green dot and a warning count, an unknown tone gives a neutral count, options and counts carry their parts, and new options with the same values keep the buttons and the focus. With GlassKit's raised tokens set back to their 1.30.0 values, docs, showcase and landing pages render as in 1.30.0 in all three engines — in Chromium section by section — apart from the small buttons above, the showcase row that now breaks, and the new example of `badgeTone`.
+
+---
+
 ## [1.30.0] – 2026-10-22
 
 Versions stay aligned with GlassKit at 1.30.0, which this release is built against (peer dependency `>=1.30.0`).
@@ -980,7 +1000,8 @@ Starting with this release, GlassKit Elements version numbers are aligned with G
 
 ---
 
-[Unreleased]: https://github.com/JUNGHERZ/GlassKit-Elements/compare/v1.30.0...HEAD
+[Unreleased]: https://github.com/JUNGHERZ/GlassKit-Elements/compare/v1.31.0...HEAD
+[1.31.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.31.0
 [1.30.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.30.0
 [1.29.1]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.29.1
 [1.29.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.29.0

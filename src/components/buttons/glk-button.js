@@ -1,7 +1,10 @@
 import { GlkElement, forwardHostClicks } from '../../base.js';
 
 const VARIANTS = ['primary', 'secondary', 'tertiary'];
-const SIZES = ['sm', 'md', 'lg', 'auto'];
+// size takes a height, auto, or since 1.31.0 both: "sm auto" for a small
+// button as wide as its text. Until then it took one word, and "sm auto"
+// gave no size at all. Of two heights the first counts.
+const HEIGHTS = ['sm', 'md', 'lg'];
 
 // States that whoever owns the element sets on it — <glk-popover> sets
 // aria-expanded on its trigger. Assistive technology reads the native button
@@ -26,7 +29,8 @@ class GlkButton extends GlkElement {
 
   render() {
     this._btn = this.createElement('button', this._computeClasses(), {
-      type: this.getAttribute('type') || 'button'
+      type: this.getAttribute('type') || 'button',
+      part: 'button'
     });
 
     for (const attr of FORWARDED_ARIA) this._forward(attr);
@@ -118,10 +122,10 @@ class GlkButton extends GlkElement {
     if (variant && VARIANTS.includes(variant)) {
       classes.push(`glass-btn--${variant}`);
     }
-    const size = this.getAttribute('size');
-    if (size && SIZES.includes(size)) {
-      classes.push(`glass-btn--${size}`);
-    }
+    const words = (this.getAttribute('size') || '').split(/\s+/);
+    const height = words.find(word => HEIGHTS.includes(word));
+    if (height) classes.push(`glass-btn--${height}`);
+    if (words.includes('auto')) classes.push('glass-btn--auto');
     return classes;
   }
 

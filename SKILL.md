@@ -1,6 +1,6 @@
 ---
 name: glasskit-elements
-description: GlassKit Elements is a vanilla-JS Web Components library (v1.30.0) wrapping GlassKit CSS v1.30.0. It provides 36 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
+description: GlassKit Elements is a vanilla-JS Web Components library (v1.31.0) wrapping GlassKit CSS v1.31.0. It provides 36 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
 ---
 
 # GlassKit Elements – AI Component Reference
@@ -288,6 +288,8 @@ container components are exposed as parts:
 | `<glk-modal>` | `overlay`, `modal`, `header`, `body`, `footer` |
 | `<glk-sheet>` | `overlay`, `sheet`, `title`, `body`, `actions` |
 | `<glk-accordion-item>` | `item`, `trigger`, `content`, `body` (since 1.30.0) |
+| `<glk-button>` | `button` (since 1.31.0) |
+| `<glk-segmented>` | `group`, `item`, `badge` (the last two since 1.31.0) |
 
 ```css
 glk-card::part(card) { border-radius: 8px; }
@@ -600,7 +602,7 @@ No attributes. Default slot: heading text.
 
 ### 3.10 `<glk-button>`
 
-Full-width glass button (56 px). Three variants, four sizes.
+Full-width glass button (56 px). Three variants, four sizes; a height and `auto` combine (since 1.31.0).
 
 ```html
 <glk-button variant="primary">Save</glk-button>
@@ -610,6 +612,7 @@ Full-width glass button (56 px). Three variants, four sizes.
 <glk-button variant="primary" size="sm">Small</glk-button>
 <glk-button variant="primary" size="lg">Large</glk-button>
 <glk-button variant="primary" size="auto">Auto width</glk-button>
+<glk-button variant="secondary" size="sm auto">Download invoice</glk-button>
 
 <glk-button variant="primary" disabled>Disabled</glk-button>
 ```
@@ -617,11 +620,13 @@ Full-width glass button (56 px). Three variants, four sizes.
 | Attribute | Type | Default | Description |
 |---|---|---|---|
 | `variant` | String | — | `primary`, `secondary`, `tertiary` |
-| `size` | String | `md` | `sm`, `md`, `lg`, `auto` |
+| `size` | String | `md` | `sm`, `md`, `lg`, `auto`, or a height and `auto`: `sm auto`, a small button as wide as its text (since 1.31.0; before, a list gave no size at all) |
 | `disabled` | Boolean | `false` | Disabled state |
 | `type` | String | `button` | `button`, `submit`, `reset` — submit and reset act on the element's form (since 1.20.0) |
 
-Events: `glk-click` (suppressed when disabled).
+Events: `glk-click` (suppressed when disabled). Part: `button`, the native button inside (since 1.31.0).
+
+**Room and shape (GlassKit 1.31.0).** Every button keeps room beside its label, `--gl-btn-padding-x` (unset 24px; `--gl-btn-padding-x-sm` for `sm`). Before, only `auto` had it, and a `size="sm"` button that took its width from its text — in a flex row, an empty state — touched it. `--gl-btn-radius` (and `-sm`) round the buttons alone: `--gl-btn-radius: 9999px` on `:root` for pill buttons, not `--gl-radius-btn`, which lists and the segmented control share. All reach the shadow root by inheritance.
 
 **Submitting (since 1.20.0).** The element is form-associated: `type="submit"` submits the form it sits in and `type="reset"` resets it. Before 1.20.0 both did nothing — the native button lives in the shadow root, outside every form. It acts once the click has finished bubbling, so `preventDefault()` on the click stops it, as on a native button; invalid fields stop the submit with the browser's message; the submit event's `submitter` is the element; `.form` is its form; `element.click()` acts like a click. No implicit submission: Enter in a `<glk-input>` does not submit the form.
 
@@ -1159,7 +1164,7 @@ A small, exclusive choice as one control (since 1.15.0) — traffic light, morni
 
 | Attribute | Type | Description |
 |---|---|---|
-| `options` | JSON | `[{ value, label, tone?, disabled?, badge?, badgeLabel? }]`; `tone` is `success` \| `warning` \| `error` and puts a dot in that colour before the label; `badge` is a count after the label (since 1.29.0), `badgeLabel` words it for the name |
+| `options` | JSON | `[{ value, label, tone?, disabled?, badge?, badgeLabel?, badgeTone? }]`; `tone` is `success` \| `warning` \| `error` and puts a dot in that colour before the label; `badge` is a count after the label (since 1.29.0), `badgeLabel` words it for the name; `badgeTone` is `primary` \| `success` \| `warning` \| `error` and colours the count alone, without the dot (since 1.31.0) |
 | `value` | String | Value of the chosen option (reflected property) |
 | `full` | Boolean | Buttons share the width |
 | `overflow` | String | What happens when the options do not fit: `scroll` — one row that scrolls sideways, the chosen option kept in view; `wrap` — breaks into lines. Without it the row stays one line (since 1.17.0) |
@@ -1169,7 +1174,7 @@ A small, exclusive choice as one control (since 1.15.0) — traffic light, morni
 | `droplet` | Boolean | The chosen option sits on a drop of glass that glides to the next one and can be dragged (since 1.27.0) — recommended |
 | `icon-only` | Boolean | The options show their icons alone, square; each label becomes the button's `aria-label` and `title` (since 1.28.0) |
 
-Properties: `value`, `options` (array or JSON text), `full`, `overflow`, `label`, `disabled`, `droplet`, `iconOnly`. Slots: `icon-<value>` (since 1.28.0). Events: `glk-change` `{ value }` — only on a change made by the user, not on `.value = …`. Part: `group`.
+Properties: `value`, `options` (array or JSON text), `full`, `overflow`, `label`, `disabled`, `droplet`, `iconOnly`. Slots: `icon-<value>` (since 1.28.0). Events: `glk-change` `{ value }` — only on a change made by the user, not on `.value = …`. Parts: `group`, `item` (each option's button), `badge` (its count) — the last two since 1.31.0.
 
 **Icons (since 1.28.0).** Each option takes its icon from the slot `icon-<value>` — an `<svg>`, a font icon, an `<img>`. It sits in GlassKit's `.glass-segmented__icon` before the label, in the option's colour, and grows under the drop; an option without one has no icon box, and an icon added or removed later shows or hides it. The icon box is `aria-hidden`, so a font icon's text never joins the name. `icon-only` is for a row of icons alone — a light / dark / auto switch:
 
@@ -1184,7 +1189,7 @@ Properties: `value`, `options` (array or JSON text), `full`, `overflow`, `label`
 
 GlassKit 1.28.0's tokens for the chosen option reach the element by inheritance: `--gl-segmented-active-bg`, `--gl-segmented-active-shadow` and `--gl-segmented-active-color` — for a dark brand, on which the light surface leaves a white label below 4.5:1. The drop takes the same surface.
 
-**Counts (since 1.29.0).** `badge` on an option shows how much waits behind it — open invoices, new tickets — as a pill after the label (GlassKit's `.glass-segmented__badge`, tabular figures), neutral without a tone and in the tone's colour with one. A number or a short text; missing, empty or `0` shows none. Use it instead of a count in the label: `"Tickets (1)"` reads as part of the label and can be neither styled nor announced apart. The button's name says both, `"Tickets, 1"`; `badgeLabel` words it, `"Tickets, 1 open"`. With `icon-only` the badge sits at the icon's corner, as on `<glk-tab-item>`, and the button's `title` carries it too. Setting `options` again with the same values in the same order fills the buttons in place, so a live count keeps the focus and the drop; other values rebuild the row.
+**Counts (since 1.29.0).** `badge` on an option shows how much waits behind it — open invoices, new tickets — as a pill after the label (GlassKit's `.glass-segmented__badge`, tabular figures), neutral without a tone and in the tone's colour with one. A number or a short text; missing, empty or `0` shows none. Use it instead of a count in the label: `"Tickets (1)"` reads as part of the label and can be neither styled nor announced apart. The button's name says both, `"Tickets, 1"`; `badgeLabel` words it, `"Tickets, 1 open"`. With `icon-only` the badge sits at the icon's corner, as on `<glk-tab-item>`, and the button's `title` carries it too. Setting `options` again with the same values in the same order fills the buttons in place, so a live count keeps the focus and the drop; other values rebuild the row. **Its own colour (since 1.31.0):** `badgeTone` — `primary`, `success`, `warning`, `error` — colours the count alone (GlassKit's `.glass-segmented__badge--*`), without the dot `tone` puts before the label; with both, the count keeps its own colour. Use it for a red count of new calls on an "Open" option, never a `tone` for that. Size and hairline: GlassKit's `--gl-segmented-badge-height`, `-font-size`, `-border`; anything else through `::part(badge)`.
 
 ```html
 <glk-segmented droplet overflow="scroll" label="Customer" value="invoices"

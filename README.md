@@ -5,7 +5,7 @@
   <a href="#"><img src="https://img.shields.io/badge/vanilla_JS-no_dependencies-44cc11?style=flat-square" alt="Vanilla JS"></a>
   <a href="#"><img src="https://img.shields.io/badge/components-36-7ec8e3?style=flat-square" alt="36 Components"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="MIT License"></a>
-  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/changelog-v1.30.0-lightgrey?style=flat-square" alt="Changelog"></a>
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/changelog-v1.31.0-lightgrey?style=flat-square" alt="Changelog"></a>
   <a href="https://www.npmjs.com/package/@jungherz-de/glasskit-elements"><img src="https://img.shields.io/badge/npm-%40jungherz--de%2Fglasskit--elements-cb3837?style=flat-square&logo=npm" alt="npm"></a>
 </p>
 
@@ -67,7 +67,7 @@ It is the **app layer** of the GlassKit family — three layers, one design lang
 
 ```html
 <!-- 1. GlassKit CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.30/glasskit.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.31/glasskit.min.css">
 
 <!-- 2. GlassKit Elements -->
 <script src="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"></script>
@@ -105,7 +105,7 @@ The per-component files leave `@jungherz-de/glasskit/glasskit-styles.js` as an e
 <!DOCTYPE html>
 <html data-theme="dark">
 <head>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.30/glasskit.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.31/glasskit.min.css">
   <script src="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"></script>
 </head>
 <body>
@@ -149,7 +149,7 @@ The per-component files leave `@jungherz-de/glasskit/glasskit-styles.js` as an e
 
 | Component | Description | Key Attributes |
 |---|---|---|
-| `<glk-button>` | Glass-styled button; `type="submit"` / `"reset"` act on its form | `variant` (primary, secondary, tertiary), `size` (sm, md, lg, auto), `disabled`, `type` (button, submit, reset) |
+| `<glk-button>` | Glass-styled button; `type="submit"` / `"reset"` act on its form | `variant` (primary, secondary, tertiary), `size` (sm, md, lg, auto; `sm auto` since 1.31.0), `disabled`, `type` (button, submit, reset) |
 
 ### Form Elements
 
@@ -165,7 +165,7 @@ All form components support `name`, `value`, `disabled` and participate in nativ
 | `<glk-checkbox>` | Checkbox | `label`, `checked`, `disabled`, `required` |
 | `<glk-radio>` | Radio button | `label`, `name`, `value`, `checked`, `required` (per group) |
 | `<glk-range>` | Range slider | `label`, `min`, `max`, `value`, `step` |
-| `<glk-segmented>` | Small exclusive choice as one control, icons per option in `slot="icon-<value>"`, a count per option (`badge`); form-associated | `options` (JSON), `value`, `full`, `overflow` (scroll, wrap), `droplet`, `icon-only`, `label`, `name` |
+| `<glk-segmented>` | Small exclusive choice as one control, icons per option in `slot="icon-<value>"`, a count per option (`badge`, its own colour with `badgeTone`); form-associated | `options` (JSON), `value`, `full`, `overflow` (scroll, wrap), `droplet`, `icon-only`, `label`, `name` |
 | `<glk-calendar>` | One month with a day to pick; keyboard navigation, `Intl` names; form-associated | `month`, `value`, `today`, `min`, `max`, `marks`, `locale`, `week-start`, `label`, `name` |
 | `<glk-image-picker>` | One image with preview, resized on the client, EXIF rotation applied; not form-associated | `src`, `label`, `hint`, `round`, `max`, `type`, `quality`, `accept` |
 
@@ -257,14 +257,14 @@ Since 1.28.0 a tab item and each segmented option take icons that are not inline
 
 `glk-tab-select` is cancelable and comes before `active` changes: `event.preventDefault()` keeps the current tab — for an item that opens a drawer or a link — and the bar, its drop and `glk-tab-change` stay put. `droplet` and `floating` are properties of `<glk-tab-bar>` as well. The action buttons of `<glk-modal>` follow attribute changes of their originals, so a confirm button that starts `disabled` unlocks when the page or a framework enables it.
 
-Since 1.29.0 a segmented option also takes a count, `badge`, shown as a pill after its label or at the icon's corner, with `badgeLabel` for the words a screen reader says — `"Tickets, 1 open"`. New options with the same values fill the buttons in place, so a live count keeps the focus and the drop:
+Since 1.29.0 a segmented option also takes a count, `badge`, shown as a pill after its label or at the icon's corner, with `badgeLabel` for the words a screen reader says — `"Tickets, 1 open"`. Since 1.31.0 `badgeTone` (`primary`, `success`, `warning`, `error`) colours the count alone, without the dot a `tone` adds. New options with the same values fill the buttons in place, so a live count keeps the focus and the drop:
 
 ```html
 <glk-segmented droplet overflow="scroll" label="Customer" value="invoices"
   options='[{"value":"invoices","label":"Invoices","badge":2},{"value":"tickets","label":"Tickets","tone":"warning","badge":1,"badgeLabel":"1 open"}]'></glk-segmented>
 ```
 
-> **Requires GlassKit CSS >= 1.28.0** (1.29.0 for the counts). The icon colours come from GlassKit's icon boxes; its new tokens reach the elements by inheritance: `--gl-tab-bar-color`, `--gl-tab-bar-hover-color`, `--gl-tab-bar-label-size`, `--gl-tab-bar-z-index` for the tab bar, `--gl-segmented-active-bg`, `-shadow` and `-color` for the chosen option and its drop.
+> **Requires GlassKit CSS >= 1.28.0** (1.29.0 for the counts, 1.31.0 for `badgeTone`). The icon colours come from GlassKit's icon boxes; its new tokens reach the elements by inheritance: `--gl-tab-bar-color`, `--gl-tab-bar-hover-color`, `--gl-tab-bar-label-size`, `--gl-tab-bar-z-index` for the tab bar, `--gl-segmented-active-bg`, `-shadow` and `-color` for the chosen option and its drop.
 
 ### Solid and tint surfaces
 

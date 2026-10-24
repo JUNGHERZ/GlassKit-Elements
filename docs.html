@@ -20,7 +20,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="GlassKit Elements — Documentation">
   <meta name="twitter:description" content="Complete documentation for all 29 GlassKit Elements web components with live examples.">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.30/glasskit.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.31/glasskit.min.css">
   <script src="/dist/glasskit-elements.min.js"></script>
   <style>
     html { scroll-behavior: smooth; }
@@ -253,7 +253,7 @@
     <aside class="docs-sidebar">
       <div class="docs-sidebar__title">&#129482; <a href="/">GlassKit Elements</a></div>
       <div class="docs-sidebar__subtitle">Web Components for GlassKit CSS.</div>
-      <div class="docs-sidebar__version">v1.30.0 &ndash; Jungherz GmbH</div>
+      <div class="docs-sidebar__version">v1.31.0 &ndash; Jungherz GmbH</div>
 
       <div class="docs-sidebar__group">
         <div class="docs-sidebar__group-title">Basics</div>
@@ -339,7 +339,7 @@
         <h1>GlassKit Elements</h1>
         <p>Complete reference for all 36 web components &ndash; built by Jungherz GmbH. Vanilla JS, Shadow DOM, native form participation.</p>
         <div class="docs-hero__badges">
-          <span class="docs-hero__badge">v1.30.0</span>
+          <span class="docs-hero__badge">v1.31.0</span>
           <span class="docs-hero__badge">Shadow DOM</span>
           <span class="docs-hero__badge">36 Components</span>
           <span class="docs-hero__badge">Vanilla JS</span>
@@ -352,7 +352,7 @@
 
         <h3>CDN (quickest)</h3>
         <div class="docs-code"><span class="cmt">&lt;!-- 1. GlassKit CSS --&gt;</span>
-<span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span> <span class="attr">href</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.30/glasskit.min.css"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span> <span class="attr">href</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.31/glasskit.min.css"</span><span class="tag">&gt;</span>
 
 <span class="cmt">&lt;!-- 2. GlassKit Elements --&gt;</span>
 <span class="tag">&lt;script</span> <span class="attr">src</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"</span><span class="tag">&gt;&lt;/script&gt;</span></div>
@@ -558,11 +558,12 @@ addEventListener(<span class="val">'afterprint'</span>, () =&gt; {
           <table class="docs-table">
             <tr><th>Attribute</th><th>Type</th><th>Values</th></tr>
             <tr><td><code>variant</code></td><td>String</td><td><code>primary</code> | <code>secondary</code> | <code>tertiary</code></td></tr>
-            <tr><td><code>size</code></td><td>String</td><td><code>sm</code> | <code>md</code> | <code>lg</code> | <code>auto</code></td></tr>
+            <tr><td><code>size</code></td><td>String</td><td><code>sm</code> | <code>md</code> | <code>lg</code> | <code>auto</code>, or a height and <code>auto</code> together: <code>sm auto</code>, a small button as wide as its text (since 1.31.0)</td></tr>
             <tr><td><code>disabled</code></td><td>Boolean</td><td>Disables the button</td></tr>
             <tr><td><code>type</code></td><td>String</td><td><code>button</code> | <code>submit</code> | <code>reset</code> &mdash; submit and reset act on the element&rsquo;s form (since 1.20.0)</td></tr>
           </table>
-          <p><strong>Events:</strong> <code>glk-click</code></p>
+          <p><strong>Events:</strong> <code>glk-click</code> &nbsp; <strong>Part:</strong> <code>button</code>, the native button inside (since 1.31.0)</p>
+          <p>Since GlassKit 1.31.0 every button keeps room beside its label, 24&nbsp;px unless <code>--gl-btn-padding-x</code> sets another: a small button that takes its width from its text, in a row or an empty state, touched the text with its edges before. <code>--gl-btn-radius</code> rounds the buttons alone &mdash; <code>9999px</code> for pill-shaped ones &mdash; and leaves lists and the segmented control as they are.</p>
           <p><code>type="submit"</code> submits the form the element sits in, <code>type="reset"</code> resets it &mdash; once the click has finished bubbling, so a listener that calls <code>preventDefault()</code> on the click stops it, as on a native button. A form with invalid fields does not submit and shows the browser&rsquo;s message. The submit event names the element as its <code>submitter</code>; <code>.form</code> is its form, and <code>element.click()</code> acts like a click. <code>aria-expanded</code>, <code>aria-haspopup</code> and <code>aria-pressed</code> set on the element are handed on to the native button inside, which is what screen readers read (since 1.20.0).</p>
         </div>
 
@@ -717,7 +718,7 @@ addEventListener(<span class="val">'afterprint'</span>, () =&gt; {
   <span class="attr">options</span>=<span class="val">'[{"value":"g","label":"Green","tone":"success"}, {"value":"y","label":"Yellow","tone":"warning"}, {"value":"x","label":"Locked","disabled":true}]'</span><span class="tag">&gt;&lt;/glk-segmented&gt;</span></div>
           <table class="docs-table">
             <tr><th>Attribute</th><th>Type</th><th>Values</th></tr>
-            <tr><td><code>options</code></td><td>JSON</td><td><code>[{ value, label, tone?, disabled?, badge?, badgeLabel? }]</code> &mdash; <code>tone</code>: <code>success</code> | <code>warning</code> | <code>error</code>; <code>badge</code>: a count after the label (since 1.29.0)</td></tr>
+            <tr><td><code>options</code></td><td>JSON</td><td><code>[{ value, label, tone?, disabled?, badge?, badgeLabel?, badgeTone? }]</code> &mdash; <code>tone</code>: <code>success</code> | <code>warning</code> | <code>error</code>; <code>badge</code>: a count after the label (since 1.29.0); <code>badgeTone</code>: <code>primary</code> | <code>success</code> | <code>warning</code> | <code>error</code>, the count&rsquo;s own colour (since 1.31.0)</td></tr>
             <tr><td><code>value</code></td><td>String</td><td>The chosen option's value</td></tr>
             <tr><td><code>full</code></td><td>Boolean</td><td>Buttons share the width</td></tr>
             <tr><td><code>overflow</code></td><td>String</td><td><code>scroll</code> &mdash; one row that scrolls sideways, the chosen option kept in view; <code>wrap</code> &mdash; breaks into lines. Without it the row stays one line (since 1.17.0)</td></tr>
@@ -727,7 +728,7 @@ addEventListener(<span class="val">'afterprint'</span>, () =&gt; {
             <tr><td><code>droplet</code></td><td>Boolean</td><td>The chosen option sits on a drop of glass that glides to the next one and can be dragged (since 1.27.0)</td></tr>
             <tr><td><code>icon-only</code></td><td>Boolean</td><td>The options show their icons alone, square; each label becomes the button&rsquo;s <code>aria-label</code> and <code>title</code> (since 1.28.0; property <code>iconOnly</code>)</td></tr>
           </table>
-          <p><strong>Events:</strong> <code>glk-change</code> <code>{ value }</code> — only on a change made by the user. <strong>Slots:</strong> <code>icon-&lt;value&gt;</code> (since 1.28.0). <strong>Part:</strong> <code>group</code>.</p>
+          <p><strong>Events:</strong> <code>glk-change</code> <code>{ value }</code> — only on a change made by the user. <strong>Slots:</strong> <code>icon-&lt;value&gt;</code> (since 1.28.0). <strong>Parts:</strong> <code>group</code>, <code>item</code> (each option) and <code>badge</code> (its count), the last two since 1.31.0.</p>
           <p><strong>Droplet (since 1.27.0).</strong> <code>droplet</code> gives the chosen option the drop of the tab bar: it runs to a new option, stretches on the way and settles, the text it passes lights up, and a finger can drag it. A drag that ends on an option selects it like a tap &mdash; <code>value</code>, <code>glk-change</code> and the form value follow; disabled options are skipped. With <code>overflow="scroll"</code> a swipe still scrolls the row: only the drop itself is dragged, and the row scrolls along at its edges. Recommended wherever a segmented control is used:</p>
           <div class="docs-preview" style="display:flex;flex-direction:column;gap:10px;align-items:flex-start;">
             <glk-segmented droplet label="Mode" options='[{"value":"context","label":"Contextual"},{"value":"page","label":"Help page"},{"value":"inline","label":"Inline"}]' value="context"></glk-segmented>
@@ -762,6 +763,16 @@ addEventListener(<span class="val">'afterprint'</span>, () =&gt; {
 
 <span class="cmt">// A count changed: same values, so the buttons stay</span>
 segmented.options = segmented.options.map(o =&gt; o.value === <span class="val">'tickets'</span> ? { ...o, badge: 2, badgeLabel: <span class="val">'2 open'</span> } : o);</div>
+          <p><strong>A colour of the count&rsquo;s own (since 1.31.0).</strong> <code>badgeTone</code> &mdash; <code>primary</code>, <code>success</code>, <code>warning</code> or <code>error</code> &mdash; colours the count alone, with GlassKit&rsquo;s <code>.glass-segmented__badge--*</code>: the look of the badge variants, without the dot that <code>tone</code> puts before the label. Where an option has both, the count keeps its own colour. Size and hairline come from GlassKit&rsquo;s tokens, <code>--gl-segmented-badge-height</code>, <code>-font-size</code> and <code>-border</code>, which reach the element by inheritance; for anything else the count is the part <code>badge</code> and each option the part <code>item</code>.</p>
+          <div class="docs-preview" style="display:flex;flex-direction:column;gap:10px;align-items:flex-start;">
+            <glk-segmented droplet label="Calls" value="open" options='[{"value":"open","label":"Open","badge":4,"badgeTone":"error","badgeLabel":"4 new"},{"value":"callbacks","label":"Callbacks","badge":2,"badgeTone":"primary"},{"value":"done","label":"Done"}]'></glk-segmented>
+          </div>
+          <div class="docs-code"><span class="tag">&lt;glk-segmented</span> <span class="attr">droplet label</span>=<span class="val">"Calls"</span> <span class="attr">value</span>=<span class="val">"open"</span> <span class="attr">options</span>=<span class="val">'[
+  {"value":"open","label":"Open","badge":4,"badgeTone":"error"},
+  {"value":"done","label":"Done"}]'</span><span class="tag">&gt;&lt;/glk-segmented&gt;</span>
+
+<span class="cmt">/* What the tokens do not reach */</span>
+glk-segmented::part(badge) { letter-spacing: 0.02em; }</div>
           <p>GlassKit&rsquo;s tokens for the chosen option reach the element by inheritance (GlassKit 1.28.0): <code>--gl-segmented-active-bg</code>, <code>--gl-segmented-active-shadow</code> and <code>--gl-segmented-active-color</code> &mdash; for a dark brand on which the light surface leaves a white label below 4.5:1. The drop takes the same surface.</p>
           <script>
             document.getElementById('docs-seg').addEventListener('glk-change', e => { document.querySelector('[data-docs-seg-out]').textContent = 'glk-change → ' + e.detail.value; });

@@ -3,15 +3,15 @@
 <p align="center">
   <a href="https://www.npmjs.com/package/@jungherz-de/glasskit-elements"><img src="https://img.shields.io/npm/v/@jungherz-de/glasskit-elements?style=flat-square&color=f5a623&label=version" alt="Version"></a>
   <a href="#"><img src="https://img.shields.io/badge/vanilla_JS-no_dependencies-44cc11?style=flat-square" alt="Vanilla JS"></a>
-  <a href="#"><img src="https://img.shields.io/badge/components-36-7ec8e3?style=flat-square" alt="36 Components"></a>
+  <a href="#"><img src="https://img.shields.io/badge/components-46-7ec8e3?style=flat-square" alt="46 Components"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="MIT License"></a>
-  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/changelog-v1.31.0-lightgrey?style=flat-square" alt="Changelog"></a>
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/changelog-v1.32.0-lightgrey?style=flat-square" alt="Changelog"></a>
   <a href="https://www.npmjs.com/package/@jungherz-de/glasskit-elements"><img src="https://img.shields.io/badge/npm-%40jungherz--de%2Fglasskit--elements-cb3837?style=flat-square&logo=npm" alt="npm"></a>
 </p>
 
 <p align="center">
   <strong>Drop-in Web Components for <a href="https://github.com/JUNGHERZ/GlassKit">GlassKit CSS</a></strong><br>
-  36 vanilla JavaScript custom elements wrapping GlassKit's glassmorphism components.<br>
+  46 vanilla JavaScript custom elements wrapping GlassKit's glassmorphism components.<br>
   Shadow DOM &middot; Native form participation &middot; Zero dependencies.
 </p>
 
@@ -26,7 +26,7 @@
 
 ## ✨ What is GlassKit Elements?
 
-GlassKit Elements is a companion library to [GlassKit CSS](https://github.com/JUNGHERZ/GlassKit). It provides **36 Web Components** (incl. the iOS 26-style floating Tab-Bar + Accessory) that encapsulate the verbose HTML markup required by GlassKit into simple, declarative custom elements.
+GlassKit Elements is a companion library to [GlassKit CSS](https://github.com/JUNGHERZ/GlassKit). It provides **46 Web Components** (incl. the iOS 26-style floating Tab-Bar + Accessory) that encapsulate the verbose HTML markup required by GlassKit into simple, declarative custom elements.
 
 It is the **app layer** of the GlassKit family — three layers, one design language: [GlassKit](https://glasskit.jungherz.com) is the pure-CSS foundation, GlassKit Elements wraps it into web components for application UIs, and [GlassKit Web](https://glasskit-web.jungherz.com) is the official Astro template for complete websites on top of the same foundation.
 
@@ -51,12 +51,14 @@ It is the **app layer** of the GlassKit family — three layers, one design lang
 | Feature | Details |
 |---|---|
 | 🔌 **Shadow DOM** | Style encapsulation via `adoptedStyleSheets` — no CSS leaking |
-| 🧩 **36 Components** | Buttons, cards, toggles, modals, accordions, lists, popovers, tab bars (incl. floating + accessory), and more |
-| 🪶 **Lightweight** | 156 KB minified / 28 KB gzipped (IIFE bundle, GlassKit's component rules included), no external dependencies |
+| 🧩 **46 Components** | Buttons, cards, toggles, modals, accordions, lists, popovers, tab bars (incl. floating + accessory), tooltips, menus, trees, breadcrumbs, tables, and more |
+| 🪶 **Lightweight** | 273 KB minified / 52 KB gzipped (IIFE bundle, GlassKit's component rules included), no external dependencies |
 | 📦 **Three bundle formats** | IIFE for `<script>`, minified IIFE for production, ESM for bundlers & tree-shaking |
 | 🎛️ **Form Participation** | Input, toggle, checkbox, radio, select — all work natively with `<form>` via `ElementInternals`: value, reset and, since 1.20.0, validity; `<glk-button type="submit">` submits |
 | 🌗 **Theme Sync** | Automatic dark/light mode sync via `data-theme` on `<html>`, compact controls via `data-density`, opaque surfaces via `data-surface` |
 | 💧 **Fluid selection** | `droplet` on `<glk-tab-bar>` and `<glk-segmented>`: the chosen item rides a drop of glass that glides to the next one and can be dragged (since 1.27.0) |
+| 🧭 **Navigation at every edge** | One `<glk-tab-bar>` as bottom bar, top bar, sidebar or icon rail, or docked at a side where the thumb rests on a phone held open (since 1.32.0) |
+| ↕️ **Drag and drop** | `sortable` lists and trees, by mouse, touch and keyboard, with breadcrumbs as drop targets (since 1.32.0) |
 | 📱 **Mobile-first** | Inherits GlassKit's mobile-optimized design with `safe-area-inset` support |
 
 ---
@@ -67,7 +69,7 @@ It is the **app layer** of the GlassKit family — three layers, one design lang
 
 ```html
 <!-- 1. GlassKit CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.31/glasskit.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.32/glasskit.min.css">
 
 <!-- 2. GlassKit Elements -->
 <script src="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"></script>
@@ -105,7 +107,7 @@ The per-component files leave `@jungherz-de/glasskit/glasskit-styles.js` as an e
 <!DOCTYPE html>
 <html data-theme="dark">
 <head>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.31/glasskit.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.32/glasskit.min.css">
   <script src="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"></script>
 </head>
 <body>
@@ -126,12 +128,14 @@ The per-component files leave `@jungherz-de/glasskit/glasskit-styles.js` as an e
 |---|---|---|
 | `<glk-nav>` | Horizontal navigation bar | — |
 | `<glk-pill>` | Circular icon button (46×46px) | `label`, `disabled` |
-| `<glk-tab-bar>` | Bottom tab bar navigation | `static`, `floating`, `droplet` |
-| `<glk-tab-item>` | Tab bar item; any icon in `slot="icon"`, a cancelable `glk-tab-select` | `label`, `active`, `badge` |
-| `<glk-tab-dock>` | Wrapper for floating tab bar + optional accessory | `accessory-left` |
+| `<glk-tab-bar>` | Tab bar navigation: at the bottom, at the top, as a sidebar or an icon rail, docked at a side | `static`, `floating`, `droplet`, `orientation`, `rail`, `dock`, `placement`, `label` |
+| `<glk-tab-item>` | Tab bar item; any icon in `slot="icon"`, a cancelable `glk-tab-select`, a link with `href`, `aria-current` on the open view | `label`, `active`, `badge`, `badge-label`, `href` |
+| `<glk-tab-dock>` | Wrapper for floating tab bar + optional accessory, upright at a side with `orientation="vertical"` | `accessory-left`, `orientation`, `dock` |
 | `<glk-tab-accessory>` | Standalone glass capsule (search, compose…) | `label`, `variant` (accent, success, error), `disabled` |
 | `<glk-steps>` | Progress through a short flow | `steps`, `current`, `label` |
 | `<glk-date-strip>` | Scrolling row of day chips with tone dots; arrow keys, chosen chip centred | `start`, `days`, `value`, `today`, `marks`, `locale`, `label` |
+| `<glk-breadcrumbs>` | The path through nested levels; folds the middle into a "…" menu, crumbs as drop targets, a cancelable `glk-navigate` | `label`, `collapse`, `drop-target`, `group`, `more-label` |
+| `<glk-breadcrumb>` | One level of the path | `href`, `value`, `current` |
 
 ### Content
 
@@ -174,10 +178,13 @@ All form components support `name`, `value`, `disabled` and participate in nativ
 | Component | Description | Key Attributes |
 |---|---|---|
 | `<glk-progress>` | Progress bar | `value`, `label`, `variant` (success, error), `size` (sm, lg) |
-| `<glk-modal>` | Modal dialog — a native `<dialog>`: page behind inert and still, focus in and back | `open`, `title` |
+| `<glk-modal>` | Modal dialog — a native `<dialog>`: page behind inert and still, focus in and back; `glk-closed` once it has faded out | `open`, `title` |
 | `<glk-toast>` | Notification that hides itself, or an offer with one action and an × | `message`, `variant` (success, error, warning), `duration`, `action-label`, `action-value`, `dismissible` |
-| `<glk-popover>` | Anchored dropdown / menu | `open`, `placement` (top, bottom, start, end) |
-| `<glk-sheet>` | Bottom sheet, the mobile sibling of the modal — a native `<dialog>` in the top layer since 1.30.0 | `open`, `inline`, `title` |
+| `<glk-popover>` | Anchored dropdown / menu, in the top layer since 1.32.0: flipped and shifted at the viewport's edges | `open`, `placement` (top, bottom, start, end) |
+| `<glk-tooltip>` | A short name or hint on hover, focus and a long press; the pointer may rest on it | `for`, `placement`, `show-delay`, `as-label` |
+| `<glk-menu>` | A menu button: menu roles, arrows, typeahead, Escape back to the button; `glk-select` | `open`, `placement` |
+| `<glk-menu-item>` | An action in a menu, checkable, destructive or disabled; `<glk-menu-separator>` and `<glk-menu-group>` part them | `value`, `type` (checkbox, radio), `checked`, `disabled`, `variant` (danger) |
+| `<glk-sheet>` | Bottom sheet, the mobile sibling of the modal — a native `<dialog>` in the top layer since 1.30.0; `glk-closed` once it has slid out | `open`, `inline`, `title` |
 
 ### Containers
 
@@ -185,8 +192,11 @@ All form components support `name`, `value`, `disabled` and participate in nativ
 |---|---|---|
 | `<glk-accordion>` | Accordion container | — |
 | `<glk-accordion-item>` | Collapsible section | `title`, `open` |
-| `<glk-list>` | iOS-style grouped list | `flush`, `bare` |
-| `<glk-list-item>` | List row (icon + title + subtitle + trailing) | `title`, `subtitle`, `interactive`, `center` |
+| `<glk-list>` | iOS-style grouped list; `sortable` by mouse, touch and keyboard | `flush`, `bare`, `sortable`, `group` |
+| `<glk-list-item>` | List row (icon + title + subtitle + trailing); an `interactive` row is a button for the keyboard | `title`, `subtitle`, `interactive`, `center`, `container`, `no-drag` |
+| `<glk-tree>` | Levels that open and close, the WAI-ARIA tree view; children that load on opening, with an error state and a retry; `sortable` | `label`, `selection`, `sortable`, `group` |
+| `<glk-tree-item>` | One level of a tree, with its children nested | `label`, `value`, `expanded`, `selected`, `disabled`, `has-children` |
+| `<glk-table>` | Around a native `<table>`: sortable headers, a sticky header, row actions, an empty state, cards below a width | `sort`, `direction`, `sticky-header`, `list-below` |
 
 ---
 
@@ -266,6 +276,71 @@ Since 1.29.0 a segmented option also takes a count, `badge`, shown as a pill aft
 
 > **Requires GlassKit CSS >= 1.28.0** (1.29.0 for the counts, 1.31.0 for `badgeTone`). The icon colours come from GlassKit's icon boxes; its new tokens reach the elements by inheritance: `--gl-tab-bar-color`, `--gl-tab-bar-hover-color`, `--gl-tab-bar-label-size`, `--gl-tab-bar-z-index` for the tab bar, `--gl-segmented-active-bg`, `-shadow` and `-color` for the chosen option and its drop.
 
+### One navigation, every edge
+
+Since 1.32.0 one `<glk-tab-bar>` serves every layout: the same items as a bottom bar on phones, a top bar on the desktop, a sidebar that collapses to an icon rail, or a column docked at a side — where the thumb rests when a phone is held open, or a foldable has moved its own controls to a side. The page switches by setting attributes, without rendering the items again:
+
+```html
+<glk-tab-bar orientation="vertical" droplet label="Main">            <!-- a sidebar in the page's grid -->
+  <glk-tab-item label="Dashboard" href="/dashboard" active>…</glk-tab-item>
+  <glk-tab-item label="Customers" href="/customers" badge="3" badge-label="3 new">…</glk-tab-item>
+</glk-tab-bar>
+
+<glk-tab-bar orientation="vertical" dock="end" rail droplet label="Main">…</glk-tab-bar>   <!-- fixed to the end edge, icons alone -->
+<glk-tab-bar placement="top" droplet label="Main">…</glk-tab-bar>                         <!-- for a sticky header -->
+
+<glk-tab-dock orientation="vertical" dock="start">                    <!-- the floating bar upright -->
+  <glk-tab-bar floating droplet orientation="vertical" label="Main">…</glk-tab-bar>
+  <glk-tab-accessory variant="accent" label="Compose">…</glk-tab-accessory>
+</glk-tab-dock>
+```
+
+In a rail the labels are hidden from view, stay the items' names, and show as tooltips beside the rail on hover, focus and a long press. The drop runs along y in a column, and its timing is GlassKit's `--gl-droplet-*` tokens — for a product whose motion stays within 240ms ease-out, GlassKit's README has the recipe, `--gl-droplet-lift-duration: 0ms` included, without which the lift's shadow fades until about 600ms. The open view carries `aria-current="page"`, `label` names each navigation, `badge-label` words a count ("Customers, 3 new"), and `href` makes an item a link.
+
+> **Requires GlassKit CSS >= 1.32.0** — the sidebar, rail, top and side-dock layouts, the drop's y axis and its timing tokens.
+
+### Tooltips, menus, trees, breadcrumbs, tables
+
+Since 1.32.0, ten elements for the screens behind an app — a back office, an editor, a settings area:
+
+```html
+<glk-breadcrumbs>
+  <glk-breadcrumb href="/app">My app</glk-breadcrumb>
+  <glk-breadcrumb href="/app/menu">Main menu</glk-breadcrumb>
+  <glk-breadcrumb current>Services</glk-breadcrumb>
+</glk-breadcrumbs>
+
+<glk-tree label="App structure" sortable>
+  <glk-tree-item label="Main menu" expanded>
+    <glk-tree-item label="Services" selected></glk-tree-item>
+    <glk-tree-item label="Pricing" has-children></glk-tree-item>
+  </glk-tree-item>
+</glk-tree>
+
+<glk-table sort="date" direction="descending" sticky-header list-below="640px">
+  <table>…<td class="glass-table__actions">
+    <glk-menu placement="end">
+      <glk-button slot="trigger" variant="tertiary" size="sm auto">Actions</glk-button>
+      <glk-menu-item value="send">Send again</glk-menu-item>
+      <glk-menu-item value="cancel" variant="danger">Cancel invoice</glk-menu-item>
+    </glk-menu>
+  </td>…</table>
+</glk-table>
+
+<glk-tooltip as-label>
+  <glk-pill slot="trigger"><svg viewBox="0 0 24 24">…</svg></glk-pill>
+  Archive
+</glk-tooltip>
+```
+
+- `<glk-tooltip>` names or describes a control, on hover, keyboard focus and a long press; `<glk-menu>` is a menu button with menu roles, arrows, typeahead and Escape back to the button.
+- `<glk-tree>` is the WAI-ARIA tree view, with children that load once when their item opens — `load-error` shows a failure and opening again retries; `<glk-breadcrumbs>` folds the middle levels into a "…" menu where the path does not fit.
+- `<glk-table>` wraps a native table in the page — sortable headers, a sticky header, row actions, an empty state, cards below a width; load `glasskit.css` for it.
+- `sortable` on `<glk-list>` and `<glk-tree>` reorders by mouse, touch (a long press) and keyboard (Space, arrows, Space), into submenus and onto breadcrumbs of the same `group`, with announcements a page can translate. Lists and trees change single items in place — DOM methods instead of a new render, the focus kept — and `highlight()` flashes an item that changed elsewhere.
+- Panels open in the top layer — `<glk-popover>` too since 1.32.0 — so no `overflow: hidden` cuts them off; `<glk-modal>` and `<glk-sheet>` emit `glk-closed` once they are gone, for pages that render them from state.
+
+> **Requires GlassKit CSS >= 1.32.0** for the classes behind them: `.glass-tooltip`, `.glass-menu`, `.glass-tree`, `.glass-breadcrumbs`, the table's additions and the sorting states.
+
 ### Solid and tint surfaces
 
 Not every screen wants glass. Set `data-surface="solid"` on `<html>`, next to `data-theme` (since 1.24.0):
@@ -337,6 +412,8 @@ inherits them — no JavaScript, no per-element setup:
 
 `--gl-tab-bar-active-color` colours the icon and label of the active tab alone; unset, they take `--gl-color-primary-text`.
 
+**Accent fills with white text (GlassKit 1.32.0).** `--gl-btn-primary-bg` (the background of `<glk-button variant="primary">`) and `--gl-color-primary-fill` (the chosen day of `<glk-date-strip>` and `<glk-calendar>`, the current step of `<glk-steps>`) darken the fills alone, so white text reaches AA without a darker brand colour; the dot of `<glk-radio>` follows `--gl-color-on-primary` like the checkbox tick. The recipe with the measured ratios is in GlassKit's README.
+
 Token defaults are placed on the document once, inside `@layer glasskit-defaults`, so
 pages that never load `glasskit.css` still work and your brand file always wins.
 
@@ -355,7 +432,8 @@ Since 1.20.0 that layer carries the `--gl-*` tokens only — GlassKit's `color-s
 - **Global `MutationObserver`** — single observer watches `data-theme` and `data-density` changes and syncs all instances
 - **`GlkElement`** base class — handles Shadow DOM setup, theme sync, attribute reflection
 - **`GlkFormElement`** extends `GlkElement` — adds `ElementInternals` for native form participation, delegates focus to its field and reports the field's validity
-- **Native semantics** — labels tied to their fields, the toggle's `role="switch"` on its native checkbox, `<glk-modal>` a native `<dialog>`, `aria-expanded` on accordion and popover triggers
+- **Native semantics** — labels tied to their fields, the toggle's `role="switch"` on its native checkbox, `<glk-modal>` a native `<dialog>`, `aria-expanded` on accordion and popover triggers, `aria-current` on the open tab; menu and tree roles on the elements themselves through `ElementInternals` (since 1.32.0)
+- **Top layer** — popover, tooltip, menu and the breadcrumbs' "…" open with the popover API and are placed by script, flipped and shifted at the viewport's edges (since 1.32.0)
 
 ### Build your own element
 
@@ -393,18 +471,20 @@ glasskit-elements/
   src/
     index.js              # Registers all components
     base.js               # GlkElement + GlkFormElement
+    overlay.js            # Panels in the top layer: placement, the tooltip's behaviour
+    sortable.js           # Drag and drop for lists, trees and breadcrumbs
     components/
-      navigation/         # glk-nav, glk-pill, glk-tab-bar, glk-tab-item, glk-tab-dock, glk-tab-accessory
+      navigation/         # glk-nav, glk-pill, glk-tab-bar, glk-tab-item, glk-tab-dock, glk-tab-accessory, glk-breadcrumbs, ...
       content/            # glk-card, glk-badge, glk-avatar, glk-title, ...
       buttons/            # glk-button
       forms/              # glk-input, glk-toggle, glk-checkbox, ...
-      feedback/           # glk-progress, glk-modal, glk-toast, glk-popover
-      containers/         # glk-accordion, glk-accordion-item, glk-list, glk-list-item
+      feedback/           # glk-progress, glk-modal, glk-toast, glk-popover, glk-tooltip, glk-menu, ...
+      containers/         # glk-accordion, glk-list, glk-tree, glk-table, ...
   dist/
-    glasskit-elements.js      # IIFE bundle (229 KB raw / 46 KB gzipped)
-    glasskit-elements.min.js  # IIFE minified (156 KB raw / 28 KB gzipped)
-    glasskit-elements.esm.js  # ES module bundle (221 KB raw / 45 KB gzipped)
-    components/               # one ESM file per element + base.js (GlkElement, GlkFormElement)
+    glasskit-elements.js      # IIFE bundle (428 KB raw / 93 KB gzipped)
+    glasskit-elements.min.js  # IIFE minified (273 KB raw / 52 KB gzipped)
+    glasskit-elements.esm.js  # ES module bundle (413 KB raw / 91 KB gzipped)
+    components/               # one ESM file per element + base.js (GlkElement, GlkFormElement); shared/ holds the modules several of them import
   index.html                  # Landing page
   docs.html                   # Documentation
   showcase.html               # Interactive showcase
@@ -415,20 +495,22 @@ glasskit-elements/
 
 ## 🌐 Browser Compatibility
 
-| Browser | Support |
-|---|---|
-| Chrome | 111+ |
-| Edge | 111+ |
-| Safari | 16.4+ |
-| Firefox | 113+ |
+| Browser | Support | Popover, tooltip, menu, the breadcrumbs' "…" (since 1.32.0) |
+|---|---|---|
+| Chrome | 111+ | 114+ |
+| Edge | 111+ | 114+ |
+| Safari | 16.4+ | 17+ |
+| Firefox | 113+ | 125+ |
 
 The floor is GlassKit's: its tokens are derived with `color-mix()`. The elements also need constructable stylesheets, `ElementInternals`, `delegatesFocus`, `<dialog>` and `inert` — all inside that floor. A few refinements come later and fall back quietly: first-line alignment of toggle, checkbox and radio (`lh`, Firefox 120), the divider of list rows without icon (`:has()`, Firefox 121), right-to-left mirroring of select chevron, toggle thumb and progress fill (`:dir()`, Chrome 120).
+
+Since 1.32.0 the panels that open over the page — `<glk-popover>`, `<glk-tooltip>`, `<glk-menu>`, the "…" of `<glk-breadcrumbs>`, the labels of a rail and the dragged copy of a sortable item — open with the popover API, so these need Chrome and Edge 114, Safari 17 and Firefox 125. A side bar and the upright `<glk-tab-dock>` find their edge everywhere; only the padding for the safe area of the physical side waits for `:dir()` (Chrome 120).
 
 ---
 
 ## 🤖 AI / LLM Reference
 
-[`SKILL.md`](SKILL.md) is a tag-based, machine-readable reference for LLMs and AI copilots. It contains copy-paste-ready HTML for all 36 elements, attribute / slot / event tables, composition patterns, and a common-mistakes section. It is the companion to the class-based `SKILL.md` in [GlassKit CSS](https://github.com/JUNGHERZ/GlassKit) — use both together for complete coverage of the glass stack.
+[`SKILL.md`](SKILL.md) is a tag-based, machine-readable reference for LLMs and AI copilots. It contains copy-paste-ready HTML for all 46 elements, attribute / slot / event tables, composition patterns, and a common-mistakes section. It is the companion to the class-based `SKILL.md` in [GlassKit CSS](https://github.com/JUNGHERZ/GlassKit) — use both together for complete coverage of the glass stack.
 
 ---
 

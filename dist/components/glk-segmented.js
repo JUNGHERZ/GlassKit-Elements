@@ -1,6 +1,6 @@
 import { GlkFormElement } from './base.js';
 import { r as revealCentered } from './shared/reveal-CjjzoxTa.js';
-import { a as attachDroplet } from './shared/glasskit-droplet-3vJVXB3u.js';
+import { a as attachDroplet } from './shared/glasskit-droplet-hzz2ey4D.js';
 import '@jungherz-de/glasskit/glasskit-styles.js';
 
 // One button per option, the chosen one marked aria-pressed="true" — GlassKit

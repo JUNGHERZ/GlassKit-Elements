@@ -6,11 +6,16 @@ import '@jungherz-de/glasskit/glasskit-styles.js';
 // EhrenPfoten in 1.15.0.
 //
 // Attributes: open, inline (no overlay, always visible), title
-// Properties: open, inline · Methods: show(), close()
+// Properties: open, inline · Methods: show(), close() — close() returns a
+//             promise that settles with glk-closed (since 1.32.0)
 // Slots:      default (content), actions
 // Events:     glk-open — whenever it opens: attribute, property or show()
 //             (since 1.30.0); glk-close — only when the user closes it
-//             (scrim click, Escape), like <glk-modal>
+//             (scrim click, Escape), like <glk-modal>; glk-closed — once
+//             the sheet has slid out and its dialog closed, however it
+//             closed, at once under prefers-reduced-motion (since 1.32.0):
+//             a page that renders the sheet from state drops it there, and
+//             the slide-out shows
 // Parts:      overlay, sheet, title, body, actions
 //
 // Since 1.30.0 the overlay is a native <dialog> opened with showModal(), as
@@ -144,6 +149,7 @@ class GlkSheet extends GlkElement {
       this._overlay.classList.remove('is-active');
       this._scrollLock.release();
       if (this.open && !this.inline) this._dismiss();
+      if (!this.open) this._closed();       // not when it turned inline
     };
     this._overlay.addEventListener('click', this._onOverlayClick);
     this._overlay.addEventListener('cancel', this._onCancel);
@@ -161,6 +167,17 @@ class GlkSheet extends GlkElement {
     this._overlay?.classList.remove('is-active');
     if (this._overlay?.open) this._overlay.close();
     this._scrollLock?.release();
+    this._settleClosing();
+  }
+
+  /** The dialog has closed: glk-closed, and the promises of close() settle. */
+  _closed() {
+    this.emit('glk-closed');
+    this._settleClosing();
+  }
+
+  _settleClosing() {
+    for (const resolve of this._closing?.splice(0) ?? []) resolve();
   }
 
   onAttributeChanged(name, _old, value) {
@@ -180,7 +197,14 @@ class GlkSheet extends GlkElement {
   }
 
   show() { this.setAttribute('open', ''); }
-  close() { this.removeAttribute('open'); }
+
+  /** Settles once the sheet has slid out — at once when nothing is shown. */
+  close() {
+    const shown = !this.inline && Boolean(this._overlay?.open) && this.isConnected;
+    this.removeAttribute('open');
+    if (!shown) return Promise.resolve();
+    return new Promise(resolve => (this._closing ??= []).push(resolve));
+  }
 
   // `title` is the heading, never a tooltip — see GlkElement.takeTitle().
   get title() { return this._title ?? ''; }

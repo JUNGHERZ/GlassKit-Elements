@@ -1,4 +1,22 @@
 import { GlkElement } from '../../base.js';
+import { openPanel, focusTarget } from '../../overlay.js';
+
+// A panel that opens from the element in slot="trigger" (a click toggles
+// it) and closes on a click outside or Escape.
+//
+// Since 1.32.0 it opens in the top layer (the popover API) and is placed by
+// script: below the trigger, or above it with placement="top", centred —
+// start and end align it at the trigger's start or end edge — flipped to
+// the other side where the viewport leaves no room and shifted along it to
+// stay inside. Before, it hung absolutely below the trigger: an overflow:
+// hidden around it cut it off, at the screen's edges it left the screen,
+// and closed it still widened the page by its box. Escape gives the focus
+// back to the trigger when it was inside the panel.
+//
+// Attributes: open, placement (bottom | top | start | end)
+// Slots:      trigger, default (content)
+// Events:     glk-open, glk-close
+// Methods:    show(), close(), toggle()
 
 const PLACEMENTS = ['top', 'bottom', 'start', 'end'];
 
@@ -14,11 +32,8 @@ class GlkPopover extends GlkElement {
     this._triggerSlot.setAttribute('name', 'trigger');
     this._anchor.appendChild(this._triggerSlot);
 
-    this._popover = this.createElement('div', ['glass-popover']);
+    this._popover = this.createElement('div', ['glass-popover'], { popover: 'manual' });
     this._applyPlacement();
-    if (this.getBoolAttr('open')) {
-      this._popover.classList.add('is-open');
-    }
 
     const contentSlot = document.createElement('slot');
     this._popover.appendChild(contentSlot);
@@ -30,10 +45,8 @@ class GlkPopover extends GlkElement {
   _applyPlacement() {
     if (!this._popover) return;
     PLACEMENTS.forEach(p => this._popover.classList.remove(`glass-popover--${p}`));
-    const placement = this.getAttribute('placement') || 'bottom';
-    if (placement !== 'bottom' && PLACEMENTS.includes(placement)) {
-      this._popover.classList.add(`glass-popover--${placement}`);
-    }
+    const placement = this.placement;
+    if (placement !== 'bottom') this._popover.classList.add(`glass-popover--${placement}`);
   }
 
   /**
@@ -46,6 +59,23 @@ class GlkPopover extends GlkElement {
     for (const trigger of this._triggerSlot.assignedElements()) {
       trigger.setAttribute('aria-expanded', open);
     }
+  }
+
+  /** Shows or hides the panel to match `open`. */
+  _applyOpen() {
+    const open = this.getBoolAttr('open') && this.isConnected;
+    if (open && !this._handle) {
+      const trigger = this._triggerSlot.assignedElements()[0];
+      const placement = this.placement;
+      this._handle = openPanel(this._popover, trigger ? focusTarget(trigger) : this._anchor, {
+        side: placement === 'top' ? 'top' : 'bottom',
+        align: placement === 'start' ? 'start' : placement === 'end' ? 'end' : 'center',
+      });
+    } else if (!open && this._handle) {
+      this._handle.close();
+      this._handle = null;
+    }
+    this._popover.classList.toggle('is-open', open);
   }
 
   setupEvents() {
@@ -74,13 +104,18 @@ class GlkPopover extends GlkElement {
     };
     document.addEventListener('click', this._onDocClick);
 
-    // Close on Escape.
+    // Close on Escape; focus inside the panel goes back to the trigger.
     this._onKeydown = (e) => {
-      if (e.key === 'Escape' && this.getBoolAttr('open')) {
-        this.close();
+      if (e.key !== 'Escape' || !this.getBoolAttr('open')) return;
+      const inside = this.contains(document.activeElement) && !this._triggerSlot.assignedElements().some(t => t.contains(document.activeElement));
+      this.close();
+      if (inside) {
+        const trigger = this._triggerSlot.assignedElements()[0];
+        if (trigger) focusTarget(trigger).focus();
       }
     };
     document.addEventListener('keydown', this._onKeydown);
+    this._applyOpen();
   }
 
   teardownEvents() {
@@ -88,6 +123,8 @@ class GlkPopover extends GlkElement {
     this.removeEventListener('click', this._onTriggerClick);
     document.removeEventListener('click', this._onDocClick);
     document.removeEventListener('keydown', this._onKeydown);
+    this._handle?.close();
+    this._handle = null;
   }
 
   onAttributeChanged(name) {
@@ -95,13 +132,18 @@ class GlkPopover extends GlkElement {
     switch (name) {
       case 'open': {
         const isOpen = this.getBoolAttr('open');
-        this._popover.classList.toggle('is-open', isOpen);
+        this._applyOpen();
         this._applyExpanded();
         this.emit(isOpen ? 'glk-open' : 'glk-close');
         break;
       }
       case 'placement':
         this._applyPlacement();
+        if (this._handle) {
+          this._handle.close();
+          this._handle = null;
+          this._applyOpen();
+        }
         break;
     }
   }
@@ -116,7 +158,10 @@ class GlkPopover extends GlkElement {
   get open() { return this.getBoolAttr('open'); }
   set open(v) { this.setBoolAttr('open', v); }
 
-  get placement() { return this.getAttribute('placement') || 'bottom'; }
+  get placement() {
+    const v = this.getAttribute('placement');
+    return PLACEMENTS.includes(v) ? v : 'bottom';
+  }
   set placement(v) {
     if (PLACEMENTS.includes(v)) this.setAttribute('placement', v);
   }

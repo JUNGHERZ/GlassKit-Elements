@@ -1,4 +1,5 @@
 import { GlkElement } from '../../base.js';
+import { tooltipBehaviour } from '../../overlay.js';
 
 // The icon: an inline <svg> child is copied into the shadow root, where
 // GlassKit's rules reach it. Anything else — a font icon such as Material
@@ -12,17 +13,24 @@ import { GlkElement } from '../../base.js';
 // or a link — and the bar then neither moves `active` nor its drop, nor
 // emits glk-tab-change. A drag of the drop that ends on the item clicks it,
 // so it takes the same path.
+//
+// Since 1.32.0 the active item carries aria-current="page", so a screen
+// reader tells which view is open; badge-label words the count for the
+// item's name, "Customers, 3 new" instead of "3 Customers"; with href the
+// item is a link, which can open its view in a new tab — a cancelled
+// glk-tab-select stops the navigation too. In a rail the label is hidden
+// from view and shows as a tooltip on hover, focus and a long press, beside
+// the rail. Part: item.
 
 class GlkTabItem extends GlkElement {
   static get observedAttributes() {
-    return ['label', 'active', 'badge'];
+    return ['label', 'active', 'badge', 'badge-label', 'href'];
   }
 
   static get observesLightDom() { return true; }
 
   render() {
-    this._btn = this.createElement('button', ['glass-tab-bar__item']);
-    if (this.getBoolAttr('active')) this._btn.classList.add('is-active');
+    this._btn = this._createItem();
 
     // Icon — clone SVG from light DOM into shadow DOM so GlassKit CSS applies,
     // or show what is slotted as icon
@@ -43,6 +51,8 @@ class GlkTabItem extends GlkElement {
 
     this._btn.appendChild(this._iconEl);
     this._btn.appendChild(this._labelEl);
+    this._applyActive();
+    this._applyName();
 
     this._wrapper.appendChild(this._btn);
 
@@ -76,9 +86,54 @@ class GlkTabItem extends GlkElement {
     this._iconClone = clone;
   }
 
+  /** A link with href, else a button. */
+  _createItem() {
+    const href = this.getAttribute('href');
+    return href === null
+      ? this.createElement('button', ['glass-tab-bar__item'], { type: 'button', part: 'item' })
+      : this.createElement('a', ['glass-tab-bar__item'], { href, part: 'item' });
+  }
+
+  /** href came or went: the same content in the other element. */
+  _swapItem() {
+    this._applyRail(false);                     // bound to the old element; the bar's sync binds it again
+    const next = this._createItem();
+    next.append(...this._btn.childNodes);
+    this._btn.removeEventListener('click', this._onClick);
+    this._btn.replaceWith(next);
+    this._btn = next;
+    this._btn.addEventListener('click', this._onClick);
+    this._applyActive();
+    this._applyName();
+    this._tellBar();
+  }
+
+  _applyActive() {
+    const active = this.getBoolAttr('active');
+    this._btn.classList.toggle('is-active', active);
+    if (active) this._btn.setAttribute('aria-current', 'page');
+    else this._btn.removeAttribute('aria-current');
+  }
+
+  /** With a count, the name says it after the label, in words where given. */
+  _applyName() {
+    const label = this.getAttribute('label') || '';
+    const badge = this.getAttribute('badge');
+    if (badge && label) {
+      this._btn.setAttribute('aria-label', `${label}, ${this.getAttribute('badge-label') || badge}`);
+    } else {
+      this._btn.removeAttribute('aria-label');
+    }
+  }
+
   setupEvents() {
-    this._onClick = () => {
-      if (!this.emit('glk-tab-select', null, { cancelable: true })) return;
+    this._onClick = (e) => {
+      // A link opened in another tab or window leaves this page's tab as it is.
+      if (this._btn.localName === 'a' && (e.ctrlKey || e.metaKey || e.shiftKey || e.altKey)) return;
+      if (!this.emit('glk-tab-select', null, { cancelable: true })) {
+        e.preventDefault();                       // a link stays where it is
+        return;
+      }
       this.setAttribute('active', '');
       this.closest('glk-tab-bar')?._selected?.(this);
     };
@@ -93,10 +148,14 @@ class GlkTabItem extends GlkElement {
    * its state down and the wrapper carries it. Before 1.27.0 the items of a
    * floating bar kept the fixed bar's look: no spotlight, no pill, the dot.
    */
-  _syncBar({ floating, droplet, placed, drag }) {
+  _syncBar({ floating, droplet, placed, drag, vertical = false, rail = false, top = false, dock = null }) {
     if (!this._wrapper) return;
+    this._applyRail(rail, dock);
     this._wrapper.classList.toggle('glass-tab-bar--floating', floating);
     this._wrapper.classList.toggle('glass-tab-bar--droplet', droplet);
+    this._wrapper.classList.toggle('glass-tab-bar--vertical', vertical);
+    this._wrapper.classList.toggle('glass-tab-bar--rail', rail);
+    this._wrapper.classList.toggle('glass-tab-bar--top', top);
     this._wrapper.toggleAttribute('data-droplet', placed);
     this._wrapper.toggleAttribute('data-droplet-drag', drag);
   }
@@ -108,17 +167,49 @@ class GlkTabItem extends GlkElement {
 
   teardownEvents() {
     this._btn?.removeEventListener('click', this._onClick);
+    this._applyRail(false);
+  }
+
+  /**
+   * In a rail the label shows as a tooltip beside the rail — the other side
+   * than the edge it is docked at. Only seen: the hidden label is the name.
+   */
+  _applyRail(on, dock) {
+    this._railSide = dock === 'end' ? 'start' : 'end';
+    if (on && !this._railTip && this._btn) {
+      this._railPanel = this.createElement('div', ['glass-tooltip'], { 'aria-hidden': 'true' });
+      this._railPanel.textContent = this.getAttribute('label') || '';
+      this._wrapper.appendChild(this._railPanel);
+      this._railTip = tooltipBehaviour(this._btn, this._railPanel, {
+        side: () => this._railSide,
+        anchor: () => this._btn,
+        offset: () => parseFloat(getComputedStyle(this._railPanel).getPropertyValue('--gl-tooltip-offset')) || 8,
+      });
+    } else if (!on && this._railTip) {
+      this._railTip.destroy();
+      this._railPanel.remove();
+      this._railTip = this._railPanel = null;
+    }
   }
 
   onAttributeChanged(name) {
     if (!this._btn) return;
     switch (name) {
       case 'active':
-        this._btn.classList.toggle('is-active', this.getBoolAttr('active'));
+        this._applyActive();
         this._tellBar();
         break;
       case 'label':
         this._labelEl.textContent = this.getAttribute('label') || '';
+        if (this._railPanel) this._railPanel.textContent = this.getAttribute('label') || '';
+        this._applyName();
+        break;
+      case 'badge-label':
+        this._applyName();
+        break;
+      case 'href':
+        if ((this.getAttribute('href') === null) !== (this._btn.localName === 'button')) this._swapItem();
+        else if (this._btn.localName === 'a') this._btn.setAttribute('href', this.getAttribute('href'));
         break;
       case 'badge': {
         const badge = this.getAttribute('badge');
@@ -132,6 +223,7 @@ class GlkTabItem extends GlkElement {
           this._badgeEl.remove();
           this._badgeEl = null;
         }
+        this._applyName();
         break;
       }
     }

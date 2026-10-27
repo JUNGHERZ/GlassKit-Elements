@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GlassKit Elements — Documentation</title>
-  <meta name="description" content="Complete documentation for all 29 GlassKit Elements web components. Installation, API reference, attributes, events, and live examples.">
+  <meta name="description" content="Complete documentation for all 46 GlassKit Elements web components. Installation, API reference, attributes, events, and live examples.">
   <meta name="keywords" content="glasskit elements, documentation, web components, api reference, glassmorphism, custom elements">
   <meta name="author" content="Jungherz GmbH">
   <meta name="robots" content="index, follow">
@@ -13,14 +13,14 @@
   <link rel="alternate" hreflang="de" href="https://glasskit-elements.jungherz.com/de/docs.html">
   <meta property="og:type" content="website">
   <meta property="og:title" content="GlassKit Elements — Documentation">
-  <meta property="og:description" content="Complete documentation for all 29 GlassKit Elements web components with live examples.">
+  <meta property="og:description" content="Complete documentation for all 46 GlassKit Elements web components with live examples.">
   <meta property="og:url" content="https://glasskit-elements.jungherz.com/docs.html">
   <meta property="og:site_name" content="GlassKit Elements">
   <meta property="og:locale" content="en_US">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="GlassKit Elements — Documentation">
-  <meta name="twitter:description" content="Complete documentation for all 29 GlassKit Elements web components with live examples.">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.31/glasskit.min.css">
+  <meta name="twitter:description" content="Complete documentation for all 46 GlassKit Elements web components with live examples.">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.32/glasskit.min.css">
   <script src="/dist/glasskit-elements.min.js"></script>
   <style>
     html { scroll-behavior: smooth; }
@@ -140,7 +140,7 @@
       color: var(--gl-color-text-muted); font-size: 18px; line-height: 1.6;
       margin-bottom: 20px;
     }
-    .docs-hero__badges { display: flex; gap: 8px; margin-bottom: 0; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.06); }
+    .docs-hero__badges { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 0; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.06); }
     [data-theme="light"] .docs-hero__badges { border-color: rgba(0,0,0,0.06); }
     .docs-hero__badge {
       font-size: 13px; padding: 6px 16px; border-radius: 9999px;
@@ -253,7 +253,7 @@
     <aside class="docs-sidebar">
       <div class="docs-sidebar__title">&#129482; <a href="/">GlassKit Elements</a></div>
       <div class="docs-sidebar__subtitle">Web Components for GlassKit CSS.</div>
-      <div class="docs-sidebar__version">v1.31.0 &ndash; Jungherz GmbH</div>
+      <div class="docs-sidebar__version">v1.32.0 &ndash; Jungherz GmbH</div>
 
       <div class="docs-sidebar__group">
         <div class="docs-sidebar__group-title">Basics</div>
@@ -301,6 +301,7 @@
         <a class="docs-sidebar__link" href="#glk-tab-dock">glk-tab-dock</a>
         <a class="docs-sidebar__link" href="#glk-steps">glk-steps</a>
         <a class="docs-sidebar__link" href="#glk-date-strip">glk-date-strip</a>
+        <a class="docs-sidebar__link" href="#glk-breadcrumbs">glk-breadcrumbs</a>
       </div>
 
       <div class="docs-sidebar__group">
@@ -309,6 +310,8 @@
         <a class="docs-sidebar__link" href="#glk-modal">glk-modal</a>
         <a class="docs-sidebar__link" href="#glk-toast">glk-toast</a>
         <a class="docs-sidebar__link" href="#glk-popover">glk-popover</a>
+        <a class="docs-sidebar__link" href="#glk-tooltip">glk-tooltip</a>
+        <a class="docs-sidebar__link" href="#glk-menu">glk-menu</a>
         <a class="docs-sidebar__link" href="#glk-sheet">glk-sheet</a>
       </div>
 
@@ -316,6 +319,9 @@
         <div class="docs-sidebar__group-title">Containers</div>
         <a class="docs-sidebar__link" href="#glk-accordion">glk-accordion</a>
         <a class="docs-sidebar__link" href="#glk-list">glk-list</a>
+        <a class="docs-sidebar__link" href="#glk-tree">glk-tree</a>
+        <a class="docs-sidebar__link" href="#glk-table">glk-table</a>
+        <a class="docs-sidebar__link" href="#sorting">Sorting</a>
       </div>
       <div class="docs-sidebar__group">
         <div class="docs-sidebar__group-title">Extend</div>
@@ -337,11 +343,11 @@
       <!-- Hero -->
       <div class="docs-hero">
         <h1>GlassKit Elements</h1>
-        <p>Complete reference for all 36 web components &ndash; built by Jungherz GmbH. Vanilla JS, Shadow DOM, native form participation.</p>
+        <p>Complete reference for all 46 web components &ndash; built by Jungherz GmbH. Vanilla JS, Shadow DOM, native form participation.</p>
         <div class="docs-hero__badges">
-          <span class="docs-hero__badge">v1.31.0</span>
+          <span class="docs-hero__badge">v1.32.0</span>
           <span class="docs-hero__badge">Shadow DOM</span>
-          <span class="docs-hero__badge">36 Components</span>
+          <span class="docs-hero__badge">46 Components</span>
           <span class="docs-hero__badge">Vanilla JS</span>
         </div>
       </div>
@@ -352,7 +358,7 @@
 
         <h3>CDN (quickest)</h3>
         <div class="docs-code"><span class="cmt">&lt;!-- 1. GlassKit CSS --&gt;</span>
-<span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span> <span class="attr">href</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.31/glasskit.min.css"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span> <span class="attr">href</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.32/glasskit.min.css"</span><span class="tag">&gt;</span>
 
 <span class="cmt">&lt;!-- 2. GlassKit Elements --&gt;</span>
 <span class="tag">&lt;script</span> <span class="attr">src</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"</span><span class="tag">&gt;&lt;/script&gt;</span></div>
@@ -406,6 +412,17 @@
   <span class="attr">--gl-color-primary-text</span>: <span class="val">var(--gl-color-primary)</span>;
 }</div>
         <p><code>--gl-tab-bar-active-color</code> colours the icon and label of the active tab alone, for a spotlight that needs a lighter tone still; unset, they take <code>--gl-color-primary-text</code>.</p>
+        <h3>Accent fills</h3>
+        <p>White text on GlassKit&rsquo;s orange reads 2.0 to 3.8:1 where the accent fills a surface: the primary <code>&lt;glk-button&gt;</code>, the chosen day of <code>&lt;glk-calendar&gt;</code> and <code>&lt;glk-date-strip&gt;</code>, the number of the current step in <code>&lt;glk-steps&gt;</code>. GlassKit 1.32.0 gives these fills tokens of their own, unset by default, so nothing changes until a project sets them: <code>--gl-btn-primary-bg</code> replaces the whole background of the primary button (today&rsquo;s gradient when unset), <code>--gl-color-primary-fill</code> fills the chosen days and the current step (the primary when unset). A brand that keeps white text darkens the fills and leaves its primary alone &mdash; the primary also draws focus rings, borders and the accent as text. The tokens reach every shadow root by inheritance; with these values white reads 5:1 or more on every fill, in both themes:</p>
+        <div class="docs-code"><span class="cls">:root</span>, [data-theme=<span class="val">'dark'</span>] {
+  <span class="attr">--gl-color-primary-fill</span>: <span class="val">color-mix(in srgb, var(--gl-color-primary) 60%, #000)</span>;
+  <span class="attr">--gl-btn-primary-bg</span>: <span class="val">linear-gradient(135deg, var(--gl-color-primary-fill), color-mix(in srgb, var(--gl-color-primary-dark) 60%, #000))</span>;
+}
+[data-theme=<span class="val">'light'</span>] {
+  <span class="attr">--gl-color-primary-fill</span>: <span class="val">color-mix(in srgb, var(--gl-color-primary) 70%, #000)</span>;
+  <span class="attr">--gl-btn-primary-bg</span>: <span class="val">linear-gradient(135deg, var(--gl-color-primary-fill), color-mix(in srgb, var(--gl-color-primary-dark) 70%, #000))</span>;
+}</div>
+        <p>A brand that turns to a dark ink instead sets <code>--gl-color-on-primary</code>. Since GlassKit 1.32.0 the dot of <code>&lt;glk-radio&gt;</code> follows it as the checkbox tick does; before, it stayed white on the same orange.</p>
         <h3>Printing</h3>
         <p>Print dialogs leave out background graphics by default. With GlassKit 1.21.1 the parts that carry a state keep their colours on paper &mdash; checkbox, radio, toggle, progress, the current step, the chosen day, the slider thumb, the tone dots &mdash; inside the elements as well. A dark page prints its light text and surfaces on white paper; a page meant for printing switches to the light theme for it, and the elements follow:</p>
         <div class="docs-code">let printTheme = null;
@@ -455,7 +472,7 @@ addEventListener(<span class="val">'afterprint'</span>, () =&gt; {
         <div class="docs-component" id="glk-badge">
           <h3><code>&lt;glk-badge&gt;</code></h3>
           <p>Inline status badge with color variants &mdash; and, with <code>interactive</code>, a filter chip.</p>
-          <div class="docs-preview" style="display:flex;gap:8px;">
+          <div class="docs-preview" style="display:flex;gap:8px;flex-wrap:wrap;">
             <glk-badge>Default</glk-badge>
             <glk-badge variant="primary">Primary</glk-badge>
             <glk-badge variant="success">Success</glk-badge>
@@ -860,7 +877,7 @@ glk-segmented::part(badge) { letter-spacing: 0.02em; }</div>
 
         <div class="docs-component" id="glk-tab-bar">
           <h3><code>&lt;glk-tab-bar&gt;</code> + <code>&lt;glk-tab-item&gt;</code></h3>
-          <p>Bottom tab bar navigation. The items sit in the middle of the bar; on an iPhone with <code>viewport-fit=cover</code> they keep to the top, above the home indicator (GlassKit 1.28.0).</p>
+          <p>Bottom tab bar navigation. The items sit in the middle of the bar; on an iPhone with <code>viewport-fit=cover</code> they keep to the top, above the home indicator (GlassKit 1.28.0). Since 1.32.0 the same items also make a sidebar, an icon rail or a top bar &mdash; see below.</p>
           <div class="docs-preview">
             <glk-tab-bar static>
               <glk-tab-item label="Home" active><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></glk-tab-item>
@@ -875,9 +892,16 @@ glk-segmented::part(badge) { letter-spacing: 0.02em; }</div>
           <table class="docs-table">
             <tr><th>Attribute</th><th>Component</th><th>Description</th></tr>
             <tr><td><code>label</code></td><td>glk-tab-item</td><td>Tab label</td></tr>
-            <tr><td><code>active</code></td><td>glk-tab-item</td><td>Active state</td></tr>
+            <tr><td><code>active</code></td><td>glk-tab-item</td><td>Active state; the item carries <code>aria-current="page"</code> (since 1.32.0)</td></tr>
             <tr><td><code>badge</code></td><td>glk-tab-item</td><td>Badge count</td></tr>
+            <tr><td><code>badge-label</code></td><td>glk-tab-item</td><td>The count in words for the item&rsquo;s name: &ldquo;Customers, 3 new&rdquo; instead of &ldquo;Customers, 3&rdquo; (since 1.32.0)</td></tr>
+            <tr><td><code>href</code></td><td>glk-tab-item</td><td>The item is a link, so its view can open in a new tab: a click with Ctrl, Cmd, Shift or Alt opens it elsewhere and leaves the current tab active; a cancelled <code>glk-tab-select</code> stops the navigation as well (since 1.32.0)</td></tr>
             <tr><td><code>slot="icon"</code></td><td>glk-tab-item</td><td>An icon that is not inline SVG &mdash; a font icon, an <code>&lt;img&gt;</code>, an element of your own; it takes the state colour (since 1.28.0). An <code>&lt;svg&gt;</code> without <code>slot</code> is copied in as before.</td></tr>
+            <tr><td><code>orientation</code></td><td>glk-tab-bar</td><td><code>vertical</code>: a column, for a sidebar (since 1.32.0)</td></tr>
+            <tr><td><code>dock</code></td><td>glk-tab-bar</td><td><code>start</code> | <code>end</code>, with <code>vertical</code>: fixed to that edge of the viewport, clear of its safe area (since 1.32.0)</td></tr>
+            <tr><td><code>rail</code></td><td>glk-tab-bar</td><td>With <code>vertical</code>: the icons alone, each label in a tooltip (since 1.32.0)</td></tr>
+            <tr><td><code>placement</code></td><td>glk-tab-bar</td><td><code>top</code>: a horizontal bar for the top of a page (since 1.32.0)</td></tr>
+            <tr><td><code>label</code></td><td>glk-tab-bar</td><td>The navigation&rsquo;s name, its <code>aria-label</code> (since 1.32.0)</td></tr>
           </table>
           <p><strong>Events:</strong> <code>glk-tab-select</code> on the item, then <code>glk-tab-change</code> &rarr; <code>{ tab: Element }</code> on the bar. Since 1.28.0 <code>glk-tab-select</code> comes before <code>active</code> changes and is cancelable: <code>preventDefault()</code> keeps the current tab &mdash; for an item that opens a drawer or a link. Then nothing changes, no <code>glk-tab-change</code> follows, and the drop stays; a drag of the drop that ends on such an item takes the same path and goes back.</p>
           <div class="docs-code"><span class="tag">&lt;glk-tab-item</span> <span class="attr">label</span>=<span class="val">"Home"</span> <span class="attr">active</span><span class="tag">&gt;</span>
@@ -890,6 +914,52 @@ glk-segmented::part(badge) { letter-spacing: 0.02em; }</div>
   openDrawer();
 });</div>
           <p>Give a font icon <code>aria-hidden="true"</code>, or its text joins the tab&rsquo;s name. GlassKit&rsquo;s tab bar tokens reach the items by inheritance (GlassKit 1.28.0): <code>--gl-tab-bar-color</code> for the inactive tabs, <code>--gl-tab-bar-hover-color</code>, <code>--gl-tab-bar-label-size</code> and <code>--gl-tab-bar-z-index</code>.</p>
+          <p>Since 1.32.0 the active item tells a screen reader which view is open with <code>aria-current="page"</code>, and every item shows a focus ring for the keyboard. <strong>Parts:</strong> <code>nav</code> on the bar, <code>item</code> on each item &mdash; its button, or its link with <code>href</code>.</p>
+          <p><strong>Sidebar, rail and top bar (since 1.32.0).</strong> One set of items in more places than the bottom edge. <code>orientation="vertical"</code> makes the bar a column, one item per row with the icon before the label and the badge at the row&rsquo;s end: a sidebar in a column of the page&rsquo;s layout, as high as its container. With <code>dock="start"</code> or <code>"end"</code> it is fixed to that edge of the viewport instead, full height and clear of the edge&rsquo;s safe area &mdash; the side a phone&rsquo;s thumb reaches when the system moves its own controls there, as on a phone held open. <code>rail</code> shows the icons alone; the label stays the item&rsquo;s name and shows in a tooltip beside the rail, on hover, focus and a long press. <code>placement="top"</code> lays a horizontal bar out for the top of a page: in the flow &mdash; put it in a sticky header &mdash;, its border below, no room for the home indicator, and from 640&nbsp;px the icon beside the label. In a column the drop of <code>droplet</code> runs along y. The page switches between the layouts with a media query or on resize, and the items are not rendered again. Try it &mdash; tap a row or drag the drop in the sidebar, hover the rail:</p>
+          <div class="docs-preview" style="display:grid;grid-template-columns:minmax(0,200px) auto;gap:16px;height:248px;">
+            <glk-tab-bar orientation="vertical" droplet label="Sidebar">
+              <glk-tab-item label="Dashboard" active><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg></glk-tab-item>
+              <glk-tab-item label="Customers" badge="3" badge-label="3 new"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></glk-tab-item>
+              <glk-tab-item label="Invoices"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg></glk-tab-item>
+              <glk-tab-item label="Settings"><svg viewBox="0 0 24 24"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg></glk-tab-item>
+            </glk-tab-bar>
+            <glk-tab-bar orientation="vertical" rail droplet label="Rail">
+              <glk-tab-item label="Dashboard" active><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg></glk-tab-item>
+              <glk-tab-item label="Customers" badge="3" badge-label="3 new"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></glk-tab-item>
+              <glk-tab-item label="Invoices"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg></glk-tab-item>
+              <glk-tab-item label="Settings"><svg viewBox="0 0 24 24"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg></glk-tab-item>
+            </glk-tab-bar>
+          </div>
+          <div class="docs-preview">
+            <glk-tab-bar placement="top" droplet label="Top bar">
+              <glk-tab-item label="Home" active><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></glk-tab-item>
+              <glk-tab-item label="Content"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="7" y1="8" x2="17" y2="8"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="7" y1="16" x2="12" y2="16"/></svg></glk-tab-item>
+              <glk-tab-item label="Users"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></glk-tab-item>
+              <glk-tab-item label="Settings"><svg viewBox="0 0 24 24"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg></glk-tab-item>
+            </glk-tab-bar>
+          </div>
+          <div class="docs-code"><span class="cmt">&lt;!-- A sidebar in a column of the page's grid --&gt;</span>
+<span class="tag">&lt;glk-tab-bar</span> <span class="attr">orientation</span>=<span class="val">"vertical"</span> <span class="attr">droplet</span> <span class="attr">label</span>=<span class="val">"Main"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;glk-tab-item</span> <span class="attr">label</span>=<span class="val">"Dashboard"</span> <span class="attr">active</span><span class="tag">&gt;</span><span class="tag">&lt;svg&gt;</span>...<span class="tag">&lt;/svg&gt;&lt;/glk-tab-item&gt;</span>
+  <span class="tag">&lt;glk-tab-item</span> <span class="attr">label</span>=<span class="val">"Customers"</span> <span class="attr">badge</span>=<span class="val">"3"</span> <span class="attr">badge-label</span>=<span class="val">"3 new"</span><span class="tag">&gt;</span><span class="tag">&lt;svg&gt;</span>...<span class="tag">&lt;/svg&gt;&lt;/glk-tab-item&gt;</span>
+  <span class="tag">&lt;glk-tab-item</span> <span class="attr">label</span>=<span class="val">"Invoices"</span> <span class="attr">href</span>=<span class="val">"/invoices"</span><span class="tag">&gt;</span><span class="tag">&lt;svg&gt;</span>...<span class="tag">&lt;/svg&gt;&lt;/glk-tab-item&gt;</span>
+<span class="tag">&lt;/glk-tab-bar&gt;</span>
+
+<span class="cmt">&lt;!-- The same items as an icon rail at the start edge of the viewport --&gt;</span>
+<span class="tag">&lt;glk-tab-bar</span> <span class="attr">orientation</span>=<span class="val">"vertical"</span> <span class="attr">rail</span> <span class="attr">dock</span>=<span class="val">"start"</span> <span class="attr">label</span>=<span class="val">"Main"</span><span class="tag">&gt;</span>...<span class="tag">&lt;/glk-tab-bar&gt;</span>
+
+<span class="cmt">&lt;!-- A top bar in a sticky header --&gt;</span>
+<span class="tag">&lt;header</span> <span class="attr">style</span>=<span class="val">"position: sticky; top: 0"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;glk-tab-bar</span> <span class="attr">placement</span>=<span class="val">"top"</span> <span class="attr">droplet</span> <span class="attr">label</span>=<span class="val">"Main"</span><span class="tag">&gt;</span>...<span class="tag">&lt;/glk-tab-bar&gt;</span>
+<span class="tag">&lt;/header&gt;</span>
+
+<span class="cmt">// One bar, switched by the width of the screen</span>
+<span class="tag">const</span> bar = document.querySelector(<span class="val">'glk-tab-bar'</span>);
+<span class="tag">const</span> wide = matchMedia(<span class="val">'(min-width: 1024px)'</span>);
+<span class="tag">const</span> apply = () =&gt; { bar.orientation = wide.matches ? <span class="val">'vertical'</span> : <span class="val">'horizontal'</span>; };
+wide.addEventListener(<span class="val">'change'</span>, apply);
+apply();</div>
+          <p>A docked bar lies over the page; the page keeps room for it on that side. GlassKit&rsquo;s tab bar tokens reach these layouts as well: <code>--gl-tab-bar-rail-width</code> (72&nbsp;px) sets the width of the rail, <code>--gl-tab-bar-active-bg</code> the surface of the active row in a sidebar.</p>
         </div>
 
         <div class="docs-component" id="glk-tab-dock">
@@ -920,7 +990,9 @@ glk-segmented::part(badge) { letter-spacing: 0.02em; }</div>
             <tr><th>Attribute</th><th>Component</th><th>Description</th></tr>
             <tr><td><code>floating</code></td><td>glk-tab-bar</td><td>Pill-shaped Liquid Glass variant — Spotlight halo on the active item</td></tr>
             <tr><td><code>droplet</code></td><td>glk-tab-bar</td><td>The active item sits on a drop of glass that glides to the next one and can be dragged (since 1.27.0); a property as well, like <code>floating</code> (since 1.28.0)</td></tr>
-            <tr><td><code>accessory-left</code></td><td>glk-tab-dock</td><td>Place the accessory on the left of the bar (default is right)</td></tr>
+            <tr><td><code>accessory-left</code></td><td>glk-tab-dock</td><td>Place the accessory on the left of the bar (default is right); in an upright dock above it (since 1.32.0)</td></tr>
+            <tr><td><code>orientation</code></td><td>glk-tab-dock</td><td><code>vertical</code>: upright at a side of the viewport, the accessory below the bar (since 1.32.0)</td></tr>
+            <tr><td><code>dock</code></td><td>glk-tab-dock</td><td><code>end</code> (default) | <code>start</code> &mdash; the edge of an upright dock (since 1.32.0)</td></tr>
             <tr><td><code>label</code></td><td>glk-tab-accessory</td><td>aria-label for accessibility</td></tr>
             <tr><td><code>variant</code></td><td>glk-tab-accessory</td><td><code>accent</code> | <code>success</code> | <code>error</code> &mdash; filled colored capsule with white icon</td></tr>
             <tr><td><code>disabled</code></td><td>glk-tab-accessory</td><td>Disabled state</td></tr>
@@ -943,6 +1015,49 @@ glk-segmented::part(badge) { letter-spacing: 0.02em; }</div>
   <span class="cmt">&lt;!-- more items --&gt;</span>
 <span class="tag">&lt;/glk-tab-bar&gt;</span></div>
           <p>It is GlassKit&rsquo;s <code>.glass-tab-bar--droplet</code>, moved by GlassKit&rsquo;s <code>glasskit-droplet.js</code>, which the bundles and the per-component files carry &mdash; an import map needs no new entry. Spotlight, dot and glow are off on a droplet bar; with <code>prefers-reduced-motion</code> the drop jumps, solid and tint surfaces make it opaque. GlassKit&rsquo;s tokens for a capsule behind the active tab (<code>--gl-tab-bar-active-bg</code>, <code>-shadow</code>, <code>--gl-tab-bar-spotlight-opacity</code>, <code>--gl-tab-bar-active-glow</code>) reach the items by inheritance, and the drop takes that surface. Since 1.27.0 the items of a floating bar also really take the floating look: spotlight and pill, no dot.</p>
+          <p><strong>Motion (GlassKit 1.32.0).</strong> The drop&rsquo;s timing is set by tokens now &mdash; unset, today&rsquo;s values &mdash;, read by the stylesheet and the script alike and inherited into <code>&lt;glk-tab-bar&gt;</code> and <code>&lt;glk-segmented&gt;</code>: <code>--gl-droplet-duration</code> and <code>--gl-droplet-easing</code> for the leading edge (0.3s), <code>-trail-duration</code>, <code>-trail-delay</code> and <code>-trail-easing</code> for the trailing one (0.5s after 40ms), <code>-lift</code> for the squash while it travels (0.86; <code>1</code> squashes nothing) and <code>-lift-duration</code> (280ms), <code>-settle-duration</code> and <code>-settle-easing</code> for the spring back (0.55s), <code>-lens-duration</code> and <code>-lens-easing</code> for the icon below the drop (0.4s). A product whose motion keeps within 240&nbsp;ms writes this, and the drop arrives in 240&nbsp;ms without a tail:</p>
+          <div class="docs-code"><span class="cls">:root</span> {
+  <span class="attr">--gl-droplet-duration</span>: <span class="val">240ms</span>;
+  <span class="attr">--gl-droplet-easing</span>: <span class="val">ease-out</span>;
+  <span class="attr">--gl-droplet-trail-duration</span>: <span class="val">240ms</span>;
+  <span class="attr">--gl-droplet-trail-delay</span>: <span class="val">0ms</span>;
+  <span class="attr">--gl-droplet-trail-easing</span>: <span class="val">ease-out</span>;
+  <span class="attr">--gl-droplet-lift</span>: <span class="val">1</span>;
+  <span class="attr">--gl-droplet-settle-duration</span>: <span class="val">0ms</span>;
+  <span class="attr">--gl-droplet-lens-duration</span>: <span class="val">240ms</span>;
+  <span class="attr">--gl-droplet-lens-easing</span>: <span class="val">ease-out</span>;
+}</div>
+          <p><strong>Upright (since 1.32.0).</strong> <code>orientation="vertical"</code> stands the dock at the end edge of the viewport &mdash; <code>dock="start"</code> for the other &mdash;, vertically centred and clear of that edge&rsquo;s safe area, the accessory below the bar and above it with <code>accessory-left</code>. Give the bar inside <code>orientation="vertical"</code> as well: its items stay stacked as on the bottom edge, and the drop runs along y. Where a phone held open puts the thumb at a side rather than at the bottom edge, the navigation can go there &mdash; the same items, switched by a media query:</p>
+          <div class="docs-preview" style="height:300px;display:flex;align-items:center;justify-content:flex-end;">
+            <glk-tab-dock static orientation="vertical">
+              <glk-tab-bar floating droplet orientation="vertical">
+                <glk-tab-item label="Home" active><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></glk-tab-item>
+                <glk-tab-item label="Docs" badge="3"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></glk-tab-item>
+                <glk-tab-item label="Upload"><svg viewBox="0 0 24 24"><path d="M12 16V4"/><polyline points="8 8 12 4 16 8"/><path d="M20 17v1a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-1"/></svg></glk-tab-item>
+              </glk-tab-bar>
+              <glk-tab-accessory variant="accent" label="Compose">
+                <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              </glk-tab-accessory>
+            </glk-tab-dock>
+          </div>
+          <div class="docs-code"><span class="tag">&lt;glk-tab-dock</span> <span class="attr">orientation</span>=<span class="val">"vertical"</span> <span class="attr">dock</span>=<span class="val">"end"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;glk-tab-bar</span> <span class="attr">floating droplet</span> <span class="attr">orientation</span>=<span class="val">"vertical"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;glk-tab-item</span> <span class="attr">label</span>=<span class="val">"Home"</span> <span class="attr">active</span><span class="tag">&gt;</span><span class="tag">&lt;svg&gt;</span>...<span class="tag">&lt;/svg&gt;&lt;/glk-tab-item&gt;</span>
+    <span class="cmt">&lt;!-- more items --&gt;</span>
+  <span class="tag">&lt;/glk-tab-bar&gt;</span>
+  <span class="tag">&lt;glk-tab-accessory</span> <span class="attr">variant</span>=<span class="val">"accent"</span> <span class="attr">label</span>=<span class="val">"Compose"</span><span class="tag">&gt;</span><span class="tag">&lt;svg&gt;</span>...<span class="tag">&lt;/svg&gt;&lt;/glk-tab-accessory&gt;</span>
+<span class="tag">&lt;/glk-tab-dock&gt;</span>
+
+<span class="cmt">// Upright on a wide touch screen, at the bottom edge elsewhere</span>
+<span class="tag">const</span> dock = document.querySelector(<span class="val">'glk-tab-dock'</span>);
+<span class="tag">const</span> side = matchMedia(<span class="val">'(min-width: 700px) and (pointer: coarse)'</span>);
+<span class="tag">const</span> apply = () =&gt; {
+  <span class="tag">const</span> orientation = side.matches ? <span class="val">'vertical'</span> : <span class="val">'horizontal'</span>;
+  dock.orientation = orientation;
+  dock.querySelector(<span class="val">'glk-tab-bar'</span>).orientation = orientation;
+};
+side.addEventListener(<span class="val">'change'</span>, apply);
+apply();</div>
         </div>
         <div class="docs-component" id="glk-steps">
           <h3><code>&lt;glk-steps&gt;</code></h3>
@@ -982,6 +1097,59 @@ glk-segmented::part(badge) { letter-spacing: 0.02em; }</div>
           <p><strong>Events:</strong> <code>glk-change</code> <code>{ value }</code> &mdash; only on a change made by the user. <strong>Properties:</strong> <code>value</code>, <code>marks</code> (object or JSON text), <code>locale</code>, <code>label</code>. <strong>Part:</strong> <code>strip</code>.</p>
           <script>
             document.getElementById('docs-strip').addEventListener('glk-change', e => { document.querySelector('[data-docs-strip-out]').textContent = 'glk-change → ' + e.detail.value; });
+          </script>
+        </div>
+
+        <div class="docs-component" id="glk-breadcrumbs">
+          <h3><code>&lt;glk-breadcrumbs&gt;</code> + <code>&lt;glk-breadcrumb&gt;</code></h3>
+          <p>The path through nested levels (since 1.32.0) &mdash; GlassKit&rsquo;s <code>.glass-breadcrumbs</code>: My app &rsaquo; Main menu &rsaquo; Services &rsaquo; Online booking. The levels are <code>&lt;glk-breadcrumb&gt;</code> children; the element draws them as <code>&lt;nav aria-label&gt;&lt;ol&gt;&lt;li&gt;</code>, each level a link (<code>href</code>) or a button, the current one &mdash; <code>current</code>, else the last &mdash; plain text with <code>aria-current="page"</code>. The separators are CSS, hidden from assistive technology and mirrored right to left. Where the path does not fit, the middle levels fold into one &ldquo;&hellip;&rdquo; crumb, a menu button named like &ldquo;2 more levels&rdquo; that lists them; the first crumb and the last two stay. The path is measured on the element, so it folds and unfolds with its own width, and a label cut short shows in full in a tooltip. Try it: the second path sits in a narrow box.</p>
+          <div class="docs-preview" style="display:flex;flex-direction:column;gap:16px;">
+            <glk-breadcrumbs data-docs-crumbs>
+              <glk-breadcrumb href="/app">My app</glk-breadcrumb>
+              <glk-breadcrumb href="/app/menu">Main menu</glk-breadcrumb>
+              <glk-breadcrumb href="/app/menu/services">Services</glk-breadcrumb>
+              <glk-breadcrumb current>Online booking</glk-breadcrumb>
+            </glk-breadcrumbs>
+            <div style="max-width:320px;padding:8px;border:1px dashed var(--gl-border-medium);border-radius:var(--gl-radius-sm)">
+              <glk-breadcrumbs data-docs-crumbs>
+                <glk-breadcrumb value="app">My app</glk-breadcrumb>
+                <glk-breadcrumb value="menu">Main menu</glk-breadcrumb>
+                <glk-breadcrumb value="services">Services and appointments</glk-breadcrumb>
+                <glk-breadcrumb value="booking">Online booking</glk-breadcrumb>
+                <glk-breadcrumb current>Confirmation e-mail to the customer</glk-breadcrumb>
+              </glk-breadcrumbs>
+            </div>
+            <span data-docs-crumbs-out style="opacity:.75;font-size:13px">waiting for glk-navigate…</span>
+          </div>
+          <div class="docs-code"><span class="tag">&lt;glk-breadcrumbs&gt;</span>
+  <span class="tag">&lt;glk-breadcrumb</span> <span class="attr">href</span>=<span class="val">"/app"</span><span class="tag">&gt;</span>My app<span class="tag">&lt;/glk-breadcrumb&gt;</span>
+  <span class="tag">&lt;glk-breadcrumb</span> <span class="attr">href</span>=<span class="val">"/app/menu"</span><span class="tag">&gt;</span>Main menu<span class="tag">&lt;/glk-breadcrumb&gt;</span>
+  <span class="tag">&lt;glk-breadcrumb</span> <span class="attr">href</span>=<span class="val">"/app/menu/services"</span><span class="tag">&gt;</span>Services<span class="tag">&lt;/glk-breadcrumb&gt;</span>
+  <span class="tag">&lt;glk-breadcrumb</span> <span class="attr">current</span><span class="tag">&gt;</span>Online booking<span class="tag">&lt;/glk-breadcrumb&gt;</span>
+<span class="tag">&lt;/glk-breadcrumbs&gt;</span>
+
+crumbs.addEventListener(<span class="val">'glk-navigate'</span>, (event) =&gt; {
+  event.preventDefault();          <span class="cmt">// the app routes by itself</span>
+  router.go(event.detail.href);
+});</div>
+          <table class="docs-table">
+            <tr><th>Attribute</th><th>Component</th><th>Description</th></tr>
+            <tr><td><code>label</code></td><td>glk-breadcrumbs</td><td>The navigation&rsquo;s name, &ldquo;Breadcrumb&rdquo; by default</td></tr>
+            <tr><td><code>collapse</code></td><td>glk-breadcrumbs</td><td><code>auto</code> (default) folds the middle levels where the path does not fit; <code>never</code> keeps every crumb</td></tr>
+            <tr><td><code>more-label</code></td><td>glk-breadcrumbs</td><td>The name of the &ldquo;&hellip;&rdquo; crumb, with <code>{count}</code>: <code>"{count} more levels"</code>; by default &ldquo;1 more level&rdquo;, &ldquo;2 more levels&rdquo;</td></tr>
+            <tr><td><code>more-label-one</code></td><td>glk-breadcrumbs</td><td>The same for one folded level, where a language needs its singular: <code>more-label="{count} weitere Ebenen" more-label-one="1 weitere Ebene"</code>; without it <code>more-label</code> serves for one as well</td></tr>
+            <tr><td><code>drop-target</code>, <code>group</code></td><td>glk-breadcrumbs</td><td>The crumbs take items dragged from a sortable list or tree &mdash; see <a href="#sorting">Sorting</a>; both may change at run time</td></tr>
+            <tr><td><code>href</code></td><td>glk-breadcrumb</td><td>The level is a link; without it a button</td></tr>
+            <tr><td><code>value</code></td><td>glk-breadcrumb</td><td>What <code>glk-navigate</code> reports; the label when missing</td></tr>
+            <tr><td><code>current</code></td><td>glk-breadcrumb</td><td>The level shown, plain text with <code>aria-current="page"</code>; without it the last</td></tr>
+          </table>
+          <p><strong>Events:</strong> <code>glk-navigate</code> <code>{ item, value, href, index }</code>, cancelable &mdash; for a crumb and for a level chosen from the &ldquo;&hellip;&rdquo; menu. Cancelled on a link it stops the browser&rsquo;s navigation, so a single-page app routes by itself; a link without a listener just works, in a new tab too. <strong>Parts:</strong> <code>nav</code>, <code>list</code>, <code>crumb</code>, <code>current</code>, <code>overflow</code> (the &ldquo;&hellip;&rdquo; crumb); the separators are CSS and have no part. A crumb is cut at GlassKit&rsquo;s <code>--gl-breadcrumbs-crumb-width</code> (200&nbsp;px), which reaches the element by inheritance.</p>
+          <script>
+            (() => { const out = document.querySelector('[data-docs-crumbs-out]');
+              for (const crumbs of document.querySelectorAll('[data-docs-crumbs]')) crumbs.addEventListener('glk-navigate', e => {
+                e.preventDefault();
+                out.textContent = 'glk-navigate → ' + e.detail.value + (e.detail.href ? ' (' + e.detail.href + ', cancelled)' : '');
+              }); })();
           </script>
         </div>
       </section>
@@ -1034,8 +1202,12 @@ document.getElementById(<span class="val">'my-modal'</span>).close();</div>
             <tr><td><code>open</code></td><td>Boolean</td><td>Show/hide</td></tr>
             <tr><td><code>title</code></td><td>String</td><td>Header title</td></tr>
           </table>
-          <p><strong>Methods:</strong> <code>.show()</code>, <code>.close()</code> &nbsp; <strong>Events:</strong> <code>glk-open</code> (whenever it opens, since 1.30.0), <code>glk-close</code></p>
+          <p><strong>Methods:</strong> <code>.show()</code>, <code>.close()</code> (a promise since 1.32.0) &nbsp; <strong>Events:</strong> <code>glk-open</code> (whenever it opens, since 1.30.0), <code>glk-close</code>, <code>glk-closed</code> (since 1.32.0)</p>
           <p>While the modal is open the page behind it does not scroll (since 1.30.0): the top layer kept it inert for pointer and keyboard, but a wheel or a finger over the dimmed area still moved it.</p>
+          <p><strong><code>glk-closed</code> (since 1.32.0)</strong> follows once the modal has faded out and its dialog has closed, however it closed &mdash; Escape, the dimmed area, <code>.close()</code>, the attribute &mdash; and at once under <code>prefers-reduced-motion</code>; <code>.close()</code> returns a promise that settles at the same moment. A page that renders the modal from its state removes it there, and the fade shows; before, it had to guess the duration or cut the fade short.</p>
+          <div class="docs-code">modal.addEventListener(<span class="val">'glk-closed'</span>, () =&gt; { state.dialog = null; render(); });
+
+<span class="tag">await</span> modal.close();   <span class="cmt">// settles when the fade has ended</span></div>
           <p>Which element gets the focus on opening, browsers decide differently &mdash; Chrome takes the first field of the content, Safari the first action. Mark one with <code>autofocus</code>, in the content or among the actions, to settle it. Escape and a click on the dimmed area close the modal with its fade and emit <code>glk-close</code>; <code>.close()</code> does not emit. While it is open, everything outside is inert &mdash; a <code>&lt;glk-toast&gt;</code> shown then is neither clickable nor announced, so give feedback inside the modal or close it first.</p>
           <p>The actions are copies of the buttons in <code>slot="actions"</code>, and a click on one is handed to its original. Since 1.28.0 the copies follow every change of the originals, attributes included: a confirm button that starts <code>disabled</code> unlocks once the page enables it, also through a framework that binds only <code>disabled</code>. A copy keeps its focus while it changes, and an inline <code>onclick</code> runs once per click, on the original &mdash; before, it ran twice.</p>
         </div>
@@ -1103,11 +1275,13 @@ toast.addEventListener(<span class="val">'glk-action'</span>, e =&gt; { if (e.de
 document.querySelector(<span class="val">'glk-popover'</span>).show();
 document.querySelector(<span class="val">'glk-popover'</span>).close();
 document.querySelector(<span class="val">'glk-popover'</span>).toggle();</div>
-          <table class="docs-table">
-            <tr><th>Attribute</th><th>Type</th><th>Default</th><th>Description</th></tr>
-            <tr><td><code>open</code></td><td>Boolean</td><td><code>false</code></td><td>Visibility state (reflected as <code>.is-open</code> on the inner surface)</td></tr>
-            <tr><td><code>placement</code></td><td>String</td><td><code>bottom</code></td><td><code>top</code> | <code>bottom</code> | <code>start</code> | <code>end</code></td></tr>
-          </table>
+          <div style="overflow-x:auto">
+            <table class="docs-table">
+              <tr><th>Attribute</th><th>Type</th><th>Default</th><th>Description</th></tr>
+              <tr><td><code>open</code></td><td>Boolean</td><td><code>false</code></td><td>Visibility state (reflected as <code>.is-open</code> on the inner surface)</td></tr>
+              <tr><td><code>placement</code></td><td>String</td><td><code>bottom</code></td><td><code>top</code> | <code>bottom</code> | <code>start</code> | <code>end</code> &mdash; below the trigger and centred, above it with <code>top</code>; <code>start</code> and <code>end</code> align it at the trigger&rsquo;s start or end edge</td></tr>
+            </table>
+          </div>
           <table class="docs-table">
             <tr><th>Slot</th><th>Purpose</th></tr>
             <tr><td><code>trigger</code></td><td>Element that toggles the popover when clicked</td></tr>
@@ -1117,6 +1291,102 @@ document.querySelector(<span class="val">'glk-popover'</span>).toggle();</div>
           <p><strong>Methods:</strong> <code>.show()</code>, <code>.close()</code>, <code>.toggle()</code></p>
           <p><strong>Heads-up:</strong> the method is deliberately called <code>.toggle()</code> — not <code>.togglePopover()</code>, which collides with the native <code>HTMLElement.togglePopover()</code> API.</p>
           <p>The trigger tells whether the popover is open: it gets <code>aria-expanded</code>, also after it is swapped (since 1.20.0). <code>&lt;glk-button&gt;</code> and <code>&lt;glk-pill&gt;</code> hand it on to their native button.</p>
+          <p><strong>Top layer (since 1.32.0).</strong> The panel opens in the top layer (the popover API), <code>position: fixed</code> there, so it sits right on a scrolled page too, and is placed by script: next to the trigger on the side <code>placement</code> asks for, flipped to the other side where the viewport leaves no room, shifted along it to stay inside, and kept there while the page scrolls. Before, it hung absolutely below the trigger: an <code>overflow: hidden</code> around it cut it off, at the screen&rsquo;s edges it left the screen, and closed it still widened the page by its box. Escape gives the focus back to the trigger when it was inside the panel. For a list of actions, <code>&lt;glk-menu&gt;</code> brings the keyboard of a menu; the popover stays for free content.</p>
+        </div>
+
+        <div class="docs-component" id="glk-tooltip">
+          <h3><code>&lt;glk-tooltip&gt;</code></h3>
+          <p>A short name or hint for a control, on hover and focus (since 1.32.0) &mdash; GlassKit&rsquo;s <code>.glass-tooltip</code>. The control is the element in <code>slot="trigger"</code>, or the one <code>for</code> names by its id in the same document or shadow root, so a tooltip can serve a control rendered elsewhere; the text is the tooltip&rsquo;s own content. Try it &mdash; hover the buttons, or reach them with Tab:</p>
+          <div class="docs-preview" style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+            <glk-tooltip as-label>
+              <glk-button slot="trigger" variant="secondary" size="sm auto"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></glk-button>
+              Rename
+            </glk-tooltip>
+            <glk-tooltip placement="bottom">
+              <glk-pill slot="trigger" label="Share"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></glk-pill>
+              Copies a link to this page
+            </glk-tooltip>
+            <glk-button id="docs-tip-export" variant="tertiary" size="sm auto">Export</glk-button>
+            <glk-tooltip for="docs-tip-export" placement="end" show-delay="200">Saves the list as a CSV file</glk-tooltip>
+          </div>
+          <div class="docs-code"><span class="tag">&lt;glk-tooltip</span> <span class="attr">as-label</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;glk-button</span> <span class="attr">slot</span>=<span class="val">"trigger"</span> <span class="attr">variant</span>=<span class="val">"secondary"</span> <span class="attr">size</span>=<span class="val">"sm auto"</span><span class="tag">&gt;</span><span class="tag">&lt;svg&gt;</span>...<span class="tag">&lt;/svg&gt;&lt;/glk-button&gt;</span>
+  Rename
+<span class="tag">&lt;/glk-tooltip&gt;</span>
+
+<span class="cmt">&lt;!-- Tied by id, to a control rendered elsewhere --&gt;</span>
+<span class="tag">&lt;glk-button</span> <span class="attr">id</span>=<span class="val">"export"</span> <span class="attr">variant</span>=<span class="val">"tertiary"</span> <span class="attr">size</span>=<span class="val">"sm auto"</span><span class="tag">&gt;</span>Export<span class="tag">&lt;/glk-button&gt;</span>
+<span class="tag">&lt;glk-tooltip</span> <span class="attr">for</span>=<span class="val">"export"</span> <span class="attr">placement</span>=<span class="val">"end"</span><span class="tag">&gt;</span>Saves the list as a CSV file<span class="tag">&lt;/glk-tooltip&gt;</span></div>
+          <table class="docs-table">
+            <tr><th>Attribute</th><th>Type</th><th>Values</th></tr>
+            <tr><td><code>for</code></td><td>String</td><td>The id of the control, in the same document or shadow root; without it the element in <code>slot="trigger"</code></td></tr>
+            <tr><td><code>placement</code></td><td>String</td><td><code>top</code> (default) | <code>bottom</code> | <code>start</code> | <code>end</code> &mdash; start and end follow the writing direction</td></tr>
+            <tr><td><code>show-delay</code></td><td>Number</td><td>ms on hover before it shows, default 400; focus and a long press do not wait</td></tr>
+            <tr><td><code>as-label</code></td><td>Boolean</td><td>The text is the control&rsquo;s name (<code>aria-label</code>) rather than its description &mdash; for an icon-only control</td></tr>
+          </table>
+          <p>The text describes the control: it becomes the <code>aria-description</code> of the element that takes the focus &mdash; inside <code>&lt;glk-button&gt;</code>, <code>&lt;glk-pill&gt;</code> or <code>&lt;glk-tab-item&gt;</code> their native button &mdash; and follows changes of the text; with <code>as-label</code> it is the control&rsquo;s name. Whatever the control said there before comes back when the tooltip goes. It shows on hover after <code>show-delay</code>, on keyboard focus at once, and by touch while a finger rests on the control &mdash; a long press of 500&nbsp;ms, after which it stays 1.5&nbsp;s; a tap never shows it and is never held up. It hides when the pointer leaves the control and the tooltip, so the pointer may move onto it (WCAG 1.4.13), on blur, on a press, and on Escape, which leaves the focus where it is and a dialog around it open. It lies in the top layer &mdash; <code>popover="hint"</code> where the browser knows it &mdash;, never cut off by a box around it, flipped and shifted to stay in the viewport.</p>
+          <p><strong>Methods:</strong> <code>show()</code>, <code>hide()</code>. <strong>Properties:</strong> <code>placement</code>, <code>htmlFor</code>. <strong>Slots:</strong> default (the text), <code>trigger</code>. <strong>Part:</strong> <code>tooltip</code>. GlassKit&rsquo;s tokens reach it by inheritance: <code>--gl-tooltip-bg</code>, <code>--gl-tooltip-color</code>, <code>--gl-tooltip-max-width</code> (240&nbsp;px) and <code>--gl-tooltip-offset</code>, its distance from the control (8&nbsp;px).</p>
+        </div>
+
+        <div class="docs-component" id="glk-menu">
+          <h3><code>&lt;glk-menu&gt;</code> + <code>&lt;glk-menu-item&gt;</code></h3>
+          <p>A menu button (since 1.32.0) &mdash; GlassKit&rsquo;s <code>.glass-menu</code>: the overflow menu of a header, the actions of a table row. The button is the element in <code>slot="trigger"</code>; the items are <code>&lt;glk-menu-item&gt;</code> children, parted by <code>&lt;glk-menu-separator&gt;</code> and gathered in <code>&lt;glk-menu-group label&gt;</code>. It follows the WAI-ARIA menu button pattern: the button carries <code>aria-haspopup="menu"</code> and <code>aria-expanded</code>, the panel is <code>role="menu"</code> named by the button, the items are <code>menuitem</code>, <code>menuitemcheckbox</code> or <code>menuitemradio</code>. Try it with the mouse and with the keyboard:</p>
+          <div class="docs-preview" style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+            <glk-menu id="docs-menu">
+              <glk-button slot="trigger" variant="secondary" size="sm auto">Actions</glk-button>
+              <glk-menu-item value="rename">Rename<span slot="trailing">⌘R</span></glk-menu-item>
+              <glk-menu-item value="duplicate">Duplicate</glk-menu-item>
+              <glk-menu-item value="move" disabled>Move to…</glk-menu-item>
+              <glk-menu-separator></glk-menu-separator>
+              <glk-menu-item value="pinned" type="checkbox" checked>Pinned</glk-menu-item>
+              <glk-menu-group label="Sort by">
+                <glk-menu-item value="name" type="radio" checked>Name</glk-menu-item>
+                <glk-menu-item value="date" type="radio">Date</glk-menu-item>
+              </glk-menu-group>
+              <glk-menu-separator></glk-menu-separator>
+              <glk-menu-item value="delete" variant="danger">Delete</glk-menu-item>
+            </glk-menu>
+            <span data-docs-menu-out style="opacity:.75;font-size:13px">waiting for glk-select…</span>
+          </div>
+          <div class="docs-code"><span class="tag">&lt;glk-menu</span> <span class="attr">placement</span>=<span class="val">"end"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;glk-button</span> <span class="attr">slot</span>=<span class="val">"trigger"</span> <span class="attr">id</span>=<span class="val">"more"</span> <span class="attr">variant</span>=<span class="val">"tertiary"</span> <span class="attr">size</span>=<span class="val">"sm auto"</span><span class="tag">&gt;</span><span class="tag">&lt;svg&gt;</span>...<span class="tag">&lt;/svg&gt;&lt;/glk-button&gt;</span>
+  <span class="tag">&lt;glk-menu-item</span> <span class="attr">value</span>=<span class="val">"rename"</span><span class="tag">&gt;</span>Rename<span class="tag">&lt;span</span> <span class="attr">slot</span>=<span class="val">"trailing"</span><span class="tag">&gt;</span>⌘R<span class="tag">&lt;/span&gt;&lt;/glk-menu-item&gt;</span>
+  <span class="tag">&lt;glk-menu-item</span> <span class="attr">value</span>=<span class="val">"move"</span> <span class="attr">disabled</span><span class="tag">&gt;</span>Move to…<span class="tag">&lt;/glk-menu-item&gt;</span>
+  <span class="tag">&lt;glk-menu-separator&gt;&lt;/glk-menu-separator&gt;</span>
+  <span class="tag">&lt;glk-menu-item</span> <span class="attr">value</span>=<span class="val">"pinned"</span> <span class="attr">type</span>=<span class="val">"checkbox"</span> <span class="attr">checked</span><span class="tag">&gt;</span>Pinned<span class="tag">&lt;/glk-menu-item&gt;</span>
+  <span class="tag">&lt;glk-menu-group</span> <span class="attr">label</span>=<span class="val">"Sort by"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;glk-menu-item</span> <span class="attr">value</span>=<span class="val">"name"</span> <span class="attr">type</span>=<span class="val">"radio"</span> <span class="attr">checked</span><span class="tag">&gt;</span>Name<span class="tag">&lt;/glk-menu-item&gt;</span>
+    <span class="tag">&lt;glk-menu-item</span> <span class="attr">value</span>=<span class="val">"date"</span> <span class="attr">type</span>=<span class="val">"radio"</span><span class="tag">&gt;</span>Date<span class="tag">&lt;/glk-menu-item&gt;</span>
+  <span class="tag">&lt;/glk-menu-group&gt;</span>
+  <span class="tag">&lt;glk-menu-separator&gt;&lt;/glk-menu-separator&gt;</span>
+  <span class="tag">&lt;glk-menu-item</span> <span class="attr">value</span>=<span class="val">"delete"</span> <span class="attr">variant</span>=<span class="val">"danger"</span><span class="tag">&gt;</span>Delete<span class="tag">&lt;/glk-menu-item&gt;</span>
+<span class="tag">&lt;/glk-menu&gt;</span>
+<span class="cmt">&lt;!-- An icon-only button takes its name from a tooltip --&gt;</span>
+<span class="tag">&lt;glk-tooltip</span> <span class="attr">for</span>=<span class="val">"more"</span> <span class="attr">as-label</span><span class="tag">&gt;</span>More actions<span class="tag">&lt;/glk-tooltip&gt;</span>
+
+menu.addEventListener(<span class="val">'glk-select'</span>, (event) =&gt; {
+  <span class="tag">if</span> (event.detail.value === <span class="val">'delete'</span> &amp;&amp; !confirm(<span class="val">'Delete?'</span>)) event.preventDefault();
+});</div>
+          <table class="docs-table">
+            <tr><th>Attribute</th><th>Component</th><th>Description</th></tr>
+            <tr><td><code>open</code></td><td>glk-menu</td><td>Open; also a property</td></tr>
+            <tr><td><code>placement</code></td><td>glk-menu</td><td><code>bottom</code> (default) and <code>start</code>: below the button, aligned at its start edge; <code>end</code>: aligned at its end edge; <code>top</code>: above it &mdash; flipped and shifted to stay in the viewport</td></tr>
+            <tr><td><code>value</code></td><td>glk-menu-item</td><td>What <code>glk-select</code> reports; the label when missing</td></tr>
+            <tr><td><code>type</code></td><td>glk-menu-item</td><td><code>checkbox</code> | <code>radio</code> &mdash; checkable, with a check mark; a radio item checks one of its group (<code>&lt;glk-menu-group&gt;</code>, else the menu)</td></tr>
+            <tr><td><code>checked</code></td><td>glk-menu-item</td><td>Checked, for <code>type</code></td></tr>
+            <tr><td><code>disabled</code></td><td>glk-menu-item</td><td>Keeps its place in the arrow path and is announced as unavailable, but cannot be chosen</td></tr>
+            <tr><td><code>variant</code></td><td>glk-menu-item</td><td><code>danger</code> &mdash; the error colour, for a destructive action</td></tr>
+            <tr><td><code>label</code></td><td>glk-menu-group</td><td>Shown above its items, and the group&rsquo;s name</td></tr>
+          </table>
+          <p><strong>Keyboard:</strong> one tab stop. On the button, Enter, Space and Down open the menu at its first item, Up at its last. In the menu, Down and Up move and wrap, Home and End go to the ends, typed letters jump to the next item that starts with them, Enter and Space choose, Escape closes and gives the focus back to the button &mdash; a dialog around it stays open &mdash;, Tab closes and moves on. A pointer that hovers an item moves the focus to it; a click outside closes.</p>
+          <p><strong>Events:</strong> <code>glk-select</code> <code>{ item, value, checked }</code>, cancelable and before anything happens: an item closes the menu and gives the focus back to the button; a checkbox item toggles and a radio item is checked, the others of its group unchecked, and both leave the menu open. Cancelled, nothing changes. <code>glk-open</code>, <code>glk-close</code>. <strong>Methods:</strong> <code>show()</code>, <code>close()</code> &mdash; <code>close({ focus: true })</code> gives the focus back to the button &mdash;, <code>toggle()</code>. <strong>Slots:</strong> <code>trigger</code>, default (the items); on <code>&lt;glk-menu-item&gt;</code> default (the label), <code>icon</code>, <code>trailing</code> (a hint such as a shortcut). <strong>Parts:</strong> <code>menu</code> on the menu, <code>item</code> on each item.</p>
+          <p>The panel lies in the top layer like the popover&rsquo;s, never cut off by an <code>overflow: hidden</code> around it, so a menu in a table row or a card opens in full. The roles and states sit on the elements themselves (<code>ElementInternals</code>), so the items are the menu&rsquo;s own across the slot; <code>&lt;glk-menu-separator&gt;</code> is <code>role="separator"</code>, <code>&lt;glk-menu-group&gt;</code> <code>role="group"</code>.</p>
+          <script>
+            (() => { const out = document.querySelector('[data-docs-menu-out]');
+              document.getElementById('docs-menu').addEventListener('glk-select', e => {
+                out.textContent = 'glk-select → ' + e.detail.value + (e.detail.checked === undefined ? '' : ', checked: ' + e.detail.checked);
+              }); })();
+          </script>
         </div>
         <div class="docs-component" id="glk-sheet">
           <h3><code>&lt;glk-sheet&gt;</code></h3>
@@ -1136,7 +1406,8 @@ document.querySelector(<span class="val">'glk-popover'</span>).toggle();</div>
             <tr><td><code>inline</code></td><td>Boolean</td><td>In the flow, no overlay, always visible</td></tr>
             <tr><td><code>title</code></td><td>String</td><td>Heading and <code>aria-label</code></td></tr>
           </table>
-          <p><strong>Methods:</strong> <code>show()</code>, <code>close()</code>. <strong>Slots:</strong> default (content), <code>actions</code>. <strong>Events:</strong> <code>glk-close</code> — only when the user closes it (scrim, Escape). <strong>Parts:</strong> <code>overlay</code>, <code>sheet</code>, <code>title</code>, <code>body</code>, <code>actions</code>.</p>
+          <p><strong>Methods:</strong> <code>show()</code>, <code>close()</code>. <strong>Slots:</strong> default (content), <code>actions</code>. <strong>Events:</strong> <code>glk-close</code> — only when the user closes it (scrim, Escape); <code>glk-closed</code> &mdash; once it has slid out (since 1.32.0). <strong>Parts:</strong> <code>overlay</code>, <code>sheet</code>, <code>title</code>, <code>body</code>, <code>actions</code>.</p>
+          <p><strong><code>glk-closed</code> (since 1.32.0)</strong> follows once the sheet has slid out and its dialog has closed, however it closed &mdash; scrim, Escape, <code>close()</code>, the attribute &mdash; and at once under <code>prefers-reduced-motion</code>; <code>close()</code> returns a promise that settles at the same moment. A page that renders the sheet from its state removes it there, and the slide shows. An inline sheet shows no overlay, so nothing slides: <code>close()</code> settles at once.</p>
           <script>
             document.getElementById('docs-sheet-open').addEventListener('click', () => document.getElementById('docs-sheet-el').show());
             document.getElementById('docs-sheet-close').addEventListener('click', () => document.getElementById('docs-sheet-el').close());
@@ -1203,9 +1474,13 @@ document.querySelector(<span class="val">'glk-popover'</span>).toggle();</div>
             <tr><td><code>header</code></td><td>glk-list</td><td>Section header text — uppercase label above the list</td></tr>
             <tr><td><code>flush</code></td><td>glk-list</td><td>Edge-to-edge variant — removes side borders and radius and reaches the edges of its container: a <code>&lt;glk-card&gt;</code>, the body of a <code>&lt;glk-modal&gt;</code>, a <code>&lt;glk-sheet&gt;</code> (both edges since 1.29.1; elsewhere <code>--gl-list-flush-inset</code> names the container&rsquo;s padding, 20&nbsp;px unless set)</td></tr>
             <tr><td><code>bare</code></td><td>glk-list</td><td>Strips background, border, shadow — for embedding inside <code>&lt;glk-popover&gt;</code> or <code>&lt;glk-card&gt;</code></td></tr>
+            <tr><td><code>sortable</code></td><td>glk-list</td><td>The items can be reordered by mouse, touch and keyboard (since 1.32.0) &mdash; see <a href="#sorting">Sorting</a></td></tr>
+            <tr><td><code>group</code></td><td>glk-list</td><td>Lists with the same group exchange items, and breadcrumbs of that group take them (since 1.32.0)</td></tr>
             <tr><td><code>title</code></td><td>glk-list-item</td><td>Primary text</td></tr>
             <tr><td><code>subtitle</code></td><td>glk-list-item</td><td>Secondary text (muted, optional)</td></tr>
-            <tr><td><code>interactive</code></td><td>glk-list-item</td><td>Hover / focus / active states + emits <code>glk-click</code></td></tr>
+            <tr><td><code>interactive</code></td><td>glk-list-item</td><td>Hover / focus / active states + emits <code>glk-click</code>; since 1.32.0 a button for the keyboard and assistive technology: in the Tab order, Enter and Space click it &mdash; in a sortable list Space picks it up &mdash;, a focus ring shows</td></tr>
+            <tr><td><code>container</code></td><td>glk-list-item</td><td>In a sortable list: takes a dropped item inside it, a submenu (since 1.32.0)</td></tr>
+            <tr><td><code>no-drag</code></td><td>glk-list-item</td><td>In a sortable list: stays where it is (since 1.32.0)</td></tr>
             <tr><td><code>center</code></td><td>glk-list-item</td><td>Centered single-text variant (e.g. for action rows)</td></tr>
             <tr><td><code>leading-lg</code></td><td>glk-list-item</td><td>Large 40&times;40 leading icon with rounded corners (for app icons)</td></tr>
             <tr><td><code>wrap</code></td><td>glk-list-item</td><td>Multi-line subtitle (up to 3 lines with ellipsis)</td></tr>
@@ -1216,8 +1491,11 @@ document.querySelector(<span class="val">'glk-popover'</span>).toggle();</div>
             <tr><th>Slot</th><th>Component</th><th>Purpose</th></tr>
             <tr><td><code>leading</code></td><td>glk-list-item</td><td>Icon slot (24&times;24 SVG, or 32&times;32 with <code>leading-lg</code>)</td></tr>
             <tr><td><code>trailing</code></td><td>glk-list-item</td><td>Chevron, badge, or button (rendered after <code>detail</code> value)</td></tr>
+            <tr><td><code>handle</code></td><td>glk-list-item</td><td>A grip at the row&rsquo;s end: in a sortable list a pointer starts a drag only there, a finger at once; the keyboard still picks the item up on its row (since 1.32.0)</td></tr>
           </table>
-          <p><strong>Events:</strong> <code>glk-click</code> on <code>&lt;glk-list-item&gt;</code> when <code>interactive</code> is set.</p>
+          <p><strong>Events:</strong> <code>glk-click</code> on <code>&lt;glk-list-item&gt;</code> when <code>interactive</code> is set. A sortable list emits the <code>glk-sort</code> events and takes <code>messages</code>, the texts it announces &mdash; see <a href="#sorting">Sorting</a>.</p>
+          <p>Until 1.32.0 an interactive item was a plain list item that only a pointer could reach. Now its row is a button: it takes the focus in the Tab order, Enter clicks it on keydown and Space on keyup, as on a native button &mdash; in a sortable list Space picks the item up instead &mdash;, and a screen reader announces it as a button.</p>
+          <p><strong>Changes in place</strong> (since 1.32.0): as in <a href="#glk-tree"><code>&lt;glk-tree&gt;</code></a>, the page appends, removes and moves items with the DOM&rsquo;s own methods, without rendering the list again. A moved item is the same element and keeps the focus; the focus of a removed one goes to the item that took its place, else to the one before it &mdash; while the focus was in the list. <code>highlight()</code> on an item flashes its row for 1.2&nbsp;s (GlassKit&rsquo;s <code>.is-flash</code>, tinted by <code>--gl-flash-color</code>), for an item that changed elsewhere; under <code>prefers-reduced-motion</code> nothing flashes.</p>
           <p><strong>Wrapping text</strong> (since 1.23.0): title and subtitle keep to one line, and <code>wrap</code> clamps the subtitle at three lines. GlassKit&rsquo;s list tokens change that for a whole app, one list or one row &mdash; they are inherited into the element: <code>--gl-list-title-white-space</code> and <code>--gl-list-subtitle-white-space</code> (<code>normal</code> wraps) and <code>--gl-list-subtitle-lines</code> (the clamp of <code>wrap</code>, <code>none</code> shows every line). A word wider than the column breaks instead of running out of the row, and <code>hyphens</code> set on <code>glk-list</code> or the page reaches the text as well.</p>
           <div class="docs-code"><span class="cls">:root</span> {
   <span class="attr">--gl-list-title-white-space</span>: <span class="val">normal</span>;
@@ -1225,6 +1503,252 @@ document.querySelector(<span class="val">'glk-popover'</span>).toggle();</div>
   <span class="attr">--gl-list-subtitle-lines</span>: <span class="val">none</span>;
 }</div>
           <p><strong>Framework-safe:</strong> both elements use pure Shadow DOM with slot projection — no child node cloning — so they compose cleanly inside lit-html templates, HybridsJS, React, Vue, and Svelte.</p>
+        </div>
+
+        <div class="docs-component" id="glk-tree">
+          <h3><code>&lt;glk-tree&gt;</code> + <code>&lt;glk-tree-item&gt;</code></h3>
+          <p>A tree with levels that open and close (since 1.32.0) &mdash; GlassKit&rsquo;s <code>.glass-tree</code>: the structure of an app, menus with submenus, folders. The levels are nested <code>&lt;glk-tree-item&gt;</code> elements. It follows the WAI-ARIA tree view: <code>role="tree"</code> named by <code>label</code>, one tab stop &mdash; the selected item, else the first &mdash; and the keyboard below. A click on a row selects it, a click on its twisty opens or closes it. The tree has no surface of its own: put it in a card or a sidebar. Try it &mdash; open &ldquo;Footer&rdquo;, whose children load when it opens, and &ldquo;Archive&rdquo;, whose first load fails; the button moves &ldquo;Contact&rdquo; as another device would:</p>
+          <div class="docs-preview" style="display:flex;flex-direction:column;gap:10px;align-items:flex-start;">
+            <glk-tree id="docs-tree" label="App structure" style="width:100%;max-width:420px">
+              <glk-tree-item label="Main menu" value="main" expanded>
+                <svg slot="icon" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+                <glk-tree-item label="Home" value="home"><svg slot="icon" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg></glk-tree-item>
+                <glk-tree-item label="Services" value="services" expanded>
+                  <svg slot="icon" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+                  <glk-tree-item label="Online booking" value="booking" selected><svg slot="icon" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg><glk-badge slot="trailing" variant="primary">New</glk-badge></glk-tree-item>
+                  <glk-tree-item label="Opening hours" value="hours"><svg slot="icon" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg></glk-tree-item>
+                </glk-tree-item>
+                <glk-tree-item label="Contact" value="contact"><svg slot="icon" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg></glk-tree-item>
+              </glk-tree-item>
+              <glk-tree-item label="Footer" value="footer" has-children><svg slot="icon" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></glk-tree-item>
+              <glk-tree-item label="Archive" value="archive" has-children><svg slot="icon" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></glk-tree-item>
+              <glk-tree-item label="Drafts" value="drafts" disabled><svg slot="icon" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></glk-tree-item>
+            </glk-tree>
+            <glk-button id="docs-tree-move" variant="secondary" size="sm auto">Move &ldquo;Contact&rdquo; from elsewhere</glk-button>
+            <span data-docs-tree-out style="opacity:.75;font-size:13px">waiting for glk-tree-select…</span>
+          </div>
+          <div class="docs-code"><span class="tag">&lt;glk-tree</span> <span class="attr">label</span>=<span class="val">"App structure"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;glk-tree-item</span> <span class="attr">label</span>=<span class="val">"Main menu"</span> <span class="attr">value</span>=<span class="val">"main"</span> <span class="attr">expanded</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;svg</span> <span class="attr">slot</span>=<span class="val">"icon"</span><span class="tag">&gt;</span>...<span class="tag">&lt;/svg&gt;</span>
+    <span class="tag">&lt;glk-tree-item</span> <span class="attr">label</span>=<span class="val">"Home"</span> <span class="attr">value</span>=<span class="val">"home"</span><span class="tag">&gt;&lt;/glk-tree-item&gt;</span>
+    <span class="tag">&lt;glk-tree-item</span> <span class="attr">label</span>=<span class="val">"Online booking"</span> <span class="attr">value</span>=<span class="val">"booking"</span> <span class="attr">selected</span><span class="tag">&gt;</span>
+      <span class="tag">&lt;glk-badge</span> <span class="attr">slot</span>=<span class="val">"trailing"</span> <span class="attr">variant</span>=<span class="val">"primary"</span><span class="tag">&gt;</span>New<span class="tag">&lt;/glk-badge&gt;</span>
+    <span class="tag">&lt;/glk-tree-item&gt;</span>
+  <span class="tag">&lt;/glk-tree-item&gt;</span>
+  <span class="tag">&lt;glk-tree-item</span> <span class="attr">label</span>=<span class="val">"Footer"</span> <span class="attr">value</span>=<span class="val">"footer"</span> <span class="attr">has-children</span><span class="tag">&gt;&lt;/glk-tree-item&gt;</span>
+<span class="tag">&lt;/glk-tree&gt;</span>
+
+tree.addEventListener(<span class="val">'glk-tree-load'</span>, <span class="tag">async</span> (event) =&gt; {
+  <span class="tag">const</span> { item } = event.detail;
+  <span class="tag">try</span> {
+    item.append(...<span class="tag">await</span> loadChildren(item.value));   <span class="cmt">// &lt;glk-tree-item&gt; elements</span>
+  } <span class="tag">catch</span> {
+    item.loadError = <span class="val">'The server did not answer.'</span>;   <span class="cmt">// opening it again retries</span>
+  }
+});
+
+<span class="cmt">// A change from elsewhere: in place, then flashed</span>
+<span class="tag">const</span> contact = tree.querySelector(<span class="val">'[value="contact"]'</span>);
+contact.label = <span class="val">'Contact us'</span>;
+contact.highlight();</div>
+          <table class="docs-table">
+            <tr><th>Attribute</th><th>Component</th><th>Description</th></tr>
+            <tr><td><code>label</code></td><td>glk-tree</td><td>The tree&rsquo;s name</td></tr>
+            <tr><td><code>selection</code></td><td>glk-tree</td><td><code>single</code> (default) | <code>none</code> &mdash; with <code>none</code> no item is selected, and <code>glk-tree-select</code> still comes: a tree of links</td></tr>
+            <tr><td><code>sortable</code>, <code>group</code></td><td>glk-tree</td><td>The items move by mouse, touch and keyboard &mdash; see <a href="#sorting">Sorting</a></td></tr>
+            <tr><td><code>label</code></td><td>glk-tree-item</td><td>The row&rsquo;s text and the item&rsquo;s name &mdash; its children&rsquo;s text stays out of it</td></tr>
+            <tr><td><code>value</code></td><td>glk-tree-item</td><td>What <code>glk-tree-select</code> reports and the tree&rsquo;s <code>value</code>; the label when missing</td></tr>
+            <tr><td><code>expanded</code></td><td>glk-tree-item</td><td>Open</td></tr>
+            <tr><td><code>selected</code></td><td>glk-tree-item</td><td>Selected; one item per tree</td></tr>
+            <tr><td><code>disabled</code></td><td>glk-tree-item</td><td>Reached by the arrow keys and announced as unavailable, but not selected</td></tr>
+            <tr><td><code>has-children</code></td><td>glk-tree-item</td><td>Children still to come: the twisty shows before any child exists, and opening the item loads them, once</td></tr>
+            <tr><td><code>load-error</code></td><td>glk-tree-item</td><td>The children could not load, the reason as its value (property <code>loadError</code>) &mdash; see below</td></tr>
+            <tr><td><code>container</code>, <code>no-drag</code></td><td>glk-tree-item</td><td>For a sortable tree &mdash; see <a href="#sorting">Sorting</a></td></tr>
+          </table>
+          <p><strong>Keyboard:</strong> Down and Up move to the next and previous visible item, Home and End to the first and the last; Right opens an item or moves to its first child, Left closes it or moves to its parent, both mirrored right to left; Enter and Space select &mdash; the selection does not follow the focus; <code>*</code> opens every sibling; a typed letter moves to the next item that starts with it. The keys and the typed letters work on what has loaded.</p>
+          <p><strong>Events:</strong> <code>glk-tree-toggle</code> <code>{ item, expanded }</code> and <code>glk-tree-select</code> <code>{ item, value }</code>, cancelable and before anything changes; <code>glk-tree-load</code> <code>{ item, retry }</code>, below. <strong>Properties:</strong> <code>value</code> (the selected item&rsquo;s), <code>items</code> (the top level; on an item its children); on an item also <code>loading</code> and <code>loadError</code>. <strong>Method</strong> of <code>&lt;glk-tree-item&gt;</code>: <code>highlight()</code>. <strong>Slots</strong> of <code>&lt;glk-tree-item&gt;</code>: default (the child items), <code>icon</code>, <code>trailing</code> (a badge, a status, an action &mdash; a click there selects nothing), <code>handle</code>. <strong>Parts:</strong> <code>tree</code>; on the item <code>item</code>, <code>row</code>, <code>twisty</code>, <code>label</code>, <code>group</code>.</p>
+          <p><strong>Loading on demand.</strong> <code>has-children</code> says that children are still to come. Opening such an item emits <code>glk-tree-load</code> <code>{ item, retry }</code>, cancelable; the item then loads &mdash; <code>loading</code> is true, <code>aria-busy</code> is set, a spinner takes the twisty&rsquo;s place &mdash; until child items arrive or <code>has-children</code> goes. It loads once: closed and opened again, it keeps its children and emits no second load; <code>has-children</code> added again after it went allows another. An item moved into one that has not loaded yet loads nothing and does not count as loaded, so opening it later still emits <code>glk-tree-load</code>. Cancelled, the item shows no loading state, for a page that fills it from a cache or reports an error itself; children appended inside the handler count as loaded at once.</p>
+          <p><strong>When loading fails,</strong> the page sets <code>load-error="message"</code> (property <code>loadError</code>; an empty value reads &ldquo;Could not load.&rdquo;). The item closes and shows GlassKit&rsquo;s <code>.is-error</code> &mdash; the twisty turns into a &ldquo;!&rdquo; in the error colour &mdash;, the message becomes the item&rsquo;s description, and the tree announces &ldquo;Label: message&rdquo; in a polite live region. Opening the item again retries: <code>load-error</code> goes, and <code>glk-tree-load</code> comes with <code>retry: true</code>.</p>
+          <p><strong>Changes in place.</strong> The page appends, removes, moves and renames items with the DOM&rsquo;s own methods, without rendering the tree again: expanded levels, the selection and the scroll position stay, and a moved item is the same element. The focus stays on a moved item; where the focused item was removed, it goes to the one that took its place, else to the one before it, else to the open item around it, and where the item now lies in a level that closed, to the open item around it. That only while the focus was in the tree: a focus that left by Tab, a click or the page&rsquo;s own <code>focus()</code> stays where it went. <code>highlight()</code> flashes an item&rsquo;s row for 1.2&nbsp;s &mdash; GlassKit&rsquo;s <code>.is-flash</code>, tinted by <code>--gl-flash-color</code> &mdash;, for an item that changed elsewhere: on another device, by an undo, in an AI run. Under <code>prefers-reduced-motion</code> nothing flashes.</p>
+          <p>The roles and states sit on the items themselves (<code>ElementInternals</code>): <code>treeitem</code>, <code>aria-level</code>, <code>aria-setsize</code> and <code>aria-posinset</code> &mdash; the browser cannot count them through the slots &mdash;, <code>aria-expanded</code>, <code>aria-selected</code>, <code>aria-disabled</code> and, while children load, <code>aria-busy</code>. GlassKit&rsquo;s tokens reach the tree by inheritance: <code>--gl-tree-indent</code> (20&nbsp;px per level) and <code>--gl-tree-row-height</code> (36&nbsp;px).</p>
+          <script>
+            (() => { const tree = document.getElementById('docs-tree'), out = document.querySelector('[data-docs-tree-out]');
+              const page = '<svg slot="icon" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg>';
+              const add = (item, children) => item.insertAdjacentHTML('beforeend', children.map(([label, value]) => `<glk-tree-item label="${label}" value="${value}">${page}</glk-tree-item>`).join(''));
+              tree.addEventListener('glk-tree-select', e => { out.textContent = 'glk-tree-select → ' + e.detail.value; });
+              tree.addEventListener('glk-tree-load', e => {
+                const { item, retry } = e.detail;
+                out.textContent = 'glk-tree-load → ' + item.value + (retry ? ', retry: true' : '') + ', loading…';
+                setTimeout(() => {
+                  // The archive fails the first time, as a server might.
+                  if (item.value === 'archive' && !retry) { item.loadError = 'The server did not answer.'; out.textContent = 'load-error → ' + item.value; return; }
+                  add(item, item.value === 'archive' ? [['2025', 'a2025'], ['2024', 'a2024']] : [['Imprint', 'imprint'], ['Privacy', 'privacy']]);
+                  out.textContent = 'glk-tree-load → ' + item.value + ', 2 children appended';
+                }, 800);
+              });
+              // As another device would: moved in place, then flashed.
+              document.getElementById('docs-tree-move').addEventListener('click', () => {
+                const contact = tree.querySelector('[value="contact"]'), level = contact.parentElement;
+                const first = level.querySelector(':scope > glk-tree-item');
+                level.insertBefore(contact, contact === first ? null : first);
+                contact.highlight();
+                out.textContent = 'moved in place: contact, highlight()';
+              }); })();
+          </script>
+        </div>
+
+        <div class="docs-component" id="glk-table">
+          <h3><code>&lt;glk-table&gt;</code></h3>
+          <p>A native <code>&lt;table class="glass-table"&gt;</code> in its light DOM, kept a table &mdash; its semantics, copy and paste, find in page, markup rendered on the server &mdash; with what a list of invoices or users needs around it (since 1.32.0): sortable headers, a header that stays in view while the rows scroll, row actions within reach, an empty state, and cards on narrow screens. The table stays in the page, so the page&rsquo;s <code>glasskit.css</code> styles it. Try it &mdash; sort a column, scroll the box, open a row&rsquo;s menu; below 640&nbsp;px of width the rows become cards:</p>
+          <div class="docs-preview" style="display:flex;flex-direction:column;gap:10px;">
+            <glk-table id="docs-table" sticky-header list-below="640px" sort="date" direction="descending" style="--gl-table-max-height:260px">
+              <table class="glass-table">
+                <thead><tr><th data-sort="invoice">Invoice</th><th data-sort="customer">Customer</th><th data-sort="date">Date</th><th class="glass-table__num" data-sort="amount">Amount</th><th>Status</th><th class="glass-table__actions" aria-label="Actions"></th></tr></thead>
+                <tbody>
+                  <tr><td>2026-1048</td><td>Bergmann Bakery</td><td>2026-10-27</td><td class="glass-table__num" data-value="1240">1,240.00&nbsp;€</td><td>Open</td><td class="glass-table__actions"><glk-menu placement="end"><glk-button slot="trigger" variant="tertiary" size="sm auto"><svg role="img" aria-label="Actions" viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg></glk-button><glk-menu-item value="open">Open</glk-menu-item><glk-menu-item value="download">Download PDF</glk-menu-item><glk-menu-item value="cancel" variant="danger">Cancel invoice</glk-menu-item></glk-menu></td></tr>
+                  <tr><td>2026-1047</td><td>Kaya Florists</td><td>2026-10-24</td><td class="glass-table__num" data-value="86.5">86.50&nbsp;€</td><td>Paid</td><td class="glass-table__actions"><glk-menu placement="end"><glk-button slot="trigger" variant="tertiary" size="sm auto"><svg role="img" aria-label="Actions" viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg></glk-button><glk-menu-item value="open">Open</glk-menu-item><glk-menu-item value="download">Download PDF</glk-menu-item><glk-menu-item value="cancel" variant="danger">Cancel invoice</glk-menu-item></glk-menu></td></tr>
+                  <tr><td>2026-1046</td><td>Northside Dental Practice</td><td>2026-10-21</td><td class="glass-table__num" data-value="3980">3,980.00&nbsp;€</td><td>Overdue</td><td class="glass-table__actions"><glk-menu placement="end"><glk-button slot="trigger" variant="tertiary" size="sm auto"><svg role="img" aria-label="Actions" viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg></glk-button><glk-menu-item value="open">Open</glk-menu-item><glk-menu-item value="download">Download PDF</glk-menu-item><glk-menu-item value="cancel" variant="danger">Cancel invoice</glk-menu-item></glk-menu></td></tr>
+                  <tr><td>2026-1045</td><td>Alder &amp; Sons Joinery</td><td>2026-10-17</td><td class="glass-table__num" data-value="512.3">512.30&nbsp;€</td><td>Paid</td><td class="glass-table__actions"><glk-menu placement="end"><glk-button slot="trigger" variant="tertiary" size="sm auto"><svg role="img" aria-label="Actions" viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg></glk-button><glk-menu-item value="open">Open</glk-menu-item><glk-menu-item value="download">Download PDF</glk-menu-item><glk-menu-item value="cancel" variant="danger">Cancel invoice</glk-menu-item></glk-menu></td></tr>
+                  <tr><td>2026-1044</td><td>Marlow Yoga Studio</td><td>2026-10-12</td><td class="glass-table__num" data-value="149">149.00&nbsp;€</td><td>Paid</td><td class="glass-table__actions"><glk-menu placement="end"><glk-button slot="trigger" variant="tertiary" size="sm auto"><svg role="img" aria-label="Actions" viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg></glk-button><glk-menu-item value="open">Open</glk-menu-item><glk-menu-item value="download">Download PDF</glk-menu-item><glk-menu-item value="cancel" variant="danger">Cancel invoice</glk-menu-item></glk-menu></td></tr>
+                  <tr><td>2026-1043</td><td>Okafor Translations</td><td>2026-10-08</td><td class="glass-table__num" data-value="720">720.00&nbsp;€</td><td>Open</td><td class="glass-table__actions"><glk-menu placement="end"><glk-button slot="trigger" variant="tertiary" size="sm auto"><svg role="img" aria-label="Actions" viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg></glk-button><glk-menu-item value="open">Open</glk-menu-item><glk-menu-item value="download">Download PDF</glk-menu-item><glk-menu-item value="cancel" variant="danger">Cancel invoice</glk-menu-item></glk-menu></td></tr>
+                </tbody>
+              </table>
+            </glk-table>
+            <span data-docs-table-out style="opacity:.75;font-size:13px">waiting for glk-table-sort…</span>
+            <glk-table>
+              <table class="glass-table">
+                <thead><tr><th>Invoice</th><th>Customer</th><th>Date</th><th class="glass-table__num">Amount</th></tr></thead>
+                <tbody></tbody>
+              </table>
+              <glk-empty slot="empty" title="No invoices" text="Nothing matches this filter."></glk-empty>
+            </glk-table>
+          </div>
+          <div class="docs-code"><span class="tag">&lt;glk-table</span> <span class="attr">sticky-header</span> <span class="attr">list-below</span>=<span class="val">"640px"</span> <span class="attr">sort</span>=<span class="val">"date"</span> <span class="attr">direction</span>=<span class="val">"descending"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;table</span> <span class="cls">class</span>=<span class="val">"glass-table"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;thead&gt;&lt;tr&gt;</span>
+      <span class="tag">&lt;th</span> <span class="attr">data-sort</span>=<span class="val">"invoice"</span><span class="tag">&gt;</span>Invoice<span class="tag">&lt;/th&gt;</span>
+      <span class="tag">&lt;th</span> <span class="attr">data-sort</span>=<span class="val">"date"</span><span class="tag">&gt;</span>Date<span class="tag">&lt;/th&gt;</span>
+      <span class="tag">&lt;th</span> <span class="cls">class</span>=<span class="val">"glass-table__num"</span> <span class="attr">data-sort</span>=<span class="val">"amount"</span><span class="tag">&gt;</span>Amount<span class="tag">&lt;/th&gt;</span>
+      <span class="tag">&lt;th</span> <span class="cls">class</span>=<span class="val">"glass-table__actions"</span> <span class="attr">aria-label</span>=<span class="val">"Actions"</span><span class="tag">&gt;&lt;/th&gt;</span>
+    <span class="tag">&lt;/tr&gt;&lt;/thead&gt;</span>
+    <span class="tag">&lt;tbody&gt;</span>
+      <span class="tag">&lt;tr&gt;</span>
+        <span class="tag">&lt;td&gt;</span>2026-1048<span class="tag">&lt;/td&gt;&lt;td&gt;</span>2026-10-27<span class="tag">&lt;/td&gt;</span>
+        <span class="tag">&lt;td</span> <span class="cls">class</span>=<span class="val">"glass-table__num"</span><span class="tag">&gt;</span>1,240.00 €<span class="tag">&lt;/td&gt;</span>
+        <span class="tag">&lt;td</span> <span class="cls">class</span>=<span class="val">"glass-table__actions"</span><span class="tag">&gt;&lt;glk-menu</span> <span class="attr">placement</span>=<span class="val">"end"</span><span class="tag">&gt;</span>...<span class="tag">&lt;/glk-menu&gt;&lt;/td&gt;</span>
+      <span class="tag">&lt;/tr&gt;</span>
+    <span class="tag">&lt;/tbody&gt;</span>
+  <span class="tag">&lt;/table&gt;</span>
+  <span class="tag">&lt;glk-empty</span> <span class="attr">slot</span>=<span class="val">"empty"</span> <span class="attr">title</span>=<span class="val">"No invoices"</span><span class="tag">&gt;&lt;/glk-empty&gt;</span>
+<span class="tag">&lt;/glk-table&gt;</span>
+
+table.addEventListener(<span class="val">'glk-table-sort'</span>, (event) =&gt; {
+  <span class="tag">const</span> { key, direction } = event.detail;
+  loadInvoices({ sort: key, direction }).then(renderRows);   <span class="cmt">// the page sorts</span>
+});</div>
+          <table class="docs-table">
+            <tr><th>Attribute</th><th>Type</th><th>Values</th></tr>
+            <tr><td><code>sort</code></td><td>String</td><td>The <code>data-sort</code> key of the sorted column</td></tr>
+            <tr><td><code>direction</code></td><td>String</td><td><code>ascending</code> (default) | <code>descending</code></td></tr>
+            <tr><td><code>sticky-header</code></td><td>Boolean</td><td>The wrap scrolls both ways, as high as <code>--gl-table-max-height</code> (60vh), and the header cells stick to its top on a surface of their own</td></tr>
+            <tr><td><code>list-below</code></td><td>String</td><td>A width such as <code>640px</code>: narrower than that &mdash; measured on the element, not the viewport &mdash; each row becomes a card</td></tr>
+          </table>
+          <p><strong>Sorting.</strong> A header cell with <code>data-sort="&lt;key&gt;"</code> gets a button inside it and <code>aria-sort</code> on itself (<code>ascending</code>, <code>descending</code>, <code>none</code>). A click, Enter or Space emits <code>glk-table-sort</code> <code>{ key, direction }</code> &mdash; ascending for a new column, then turning &mdash;, cancelable and before the state changes. The page sorts the rows, often on the server, and renders them; the element only shows the state, which <code>sort</code> and <code>direction</code> set.</p>
+          <p><strong>Row actions.</strong> Cells with <code>class="glass-table__actions"</code> stay at the row&rsquo;s end while the table scrolls sideways, on a surface of their own: a <code>&lt;glk-menu&gt;</code>, or icon buttons with a <code>&lt;glk-tooltip&gt;</code>. The wrap&rsquo;s edges shade where more columns wait. Sort buttons and row actions are in the Tab order; there is no grid navigation with arrow keys.</p>
+          <p><strong>Empty.</strong> While the body has no rows, the <code>slot="empty"</code> content &mdash; a <code>&lt;glk-empty&gt;</code> &mdash; shows below the header. <strong>Cards.</strong> Below <code>list-below</code> the element copies each header&rsquo;s text into its column&rsquo;s cells as <code>data-label</code>, and GlassKit shows it before the value; the actions move to the card&rsquo;s top end, numbers keep their tabular figures. The header stays for assistive technology, hidden from view, and the table&rsquo;s roles are set explicitly, so a screen reader still meets a table.</p>
+          <p><strong>Events:</strong> <code>glk-table-sort</code>. <strong>Properties:</strong> <code>sort</code>, <code>direction</code>, <code>stickyHeader</code>, <code>listBelow</code>. <strong>Slots:</strong> default (the table), <code>empty</code>. <strong>Parts:</strong> <code>wrap</code> (the scroller), <code>empty</code>. GlassKit&rsquo;s tokens reach the table: <code>--gl-table-max-height</code>, <code>--gl-table-header-bg</code>, <code>--gl-table-cell-padding</code> (9px 10px) and <code>--gl-table-header-padding</code> (8px 10px).</p>
+          <script>
+            (() => { const table = document.getElementById('docs-table'), out = document.querySelector('[data-docs-table-out]');
+              table.addEventListener('glk-table-sort', e => {
+                const { key, direction } = e.detail;
+                const col = [...table.querySelectorAll('thead th')].findIndex(th => th.dataset.sort === key);
+                const body = table.querySelector('tbody');
+                const value = row => row.cells[col].dataset.value ?? row.cells[col].textContent.trim();
+                const rows = [...body.rows].sort((a, b) => {
+                  const x = value(a), y = value(b), n = Number(x) - Number(y);
+                  return (Number.isNaN(n) ? x.localeCompare(y) : n) * (direction === 'descending' ? -1 : 1);
+                });
+                body.append(...rows);
+                out.textContent = 'glk-table-sort → ' + key + ', ' + direction;
+              });
+              table.addEventListener('glk-select', e => { out.textContent = 'glk-select → ' + e.detail.value + ', ' + e.target.closest('tr').cells[0].textContent; }); })();
+          </script>
+        </div>
+
+        <div class="docs-component" id="sorting">
+          <h3>Sorting by drag and drop</h3>
+          <p><code>sortable</code> on <code>&lt;glk-list&gt;</code> or <code>&lt;glk-tree&gt;</code> lets the visitor reorder the items (since 1.32.0): with mouse and pen after a few pixels, by touch after a long press of 500&nbsp;ms &mdash; before it a swipe scrolls the page &mdash;, and with the keyboard. A raised copy follows the pointer, a line shows where the item lands, an item that takes it inside lights up, and the others glide out of the way. Lists with the same <code>group</code> exchange items, and so do trees, but a list never with a tree; breadcrumbs of that group take items from both. Without a group a list or a tree keeps its items to itself, and breadcrumbs with <code>drop-target</code> and no group still take them. Items with <code>container</code> &mdash; in a tree also items with children &mdash; take others inside them; in a tree a closed one opens after a moment under the dragged item. Try it &mdash; move a page within the list, into &ldquo;Services&rdquo;, or onto &ldquo;My app&rdquo; in the path; &ldquo;Main menu&rdquo; stands for the list&rsquo;s own level and takes none:</p>
+          <div class="docs-preview" style="display:flex;flex-direction:column;gap:12px;">
+            <glk-breadcrumbs group="docs-pages" label="Level">
+              <glk-breadcrumb value="app">My app</glk-breadcrumb>
+              <glk-breadcrumb current>Main menu</glk-breadcrumb>
+            </glk-breadcrumbs>
+            <glk-list id="docs-sort-list" header="Main menu" sortable group="docs-pages">
+              <glk-list-item title="Home"></glk-list-item>
+              <glk-list-item title="Services" subtitle="3 pages" container></glk-list-item>
+              <glk-list-item title="Opening hours"></glk-list-item>
+              <glk-list-item title="Contact"></glk-list-item>
+              <glk-list-item title="Imprint" subtitle="Cannot be picked up" no-drag></glk-list-item>
+            </glk-list>
+            <span data-docs-sort-out style="opacity:.75;font-size:13px">waiting for glk-sort…</span>
+          </div>
+          <div class="docs-code"><span class="tag">&lt;glk-breadcrumbs</span> <span class="attr">group</span>=<span class="val">"pages"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;glk-breadcrumb</span> <span class="attr">value</span>=<span class="val">"app"</span><span class="tag">&gt;</span>My app<span class="tag">&lt;/glk-breadcrumb&gt;</span>
+  <span class="tag">&lt;glk-breadcrumb</span> <span class="attr">current</span><span class="tag">&gt;</span>Main menu<span class="tag">&lt;/glk-breadcrumb&gt;</span>
+<span class="tag">&lt;/glk-breadcrumbs&gt;</span>
+<span class="tag">&lt;glk-list</span> <span class="attr">header</span>=<span class="val">"Main menu"</span> <span class="attr">sortable</span> <span class="attr">group</span>=<span class="val">"pages"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;glk-list-item</span> <span class="attr">title</span>=<span class="val">"Home"</span><span class="tag">&gt;&lt;/glk-list-item&gt;</span>
+  <span class="tag">&lt;glk-list-item</span> <span class="attr">title</span>=<span class="val">"Services"</span> <span class="attr">container</span><span class="tag">&gt;&lt;/glk-list-item&gt;</span>
+  <span class="tag">&lt;glk-list-item</span> <span class="attr">title</span>=<span class="val">"Contact"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;svg</span> <span class="attr">slot</span>=<span class="val">"handle"</span> <span class="attr">aria-hidden</span>=<span class="val">"true"</span><span class="tag">&gt;</span>...<span class="tag">&lt;/svg&gt;</span>   <span class="cmt">&lt;!-- a pointer drags only here --&gt;</span>
+  <span class="tag">&lt;/glk-list-item&gt;</span>
+<span class="tag">&lt;/glk-list&gt;</span>
+
+list.addEventListener(<span class="val">'glk-sort'</span>, (event) =&gt; {
+  <span class="tag">const</span> { item, from, to, target, position } = event.detail;
+  <span class="cmt">// Not cancelled, the list moves the item itself. A page that renders</span>
+  <span class="cmt">// from its state cancels and renders the new order; the glide follows.</span>
+  event.preventDefault();
+  store.move(item.dataset.id, to.container, to.index).then(render);
+});
+
+<span class="cmt">// The announcements in another language, at once</span>
+list.messages = {
+  roleDescription: <span class="val">'sortierbar'</span>,
+  instructions: <span class="val">'Leertaste nimmt auf, Pfeiltasten verschieben, Leertaste legt ab, Escape bricht ab.'</span>,
+  pickedUp: ({ label, position, size, container }) =&gt; <span class="val">`${label}, aufgenommen. Position ${position} von ${size} in ${container}.`</span>,
+  <span class="cmt">// moved, into, onto, dropped, cancelled</span>
+};</div>
+          <table class="docs-table">
+            <tr><th>Attribute</th><th>Component</th><th>Description</th></tr>
+            <tr><td><code>sortable</code></td><td>glk-list, glk-tree</td><td>The items can be reordered</td></tr>
+            <tr><td><code>group</code></td><td>glk-list, glk-tree, glk-breadcrumbs</td><td>A name: lists with the same one exchange items, trees too, and breadcrumbs with it take items from both</td></tr>
+            <tr><td><code>drop-target</code></td><td>glk-breadcrumbs</td><td>The crumbs take items from sortable lists and trees without a group; <code>drop-target</code> and <code>group</code> may change at run time</td></tr>
+            <tr><td><code>container</code></td><td>glk-list-item, glk-tree-item</td><td>Takes a dropped item inside it &mdash; a submenu</td></tr>
+            <tr><td><code>no-drag</code></td><td>glk-list-item, glk-tree-item</td><td>Stays where it is; the others still move around it</td></tr>
+            <tr><td><code>slot="handle"</code></td><td>glk-list-item, glk-tree-item</td><td>A grip: a pointer starts a drag only there, a finger at once; Space still picks the item up on its row, so an <code>&lt;svg&gt;</code> will do</td></tr>
+          </table>
+          <p><strong>Keyboard:</strong> Space on an item picks it up, also where it has a handle (in a tree Enter still selects). Up and Down move it, Home and End to the ends; Right moves it into the item above, if that one takes items, Left out to the level above &mdash; from the top level onto the crumb of the level above &mdash;, both mirrored right to left. Space drops it, and the focus stays on it; Escape and Tab cancel. Every step is announced through a live region, and each item says how to move it.</p>
+          <p><strong>Events</strong> go to the element that owns the dragged item, each with <code>via</code>: <code>'mouse'</code>, <code>'touch'</code> or <code>'keyboard'</code>. <code>glk-sort-start</code> <code>{ item, from }</code>; <code>glk-sort-over</code> <code>{ item, target, position }</code> while the target changes, with <code>position</code> <code>before</code>, <code>after</code> or <code>inside</code> &mdash; cancelled, the target shows that it refuses the item, and a drop there does nothing; <code>glk-sort</code> <code>{ item, from, to, target, position }</code> on the drop, cancelable and before anything moves, <code>from</code> and <code>to</code> as <code>{ container, index }</code>; and <code>glk-sort-cancel</code> <code>{ item }</code>, also for a drop back where the item came from. Not cancelled, the element moves the node itself; cancelled, the DOM is the page&rsquo;s, which renders the new order from its state &mdash; the items glide into place either way. A drop on a crumb, or into a list&rsquo;s container item, moves nothing: that level is not in the DOM, and the page moves the item there. The current crumb takes no drop from a list, since it stands for the list&rsquo;s own level. If the page removes an item while it is dragged, the drag is cancelled.</p>
+          <p><strong>Property</strong> <code>messages</code> on the list or tree translates the announcements: <code>roleDescription</code> and <code>instructions</code> are texts; <code>pickedUp</code>, <code>moved</code>, <code>into</code>, <code>onto</code>, <code>dropped</code> and <code>cancelled</code> are functions that get the label, the position, the size and the container. It applies at once, also to a list or tree that is sortable already. <code>--gl-sort-duration</code> (180&nbsp;ms) and <code>--gl-sort-easing</code> (<code>ease-out</code>) time the glide; under <code>prefers-reduced-motion</code> nothing glides.</p>
+          <script>
+            (() => { const list = document.getElementById('docs-sort-list'), out = document.querySelector('[data-docs-sort-out]');
+              // A drop onto a crumb or into "Services" leaves this level: the page takes the item out.
+              const leave = item => setTimeout(() => item.remove(), 200);
+              list.addEventListener('glk-sort', e => {
+                const { item, to, target, position, via } = e.detail;
+                if (target?.localName === 'glk-breadcrumb') {
+                  out.textContent = `glk-sort → ${item.title} onto “${target.textContent.trim()}” (${via})`;
+                  leave(item);
+                } else if (position === 'inside') {
+                  out.textContent = `glk-sort → ${item.title} into ${target.title} (${via})`;
+                  target.setAttribute('subtitle', (parseInt(target.getAttribute('subtitle'), 10) + 1) + ' pages');
+                  leave(item);
+                } else {
+                  out.textContent = `glk-sort → ${item.title} to position ${to.index + 1} (${via})`;
+                }
+              }); })();
+          </script>
         </div>
       </section>
 

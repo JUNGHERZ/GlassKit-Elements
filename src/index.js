@@ -16,6 +16,8 @@ export { GlkTabDock } from './components/navigation/glk-tab-dock.js';
 export { GlkTabAccessory } from './components/navigation/glk-tab-accessory.js';
 export { GlkSteps } from './components/navigation/glk-steps.js';
 export { GlkDateStrip } from './components/navigation/glk-date-strip.js';
+export { GlkBreadcrumbs } from './components/navigation/glk-breadcrumbs.js';
+export { GlkBreadcrumb } from './components/navigation/glk-breadcrumb.js';
 
 // Content
 export { GlkCard } from './components/content/glk-card.js';
@@ -47,6 +49,11 @@ export { GlkProgress } from './components/feedback/glk-progress.js';
 export { GlkModal } from './components/feedback/glk-modal.js';
 export { GlkToast } from './components/feedback/glk-toast.js';
 export { GlkPopover } from './components/feedback/glk-popover.js';
+export { GlkTooltip } from './components/feedback/glk-tooltip.js';
+export { GlkMenu } from './components/feedback/glk-menu.js';
+export { GlkMenuItem } from './components/feedback/glk-menu-item.js';
+export { GlkMenuSeparator } from './components/feedback/glk-menu-separator.js';
+export { GlkMenuGroup } from './components/feedback/glk-menu-group.js';
 export { GlkSheet } from './components/feedback/glk-sheet.js';
 
 // Containers
@@ -54,3 +61,6 @@ export { GlkAccordion } from './components/containers/glk-accordion.js';
 export { GlkAccordionItem } from './components/containers/glk-accordion-item.js';
 export { GlkList } from './components/containers/glk-list.js';
 export { GlkListItem } from './components/containers/glk-list-item.js';
+export { GlkTree } from './components/containers/glk-tree.js';
+export { GlkTreeItem } from './components/containers/glk-tree-item.js';
+export { GlkTable } from './components/containers/glk-table.js';

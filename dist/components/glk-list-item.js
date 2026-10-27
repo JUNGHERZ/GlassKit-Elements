@@ -12,9 +12,15 @@ lastChildOverrideSheet.replaceSync(`
 
 const VARIANTS = ['danger', 'accent'];
 
+// An interactive item is a button for the keyboard and for assistive
+// technology (since 1.32.0): its row takes the focus in the Tab order, Enter
+// and Space click it — in a sortable list Space picks it up — and it is
+// announced as a button. Until then it was a plain list item that only a
+// pointer could reach. highlight() flashes the row.
+
 class GlkListItem extends GlkElement {
   static get observedAttributes() {
-    return ['title', 'subtitle', 'interactive', 'center', 'leading-lg', 'wrap', 'detail', 'variant', 'data-last'];
+    return ['title', 'subtitle', 'interactive', 'center', 'leading-lg', 'wrap', 'detail', 'variant', 'data-last', 'no-drag'];
   }
 
   constructor() {
@@ -31,7 +37,7 @@ class GlkListItem extends GlkElement {
     wrap.style.display = 'contents';
 
     this._item = this.createElement('li', ['glass-list__item']);
-    if (this.getBoolAttr('interactive')) this._item.classList.add('glass-list__item--interactive');
+    this._applyInteractive();
     if (this.getBoolAttr('center')) this._item.classList.add('glass-list__item--center');
     const initialVariant = this.getAttribute('variant');
     if (initialVariant && VARIANTS.includes(initialVariant)) {
@@ -75,6 +81,13 @@ class GlkListItem extends GlkElement {
     this._item.appendChild(this._content);
     this._item.appendChild(this._trailing);
 
+    // A handle for a sortable list (since 1.32.0), at the row's end.
+    this._handle = this.createElement('span', ['glass-sort__handle']);
+    this._handleSlot = this.createElement('slot', [], { name: 'handle' });
+    this._handle.appendChild(this._handleSlot);
+    this._handle.hidden = true;
+    this._item.appendChild(this._handle);
+
     // Sentinel sibling so the <li> is never :last-child inside its shadow
     // parent — keeps the glasskit.css ::after divider rule matching.
     const sentinel = this.createElement('span');
@@ -96,6 +109,8 @@ class GlkListItem extends GlkElement {
       const hasDetail = !this._valueEl.hidden;
       this._trailing.hidden = !hasSlotted && !hasDetail;
     };
+    this._onHandleSlotChange = () => { this._handle.hidden = this._handleSlot.assignedNodes().length === 0; };
+    this._handleSlot.addEventListener('slotchange', this._onHandleSlotChange);
     this._leadingSlot.addEventListener('slotchange', this._onLeadingSlotChange);
     this._trailingSlot.addEventListener('slotchange', this._onTrailingSlotChange);
     this._onLeadingSlotChange();
@@ -108,12 +123,61 @@ class GlkListItem extends GlkElement {
       }
     };
     this._item.addEventListener('click', this._onClick);
+
+    // Enter clicks on keydown, Space on keyup, as on a native button. In a
+    // sortable list Space picks the item up instead.
+    this._onKeydown = (e) => {
+      if (!this.getBoolAttr('interactive') || e.target !== this._item) return;
+      if (e.key === 'Enter') { e.preventDefault(); this._item.click(); }
+      else if (e.key === ' ') e.preventDefault();          // no page scroll
+    };
+    this._onKeyup = (e) => {
+      if (this._sortable) return;
+      if (this.getBoolAttr('interactive') && e.target === this._item && e.key === ' ') this._item.click();
+    };
+    this._item.addEventListener('keydown', this._onKeydown);
+    this._item.addEventListener('keyup', this._onKeyup);
+    // Defined after its sortable list, or added later: the list marks it now.
+    this.parentElement?._sort?.sync();
   }
 
   teardownEvents() {
     this._leadingSlot?.removeEventListener('slotchange', this._onLeadingSlotChange);
     this._trailingSlot?.removeEventListener('slotchange', this._onTrailingSlotChange);
     this._item?.removeEventListener('click', this._onClick);
+    this._item?.removeEventListener('keydown', this._onKeydown);
+    this._item?.removeEventListener('keyup', this._onKeyup);
+    this._handleSlot?.removeEventListener('slotchange', this._onHandleSlotChange);
+  }
+
+  _applyInteractive() {
+    const on = this.getBoolAttr('interactive');
+    this._item.classList.toggle('glass-list__item--interactive', on);
+    // Focusable as a button when interactive, or as a sortable item.
+    if (on || this._sortable) {
+      this._item.setAttribute('role', 'button');
+      this._item.tabIndex = 0;
+    } else {
+      this._item.removeAttribute('role');
+      this._item.removeAttribute('tabindex');
+    }
+  }
+
+  /**
+   * Called by a sortable list: the row takes the focus and says what it is
+   * and how to move it; null takes it back.
+   */
+  _setSortable(messages) {
+    this._sortable = Boolean(messages);
+    if (!this._item) return;
+    this._applyInteractive();
+    if (messages) {
+      this._item.setAttribute('aria-roledescription', messages.roleDescription);
+      this._item.setAttribute('aria-description', messages.instructions);
+    } else {
+      this._item.removeAttribute('aria-roledescription');
+      this._item.removeAttribute('aria-description');
+    }
   }
 
   onAttributeChanged(name, _old, value) {
@@ -129,7 +193,7 @@ class GlkListItem extends GlkElement {
         break;
       }
       case 'interactive':
-        this._item.classList.toggle('glass-list__item--interactive', this.getBoolAttr('interactive'));
+        this._applyInteractive();
         break;
       case 'center':
         this._item.classList.toggle('glass-list__item--center', this.getBoolAttr('center'));
@@ -157,6 +221,9 @@ class GlkListItem extends GlkElement {
         }
         break;
       }
+      case 'no-drag':
+        this.parentElement?._sort?.sync();
+        break;
     }
   }
 
@@ -193,6 +260,28 @@ class GlkListItem extends GlkElement {
   set variant(v) {
     if (v && VARIANTS.includes(v)) this.setAttribute('variant', v);
     else this.removeAttribute('variant');
+  }
+
+  /**
+   * A short flash of the row (since 1.32.0), for an item that changed
+   * elsewhere — on another device, by an undo — so the eye finds it
+   * (GlassKit's .is-flash); none under prefers-reduced-motion.
+   */
+  highlight() {
+    const row = this._item;
+    if (!row) return;
+    row.classList.remove('is-flash');
+    void row.offsetWidth;                                  // again from the start
+    row.classList.add('is-flash');
+    clearTimeout(this._flashTimer);
+    const end = (e) => {
+      if (e && (e.target !== row || e.animationName !== 'glass-flash')) return;
+      clearTimeout(this._flashTimer);
+      row.classList.remove('is-flash');
+      row.removeEventListener('animationend', end);
+    };
+    row.addEventListener('animationend', end);
+    this._flashTimer = setTimeout(end, (parseFloat(getComputedStyle(row).animationDuration) || 0) * 1000 + 100);
   }
 }
 

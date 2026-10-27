@@ -7,6 +7,145 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.32.0] – 2026-10-27
+
+Versions stay aligned with GlassKit at 1.32.0, which this release is built against (peer dependency `>=1.32.0`). Ten new elements bring the count to 46.
+
+### Added
+
+- **`<glk-tab-bar>` as a sidebar, an icon rail, a bar docked at a side and a top bar, with one set of items for every layout.** The bar was a bottom bar. A sidebar on the desktop or a rail in a narrower window was a second navigation in the page's own markup, kept in step with the bar's items by hand. On phones whose system moves its own controls to a side, an unfolded iPhone Duo for one, the thumb rests at that edge and a bottom bar is out of reach. Of the two ways the issue offered, this is the first, one bar with several layouts, so the badge, the accessory, the events and the drop exist once:
+  - `orientation="vertical"` makes the bar a column, placed by the page's layout.
+  - `rail` shows the icons alone. The label stays each item's name and shows as a tooltip beside the rail on hover, keyboard focus and a long press.
+  - `dock="start"` or `"end"` fixes the column to that edge of the viewport, clear of the edge's safe area and mirrored right to left.
+  - `placement="top"` lays a horizontal bar out for the top of a page: no room for the home indicator, the border at the bottom, the icon beside the label on wide screens.
+  - `<glk-tab-dock orientation="vertical">` stands the floating bar and its accessory upright at the end edge, or at the start edge with `dock="start"`. `accessory-left` puts the accessory at the top.
+  - In a column the drop runs along y, through GlassKit 1.32.0, without code of its own here.
+  - `label` names the navigation, and part `nav` is the `<nav>`.
+
+  The page switches layouts by setting the attributes, with `matchMedia` or when the window changes shape. The items stay: the same buttons, the active item and the drop. ([#25](https://github.com/JUNGHERZ/GlassKit-Elements/issues/25))
+- **`aria-current`, `badge-label`, `href` and part `item` on `<glk-tab-item>`.**
+  - The active item carries `aria-current="page"` in every layout, the bottom bar included, so a screen reader tells which view is open.
+  - `badge-label` words the count for the item's name, "Customers, 3 new" instead of "3 Customers".
+  - With `href` the item is a link, which can open its view in a new tab. A cancelled `glk-tab-select` stops the navigation as well. A click with Ctrl, Cmd, Shift or Alt opens the view elsewhere and leaves the current tab active.
+
+  ([#25](https://github.com/JUNGHERZ/GlassKit-Elements/issues/25))
+- **`<glk-tooltip>`**: a short name or hint for a control on hover and focus, GlassKit's `.glass-tooltip`. The control is the element in `slot="trigger"`, or the one `for` names by its id, such as an item rendered elsewhere.
+  - It shows after `show-delay` (400ms) on hover and at once on keyboard focus.
+  - By touch it shows during a long press of 500ms and lingers briefly after the finger lifts. A tap never shows it and is never held up.
+  - It hides when the pointer leaves both the control and the tooltip (the pointer may move onto it), on blur, on a press and on Escape. Escape leaves the focus where it is and a dialog around it open (WCAG 1.4.13).
+  - It sits in the top layer, `popover="hint"` where the browser knows it, at `placement` top (default), bottom, start or end, `--gl-tooltip-offset` (8px) from the control. It flips and shifts to stay in the viewport.
+  - The text becomes the `aria-description` of the element inside the control that takes the focus, such as the native button of `<glk-button>`, `<glk-pill>` or `<glk-tab-item>`. With `as-label` it is the control's name instead, for an icon-only control.
+
+  The issue proposed element references to the tooltip's text. That text has no element of its own: it sits beside the trigger in the tooltip's light DOM, so a reference to the tooltip would read the trigger's own text with it. A string is announced the same way, and the element gives back the value it replaced when it goes. It is placed by measurement rather than CSS anchor positioning, because an anchor name does not reach from a shadow root to a light-DOM trigger. ([#29](https://github.com/JUNGHERZ/GlassKit-Elements/issues/29))
+- **`<glk-menu>` with `<glk-menu-item>`, `<glk-menu-separator>` and `<glk-menu-group>`**: a menu button, GlassKit's `.glass-menu`, for the overflow menu of a header or the actions of a table row. It follows the WAI-ARIA menu button pattern:
+  - The button in `slot="trigger"` carries `aria-haspopup="menu"` and `aria-expanded`. The panel has `role="menu"` and is named by the button.
+  - The items are `menuitem`, `menuitemcheckbox` or `menuitemradio`, through `ElementInternals`, with `aria-checked` and `aria-disabled`. A disabled item keeps its place and is announced but cannot be chosen.
+  - On the button, Enter, Space and Down open at the first item and Up at the last. In the menu, the arrows move and wrap and Home and End go to the ends. Typed characters within half a second jump to the next matching label.
+  - Enter and Space choose. Escape closes and returns the focus to the button, and Tab closes and moves on.
+  - Hovering moves the focus, and a click outside closes.
+  - `glk-select { item, value, checked }` is cancelable and comes before anything happens. A plain item closes the menu and returns the focus. A checkbox item toggles and a radio item checks within its group, and both leave the menu open.
+  - `variant="danger"` takes the error colour, and the `icon` and `trailing` slots hold an icon and a hint such as a shortcut.
+  - `glk-open` and `glk-close` fire as on `<glk-popover>`. The panel opens in the top layer below the button and aligned at its start; `placement` is top, start or end.
+
+  There is no `aria-controls`: the panel lives in the element's shadow root, where a reference from the button in the light DOM does not reach. ([#30](https://github.com/JUNGHERZ/GlassKit-Elements/issues/30))
+- **`<glk-tree>` with `<glk-tree-item>`**: levels that open and close, GlassKit's `.glass-tree`, with the role and states of each item on the element through `ElementInternals`. The browser cannot count through the slots, so the tree sets `aria-level`, `aria-setsize` and `aria-posinset` explicitly.
+  - Keyboard (WAI-ARIA tree view, one tab stop): Down, Up, Right, Left (mirrored right to left), Home, End, Enter and Space to select, `*` to open every sibling, and a typed letter to jump.
+  - Selection does not follow the focus. A click on the twisty toggles, a click on the row selects, and the `trailing` slot keeps its own clicks.
+  - `glk-tree-toggle { item, expanded }` and `glk-tree-select { item, value }` are cancelable and come before anything changes.
+  - **Loading on demand**, for structures of several hundred entries. `has-children` says that children are still to come, and the twisty shows before any of them exists.
+    - Opening such an item emits `glk-tree-load { item, retry }` (cancelable). The item then shows a spinner, `aria-busy` and `loading` until child items arrive or `has-children` goes.
+    - It loads once: closed and opened again, it keeps its children. Re-adding `has-children` allows another load.
+    - An item that the page moves into an unloaded item does not count as its children: opening it still loads.
+    - Children appended inside the handler count as loaded at once. A cancelled load shows no loading state.
+  - **Load errors:** `load-error=message` (`loadError`) reports a failure. The item closes and shows GlassKit's `.is-error`, the message becomes its description, and the tree announces it in a polite live region. Opening the item again tries once more, with `retry: true`.
+  - **Single items change in place.** The page appends, removes, moves and renames items with the DOM's own methods, without rendering the tree again. Expanded levels, the selection and the scroll position stay, and a moved item is the same element.
+    - The focus stays on a moved item.
+    - For a removed item it goes to the one that took its place, else the one before it, else the open item around it.
+    - In a level that closes, it goes to the open item around it.
+    - All of this applies only while the focus was in the tree.
+    - `highlight()` flashes an item that changed elsewhere (GlassKit's `.is-flash`), without the flash under `prefers-reduced-motion`.
+  - Attributes `label`, `selection` (single or none) and `value`. On items: `label`, `value`, `expanded`, `selected`, `disabled`, `has-children`, `load-error`, slots `icon`, `trailing` and `handle`, and parts `item`, `row`, `twisty`, `label` and `group`.
+
+  ([#26](https://github.com/JUNGHERZ/GlassKit-Elements/issues/26))
+- **`<glk-breadcrumbs>` with `<glk-breadcrumb>`**: the path through nested levels, GlassKit's `.glass-breadcrumbs`, drawn as `<nav aria-label><ol><li>`. Each crumb is a link (`href`) or a button (`value`), and the current level is plain text with `aria-current="page"`.
+  - `glk-navigate { item, value, href, index }` is cancelable. Cancelled on a link, it stops the browser, so a single-page app routes by itself. A link without a listener just works, in a new tab too.
+  - Where the path does not fit, measured on the element, the middle levels fold into a "…" crumb (`collapse="auto"`, the default). It is a `<glk-menu>` named "2 more levels", or `more-label`, that lists them. The first crumb and the last two stay.
+  - A label cut by the ellipsis shows in full in a tooltip.
+  - With `drop-target`, or the same `group` as a sortable list or tree, the crumbs take dragged items, and hovering "…" during a drag opens its menu.
+  - `more-label-one` holds the singular of `more-label`, for languages that need a form of their own: `more-label="{count} weitere Ebenen" more-label-one="1 weitere Ebene"`.
+  - Parts are `nav`, `list`, `crumb`, `current` and `overflow`. There is no `separator` part: the separators are drawn by CSS on the items.
+
+  ([#27](https://github.com/JUNGHERZ/GlassKit-Elements/issues/27))
+- **Sorting by drag and drop: `sortable` and `group` on `<glk-list>` and `<glk-tree>`.** Items move within a level, into a container item (`container`, or a tree item with children) and onto a crumb. Lists of the same `group` exchange items with each other, and so do trees. A list without a group keeps its items to itself; breadcrumbs with `drop-target` still take them. `no-drag` keeps an item in place, and `slot="handle"` makes the handle the only place a pointer starts a drag, so a tap on the item still chooses it.
+  - **Mouse and pen** start after 6px.
+  - **Touch** starts after a long press of 500ms, before which a swipe scrolls. A handle starts at once.
+  - **Keyboard:** Space picks up and Up, Down, Home and End move within the level. Right moves into the container above and Left out of the container, at the list's top onto the breadcrumbs. Space drops, and Escape or Tab cancels.
+  - A polite live region announces each step. The texts come from a `messages` property with English defaults, so a page can translate them.
+  - Near the scroller's edges the list scrolls. A closed container opens after 600ms over it.
+  - **Events,** all with `via`: `glk-sort-start { item, from }`, `glk-sort-over { item, target, position }` (cancelable: refused, the target shows the error colour and takes nothing), `glk-sort { item, from, to, target, position }` (cancelable, before anything moves) and `glk-sort-cancel { item }`.
+  - **Who moves the DOM:** not cancelled, the element moves the node itself. Cancelled, it leaves the DOM to the page, which renders the new order from its state. A drop into a list item's container or onto a crumb moves nothing, because that level is not in the DOM. Either way the items glide into place once the new order is there (`--gl-sort-duration`, `--gl-sort-easing`), and not under `prefers-reduced-motion`. The focus stays on the dropped item, and a drag whose item the page removes is cancelled.
+  - The current crumb takes no drop from a list, because it stands for the list's own level. `drop-target` and `group` on the breadcrumbs may change at any time.
+  - In a `<glk-list>`, too, single items change in place with the DOM's own methods, with the focus kept as in the tree, and `highlight()` on `<glk-list-item>` flashes one.
+
+  While dragging, a line marks where the item lands. The issue's items that make room as the pointer moves would shift the target under the pointer at every step. The instructions are a description string on each item, `aria-description`, since an id reference from the light DOM does not reach into the items' shadow roots. Space on an item picks it up and Enter selects or clicks it, also where a handle exists, so a handle that cannot take the focus, an `<svg>`, leaves the keyboard its way. `messages` applies at once, also to the items' description. Lists and trees do not exchange items with each other: a list item in a tree, or a tree item in a list, would be an element of the wrong kind. ([#28](https://github.com/JUNGHERZ/GlassKit-Elements/issues/28), [#26](https://github.com/JUNGHERZ/GlassKit-Elements/issues/26))
+- **`<glk-table>`**: around a native `<table class="glass-table">` in its light DOM, so the table keeps its semantics, copy and paste, find in page and markup rendered on the server.
+  - **Sorting:** a header cell with `data-sort="<key>"` gets a sort button and `aria-sort`. A click, Enter or Space cycles the direction and emits `glk-table-sort { key, direction }`, cancelable. The page sorts, often on the server, and `sort` and `direction` show the state.
+  - **`sticky-header`:** the wrap scrolls both ways, as high as `--gl-table-max-height` (60vh), and the header sticks to its top. The edges shade where more columns wait.
+  - **Row actions:** cells with `class="glass-table__actions"` stay at the row's end while the table scrolls sideways.
+  - **Empty state:** while the body has no rows, the `empty` slot shows below the header.
+  - **`list-below="640px"`:** narrower than that, measured on the element, each row becomes a card with the column's name before each value. The element copies each header's text into its cells as `data-label` and keeps the table's roles explicit, so assistive technology still meets a table.
+  - Parts are `wrap` and `empty`.
+
+  The sort event is named `glk-table-sort`, not the issue's `glk-sort`, which a sortable list emits when an item is dropped. A page that listens for one never hears the other. ([#31](https://github.com/JUNGHERZ/GlassKit-Elements/issues/31))
+- **`glk-closed` on `<glk-sheet>` and `<glk-modal>`, and `close()` returns a promise.** Nothing told a page when a sheet had finished sliding out. `glk-close` fires only for the visitor's dismissal, and before the slide-out; `close()` and removing the attribute emitted nothing. A page that renders the sheet from state removed it in the same frame, and the slide-out never showed. `glk-closed` now fires once the dialog has closed after the slide-out (the fade for the modal), on every way of closing: attribute, property, `close()`, swipe, backdrop or Escape. Under `prefers-reduced-motion` it fires at once. `close()` returns a promise that settles at the same moment, and at once if nothing was shown. `glk-close` keeps its meaning. ([#24](https://github.com/JUNGHERZ/GlassKit-Elements/issues/24))
+
+### Changed
+
+- **`<glk-popover>` opens in the top layer.** It hung absolutely below its trigger. An `overflow: hidden` around it cut it off, it left the screen at the edges, and closed it still widened the page by its box. It now shares its placement with the tooltip and the menu: flipped to the other side where the viewport leaves no room, shifted to stay inside it, and following while the page scrolls. Escape returns the focus to the trigger when it was inside the panel. ([#29](https://github.com/JUNGHERZ/GlassKit-Elements/issues/29))
+- **An interactive `<glk-list-item>` is a button for the keyboard and for assistive technology.** Before, only a pointer could reach it. Its row is now in the Tab order with `role="button"`. Enter clicks on keydown and Space on keyup, like a native button, and GlassKit 1.32.0 draws its focus ring. The items of a sortable list take the focus the same way. ([#28](https://github.com/JUNGHERZ/GlassKit-Elements/issues/28))
+- **From GlassKit 1.32.0**, by inheritance:
+  - The drop's motion tokens reach `<glk-tab-bar droplet>` and `<glk-segmented droplet>` ([GlassKit #23](https://github.com/JUNGHERZ/GlassKit/issues/23)).
+  - `--gl-btn-primary-bg` and `--gl-color-primary-fill` reach the primary `<glk-button>`, `<glk-calendar>`, `<glk-date-strip>` and `<glk-steps>`. The dot of `<glk-radio>` follows `--gl-color-on-primary`, and the chosen date strip day's weekday is as strong as its number ([GlassKit #24](https://github.com/JUNGHERZ/GlassKit/issues/24)).
+  - Tab bar items show a focus ring on keyboard focus.
+
+### Compatibility
+
+- An interactive list item is now a button. Put no other control inside it, because a button inside a button is lost to assistive technology. An item with actions of its own leaves `interactive` off and keeps the actions in its `trailing` slot.
+- `<glk-popover>`'s panel is fixed in the top layer, no longer absolutely positioned in its parent.
+- The panels of `<glk-popover>`, `<glk-tooltip>`, `<glk-menu>` and the breadcrumbs' overflow use the popover API: Chrome 114, Safari 17 and Firefox 125 or newer.
+
+Measured in Chromium 153, WebKit 26.6 and Firefox 151 with the issues' pages and our own tests:
+- **Tab bar:**
+  - A sidebar of 240 by 420px with 44px rows, `aria-current="page"` on the active one, "Customers, 3 new" as a name and a link for `href`.
+  - A rail 72px wide with 48px items and its tooltip beside the rail.
+  - A rail docked at the end runs from top to bottom at the right edge, or at the left edge right to left.
+  - Switching to the bottom bar in place keeps the same buttons, the active item and the drop.
+- **`glk-closed`** fires 303 to 343ms after `close()`, the attribute, Escape or the backdrop, or within 5ms under reduced motion, together with the promise.
+- **Tooltip:** not yet shown at 200ms, shown at 600ms, still open with the pointer on it, shown on keyboard focus, and gone after Escape with the focus in place.
+- **Menu:** every key of the pattern, typeahead, checkbox and radio items, a click outside, and the panel shifted inside a 390px viewport. Its roles show in Chromium's accessibility tree.
+- **Popover:** the panel lies in the top layer inside a 390px viewport, the closed page stays 390px wide, and Escape returns the focus to the trigger.
+- **Tree:** all of its keys, lazy loading with `aria-busy`, and its levels, sizes, positions and states in Chromium's accessibility tree.
+- **Loading and live changes:**
+  - An item loads once and keeps its children when closed and opened again.
+  - A failed load closes the item, describes and announces the message, and loads again on the next opening with `retry: true`.
+  - A child moved into an unloaded item does not stop its load.
+  - The focus stays on a moved item, goes to the item after a removed one, and goes to the open item around one in a level that closes. A focus outside the tree stays outside.
+  - In a list the focus stays on a moved row, on the next row after a removal, and on the dropped item after a keyboard move.
+  - `highlight()` flashes for 1.2s, and not at all under reduced motion.
+- **Breadcrumbs:** fold at 390px into "1 more level", and a cancelled crumb does not navigate.
+- **Sorting** by mouse, touch long press and keyboard, with the announcements word for word: within a list, into a container, onto a crumb, out of a tree level, cancelled by the page and by Escape. A swipe without a long press starts nothing.
+- **Table:**
+  - It sorts and cycles, and a cancelled sort keeps the state.
+  - The sticky header stays at the wrap's top.
+  - The empty state shows below the header.
+  - Narrower than `list-below`, it becomes cards with the table's roles.
+  - The edges shade and the action cells stay at the end while it scrolls sideways.
+  - Nothing changes in the DOM at rest.
+
+Docs (English and German), README and SKILL.md describe the new elements, the tab bar's layouts, sorting, loading on demand and changes in place. The showcases show the menu, the tooltip, the breadcrumbs, the tree, a sortable list, the table and a rail. The existing docs, showcase and landing pages render as in 1.31.0 in all three engines, in Chromium section by section, apart from the chosen date strip day's weekday.
+
+---
+
 ## [1.31.0] – 2026-10-25
 
 Versions stay aligned with GlassKit at 1.31.0, which this release is built against (peer dependency `>=1.31.0`).
@@ -1000,7 +1139,8 @@ Starting with this release, GlassKit Elements version numbers are aligned with G
 
 ---
 
-[Unreleased]: https://github.com/JUNGHERZ/GlassKit-Elements/compare/v1.31.0...HEAD
+[Unreleased]: https://github.com/JUNGHERZ/GlassKit-Elements/compare/v1.32.0...HEAD
+[1.32.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.32.0
 [1.31.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.31.0
 [1.30.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.30.0
 [1.29.1]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.29.1

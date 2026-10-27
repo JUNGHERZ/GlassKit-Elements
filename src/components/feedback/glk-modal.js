@@ -20,7 +20,10 @@ import { scrollLock } from '../../scroll-lock.js';
 //
 // Since 1.30.0 it emits glk-open whenever it opens — attribute, property or
 // show() — and the page does not scroll while it is open (glk-close stays
-// the user's close only).
+// the user's close only). Since 1.32.0 glk-closed follows once it has faded
+// out and its dialog closed, however it closed, and close() returns a
+// promise that settles then: a page that renders the modal from state drops
+// it there, and the fade shows.
 
 const CLOSE_FALLBACK_MS = 400;
 
@@ -144,6 +147,7 @@ class GlkModal extends GlkElement {
       this._overlay.classList.remove('is-active');
       this._scrollLock.release();
       if (this.open) this._dismiss();
+      this._closed();
     };
     this._overlay.addEventListener('close', this._onClose);
 
@@ -162,6 +166,17 @@ class GlkModal extends GlkElement {
     this._overlay?.classList.remove('is-active');
     if (this._overlay?.open) this._overlay.close();
     this._scrollLock?.release();
+    this._settleClosing();
+  }
+
+  /** The dialog has closed: glk-closed, and the promises of close() settle. */
+  _closed() {
+    this.emit('glk-closed');
+    this._settleClosing();
+  }
+
+  _settleClosing() {
+    for (const resolve of this._closing?.splice(0) ?? []) resolve();
   }
 
   onAttributeChanged(name, _old, value) {
@@ -220,7 +235,14 @@ class GlkModal extends GlkElement {
   }
 
   show() { this.setAttribute('open', ''); }
-  close() { this.removeAttribute('open'); }
+
+  /** Settles once the modal has faded out — at once when nothing is shown. */
+  close() {
+    const shown = Boolean(this._overlay?.open) && this.isConnected;
+    this.removeAttribute('open');
+    if (!shown) return Promise.resolve();
+    return new Promise(resolve => (this._closing ??= []).push(resolve));
+  }
 
   _applyTitle() {
     if (!this._titleEl) return;

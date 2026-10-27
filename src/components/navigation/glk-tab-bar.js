@@ -6,14 +6,32 @@ import { attachDroplet } from '@jungherz-de/glasskit/glasskit-droplet.js';
 // moved by its glasskit-droplet.js. The items live in shadow roots of their
 // own, so the bar hands its state down to them (see glk-tab-item _syncBar)
 // and tells the drop when the active item changed.
+//
+// One set of items in more places than the bottom edge (since 1.32.0):
+// orientation="vertical" makes the bar a column — a sidebar placed by the
+// page's layout, or with dock="start" or "end" fixed to that edge of the
+// viewport, clear of its safe area: the side a phone's thumb reaches when
+// the system moves its controls there. rail shows the icons alone; the
+// label stays the item's name and shows in a tooltip. placement="top" lays
+// a horizontal bar out for the top of a page. The drop runs along y in a
+// column. The page switches between the layouts with a media query or on
+// resize, without rendering the items again.
+//
+// Attributes: static, floating, droplet, orientation (horizontal | vertical),
+//             rail, dock (start | end; with vertical), placement (bottom |
+//             top), label (the navigation's name)
+// Events:     glk-tab-change { tab } — after a glk-tab-select went through
+// Part:       nav (since 1.32.0)
+
+const DOCKS = ['start', 'end'];
 
 class GlkTabBar extends GlkElement {
   static get observedAttributes() {
-    return ['static', 'floating', 'droplet'];
+    return ['static', 'floating', 'droplet', 'orientation', 'rail', 'dock', 'placement', 'label'];
   }
 
   render() {
-    const nav = this.createElement('nav', ['glass-tab-bar']);
+    const nav = this.createElement('nav', ['glass-tab-bar'], { part: 'nav' });
     nav.appendChild(document.createElement('slot'));
     this._wrapper.appendChild(nav);
     this._nav = nav;
@@ -22,10 +40,8 @@ class GlkTabBar extends GlkElement {
       nav.classList.add('glass-tab-bar--floating');
     }
     nav.classList.toggle('glass-tab-bar--droplet', this.getBoolAttr('droplet'));
-
-    if (this.getBoolAttr('static')) {
-      this._applyStatic();
-    }
+    this._applyLayout();
+    this._applyLabel();
   }
 
   onAttributeChanged(name) {
@@ -38,25 +54,62 @@ class GlkTabBar extends GlkElement {
     } else if (name === 'droplet') {
       this._nav.classList.toggle('glass-tab-bar--droplet', this.getBoolAttr('droplet'));
       this._applyDroplet();
+    } else if (name === 'label') {
+      this._applyLabel();
+    } else {
+      this._applyLayout();
+      this._syncItems();
+      this._droplet?.update();
     }
   }
 
+  get _layout() {
+    const vertical = this.orientation === 'vertical';
+    const dock = this.getAttribute('dock');
+    return {
+      vertical,
+      rail: vertical && this.getBoolAttr('rail'),
+      dock: vertical && DOCKS.includes(dock) ? dock : null,
+      top: !vertical && this.getAttribute('placement') === 'top',
+    };
+  }
+
+  _applyLayout() {
+    const { vertical, rail, dock, top } = this._layout;
+    const nav = this._nav;
+    nav.classList.toggle('glass-tab-bar--vertical', vertical);
+    nav.classList.toggle('glass-tab-bar--rail', rail);
+    for (const d of DOCKS) nav.classList.toggle(`glass-tab-bar--${d}`, dock === d);
+    nav.classList.toggle('glass-tab-bar--top', top);
+    this._applyStatic();
+  }
+
+  /** static: in the flow, with corners — a bottom bar's look on a page. */
   _applyStatic() {
-    this._nav.style.position = 'relative';
-    this._nav.style.borderRadius = '16px';
+    const on = this.getBoolAttr('static');
+    const { vertical, top } = this._layout;
+    this._nav.style.position = on && !vertical ? 'relative' : '';
+    this._nav.style.borderRadius = on && !vertical && !top ? '16px' : '';
+  }
+
+  _applyLabel() {
+    const label = this.getAttribute('label');
+    if (label) this._nav.setAttribute('aria-label', label);
+    else this._nav.removeAttribute('aria-label');
   }
 
   _items() {
     return [...this.children].filter(el => el.localName === 'glk-tab-item');
   }
 
-  /** Hands the bar's floating and droplet state to every item's wrapper. */
+  /** Hands the bar's look and droplet state to every item's wrapper. */
   _syncItems() {
     const state = {
       floating: this.getBoolAttr('floating'),
       droplet: this.getBoolAttr('droplet'),
       placed: Boolean(this._nav?.hasAttribute('data-droplet')),
       drag: Boolean(this._nav?.hasAttribute('data-droplet-drag')),
+      ...(this._nav ? this._layout : {}),
     };
     for (const item of this._items()) item._syncBar?.(state);
   }
@@ -119,6 +172,33 @@ class GlkTabBar extends GlkElement {
 
   get droplet() { return this.getBoolAttr('droplet'); }
   set droplet(v) { this.setBoolAttr('droplet', v); }
+
+  get orientation() { return this.getAttribute('orientation') === 'vertical' ? 'vertical' : 'horizontal'; }
+  set orientation(v) {
+    if (v === 'vertical') this.setAttribute('orientation', 'vertical');
+    else this.removeAttribute('orientation');
+  }
+
+  get rail() { return this.getBoolAttr('rail'); }
+  set rail(v) { this.setBoolAttr('rail', v); }
+
+  get dock() { return DOCKS.includes(this.getAttribute('dock')) ? this.getAttribute('dock') : ''; }
+  set dock(v) {
+    if (DOCKS.includes(v)) this.setAttribute('dock', v);
+    else this.removeAttribute('dock');
+  }
+
+  get placement() { return this.getAttribute('placement') === 'top' ? 'top' : 'bottom'; }
+  set placement(v) {
+    if (v === 'top') this.setAttribute('placement', 'top');
+    else this.removeAttribute('placement');
+  }
+
+  get label() { return this.getAttribute('label') || ''; }
+  set label(v) {
+    if (v) this.setAttribute('label', v);
+    else this.removeAttribute('label');
+  }
 }
 
 customElements.define('glk-tab-bar', GlkTabBar);

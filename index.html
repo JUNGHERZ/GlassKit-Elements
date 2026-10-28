@@ -86,7 +86,7 @@
       stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
     }
     .lang-switch {
-      display: flex; align-items: center; gap: 4px;
+      display: flex; align-items: center; gap: 4px; flex: none; white-space: nowrap;
       font-size: 13px; font-weight: 600; padding: 6px 12px;
       border-radius: 9999px; border: 1px solid var(--idx-card-border);
       background: var(--idx-card-bg); color: var(--idx-text-muted);
@@ -245,7 +245,8 @@
 
     /* ── Footer ── */
     footer { padding: 32px 0; border-top: 1px solid var(--idx-card-border); }
-    footer .container { display: flex; justify-content: space-between; align-items: center; }
+    footer .container { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+    .footer__links { display: flex; flex-wrap: wrap; gap: 8px 16px; }
     footer p { font-size: 13px; color: var(--idx-text-muted); }
     footer a { color: var(--idx-accent); text-decoration: none; }
     footer a:hover { text-decoration: underline; }
@@ -268,9 +269,21 @@
       .phone-frame iframe { border-radius: 40px; }
       .compare-grid { grid-template-columns: 1fr; }
       .family-grid { grid-template-columns: 1fr; }
+      /* One column as wide as the page: a code block scrolls in itself
+         instead of widening the page by its longest line. */
+      .hero .container { align-items: stretch; }
+      .hero__info { min-width: 0; }
+      .hero__phone { align-self: center; }
+      footer .container { flex-direction: column; text-align: center; }
+      .footer__links { justify-content: center; }
     }
     @media (max-width: 480px) {
       .container { padding: 0 20px; }
+      /* The header keeps the brand, the language and the buttons, as
+         GlassKit's does; Demo and Docs stand below as the hero's buttons. */
+      header .container { gap: 12px; }
+      .header-actions { gap: 8px; }
+      .header-actions > a:not(.lang-switch, .header-btn) { display: none; }
       .hero__headline { font-size: 28px; }
       .features { grid-template-columns: 1fr; }
       .phone-frame {
@@ -460,7 +473,7 @@
   <footer>
     <div class="container">
       <p>Built by <a href="https://www.jungherz.com" target="_blank" rel="noopener">Jungherz</a> with &#129482; and lots of &#10084;&#65039; for detail.</p>
-      <div style="display:flex;gap:16px;">
+      <div class="footer__links">
         <a href="docs.html">Documentation</a>
         <a href="showcase.html">Showcase</a>
         <a href="https://github.com/JUNGHERZ/GlassKit-Elements" target="_blank" rel="noopener">GitHub</a>

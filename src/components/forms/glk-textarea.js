@@ -9,7 +9,7 @@ class GlkTextarea extends GlkFormElement {
     const group = this.createElement('div', ['glass-input-group']);
 
     // Tied to the field by an id that only has to be unique in this shadow root.
-    this._labelEl = this.createElement('label', ['glass-label'], { for: 'field' });
+    this._labelEl = this.createElement('label', ['glass-label'], { for: 'field', part: 'label' });
     this._labelEl.textContent = this.getAttribute('label') || '';
 
     this._textarea = this.createElement('textarea', ['glass-textarea'], { id: 'field' });
@@ -32,6 +32,8 @@ class GlkTextarea extends GlkFormElement {
 
     group.appendChild(this._labelEl);
     group.appendChild(this._textarea);
+    // A link at the end of the label row, slot="label-end" (since 1.33.0).
+    group.appendChild(this._labelEndPlace(group));
 
     this._wrapper.appendChild(group);
     this._syncFormValue();

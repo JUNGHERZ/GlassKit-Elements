@@ -20,7 +20,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="GlassKit Elements — Documentation">
   <meta name="twitter:description" content="Complete documentation for all 46 GlassKit Elements web components with live examples.">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.32/glasskit.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.33/glasskit.min.css">
   <script src="/dist/glasskit-elements.min.js"></script>
   <style>
     html { scroll-behavior: smooth; }
@@ -196,6 +196,19 @@
     [data-theme="light"] .docs-preview {
       background: rgba(0,0,0,0.02); border-color: rgba(0,0,0,0.06);
     }
+    .docs-mark {
+      display: block; width: 40px; height: 40px; border-radius: 12px;
+      background: linear-gradient(135deg, var(--gl-color-primary), var(--gl-color-primary-dark));
+      box-shadow: var(--gl-inset-strong), 0 4px 12px rgba(0,0,0,0.15);
+    }
+    .docs-rail-page { padding: 24px; display: flex; flex-direction: column; gap: 6px; font-size: 14px; color: var(--gl-color-text-muted); }
+    .docs-rail-page strong { color: var(--gl-color-text); font-size: 18px; }
+    .docs-preview a[slot="label-end"] {
+      color: var(--gl-color-primary-on-surface, var(--gl-color-primary));
+      font-weight: 500; text-decoration: none; border-radius: 6px;
+    }
+    .docs-preview a[slot="label-end"]:hover { text-decoration: underline; }
+    .docs-preview a[slot="label-end"]:focus-visible { outline: none; box-shadow: var(--gl-shadow-focus); }
     .docs-preview--contained {
       position: relative; overflow: hidden; height: 80px;
       display: flex; align-items: flex-end;
@@ -253,7 +266,7 @@
     <aside class="docs-sidebar">
       <div class="docs-sidebar__title">&#129482; <a href="/">GlassKit Elements</a></div>
       <div class="docs-sidebar__subtitle">Web Components for GlassKit CSS.</div>
-      <div class="docs-sidebar__version">v1.32.0 &ndash; Jungherz GmbH</div>
+      <div class="docs-sidebar__version">v1.33.0 &ndash; Jungherz GmbH</div>
 
       <div class="docs-sidebar__group">
         <div class="docs-sidebar__group-title">Basics</div>
@@ -345,7 +358,7 @@
         <h1>GlassKit Elements</h1>
         <p>Complete reference for all 46 web components &ndash; built by Jungherz GmbH. Vanilla JS, Shadow DOM, native form participation.</p>
         <div class="docs-hero__badges">
-          <span class="docs-hero__badge">v1.32.0</span>
+          <span class="docs-hero__badge">v1.33.0</span>
           <span class="docs-hero__badge">Shadow DOM</span>
           <span class="docs-hero__badge">46 Components</span>
           <span class="docs-hero__badge">Vanilla JS</span>
@@ -358,7 +371,7 @@
 
         <h3>CDN (quickest)</h3>
         <div class="docs-code"><span class="cmt">&lt;!-- 1. GlassKit CSS --&gt;</span>
-<span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span> <span class="attr">href</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.32/glasskit.min.css"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span> <span class="attr">href</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.33/glasskit.min.css"</span><span class="tag">&gt;</span>
 
 <span class="cmt">&lt;!-- 2. GlassKit Elements --&gt;</span>
 <span class="tag">&lt;script</span> <span class="attr">src</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"</span><span class="tag">&gt;&lt;/script&gt;</span></div>
@@ -495,8 +508,18 @@ addEventListener(<span class="val">'afterprint'</span>, () =&gt; {
             <tr><td><code>variant</code></td><td>String</td><td><code>primary</code> | <code>success</code> | <code>warning</code> (since 1.18.0) | <code>error</code></td></tr>
             <tr><td><code>interactive</code></td><td>Boolean</td><td>Pressable chip; enables <code>glk-click</code></td></tr>
             <tr><td><code>selected</code></td><td>Boolean</td><td>The chip that is on &mdash; deepens the badge's own color, sets <code>aria-pressed</code></td></tr>
+            <tr><td><code>size</code></td><td>String</td><td><code>sm</code> (default) | <code>md</code>: a chip to choose with, 36&nbsp;px high; property <code>size</code> (since 1.33.0)</td></tr>
           </table>
-          <p><strong>Events:</strong> <code>glk-click</code> when <code>interactive</code> is set.</p>
+          <p><strong>Events:</strong> <code>glk-click</code> when <code>interactive</code> is set. <strong>Part:</strong> <code>badge</code> &mdash; the <code>&lt;span&gt;</code>, or the <code>&lt;button&gt;</code> with <code>interactive</code> (since 1.33.0).</p>
+          <p><strong>Choice chips (since 1.33.0).</strong> A badge is 25 to 26&nbsp;px high, right for a status or a filter above a list. A chip that answers a question in a form &mdash; one sector of several in a sign-up, say &mdash; takes <code>size="md"</code>: 36&nbsp;px high, in the small text of a form, its label centred. Interactive, it takes taps on 44&nbsp;px, 4&nbsp;px above and below its edges, the target every control keeps. GlassKit&rsquo;s <code>.glass-badge--md</code> draws it; <code>--gl-badge-md-height</code> sets another height. Try the row:</p>
+          <div class="docs-preview" style="display:flex;gap:8px;flex-wrap:wrap;" id="glk-badge-md-chips">
+            <glk-badge interactive selected size="md">Caf&eacute; &amp; bakery</glk-badge>
+            <glk-badge interactive size="md">Restaurant</glk-badge>
+            <glk-badge interactive size="md">Retail</glk-badge>
+            <glk-badge interactive size="md">Services</glk-badge>
+          </div>
+          <div class="docs-code"><span class="tag">&lt;glk-badge</span> <span class="attr">interactive selected</span> <span class="attr">size</span>=<span class="val">"md"</span><span class="tag">&gt;</span>Caf&eacute; &amp;amp; bakery<span class="tag">&lt;/glk-badge&gt;</span>
+<span class="tag">&lt;glk-badge</span> <span class="attr">interactive</span> <span class="attr">size</span>=<span class="val">"md"</span><span class="tag">&gt;</span>Restaurant<span class="tag">&lt;/glk-badge&gt;</span></div>
         </div>
 
         <div class="docs-component" id="glk-avatar">
@@ -635,13 +658,24 @@ addEventListener(<span class="val">'afterprint'</span>, () =&gt; {
           <div class="docs-code"><span class="tag">&lt;glk-input</span> <span class="attr">label</span>=<span class="val">"Price"</span> <span class="attr">inputmode</span>=<span class="val">"decimal"</span><span class="tag">&gt;</span>
   <span class="tag">&lt;span</span> <span class="attr">slot</span>=<span class="val">"suffix"</span><span class="tag">&gt;</span>EUR<span class="tag">&lt;/span&gt;</span>
 <span class="tag">&lt;/glk-input&gt;</span></div>
+          <p id="glk-input-label-end"><strong>A place in the label row (since 1.33.0).</strong> <code>slot="label-end"</code> puts a link at the end of the label&rsquo;s line &mdash; &ldquo;Forgot password?&rdquo; beside &ldquo;Password&rdquo;. The place comes after the field in the shadow tree, so the keyboard reaches the link after the field, which reads best in a sign-in form: email, password, &ldquo;Forgot password?&rdquo;, then the button. (Safari tabs to links only with Option+Tab, or with its setting for it, as on every page.) It shows only while something is slotted: then label and link share the line, the link at its end, and the field spans the width below. <code>&lt;glk-textarea&gt;</code> and <code>&lt;glk-select&gt;</code> have the same place. GlassKit&rsquo;s <code>.glass-input-group--label-end</code> draws it. <strong>Parts:</strong> <code>label</code> on the label, <code>label-end</code> on the place.</p>
+          <div class="docs-preview" style="display:flex;flex-direction:column;gap:12px;max-width:420px;" id="docs-sign-in">
+            <glk-input label="Email" type="email" placeholder="you@example.com" autocomplete="email"></glk-input>
+            <glk-input label="Password" type="password" placeholder="Your password" autocomplete="current-password"><a slot="label-end" href="#glk-input-label-end">Forgot password?</a></glk-input>
+            <glk-button variant="primary">Sign in</glk-button>
+          </div>
+          <div class="docs-code"><span class="tag">&lt;glk-input</span> <span class="attr">label</span>=<span class="val">"Password"</span> <span class="attr">type</span>=<span class="val">"password"</span> <span class="attr">name</span>=<span class="val">"password"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;a</span> <span class="attr">slot</span>=<span class="val">"label-end"</span> <span class="attr">href</span>=<span class="val">"/reset"</span><span class="tag">&gt;</span>Forgot password?<span class="tag">&lt;/a&gt;</span>
+<span class="tag">&lt;/glk-input&gt;</span>
+
+<span class="cls">glk-input::part(label)</span> { <span class="attr">letter-spacing</span>: <span class="val">0.01em</span>; }</div>
         </div>
 
         <div class="docs-component" id="glk-textarea">
           <h3><code>&lt;glk-textarea&gt;</code></h3>
           <div class="docs-preview"><glk-textarea label="Message" placeholder="Type here..." rows="3"></glk-textarea></div>
           <div class="docs-code"><span class="tag">&lt;glk-textarea</span> <span class="attr">label</span>=<span class="val">"Message"</span> <span class="attr">rows</span>=<span class="val">"4"</span><span class="tag">&gt;&lt;/glk-textarea&gt;</span></div>
-          <p>Attributes: <code>label</code>, <code>rows</code>, <code>placeholder</code>, <code>required</code>, <code>readonly</code> (since 1.22.0), <code>name</code>, <code>value</code>, <code>disabled</code>. The label names the field.</p>
+          <p>Attributes: <code>label</code>, <code>rows</code>, <code>placeholder</code>, <code>required</code>, <code>readonly</code> (since 1.22.0), <code>name</code>, <code>value</code>, <code>disabled</code>. The label names the field. <code>slot="label-end"</code> and the parts <code>label</code> and <code>label-end</code> as on <a href="#glk-input-label-end"><code>&lt;glk-input&gt;</code></a> (since 1.33.0).</p>
         </div>
 
         <div class="docs-component" id="glk-select">
@@ -657,7 +691,7 @@ addEventListener(<span class="val">'afterprint'</span>, () =&gt; {
   <span class="tag">&lt;option</span> <span class="attr">value</span>=<span class="val">"free"</span><span class="tag">&gt;</span>Free<span class="tag">&lt;/option&gt;</span>
   <span class="tag">&lt;option</span> <span class="attr">value</span>=<span class="val">"pro"</span><span class="tag">&gt;</span>Pro<span class="tag">&lt;/option&gt;</span>
 <span class="tag">&lt;/glk-select&gt;</span></div>
-          <p>Children: native <code>&lt;option&gt;</code> elements. With <code>required</code> and an empty first option (<code>value=""</code>) the form does not submit until a choice is made (since 1.20.0). The label names the field. A <code>value</code> &mdash; attribute or property &mdash; that names no option yet is kept and selected once its option arrives, until the user picks another (since 1.22.0; before, a value set as a property before the options were copied was lost). A form reset returns to the <code>value</code> attribute.</p>
+          <p>Children: native <code>&lt;option&gt;</code> elements. With <code>required</code> and an empty first option (<code>value=""</code>) the form does not submit until a choice is made (since 1.20.0). The label names the field. A <code>value</code> &mdash; attribute or property &mdash; that names no option yet is kept and selected once its option arrives, until the user picks another (since 1.22.0; before, a value set as a property before the options were copied was lost). A form reset returns to the <code>value</code> attribute. <code>slot="label-end"</code> and the parts <code>label</code> and <code>label-end</code> as on <a href="#glk-input-label-end"><code>&lt;glk-input&gt;</code></a> (since 1.33.0).</p>
         </div>
 
         <div class="docs-component" id="glk-search">
@@ -877,7 +911,7 @@ glk-segmented::part(badge) { letter-spacing: 0.02em; }</div>
 
         <div class="docs-component" id="glk-tab-bar">
           <h3><code>&lt;glk-tab-bar&gt;</code> + <code>&lt;glk-tab-item&gt;</code></h3>
-          <p>Bottom tab bar navigation. The items sit in the middle of the bar; on an iPhone with <code>viewport-fit=cover</code> they keep to the top, above the home indicator (GlassKit 1.28.0). Since 1.32.0 the same items also make a sidebar, an icon rail or a top bar &mdash; see below.</p>
+          <p>Bottom tab bar navigation. The items sit in the middle of the bar; on an iPhone with <code>viewport-fit=cover</code> they keep to the top, above the home indicator (GlassKit 1.28.0). Since 1.32.0 the same items also make a sidebar, an icon rail or a top bar, and since 1.33.0 a rail that keeps its labels, with a place for a mark and the account &mdash; see below.</p>
           <div class="docs-preview">
             <glk-tab-bar static>
               <glk-tab-item label="Home" active><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></glk-tab-item>
@@ -899,9 +933,11 @@ glk-segmented::part(badge) { letter-spacing: 0.02em; }</div>
             <tr><td><code>slot="icon"</code></td><td>glk-tab-item</td><td>An icon that is not inline SVG &mdash; a font icon, an <code>&lt;img&gt;</code>, an element of your own; it takes the state colour (since 1.28.0). An <code>&lt;svg&gt;</code> without <code>slot</code> is copied in as before.</td></tr>
             <tr><td><code>orientation</code></td><td>glk-tab-bar</td><td><code>vertical</code>: a column, for a sidebar (since 1.32.0)</td></tr>
             <tr><td><code>dock</code></td><td>glk-tab-bar</td><td><code>start</code> | <code>end</code>, with <code>vertical</code>: fixed to that edge of the viewport, clear of its safe area (since 1.32.0)</td></tr>
-            <tr><td><code>rail</code></td><td>glk-tab-bar</td><td>With <code>vertical</code>: the icons alone, each label in a tooltip (since 1.32.0)</td></tr>
+            <tr><td><code>rail</code></td><td>glk-tab-bar</td><td>With <code>vertical</code>: the icons alone, each label in a tooltip (since 1.32.0); <code>rail="labels"</code> keeps the label under the icon (since 1.33.0)</td></tr>
             <tr><td><code>placement</code></td><td>glk-tab-bar</td><td><code>top</code>: a horizontal bar for the top of a page (since 1.32.0)</td></tr>
             <tr><td><code>label</code></td><td>glk-tab-bar</td><td>The navigation&rsquo;s name, its <code>aria-label</code> (since 1.32.0)</td></tr>
+            <tr><td><code>leading</code> (slot)</td><td>glk-tab-bar</td><td>A mark or the accessory before the items &mdash; above them in a column (since 1.33.0)</td></tr>
+            <tr><td><code>trailing</code> (slot)</td><td>glk-tab-bar</td><td>A foot such as the account, at the far end (since 1.33.0)</td></tr>
           </table>
           <p><strong>Events:</strong> <code>glk-tab-select</code> on the item, then <code>glk-tab-change</code> &rarr; <code>{ tab: Element }</code> on the bar. Since 1.28.0 <code>glk-tab-select</code> comes before <code>active</code> changes and is cancelable: <code>preventDefault()</code> keeps the current tab &mdash; for an item that opens a drawer or a link. Then nothing changes, no <code>glk-tab-change</code> follows, and the drop stays; a drag of the drop that ends on such an item takes the same path and goes back.</p>
           <div class="docs-code"><span class="tag">&lt;glk-tab-item</span> <span class="attr">label</span>=<span class="val">"Home"</span> <span class="attr">active</span><span class="tag">&gt;</span>
@@ -914,7 +950,7 @@ glk-segmented::part(badge) { letter-spacing: 0.02em; }</div>
   openDrawer();
 });</div>
           <p>Give a font icon <code>aria-hidden="true"</code>, or its text joins the tab&rsquo;s name. GlassKit&rsquo;s tab bar tokens reach the items by inheritance (GlassKit 1.28.0): <code>--gl-tab-bar-color</code> for the inactive tabs, <code>--gl-tab-bar-hover-color</code>, <code>--gl-tab-bar-label-size</code> and <code>--gl-tab-bar-z-index</code>.</p>
-          <p>Since 1.32.0 the active item tells a screen reader which view is open with <code>aria-current="page"</code>, and every item shows a focus ring for the keyboard. <strong>Parts:</strong> <code>nav</code> on the bar, <code>item</code> on each item &mdash; its button, or its link with <code>href</code>.</p>
+          <p>Since 1.32.0 the active item tells a screen reader which view is open with <code>aria-current="page"</code>, and every item shows a focus ring for the keyboard. <strong>Parts:</strong> <code>nav</code> on the bar, <code>item</code> on each item &mdash; its button, or its link with <code>href</code>; <code>leading</code> and <code>trailing</code> on the bar&rsquo;s two places (since 1.33.0).</p>
           <p><strong>Sidebar, rail and top bar (since 1.32.0).</strong> One set of items in more places than the bottom edge. <code>orientation="vertical"</code> makes the bar a column, one item per row with the icon before the label and the badge at the row&rsquo;s end: a sidebar in a column of the page&rsquo;s layout, as high as its container. With <code>dock="start"</code> or <code>"end"</code> it is fixed to that edge of the viewport instead, full height and clear of the edge&rsquo;s safe area &mdash; the side a phone&rsquo;s thumb reaches when the system moves its own controls there, as on a phone held open. <code>rail</code> shows the icons alone; the label stays the item&rsquo;s name and shows in a tooltip beside the rail, on hover, focus and a long press. <code>placement="top"</code> lays a horizontal bar out for the top of a page: in the flow &mdash; put it in a sticky header &mdash;, its border below, no room for the home indicator, and from 640&nbsp;px the icon beside the label. In a column the drop of <code>droplet</code> runs along y. The page switches between the layouts with a media query or on resize, and the items are not rendered again. Try it &mdash; tap a row or drag the drop in the sidebar, hover the rail:</p>
           <div class="docs-preview" style="display:grid;grid-template-columns:minmax(0,200px) auto;gap:16px;height:248px;">
             <glk-tab-bar orientation="vertical" droplet label="Sidebar">
@@ -960,6 +996,37 @@ glk-segmented::part(badge) { letter-spacing: 0.02em; }</div>
 wide.addEventListener(<span class="val">'change'</span>, apply);
 apply();</div>
           <p>A docked bar lies over the page; the page keeps room for it on that side. GlassKit&rsquo;s tab bar tokens reach these layouts as well: <code>--gl-tab-bar-rail-width</code> (72&nbsp;px) sets the width of the rail, <code>--gl-tab-bar-active-bg</code> the surface of the active row in a sidebar.</p>
+          <p id="glk-tab-bar-rail-labels"><strong>A rail with labels, a mark and the account (since 1.33.0).</strong> <code>rail="labels"</code> keeps the label under the icon, as on the floating bar &mdash; a desktop rail that names its items, so it adds no tooltips. The items fill the rail&rsquo;s width (<code>--gl-tab-bar-rail-width</code>, 72&nbsp;px; 96&nbsp;px below), are at least 62&nbsp;px high (<code>--gl-tab-bar-rail-item-height</code>) and rounded like a button, 16&nbsp;px, and the drop takes the same corners; <code>--gl-tab-bar-label-size</code> sets the labels. <code>slot="leading"</code> holds a mark and the accessory above the items &mdash; before them in a row &mdash;, <code>slot="trailing"</code> a foot such as the account, at the far end. Each place shows only while something is in it, and neither counts as an item for the drop or the selection. The property <code>rail</code> reads <code>true</code>, <code>false</code> or <code>"labels"</code>. Try it &mdash; tap an item, drag the drop, press the assistant:</p>
+          <div class="docs-preview" id="docs-rail-labels" style="display:grid;grid-template-columns:auto minmax(0,1fr);height:520px;padding:0;overflow:hidden;">
+            <glk-tab-bar orientation="vertical" rail="labels" droplet label="Rail with labels" style="--gl-tab-bar-rail-width: 96px; --gl-tab-bar-label-size: 12px">
+              <span slot="leading" class="docs-mark" aria-hidden="true"></span>
+              <glk-tab-accessory slot="leading" variant="accent" label="Assistant" show-label><svg viewBox="0 0 24 24"><path d="M12 3l2.2 6.3L20.5 12l-6.3 2.7L12 21l-2.2-6.3L3.5 12l6.3-2.7z"/></svg></glk-tab-accessory>
+              <glk-tab-item label="App" active><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/></svg></glk-tab-item>
+              <glk-tab-item label="Report" badge="3" badge-label="3 new"><svg viewBox="0 0 24 24"><path d="M4 4v16h16"/><path d="M8 14l3-3 3 2 5-6"/></svg></glk-tab-item>
+              <glk-tab-item label="Catalog"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg></glk-tab-item>
+              <glk-tab-item label="Customers"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></glk-tab-item>
+              <glk-button slot="trailing" variant="tertiary" size="sm auto" aria-label="Account">MK</glk-button>
+            </glk-tab-bar>
+            <div class="docs-rail-page"><strong>App</strong><span>The page beside the rail.</span></div>
+          </div>
+          <p>With <code>floating</code> and <code>dock</code> the rail is a pane of its own glass at that edge: full height, <code>--gl-tab-bar-floating-inset</code> (16&nbsp;px) from the edge and from both ends, clear of the safe areas, with the corners of a card (<code>--gl-tab-bar-rail-radius</code>, 24&nbsp;px). The page keeps room for it at that edge, here 96 + 2&nbsp;&times;&nbsp;16&nbsp;px. The design of a back office, as a whole:</p>
+          <div class="docs-code"><span class="tag">&lt;glk-tab-bar</span> <span class="attr">floating</span> <span class="attr">orientation</span>=<span class="val">"vertical"</span> <span class="attr">rail</span>=<span class="val">"labels"</span> <span class="attr">dock</span>=<span class="val">"start"</span> <span class="attr">droplet</span> <span class="attr">label</span>=<span class="val">"Main"</span>
+             <span class="attr">style</span>=<span class="val">"--gl-tab-bar-rail-width: 96px; --gl-tab-bar-label-size: 12px"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;img</span> <span class="attr">slot</span>=<span class="val">"leading"</span> <span class="attr">src</span>=<span class="val">"/mark.svg"</span> <span class="attr">alt</span>=<span class="val">""</span> <span class="attr">width</span>=<span class="val">"40"</span> <span class="attr">height</span>=<span class="val">"40"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;glk-tab-accessory</span> <span class="attr">slot</span>=<span class="val">"leading"</span> <span class="attr">variant</span>=<span class="val">"accent"</span> <span class="attr">label</span>=<span class="val">"Assistant"</span> <span class="attr">show-label</span><span class="tag">&gt;</span><span class="tag">&lt;svg&gt;</span>...<span class="tag">&lt;/svg&gt;&lt;/glk-tab-accessory&gt;</span>
+  <span class="tag">&lt;glk-tab-item</span> <span class="attr">label</span>=<span class="val">"App"</span> <span class="attr">active</span><span class="tag">&gt;</span><span class="tag">&lt;svg&gt;</span>...<span class="tag">&lt;/svg&gt;&lt;/glk-tab-item&gt;</span>
+  <span class="tag">&lt;glk-tab-item</span> <span class="attr">label</span>=<span class="val">"Report"</span><span class="tag">&gt;</span><span class="tag">&lt;svg&gt;</span>...<span class="tag">&lt;/svg&gt;&lt;/glk-tab-item&gt;</span>
+  <span class="tag">&lt;glk-tab-item</span> <span class="attr">label</span>=<span class="val">"Catalog"</span><span class="tag">&gt;</span><span class="tag">&lt;svg&gt;</span>...<span class="tag">&lt;/svg&gt;&lt;/glk-tab-item&gt;</span>
+  <span class="tag">&lt;glk-button</span> <span class="attr">slot</span>=<span class="val">"trailing"</span> <span class="attr">variant</span>=<span class="val">"tertiary"</span> <span class="attr">size</span>=<span class="val">"sm auto"</span> <span class="attr">aria-label</span>=<span class="val">"Account"</span><span class="tag">&gt;</span>MK<span class="tag">&lt;/glk-button&gt;</span>
+<span class="tag">&lt;/glk-tab-bar&gt;</span>
+
+<span class="cls">main</span> { <span class="attr">margin-inline-start</span>: <span class="val">128px</span>; }   <span class="cmt">/* 96 + 2 &times; 16 */</span></div>
+          <p><strong>The items&rsquo; tokens (GlassKit 1.33.0).</strong> <code>--gl-tab-bar-icon-size</code> (24&nbsp;px) sizes the icon box and the SVG &mdash; 18&nbsp;px for a compact top bar drawn like the segmented control. <code>--gl-tab-bar-item-radius</code> rounds the floating items and the drop, unset a capsule, 16&nbsp;px in a rail with labels. <code>--gl-tab-bar-active-weight</code> sets the weight of the active label, unset the medium of every label. They reach the items by inheritance. The items now transition their colours, the press and the shadow only: a bar that switches its layout &mdash; upright, floating, a rail &mdash; stands in its new form at once, where it took 250&nbsp;ms to settle before, and an item measured meanwhile was not yet its size.</p>
+          <div class="docs-code"><span class="cls">glk-tab-bar[placement="top"]</span> {
+  <span class="attr">--gl-tab-bar-icon-size</span>: <span class="val">18px</span>;
+  <span class="attr">--gl-tab-bar-item-radius</span>: <span class="val">12px</span>;
+  <span class="attr">--gl-tab-bar-active-weight</span>: <span class="val">600</span>;
+}</div>
         </div>
 
         <div class="docs-component" id="glk-tab-dock">
@@ -996,8 +1063,10 @@ apply();</div>
             <tr><td><code>label</code></td><td>glk-tab-accessory</td><td>aria-label for accessibility</td></tr>
             <tr><td><code>variant</code></td><td>glk-tab-accessory</td><td><code>accent</code> | <code>success</code> | <code>error</code> &mdash; filled colored capsule with white icon</td></tr>
             <tr><td><code>disabled</code></td><td>glk-tab-accessory</td><td>Disabled state</td></tr>
+            <tr><td><code>show-label</code></td><td>glk-tab-accessory</td><td>Its label under it as well &mdash; in a rail that names its items; property <code>showLabel</code> (since 1.33.0)</td></tr>
           </table>
           <p><strong>Events:</strong> <code>&lt;glk-tab-accessory&gt;</code> emits <code>glk-click</code> when clicked (suppressed when disabled). Its icon can be a font icon as well: the colour sits on the capsule and follows hover and the variants (GlassKit 1.28.0).</p>
+          <p><strong>A name under the accessory (since 1.33.0).</strong> <code>show-label</code> sets the <code>label</code> under the capsule as well, for the <a href="#glk-tab-bar-rail-labels">leading place of a rail with labels</a>. The label stays the button&rsquo;s name; the visible one is hidden from assistive technology, so it is not read twice, and a click on it presses the button. Part: <code>label</code>, the visible one.</p>
           <p><strong>Tip:</strong> Use <code>.glass-bg--has-tab-bar-floating</code> on the outer <code>.glass-bg</code> instead of <code>--has-tab-bar</code> to reserve the right amount of bottom padding.</p>
           <p><strong>Droplet (since 1.27.0).</strong> <code>droplet</code> makes the selection fluid, as in iOS 26. The active item sits on a drop of glass that floats a little above the bar; a tap sends it to the new tab like water on a pane &mdash; the leading edge goes first, the trailing one follows, it runs flatter on the way and settles with a small wobble, and the icons it passes grow as under a lens. A finger can drag it along the bar; let go, and the tab below is selected exactly as by a tap, <code>glk-tab-change</code> included. Recommended for every floating bar: one attribute, nothing else changes. Try it &mdash; tap a tab, or drag the drop:</p>
           <div class="docs-preview" style="height:96px;align-items:center;">
@@ -1023,10 +1092,12 @@ apply();</div>
   <span class="attr">--gl-droplet-trail-delay</span>: <span class="val">0ms</span>;
   <span class="attr">--gl-droplet-trail-easing</span>: <span class="val">ease-out</span>;
   <span class="attr">--gl-droplet-lift</span>: <span class="val">1</span>;
+  <span class="attr">--gl-droplet-lift-duration</span>: <span class="val">0ms</span>;
   <span class="attr">--gl-droplet-settle-duration</span>: <span class="val">0ms</span>;
   <span class="attr">--gl-droplet-lens-duration</span>: <span class="val">240ms</span>;
   <span class="attr">--gl-droplet-lens-easing</span>: <span class="val">ease-out</span>;
 }</div>
+          <p>Keep <code>--gl-droplet-lift-duration: 0ms</code> in it: without it the lift&rsquo;s deeper shadow still fades back until about 600&nbsp;ms.</p>
           <p><strong>Upright (since 1.32.0).</strong> <code>orientation="vertical"</code> stands the dock at the end edge of the viewport &mdash; <code>dock="start"</code> for the other &mdash;, vertically centred and clear of that edge&rsquo;s safe area, the accessory below the bar and above it with <code>accessory-left</code>. Give the bar inside <code>orientation="vertical"</code> as well: its items stay stacked as on the bottom edge, and the drop runs along y. Where a phone held open puts the thumb at a side rather than at the bottom edge, the navigation can go there &mdash; the same items, switched by a media query:</p>
           <div class="docs-preview" style="height:300px;display:flex;align-items:center;justify-content:flex-end;">
             <glk-tab-dock static orientation="vertical">
@@ -1862,6 +1933,12 @@ customElements.define(<span class="val">'demo-counter'</span>, DemoCounter);</di
       const chip = e.target;
       if (chip.hasAttribute('variant')) { chip.selected = !chip.selected; return; }
       for (const c of chips.querySelectorAll('glk-badge:not([variant])')) c.selected = c === chip;
+    });
+
+    // Choice chips — one sector at a time.
+    const sectors = document.getElementById('glk-badge-md-chips');
+    sectors?.addEventListener('glk-click', e => {
+      for (const c of sectors.querySelectorAll('glk-badge')) c.selected = c === e.target;
     });
   </script>
 </body>

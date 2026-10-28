@@ -465,6 +465,24 @@ class GlkFormElement extends GlkElement {
     this._internals = this.attachInternals();
   }
 
+  /**
+   * The place at the end of a field's label row (since 1.33.0), for a link
+   * such as "Forgot password?": slot="label-end", after the field in the
+   * shadow tree so the keyboard reaches it after the field, and drawn on
+   * the label's line by GlassKit's .glass-input-group--label-end.
+   */
+  _labelEndPlace(group) {
+    const place = this.createElement('span', ['glass-input-group__label-end'], { part: 'label-end', hidden: '' });
+    const slot = this.createElement('slot', [], { name: 'label-end' });
+    slot.addEventListener('slotchange', () => {
+      const on = slot.assignedNodes().length > 0;
+      place.hidden = !on;
+      group.classList.toggle('glass-input-group--label-end', on);
+    });
+    place.appendChild(slot);
+    return place;
+  }
+
   attributeChangedCallback(name, oldValue, newValue) {
     super.attributeChangedCallback(name, oldValue, newValue);
     // required, min, pattern, type … all change what counts as valid.

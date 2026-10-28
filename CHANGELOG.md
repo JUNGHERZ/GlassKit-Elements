@@ -7,6 +7,47 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.33.0] – 2026-10-28
+
+Versions stay aligned with GlassKit at 1.33.0, which this release is built against (peer dependency `>=1.33.0`).
+
+### Added
+
+- **A rail that names its items, as a pane at the edge, with a place for a mark, the accessory and a foot: `rail="labels"`, `floating` with `dock`, slots `leading` and `trailing` on `<glk-tab-bar>`.** A back office's rail at the start edge, 96px wide and 16px from the edges, with the brand mark and the accessory above the items and the label under each icon, had none of the three vertical forms of 1.32.0. A sidebar puts the label beside the icon, a rail hides it, and the upright floating bar hugs its items as a pill with no place above them. It took a wrapper that drew the glass, overrides of the items' size and the global `--gl-radius-full` on the bar.
+  - `rail="labels"` keeps the label under the icon, through GlassKit 1.33.0's `--labels`. The items fill the rail's width (`--gl-tab-bar-rail-width`), and no tooltips are added, since the labels show. The `rail` property reads `true`, `false` or `"labels"`.
+  - `floating` with `orientation="vertical"` and `dock="start"` or `"end"` makes the rail a pane of its own glass at that edge. It is full height and inset `--gl-tab-bar-floating-inset` (16px), with a card's corners. Without `dock`, a floating rail is such a pane in the page's layout, as high as its container.
+  - `slot="leading"` holds a mark or the accessory before the items, above them in a column. `slot="trailing"` holds a foot such as the account at the far end. The parts are `leading` and `trailing`.
+  - `--gl-tab-bar-item-radius` from GlassKit 1.33.0 rounds the items and the drop without touching a global token.
+
+  ([#32](https://github.com/JUNGHERZ/GlassKit-Elements/issues/32))
+- **`show-label` on `<glk-tab-accessory>`**: its label under it as well, for a rail that names its items. The name stays the button's, and the visible label is hidden from assistive technology so it is not read twice. A click on it presses the button. The property is `showLabel` and the part is `label`. ([#32](https://github.com/JUNGHERZ/GlassKit-Elements/issues/32))
+- **A place at the end of the label row: slot `label-end` on `<glk-input>`, `<glk-textarea>` and `<glk-select>`**, for a link such as "Forgot password?" on the line of the label "Password". The label row had no slot and the label no part, so the link lay around the element from outside. The place comes after the field in the shadow tree, so the keyboard reaches it after the field, which reads best in a sign-in form. GlassKit 1.33.0's `.glass-input-group--label-end` draws it at the end of the label's line. Parts are `label` and `label-end`. ([#33](https://github.com/JUNGHERZ/GlassKit-Elements/issues/33))
+- **`size="md"` and part `badge` on `<glk-badge>`.** An interactive badge was 25 to 26px high, so a row of choice chips in a sign-up form needed tokens bent on the host. `size="md"` makes a 36px chip in the small text of a form, GlassKit 1.33.0's `--md`. Interactive, it takes taps on 44px. The property is `size` (`"sm"`, the default, or `"md"`). Part `badge` is the inner span, or the button. ([#34](https://github.com/JUNGHERZ/GlassKit-Elements/issues/34))
+
+### Changed
+
+- **From GlassKit 1.33.0**, by inheritance ([GlassKit #25](https://github.com/JUNGHERZ/GlassKit/issues/25)):
+  - The tab bar's `--gl-tab-bar-icon-size`, `--gl-tab-bar-item-radius` and `--gl-tab-bar-active-weight` reach `<glk-tab-bar>` and its items.
+  - Items move only their colours, the press and the shadow, so a bar switched between its layouts has its new size at once instead of gliding for 250ms.
+
+Measured in Chromium 153, WebKit 26.6 and Firefox 151:
+- **Rail:** the issue's design as `floating orientation="vertical" rail="labels" dock="start"` with `--gl-tab-bar-rail-width: 96px` and the mark and accessory in `leading`.
+  - The rail stands 16px from the start edge and the ends of a 760px viewport, with 24px corners.
+  - Items are 78 by 62px with 16px corners, labels 12px under the icons, a long one cut with an ellipsis.
+  - The accessory's label reads "Assistant", its button is named "Assistant", and a click on the label presses it.
+  - The account in `trailing` sits at the bottom, and the drop runs along y with 16px corners.
+  - Right to left the rail stands at the right edge.
+- **Layout switch:** a bar switched to `orientation="vertical" rail="labels"` has its 62px items in the next frame.
+- **`label-end`:**
+  - In the input, the textarea and the select, the link sits on the label's line at the field's end.
+  - Tab goes from the field to the link in Chromium and Firefox.
+  - Safari reaches links with Tab only with its preference or Option+Tab.
+- **Chips:** `size="md"` is 36px high with 14px text, and a tap 3.5px above or below its edge reaches it.
+
+Docs (English and German), README and SKILL.md describe the rail, the accessory's label, the label row's end and the chip. The existing docs, showcase and landing pages render pixel-identical to 1.32.0 in all three engines, in Chromium section by section.
+
+---
+
 ## [1.32.0] – 2026-10-27
 
 Versions stay aligned with GlassKit at 1.32.0, which this release is built against (peer dependency `>=1.32.0`). Ten new elements bring the count to 46.
@@ -1139,7 +1180,8 @@ Starting with this release, GlassKit Elements version numbers are aligned with G
 
 ---
 
-[Unreleased]: https://github.com/JUNGHERZ/GlassKit-Elements/compare/v1.32.0...HEAD
+[Unreleased]: https://github.com/JUNGHERZ/GlassKit-Elements/compare/v1.33.0...HEAD
+[1.33.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.33.0
 [1.32.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.32.0
 [1.31.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.31.0
 [1.30.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.30.0

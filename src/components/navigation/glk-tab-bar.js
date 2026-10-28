@@ -17,11 +17,19 @@ import { attachDroplet } from '@jungherz-de/glasskit/glasskit-droplet.js';
 // column. The page switches between the layouts with a media query or on
 // resize, without rendering the items again.
 //
+// Since 1.33.0 rail="labels" keeps the label under the icon, as on the
+// floating bar: a desktop rail that names its items. floating with
+// orientation="vertical" and dock makes the rail a pane of its own glass at
+// that edge, full height and inset from it. slot="leading" holds a mark or
+// the accessory before the items — above them in a column — and
+// slot="trailing" a foot such as the account after them.
+//
 // Attributes: static, floating, droplet, orientation (horizontal | vertical),
-//             rail, dock (start | end; with vertical), placement (bottom |
-//             top), label (the navigation's name)
+//             rail (or rail="labels"), dock (start | end; with vertical),
+//             placement (bottom | top), label (the navigation's name)
+// Slots:      default (glk-tab-item), leading, trailing (since 1.33.0)
 // Events:     glk-tab-change { tab } — after a glk-tab-select went through
-// Part:       nav (since 1.32.0)
+// Parts:      nav (since 1.32.0), leading, trailing (since 1.33.0)
 
 const DOCKS = ['start', 'end'];
 
@@ -32,7 +40,9 @@ class GlkTabBar extends GlkElement {
 
   render() {
     const nav = this.createElement('nav', ['glass-tab-bar'], { part: 'nav' });
-    nav.appendChild(document.createElement('slot'));
+    this._leading = this._createPlace('leading');
+    this._trailing = this._createPlace('trailing');
+    nav.append(this._leading, document.createElement('slot'), this._trailing);
     this._wrapper.appendChild(nav);
     this._nav = nav;
 
@@ -63,22 +73,34 @@ class GlkTabBar extends GlkElement {
     }
   }
 
+  /** A place before or after the items, shown once something is in it. */
+  _createPlace(name) {
+    const place = this.createElement('div', [`glass-tab-bar__${name}`], { part: name, hidden: '' });
+    const slot = this.createElement('slot', [], { name });
+    slot.addEventListener('slotchange', () => { place.hidden = slot.assignedNodes().length === 0; });
+    place.appendChild(slot);
+    return place;
+  }
+
   get _layout() {
     const vertical = this.orientation === 'vertical';
     const dock = this.getAttribute('dock');
+    const rail = vertical && this.getBoolAttr('rail');
     return {
       vertical,
-      rail: vertical && this.getBoolAttr('rail'),
+      rail,
+      labels: rail && this.getAttribute('rail') === 'labels',
       dock: vertical && DOCKS.includes(dock) ? dock : null,
       top: !vertical && this.getAttribute('placement') === 'top',
     };
   }
 
   _applyLayout() {
-    const { vertical, rail, dock, top } = this._layout;
+    const { vertical, rail, labels, dock, top } = this._layout;
     const nav = this._nav;
     nav.classList.toggle('glass-tab-bar--vertical', vertical);
     nav.classList.toggle('glass-tab-bar--rail', rail);
+    nav.classList.toggle('glass-tab-bar--labels', labels);
     for (const d of DOCKS) nav.classList.toggle(`glass-tab-bar--${d}`, dock === d);
     nav.classList.toggle('glass-tab-bar--top', top);
     this._applyStatic();
@@ -179,8 +201,12 @@ class GlkTabBar extends GlkElement {
     else this.removeAttribute('orientation');
   }
 
-  get rail() { return this.getBoolAttr('rail'); }
-  set rail(v) { this.setBoolAttr('rail', v); }
+  /** true, false, or "labels" for a rail that keeps its labels. */
+  get rail() { return this.getAttribute('rail') === 'labels' ? 'labels' : this.getBoolAttr('rail'); }
+  set rail(v) {
+    if (v === 'labels') this.setAttribute('rail', 'labels');
+    else this.setBoolAttr('rail', v);
+  }
 
   get dock() { return DOCKS.includes(this.getAttribute('dock')) ? this.getAttribute('dock') : ''; }
   set dock(v) {

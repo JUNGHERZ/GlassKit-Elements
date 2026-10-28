@@ -43,7 +43,7 @@ class GlkInput extends GlkFormElement {
     // Label — tied to the field by id, which only has to be unique inside
     // this shadow root. That gives the field its accessible name, and a click
     // on the label text focuses it.
-    this._labelEl = this.createElement('label', ['glass-label'], { for: 'field' });
+    this._labelEl = this.createElement('label', ['glass-label'], { for: 'field', part: 'label' });
     this._labelEl.textContent = this.getAttribute('label') || '';
 
     // Input
@@ -80,6 +80,8 @@ class GlkInput extends GlkFormElement {
     group.appendChild(this._labelEl);
     group.appendChild(this._box);
     if (this.getAttribute('hint')) group.appendChild(this._hintEl);
+    // A link at the end of the label row, slot="label-end" (since 1.33.0).
+    group.appendChild(this._labelEndPlace(group));
 
     this._group = group;
     this._wrapper.appendChild(group);

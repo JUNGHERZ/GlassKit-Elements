@@ -5,7 +5,7 @@
   <a href="#"><img src="https://img.shields.io/badge/vanilla_JS-no_dependencies-44cc11?style=flat-square" alt="Vanilla JS"></a>
   <a href="#"><img src="https://img.shields.io/badge/components-46-7ec8e3?style=flat-square" alt="46 Components"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="MIT License"></a>
-  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/changelog-v1.32.0-lightgrey?style=flat-square" alt="Changelog"></a>
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/changelog-v1.33.0-lightgrey?style=flat-square" alt="Changelog"></a>
   <a href="https://www.npmjs.com/package/@jungherz-de/glasskit-elements"><img src="https://img.shields.io/badge/npm-%40jungherz--de%2Fglasskit--elements-cb3837?style=flat-square&logo=npm" alt="npm"></a>
 </p>
 
@@ -57,7 +57,7 @@ It is the **app layer** of the GlassKit family — three layers, one design lang
 | 🎛️ **Form Participation** | Input, toggle, checkbox, radio, select — all work natively with `<form>` via `ElementInternals`: value, reset and, since 1.20.0, validity; `<glk-button type="submit">` submits |
 | 🌗 **Theme Sync** | Automatic dark/light mode sync via `data-theme` on `<html>`, compact controls via `data-density`, opaque surfaces via `data-surface` |
 | 💧 **Fluid selection** | `droplet` on `<glk-tab-bar>` and `<glk-segmented>`: the chosen item rides a drop of glass that glides to the next one and can be dragged (since 1.27.0) |
-| 🧭 **Navigation at every edge** | One `<glk-tab-bar>` as bottom bar, top bar, sidebar or icon rail, or docked at a side where the thumb rests on a phone held open (since 1.32.0) |
+| 🧭 **Navigation at every edge** | One `<glk-tab-bar>` as bottom bar, top bar, sidebar or icon rail, or docked at a side where the thumb rests on a phone held open (since 1.32.0); a rail that names its items, with a mark, the accessory and the account (since 1.33.0) |
 | ↕️ **Drag and drop** | `sortable` lists and trees, by mouse, touch and keyboard, with breadcrumbs as drop targets (since 1.32.0) |
 | 📱 **Mobile-first** | Inherits GlassKit's mobile-optimized design with `safe-area-inset` support |
 
@@ -69,7 +69,7 @@ It is the **app layer** of the GlassKit family — three layers, one design lang
 
 ```html
 <!-- 1. GlassKit CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.32/glasskit.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.33/glasskit.min.css">
 
 <!-- 2. GlassKit Elements -->
 <script src="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"></script>
@@ -107,7 +107,7 @@ The per-component files leave `@jungherz-de/glasskit/glasskit-styles.js` as an e
 <!DOCTYPE html>
 <html data-theme="dark">
 <head>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.32/glasskit.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.33/glasskit.min.css">
   <script src="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"></script>
 </head>
 <body>
@@ -128,10 +128,10 @@ The per-component files leave `@jungherz-de/glasskit/glasskit-styles.js` as an e
 |---|---|---|
 | `<glk-nav>` | Horizontal navigation bar | — |
 | `<glk-pill>` | Circular icon button (46×46px) | `label`, `disabled` |
-| `<glk-tab-bar>` | Tab bar navigation: at the bottom, at the top, as a sidebar or an icon rail, docked at a side | `static`, `floating`, `droplet`, `orientation`, `rail`, `dock`, `placement`, `label` |
+| `<glk-tab-bar>` | Tab bar navigation: at the bottom, at the top, as a sidebar or an icon rail — with its labels under the icons since 1.33.0 —, docked at a side; slots `leading` and `trailing` for a mark, the accessory and the account | `static`, `floating`, `droplet`, `orientation`, `rail` (or `rail="labels"`), `dock`, `placement`, `label` |
 | `<glk-tab-item>` | Tab bar item; any icon in `slot="icon"`, a cancelable `glk-tab-select`, a link with `href`, `aria-current` on the open view | `label`, `active`, `badge`, `badge-label`, `href` |
 | `<glk-tab-dock>` | Wrapper for floating tab bar + optional accessory, upright at a side with `orientation="vertical"` | `accessory-left`, `orientation`, `dock` |
-| `<glk-tab-accessory>` | Standalone glass capsule (search, compose…) | `label`, `variant` (accent, success, error), `disabled` |
+| `<glk-tab-accessory>` | Standalone glass capsule (search, compose…), its label under it with `show-label` | `label`, `variant` (accent, success, error), `disabled`, `show-label` |
 | `<glk-steps>` | Progress through a short flow | `steps`, `current`, `label` |
 | `<glk-date-strip>` | Scrolling row of day chips with tone dots; arrow keys, chosen chip centred | `start`, `days`, `value`, `today`, `marks`, `locale`, `label` |
 | `<glk-breadcrumbs>` | The path through nested levels; folds the middle into a "…" menu, crumbs as drop targets, a cancelable `glk-navigate` | `label`, `collapse`, `drop-target`, `group`, `more-label` |
@@ -142,7 +142,7 @@ The per-component files leave `@jungherz-de/glasskit/glasskit-styles.js` as an e
 | Component | Description | Key Attributes |
 |---|---|---|
 | `<glk-card>` | Glass-effect content card | `glow`, `fill` |
-| `<glk-badge>` | Inline status badge, or a filter chip with `interactive` | `variant` (primary, success, warning, error), `interactive`, `selected` |
+| `<glk-badge>` | Inline status badge, or a filter chip with `interactive`; a 36px chip to choose with in a form with `size="md"` | `variant` (primary, success, warning, error), `interactive`, `selected`, `size` (sm, md) |
 | `<glk-avatar>` | Circular avatar | `size` (sm, lg), `src` |
 | `<glk-title>` | Styled heading | — |
 | `<glk-divider>` | Horizontal divider | — |
@@ -161,9 +161,9 @@ All form components support `name`, `value`, `disabled` and participate in nativ
 
 | Component | Description | Key Attributes |
 |---|---|---|
-| `<glk-input>` | Text input with label & hint; slots `prefix` / `suffix` for an icon, unit or button in the field | `label`, `type`, `placeholder`, `hint`, `error`, `required`, `readonly`, `min`, `max`, `step`, `maxlength`, `pattern`, `autocomplete`, `inputmode` |
-| `<glk-textarea>` | Multi-line text input | `label`, `rows`, `placeholder`, `required`, `readonly` |
-| `<glk-select>` | Dropdown select | `label`, `required` (children: `<option>`) |
+| `<glk-input>` | Text input with label & hint; slots `prefix` / `suffix` for an icon, unit or button in the field, `label-end` for a link such as "Forgot password?" in the label row | `label`, `type`, `placeholder`, `hint`, `error`, `required`, `readonly`, `min`, `max`, `step`, `maxlength`, `pattern`, `autocomplete`, `inputmode` |
+| `<glk-textarea>` | Multi-line text input; slot `label-end` | `label`, `rows`, `placeholder`, `required`, `readonly` |
+| `<glk-select>` | Dropdown select; slot `label-end` | `label`, `required` (children: `<option>`) |
 | `<glk-search>` | Search input with icon | `placeholder`, `label` (accessible name) |
 | `<glk-toggle>` | Switch toggle (`role="switch"` on its native checkbox) | `label`, `checked`, `disabled`, `required` |
 | `<glk-checkbox>` | Checkbox | `label`, `checked`, `disabled`, `required` |
@@ -297,7 +297,22 @@ Since 1.32.0 one `<glk-tab-bar>` serves every layout: the same items as a bottom
 
 In a rail the labels are hidden from view, stay the items' names, and show as tooltips beside the rail on hover, focus and a long press. The drop runs along y in a column, and its timing is GlassKit's `--gl-droplet-*` tokens — for a product whose motion stays within 240ms ease-out, GlassKit's README has the recipe, `--gl-droplet-lift-duration: 0ms` included, without which the lift's shadow fades until about 600ms. The open view carries `aria-current="page"`, `label` names each navigation, `badge-label` words a count ("Customers, 3 new"), and `href` makes an item a link.
 
-> **Requires GlassKit CSS >= 1.32.0** — the sidebar, rail, top and side-dock layouts, the drop's y axis and its timing tokens.
+**A rail that names its items (since 1.33.0).** `rail="labels"` keeps each label under its icon, `slot="leading"` takes a mark and the accessory above the items, `slot="trailing"` the account at the foot, and with `floating` and `dock` the rail is a full-height pane of its own glass, 16px from the edges:
+
+```html
+<glk-tab-bar floating orientation="vertical" rail="labels" dock="start" droplet label="Main"
+             style="--gl-tab-bar-rail-width: 96px; --gl-tab-bar-label-size: 12px">
+  <img slot="leading" src="/mark.svg" alt="" width="40" height="40">
+  <glk-tab-accessory slot="leading" variant="accent" label="Assistant" show-label>…</glk-tab-accessory>
+  <glk-tab-item label="App" active>…</glk-tab-item>
+  <glk-tab-item label="Report">…</glk-tab-item>
+  <glk-button slot="trailing" variant="tertiary" size="sm auto" aria-label="Account">MK</glk-button>
+</glk-tab-bar>
+```
+
+`<glk-tab-accessory show-label>` names itself under the capsule. GlassKit 1.33.0's `--gl-tab-bar-icon-size`, `--gl-tab-bar-item-radius` and `--gl-tab-bar-active-weight` size the icons, round the items and the drop, and set the active label's weight, and a bar that switches its layout no longer glides into it.
+
+> **Requires GlassKit CSS >= 1.32.0** — the sidebar, rail, top and side-dock layouts, the drop's y axis and its timing tokens; **1.33.0** for a rail with labels, its leading and trailing places, the floating rail at an edge and the items' tokens.
 
 ### Tooltips, menus, trees, breadcrumbs, tables
 

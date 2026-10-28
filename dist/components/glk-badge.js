@@ -3,12 +3,16 @@ import '@jungherz-de/glasskit/glasskit-styles.js';
 
 // warning since 1.18.0 (needs GlassKit 1.18.0). Any other value falls back to
 // the neutral badge, as an unknown value of an enumerated attribute does.
+//
+// size="md" (since 1.33.0) makes a chip to choose with, 36px high in the
+// small text of a form — GlassKit's .glass-badge--md; interactive, it takes
+// taps on 44px. Part badge (since 1.33.0): the span, or the button.
 const VARIANTS = ['primary', 'success', 'warning', 'error'];
 
 class GlkBadge extends GlkElement {
   static get displayInline() { return true; }
   static get observedAttributes() {
-    return ['variant', 'interactive', 'selected'];
+    return ['variant', 'interactive', 'selected', 'size'];
   }
 
   render() {
@@ -24,7 +28,7 @@ class GlkBadge extends GlkElement {
   // Toggling `interactive` therefore swaps the element, not just a class.
   _mount() {
     const interactive = this.getBoolAttr('interactive');
-    const el = this.createElement(interactive ? 'button' : 'span', this._computeClasses());
+    const el = this.createElement(interactive ? 'button' : 'span', this._computeClasses(), { part: 'badge' });
     if (interactive) {
       el.type = 'button';
       el.setAttribute('aria-pressed', String(this.getBoolAttr('selected')));
@@ -67,6 +71,7 @@ class GlkBadge extends GlkElement {
         break;
       case 'variant':
       case 'selected':
+      case 'size':
         this._badge.className = this._computeClasses().join(' ');
         if (this._badge.tagName === 'BUTTON') {
           this._badge.setAttribute('aria-pressed', String(this.getBoolAttr('selected')));
@@ -81,6 +86,7 @@ class GlkBadge extends GlkElement {
     if (variant && VARIANTS.includes(variant)) {
       classes.push(`glass-badge--${variant}`);
     }
+    if (this.getAttribute('size') === 'md') classes.push('glass-badge--md');
     if (this.getBoolAttr('interactive')) classes.push('glass-badge--interactive');
     if (this.getBoolAttr('selected')) classes.push('glass-badge--selected');
     return classes;
@@ -94,6 +100,13 @@ class GlkBadge extends GlkElement {
 
   get selected() { return this.getBoolAttr('selected'); }
   set selected(v) { this.setBoolAttr('selected', v); }
+
+  /** "sm" (the default) or "md", a chip to choose with. */
+  get size() { return this.getAttribute('size') === 'md' ? 'md' : 'sm'; }
+  set size(v) {
+    if (v === 'md') this.setAttribute('size', 'md');
+    else this.removeAttribute('size');
+  }
 }
 
 customElements.define('glk-badge', GlkBadge);

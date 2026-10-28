@@ -20,7 +20,8 @@ import { tooltipBehaviour } from '../../overlay.js';
 // item is a link, which can open its view in a new tab — a cancelled
 // glk-tab-select stops the navigation too. In a rail the label is hidden
 // from view and shows as a tooltip on hover, focus and a long press, beside
-// the rail. Part: item.
+// the rail — unless the rail keeps its labels (rail="labels", since
+// 1.33.0), where it stands under the icon. Part: item.
 
 class GlkTabItem extends GlkElement {
   static get observedAttributes() {
@@ -148,13 +149,15 @@ class GlkTabItem extends GlkElement {
    * its state down and the wrapper carries it. Before 1.27.0 the items of a
    * floating bar kept the fixed bar's look: no spotlight, no pill, the dot.
    */
-  _syncBar({ floating, droplet, placed, drag, vertical = false, rail = false, top = false, dock = null }) {
+  _syncBar({ floating, droplet, placed, drag, vertical = false, rail = false, labels = false, top = false, dock = null }) {
     if (!this._wrapper) return;
-    this._applyRail(rail, dock);
+    // A rail that shows its labels needs no tooltip for them.
+    this._applyRail(rail && !labels, dock);
     this._wrapper.classList.toggle('glass-tab-bar--floating', floating);
     this._wrapper.classList.toggle('glass-tab-bar--droplet', droplet);
     this._wrapper.classList.toggle('glass-tab-bar--vertical', vertical);
     this._wrapper.classList.toggle('glass-tab-bar--rail', rail);
+    this._wrapper.classList.toggle('glass-tab-bar--labels', labels);
     this._wrapper.classList.toggle('glass-tab-bar--top', top);
     this._wrapper.toggleAttribute('data-droplet', placed);
     this._wrapper.toggleAttribute('data-droplet-drag', drag);

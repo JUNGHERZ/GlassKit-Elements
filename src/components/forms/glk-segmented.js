@@ -232,6 +232,14 @@ class GlkSegmented extends GlkFormElement {
   resetValue() { this.value = this._initialValue; }
   restoreValue(state) { if (typeof state === 'string') this.value = state; }
 
+  /** The chosen option takes the focus, else the first that can (since 1.33.2). */
+  focus(options) {
+    const buttons = [...(this._group?.querySelectorAll('button[data-value]') ?? [])].filter(button => !button.disabled);
+    const target = buttons.find(button => button.getAttribute('aria-pressed') === 'true') ?? buttons[0];
+    if (target) target.focus(options);
+    else super.focus(options);
+  }
+
   get value() { return this.getAttribute('value') ?? ''; }
   set value(v) {
     if (v == null) this.removeAttribute('value');

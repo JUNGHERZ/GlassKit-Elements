@@ -268,7 +268,7 @@
     <aside class="docs-sidebar">
       <div class="docs-sidebar__title">&#129482; <a href="../de/">GlassKit Elements</a></div>
       <div class="docs-sidebar__subtitle">Web Components f&uuml;r GlassKit CSS.</div>
-      <div class="docs-sidebar__version">v1.33.1 &ndash; Jungherz GmbH</div>
+      <div class="docs-sidebar__version">v1.33.2 &ndash; Jungherz GmbH</div>
 
       <div class="docs-sidebar__group">
         <div class="docs-sidebar__group-title">Grundlagen</div>
@@ -360,7 +360,7 @@
         <h1>GlassKit Elements</h1>
         <p>Vollst&auml;ndige Referenz f&uuml;r alle 46 Web Components &ndash; entwickelt von Jungherz GmbH. Vanilla JS, Shadow DOM, native Formular-Teilnahme.</p>
         <div class="docs-hero__badges">
-          <span class="docs-hero__badge">v1.33.1</span>
+          <span class="docs-hero__badge">v1.33.2</span>
           <span class="docs-hero__badge">Shadow DOM</span>
           <span class="docs-hero__badge">46 Komponenten</span>
           <span class="docs-hero__badge">Vanilla JS</span>
@@ -607,6 +607,7 @@ addEventListener(<span class="val">'afterprint'</span>, () =&gt; {
           <p><strong>Events:</strong> <code>glk-click</code> &nbsp; <strong>Part:</strong> <code>button</code>, der native Button darin (seit 1.31.0)</p>
           <p>Seit GlassKit 1.31.0 behält jeder Button Raum neben seiner Beschriftung, 24&nbsp;px, solange <code>--gl-btn-padding-x</code> keinen anderen setzt: Ein kleiner Button, der seine Breite aus dem Text nimmt, in einer Reihe oder einem leeren Zustand, berührte den Text vorher mit seinen Kanten. <code>--gl-btn-radius</code> rundet nur die Buttons &mdash; <code>9999px</code> für Pillenform &mdash; und lässt Listen und Segmentwahl, wie sie sind.</p>
           <p><code>type="submit"</code> sendet das Formular ab, in dem das Element steht, <code>type="reset"</code> setzt es zur&uuml;ck &mdash; erst wenn der Klick fertig aufgestiegen ist, sodass ein Listener mit <code>preventDefault()</code> auf dem Klick es verhindert, wie bei einem nativen Button. Ein Formular mit ung&uuml;ltigen Feldern sendet nicht und zeigt die Meldung des Browsers. Das submit-Event nennt das Element als <code>submitter</code>; <code>.form</code> ist sein Formular, und <code>element.click()</code> wirkt wie ein Klick. <code>aria-expanded</code>, <code>aria-haspopup</code> und <code>aria-pressed</code> am Element werden an den nativen Button im Inneren weitergereicht, den Screenreader lesen (seit 1.20.0).</p>
+          <p><code>focus()</code> am Element fokussiert den Button darin, ebenso <code>autofocus</code> (seit 1.33.2; vorher konnte das Element den Fokus nicht von au&szlig;en nehmen). <code>&lt;glk-pill&gt;</code>, <code>&lt;glk-tab-item&gt;</code> und <code>&lt;glk-tab-accessory&gt;</code> machen es genauso. Elemente mit mehr als einem Bedienelement geben <code>focus()</code> an das, welches Tab erreicht: <code>&lt;glk-segmented&gt;</code> an die gew&auml;hlte Option, <code>&lt;glk-calendar&gt;</code> und <code>&lt;glk-date-strip&gt;</code> an den Tag, der der Tab-Stopp ist, <code>&lt;glk-image-picker&gt;</code> an seinen Auswahl-Button, <code>&lt;glk-accordion-item&gt;</code> an seinen Ausl&ouml;ser, ein interaktives oder sortierbares <code>&lt;glk-list-item&gt;</code> an seine Zeile und ein interaktives <code>&lt;glk-badge&gt;</code> an seinen Button.</p>
         </div>
 
         <div class="docs-component" id="glk-pill">
@@ -1252,17 +1253,24 @@ crumbs.addEventListener(<span class="val">'glk-navigate'</span>, (event) =&gt; {
 
         <div class="docs-component">
           <h3><code>&lt;glk-progress&gt;</code></h3>
+          <p>Fortschrittsbalken mit Beschriftung und Wert. Seit 1.33.2 ist das Element f&uuml;r Hilfstechnik der Fortschrittsbalken: <code>role="progressbar"</code> mit dem Wert, 0, <code>max</code> und dem Werttext, benannt durch <code>label</code> &mdash; oder, bei einem Balken ohne sichtbare Beschriftung, durch <code>aria-label</code> oder <code>aria-labelledby</code> am Element.</p>
           <div class="docs-preview" style="display:flex;flex-direction:column;gap:12px;">
             <glk-progress label="Upload" value="75" variant="success"></glk-progress>
             <glk-progress label="Storage" value="90" variant="error" size="lg"></glk-progress>
+            <glk-progress label="Bilder diesen Monat" value="3" max="20" value-text="3 von 20" size="sm"></glk-progress>
           </div>
-          <div class="docs-code"><span class="tag">&lt;glk-progress</span> <span class="attr">label</span>=<span class="val">"Upload"</span> <span class="attr">value</span>=<span class="val">"75"</span> <span class="attr">variant</span>=<span class="val">"success"</span><span class="tag">&gt;&lt;/glk-progress&gt;</span></div>
+          <div class="docs-code"><span class="tag">&lt;glk-progress</span> <span class="attr">label</span>=<span class="val">"Upload"</span> <span class="attr">value</span>=<span class="val">"75"</span> <span class="attr">variant</span>=<span class="val">"success"</span><span class="tag">&gt;&lt;/glk-progress&gt;</span>
+<span class="tag">&lt;glk-progress</span> <span class="attr">label</span>=<span class="val">"Bilder diesen Monat"</span> <span class="attr">value</span>=<span class="val">"3"</span> <span class="attr">max</span>=<span class="val">"20"</span> <span class="attr">value-text</span>=<span class="val">"3 von 20"</span><span class="tag">&gt;&lt;/glk-progress&gt;</span></div>
           <table class="docs-table">
             <tr><th>Attribute</th><th>Type</th><th>Values</th></tr>
-            <tr><td><code>value</code></td><td>Number</td><td>0 &ndash; 100</td></tr>
+            <tr><td><code>label</code></td><td>String</td><td>Der Text &uuml;ber dem Balken an seinem Anfang; benennt den Balken</td></tr>
+            <tr><td><code>value</code></td><td>Number</td><td>0 &ndash; <code>max</code>; seit 1.33.2 auch mit Nachkommastellen</td></tr>
+            <tr><td><code>max</code></td><td>Number</td><td>Der Wert eines vollen Balkens, standardm&auml;&szlig;ig <code>100</code>; die F&uuml;llung ist <code>value</code> / <code>max</code> (seit 1.33.2)</td></tr>
+            <tr><td><code>value-text</code></td><td>String</td><td>Der Text am Ende der Beschriftungszeile, etwa <code>3 von 20</code>, und der Werttext des Balkens f&uuml;r Screenreader; ohne ihn der Prozentwert (seit 1.33.2)</td></tr>
             <tr><td><code>variant</code></td><td>String</td><td><code>success</code> | <code>error</code></td></tr>
             <tr><td><code>size</code></td><td>String</td><td><code>sm</code> | (default) | <code>lg</code></td></tr>
           </table>
+          <p><strong>Parts:</strong> <code>label</code>, <code>value</code>, <code>track</code>, <code>fill</code> (seit 1.33.2) &nbsp; <strong>Properties:</strong> <code>value</code>, <code>max</code>, <code>valueText</code></p>
         </div>
 
         <div class="docs-component" id="glk-modal">
@@ -1888,7 +1896,7 @@ customElements.define(<span class="val">'demo-counter'</span>, DemoCounter);</di
           <tr><td>Pro Komponente</td><td><code>import { GlkElement } from '@jungherz-de/glasskit-elements/base.js';</code> &mdash; genau das Modul, das die Komponenten importieren, also gilt <code>instanceof GlkElement</code> &uuml;ber beide hinweg. Die Einzelmodule lassen <code>@jungherz-de/glasskit/glasskit-styles.js</code> extern: ein Bundler l&ouml;st es auf, eine Import-Map braucht einen Eintrag daf&uuml;r. Nie neben dem <code>&lt;script&gt;</code>-Bundle &mdash; das tr&auml;gt seine eigene Kopie der Klasse.</td></tr>
           <tr><td>CDN / <code>&lt;script&gt;</code></td><td><code>const { GlkElement } = GlassKitElements;</code></td></tr>
         </table>
-        <p><strong>Hooks:</strong> <code>render()</code> baut in <code>this._wrapper</code>; <code>setupEvents()</code> / <code>teardownEvents()</code> laufen bei jedem Connect / Disconnect; <code>onAttributeChanged(name, old, value)</code> feuert nach dem ersten Render. <strong>Helfer:</strong> <code>createElement(tag, classes, attrs)</code>, <code>getBoolAttr()</code> / <code>setBoolAttr()</code>, <code>emit(name, detail)</code>. <code>static get displayInline()</code> liefert <code>true</code> f&uuml;r ein Inline-Element; <code>static get observesLightDom()</code> l&auml;sst <code>projectLightDom()</code> bei jeder &Auml;nderung der Light-DOM-Kinder erneut laufen. Seit 1.20.0 gibt <code>static get delegatesFocus()</code> mit <code>true</code> den Fokus an das erste Feld im Inneren weiter (an f&uuml;r <code>GlkFormElement</code>), und ein <code>GlkFormElement</code>, dessen <code>get _validityField()</code> sein natives Feld liefert, meldet dessen G&uuml;ltigkeit am Host &mdash; nach jedem <code>setFormValue()</code> und jeder Attribut&auml;nderung. Seit 1.22.3 gibt <code>applyDisabled(disabled)</code> den Deaktiviert-Zustand an die nativen Bedienelemente weiter: in einem <code>GlkFormElement</code> &uuml;berschreiben. Es l&auml;uft nach dem ersten Render und immer dann, wenn sich das eigene <code>disabled</code> des Elements oder ein <code>&lt;fieldset disabled&gt;</code> um es herum &auml;ndert &mdash; von selbst reicht kein Fieldset in den Shadow Root.</p>
+        <p><strong>Hooks:</strong> <code>render()</code> baut in <code>this._wrapper</code>; <code>setupEvents()</code> / <code>teardownEvents()</code> laufen bei jedem Connect / Disconnect; <code>onAttributeChanged(name, old, value)</code> feuert nach dem ersten Render. <strong>Helfer:</strong> <code>createElement(tag, classes, attrs)</code>, <code>getBoolAttr()</code> / <code>setBoolAttr()</code>, <code>emit(name, detail)</code>. <code>static get displayInline()</code> liefert <code>true</code> f&uuml;r ein Inline-Element; <code>static get observesLightDom()</code> l&auml;sst <code>projectLightDom()</code> bei jeder &Auml;nderung der Light-DOM-Kinder erneut laufen. Seit 1.20.0 gibt <code>static get delegatesFocus()</code> mit <code>true</code> den Fokus an das erste Feld oder den ersten Button im Inneren weiter (an f&uuml;r <code>GlkFormElement</code> und seit 1.33.2 f&uuml;r <code>&lt;glk-button&gt;</code>, <code>&lt;glk-pill&gt;</code>, <code>&lt;glk-tab-item&gt;</code> und <code>&lt;glk-tab-accessory&gt;</code>), und ein <code>GlkFormElement</code>, dessen <code>get _validityField()</code> sein natives Feld liefert, meldet dessen G&uuml;ltigkeit am Host &mdash; nach jedem <code>setFormValue()</code> und jeder Attribut&auml;nderung. Seit 1.22.3 gibt <code>applyDisabled(disabled)</code> den Deaktiviert-Zustand an die nativen Bedienelemente weiter: in einem <code>GlkFormElement</code> &uuml;berschreiben. Es l&auml;uft nach dem ersten Render und immer dann, wenn sich das eigene <code>disabled</code> des Elements oder ein <code>&lt;fieldset disabled&gt;</code> um es herum &auml;ndert &mdash; von selbst reicht kein Fieldset in den Shadow Root.</p>
         <script>
   // A project element on the exported base class: shadow root with GlassKit's
   // stylesheet adopted, theme sync, re-armed listeners, emit() — all inherited.

@@ -1,6 +1,6 @@
 ---
 name: glasskit-elements
-description: GlassKit Elements is a vanilla-JS Web Components library (v1.33.1) wrapping GlassKit CSS v1.33.0. It provides 46 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
+description: GlassKit Elements is a vanilla-JS Web Components library (v1.33.2) wrapping GlassKit CSS v1.33.0. It provides 46 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
 ---
 
 # GlassKit Elements – AI Component Reference
@@ -13,6 +13,8 @@ description: GlassKit Elements is a vanilla-JS Web Components library (v1.33.1) 
 > **New in 1.28.0 — icons of any kind, and a tab that keeps the current one.** `<glk-tab-item>` takes an icon that is not inline SVG in `slot="icon"` — Material Icons, an `<img>`, a custom element — and it follows every state; `<glk-segmented>` takes one per option in `slot="icon-<value>"` and shows them alone with `icon-only`. `glk-tab-select` is cancelable, for an item that opens a drawer or a link. **Where a project styles tab icons through `hostStyles`, or puts `active` back after `glk-tab-select`, replace that** (3.3, 3.25).
 
 > **New in 1.32.0 — one tab bar for every edge, ten elements, panels in the top layer.** `<glk-tab-bar>` leaves the bottom edge: `orientation="vertical"` makes it a sidebar, `dock="start"` or `"end"` fixes it to that side of the viewport — where the thumb rests on a phone held open, or a foldable that moved its system controls to a side — `rail` shows the icons alone with the labels as tooltips, `placement="top"` lays it out for the top of a page, and `<glk-tab-dock orientation="vertical">` stands the floating bar upright. One set of items serves every layout, and the drop runs along y in a column. New: `<glk-tooltip>`, `<glk-menu>` with `<glk-menu-item>`, `-separator` and `-group`, `<glk-tree>` with `<glk-tree-item>` (children that load on opening, with errors and a retry), `<glk-breadcrumbs>` with `<glk-breadcrumb>`, `<glk-table>` around a native table, and `sortable` on `<glk-list>` and `<glk-tree>` — drag and drop by mouse, touch and keyboard, onto breadcrumbs too. Lists and trees change single items in place, keeping the focus, and `highlight()` points a changed item out. `<glk-popover>` opens in the top layer, `<glk-modal>` and `<glk-sheet>` emit `glk-closed` once they are gone, interactive list items take the keyboard. **Where a project builds its own sidebar, tooltip, menu, tree, breadcrumbs or table wrapper, or waits for a sheet's slide-out with a timer, replace that** (3.3, 3.19, 3.24, 3.27, 3.32–3.37).
+
+> **New in 1.33.2 — a value of its own on the progress bar, and `focus()` on buttons.** `<glk-progress>` takes `max` (the fill is `value / max`) and `value-text` for its text — "3 of 20" instead of a percentage — and is a `progressbar` for screen readers, named by `label`; parts `label`, `value`, `track`, `fill` (3.21). `focus()` on `<glk-button>`, `<glk-pill>`, `<glk-tab-item>` and `<glk-tab-accessory>` lands on their button or link, `autofocus` too; elements with several controls hand it to the one Tab reaches. **Where a project focuses `shadowRoot.querySelector('button')` of an element or draws a quota bar with GlassKit's own markup, replace that** (3.10, 3.21).
 
 > **New in 1.33.1 — a name without a visible label for switches, checkboxes and radios.** `<glk-toggle>`, `<glk-checkbox>` and `<glk-radio>` hand `aria-label` and `aria-labelledby` from the element to their native control, and `label-hidden` keeps `label` as the name out of sight — for a switch at the end of a settings row whose title stands on the left. `label-position="start"` puts the text before the control. Parts: `label` and `track` / `box` / `circle`. **Where a project shrinks a label to nothing through `--gl-font-size-base` or `--gl-space-sm`, or leaves a switch nameless with `aria-label` on the host, replace that** (3.18).
 
@@ -142,10 +144,10 @@ addEventListener('afterprint', () => {
 | Theme sync | Global MutationObserver on `<html data-theme>`, `<html data-density>` and `<html data-surface>` (since 1.24.0) |
 | Events | Custom `glk-*` events, all `bubbles: true, composed: true` |
 | Form participation | `GlkFormElement` uses `ElementInternals` (`static formAssociated = true`): value, reset and — since 1.20.0 — the inner field's validity |
-| Focus | Form elements with one field delegate focus (since 1.20.0): `element.focus()`, a click on the label, a `<label for>` land in the field |
+| Focus | Form elements with one field delegate focus (since 1.20.0): `element.focus()`, a click on the label, a `<label for>` land in the field. Since 1.33.2 `<glk-button>`, `<glk-pill>`, `<glk-tab-item>` and `<glk-tab-accessory>` delegate it to their button or link, `autofocus` included, and elements with several controls hand `focus()` to the one Tab reaches: the chosen option of `<glk-segmented>`, the tab-stop day of `<glk-calendar>` and `<glk-date-strip>`, the choose button of `<glk-image-picker>`, the trigger of `<glk-accordion-item>`, the row of an interactive or sortable `<glk-list-item>`, the button of an interactive `<glk-badge>` |
 | Disabled | Form elements follow their own `disabled` and a `<fieldset disabled>` around them, as native controls do (since 1.22.3); the `disabled` property reflects the attribute |
 | API style | Declarative HTML attributes + reflected JS properties |
-| Roles on the host | `<glk-menu-item>`, `-separator`, `-group`, `<glk-tree>` and `<glk-tree-item>` carry their role and states on the element itself through `ElementInternals` (since 1.32.0), so the items are the menu's and the tree's own children across the slots |
+| Roles on the host | `<glk-menu-item>`, `-separator`, `-group`, `<glk-tree>` and `<glk-tree-item>` carry their role and states on the element itself through `ElementInternals` (since 1.32.0), so the items are the menu's and the tree's own children across the slots; `<glk-progress>` is the progress bar with its values (since 1.33.2) |
 | Panels | `<glk-popover>`, `<glk-tooltip>`, `<glk-menu>` and the "…" of `<glk-breadcrumbs>` open in the top layer (popover API) since 1.32.0: above every stacking context, outside every box that clips, placed next to their control — flipped and shifted at the viewport's edges, kept there while the page scrolls. They need the popover API: Chrome 114, Safari 17, Firefox 125 |
 
 Custom properties (`--gl-*`) defined on `:root` or `<html>` pass through shadow boundaries by inheritance, so custom theming works with a single global stylesheet.
@@ -307,6 +309,7 @@ container components are exposed as parts:
 | `<glk-textarea>` / `<glk-select>` | `label`, `label-end` (since 1.33.0) |
 | `<glk-badge>` | `badge` — the `<span>`, or the `<button>` with `interactive` (since 1.33.0) |
 | `<glk-toggle>` / `<glk-checkbox>` / `<glk-radio>` | `track` / `box` / `circle`, and `label` (since 1.33.1) |
+| `<glk-progress>` | `label`, `value`, `track`, `fill` (since 1.33.2) |
 | `<glk-tooltip>` | `tooltip` (since 1.32.0) |
 | `<glk-menu>` / `<glk-menu-item>` | `menu` / `item` (since 1.32.0) |
 | `<glk-tree>` / `<glk-tree-item>` | `tree` / `item`, `row`, `twisty`, `label`, `group` (since 1.32.0) |
@@ -778,6 +781,8 @@ Events: `glk-click` (suppressed when disabled). Part: `button`, the native butto
 
 `aria-expanded`, `aria-haspopup` and `aria-pressed` set on the element are handed on to the native button inside, which is what screen readers read (since 1.20.0).
 
+**Focus (since 1.33.2).** `element.focus()` focuses the native button inside, and so does `autofocus` — also in a `<glk-modal>` or `<glk-sheet>`, which focus their `[autofocus]` element on opening. Before, the shadow root did not delegate the focus: `focus()` left it on the body, and a page had to reach for `shadowRoot.querySelector('button')`. A disabled button takes no focus, like a native one.
+
 Default slot: button label (text or SVG + text).
 
 ---
@@ -1154,20 +1159,29 @@ The trigger gets `aria-expanded`, kept in step with `open` and set again when th
 
 ### 3.21 `<glk-progress>`
 
-Progress bar.
+Progress bar with its label and value.
 
 ```html
 <glk-progress label="Upload" value="75" variant="success"></glk-progress>
 <glk-progress label="Storage" value="90" variant="error" size="lg"></glk-progress>
 <glk-progress label="CPU" value="45" size="sm"></glk-progress>
+
+<!-- A quota: the fill is 3 / 20, the text says it in words (since 1.33.2) -->
+<glk-progress label="Images this month" value="3" max="20" value-text="3 of 20" size="sm"></glk-progress>
 ```
 
 | Attribute | Type | Description |
 |---|---|---|
-| `label` | String | Label text shown left of the bar |
-| `value` | Number | 0–100 percentage |
+| `label` | String | Label text shown left of the bar; names the bar |
+| `value` | Number | 0 to `max`; with decimals since 1.33.2 (before, cut to a whole number) |
+| `max` | Number | The value of a full bar, `100` by default; the fill is `value / max` (since 1.33.2) |
+| `value-text` | String | The text at the end of the label row (`3 of 20`) and the bar's value text for screen readers; without it, the percentage (since 1.33.2) |
 | `variant` | String | `success`, `error` |
 | `size` | String | `sm`, `md` (default), `lg` |
+
+Properties: `value`, `max`, `valueText`. Parts: `label`, `value`, `track`, `fill` (since 1.33.2).
+
+**A progress bar for assistive technology (since 1.33.2).** The element carries `role="progressbar"` through `ElementInternals`, with `aria-valuenow`, `aria-valuemin` (0), `aria-valuemax` and `aria-valuetext` (the value text), named by `label`. A bar without a visible label takes `aria-label` or `aria-labelledby` on the element. Until 1.33.2 it had no role, `value` was a percentage, and `value="3" max="20"` showed "3%" with a 3% fill.
 
 ---
 
@@ -2214,7 +2228,7 @@ All `glk-*` events bubble and are `composed: true`, so they pierce shadow bounda
 | `<glk-menu-item>` | Feedback | `value`, `type`, `checked`, `disabled`, `variant` | default (label), `icon`, `trailing` | — |
 | `<glk-menu-separator>` | Feedback | — | — | — |
 | `<glk-menu-group>` | Feedback | `label` | default (items) | — |
-| `<glk-progress>` | Feedback | `value`, `label`, `variant`, `size` | — | — |
+| `<glk-progress>` | Feedback | `value`, `max`, `value-text`, `label`, `variant`, `size` | — | — |
 | `<glk-toast>` | Feedback | `message`, `variant`, `duration`, `visible`, `action-label`, `action-value`, `dismissible`, `close-label` | `icon` | `glk-action`, `glk-close`, `glk-dismiss` |
 | `<glk-accordion>` | Containers | — | default | — |
 | `<glk-accordion-item>` | Containers | `title`, `open` | default | `glk-toggle` |
@@ -2356,7 +2370,7 @@ GlassKit 1.33.0 adds, by inheritance as well: `--gl-tab-bar-icon-size`, `--gl-ta
 
 Each element is a subclass of `GlkElement` (or `GlkFormElement` for form controls) and follows a consistent lifecycle:
 
-1. `constructor()` — attach open shadow (`delegatesFocus` for form elements with one field), adopt GlassKit stylesheet + host display sheet
+1. `constructor()` — attach open shadow (`delegatesFocus` for elements built around one field or button), adopt GlassKit stylesheet + host display sheet
 2. `connectedCallback()` — create theme wrapper, call `render()`, call `setupEvents()`, register for global theme sync
 3. `render()` — build shadow DOM tree (override per component)
 4. `setupEvents()` — attach DOM listeners (override per component)

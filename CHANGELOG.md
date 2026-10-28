@@ -7,6 +7,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.33.2] – 2026-10-28
+
+GlassKit is unchanged; the peer dependency stays `>=1.33.0`.
+
+### Added
+
+- **A value of its own on `<glk-progress>`: `max`, `value-text`, the role `progressbar` and parts.** A quota row says "3 of 20 images this month". The element took `value` as a percentage, clamped it to 0–100 and always wrote it as one, so `value="3" max="20"` showed "3%" with a 3% fill. The bar had no role, and screen readers met its value as plain text. A project drew the row with GlassKit's own markup instead.
+  - `max` (100 by default) is the value of a full bar, and the fill is `value / max`.
+  - `value-text` is the text at the end of the label row ("3 of 20"). Without it, the percentage shows, as before.
+  - The element is the progress bar: `role="progressbar"` with `aria-valuenow`, `aria-valuemin` (0), `aria-valuemax` and `aria-valuetext` (the value text), through `ElementInternals`, named by `label`. A bar without a visible label takes `aria-label` or `aria-labelledby` on the element.
+  - Parts are `label`, `value`, `track` and `fill`. The properties are `max` and `valueText`.
+  - `value` keeps its decimals; it was cut to a whole number before.
+
+  ([#36](https://github.com/JUNGHERZ/GlassKit-Elements/issues/36))
+
+### Fixed
+
+- **`focus()` on `<glk-button>` focuses its button.** A tool moves the focus to "Apply" once a streamed suggestion is ready, so the keyboard can take it over. `focus()` on the element did nothing: its shadow root did not delegate the focus, which only the form fields did, and the focus stayed on the body. A project focused `shadowRoot.querySelector('button')` instead.
+  - `<glk-button>`, `<glk-pill>`, `<glk-tab-item>` (button or link) and `<glk-tab-accessory>` delegate the focus now, `autofocus` included.
+  - Elements with more than one control hand `focus()` to the one Tab reaches: `<glk-segmented>` to the chosen option, `<glk-calendar>` and `<glk-date-strip>` to the day that is the tab stop, `<glk-image-picker>` to its choose button, `<glk-accordion-item>` to its trigger. An interactive or sortable `<glk-list-item>` hands it to its row, and an interactive `<glk-badge>` to its button.
+  - The elements' own paths had the same gap. `autofocus` on a `<glk-button>` in a `<glk-modal>` or `<glk-sheet>` left the focus on the dialog in WebKit and Firefox, and a `<glk-toast>` closed with Escape could not hand the focus back to a `<glk-button>`. Both work now.
+  - A disabled button takes no focus, like a native one. A click on one inside a focusable container now leaves the focus on the body instead of moving it to that container in Chromium and WebKit, as for the form fields since 1.20.0.
+  - `<glk-breadcrumbs>`, `<glk-tab-bar>` and `<glk-table>` hold several controls side by side, each reached by Tab, and keep `focus()` as it was.
+
+  The issue asked for the button and suspected the same gap elsewhere; every element with a control in its shadow root was checked. ([#37](https://github.com/JUNGHERZ/GlassKit-Elements/issues/37))
+
+Measured in Chromium 153, WebKit 26.6 and Firefox 151:
+- **Progress:** `value="3" max="20" value-text="3 of 20"` shows "3 of 20" with a 15% fill, and without `value-text` "15%". Chromium's accessibility tree has a progressbar named "Images this month" with value 3, minimum 0 and maximum 20, the same as a `<div role="progressbar">` with those attributes, and leaves the texts inside out. In WebKit and Firefox the element's `ElementInternals` carry the same role and values. `aria-label` and `aria-labelledby` name a bar without a label.
+- **Focus:** `focus()` lands in the control of each element named above in all three engines. The Tab order is the same as in 1.33.1. A click focuses what it focused before, except that the visible label of a `<glk-tab-accessory show-label>` now focuses its button, as a click on the button does. No focus ring shows after a click. `autofocus` on a `<glk-button>` in a modal and a sheet takes the focus, and the toast hands it back.
+- The existing docs, showcase and landing pages render as in 1.33.1.
+
+---
+
 ## [1.33.1] – 2026-10-28
 
 GlassKit is unchanged; the peer dependency stays `>=1.33.0`.
@@ -1207,6 +1240,7 @@ Starting with this release, GlassKit Elements version numbers are aligned with G
 ---
 
 [Unreleased]: https://github.com/JUNGHERZ/GlassKit-Elements/compare/v1.33.1...HEAD
+[1.33.2]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.33.2
 [1.33.1]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.33.1
 [1.33.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.33.0
 [1.32.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.32.0

@@ -18,6 +18,9 @@ class GlkTabAccessory extends GlkElement {
     return ['label', 'disabled', 'variant', 'show-label'];
   }
 
+  // focus() lands on the native button (since 1.33.2).
+  static get delegatesFocus() { return true; }
+
   render() {
     this._btn = this.createElement('button', ['glass-tab-bar__accessory']);
 

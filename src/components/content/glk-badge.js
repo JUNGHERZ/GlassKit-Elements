@@ -91,6 +91,16 @@ class GlkBadge extends GlkElement {
     return classes;
   }
 
+  /**
+   * A chip takes the focus on its button (since 1.33.2). Not delegated: a
+   * plain badge has nothing to focus, and a click on it must still reach a
+   * row or card around it that takes the focus.
+   */
+  focus(options) {
+    if (this._badge?.localName === 'button') this._badge.focus(options);
+    else super.focus(options);
+  }
+
   get variant() { return this.getAttribute('variant'); }
   set variant(v) { this.setAttribute('variant', v); }
 

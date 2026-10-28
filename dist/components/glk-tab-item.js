@@ -31,6 +31,9 @@ class GlkTabItem extends GlkElement {
 
   static get observesLightDom() { return true; }
 
+  // focus() lands on the item, button or link (since 1.33.2).
+  static get delegatesFocus() { return true; }
+
   render() {
     this._btn = this._createItem();
 

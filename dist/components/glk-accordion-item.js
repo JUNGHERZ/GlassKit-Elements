@@ -80,6 +80,12 @@ class GlkAccordionItem extends GlkElement {
   }
 
   // `title` is the heading, never a tooltip — see GlkElement.takeTitle().
+  /** The trigger takes the focus (since 1.33.2). */
+  focus(options) {
+    if (this._trigger) this._trigger.focus(options);
+    else super.focus(options);
+  }
+
   get title() { return this._title ?? ''; }
   set title(v) {
     this._title = v == null ? '' : String(v);

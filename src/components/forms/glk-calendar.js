@@ -233,6 +233,13 @@ class GlkCalendar extends GlkFormElement {
   resetValue() { this.value = this._initialValue; }
   restoreValue(state) { if (typeof state === 'string') this.value = state; }
 
+  /** The day that is the tab stop takes the focus, the one Tab reaches (since 1.33.2). */
+  focus(options) {
+    const day = this._grid && this._days().find(button => button.tabIndex === 0 && !button.disabled);
+    if (day) day.focus(options);
+    else super.focus(options);
+  }
+
   get month() {
     const attr = this.getAttribute('month');
     if (attr && MONTH.test(attr) && parseIso(attr)) return attr;

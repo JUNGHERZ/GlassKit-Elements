@@ -5,7 +5,7 @@
   <a href="#"><img src="https://img.shields.io/badge/vanilla_JS-no_dependencies-44cc11?style=flat-square" alt="Vanilla JS"></a>
   <a href="#"><img src="https://img.shields.io/badge/components-46-7ec8e3?style=flat-square" alt="46 Components"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="MIT License"></a>
-  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/changelog-v1.33.1-lightgrey?style=flat-square" alt="Changelog"></a>
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/changelog-v1.33.2-lightgrey?style=flat-square" alt="Changelog"></a>
   <a href="https://www.npmjs.com/package/@jungherz-de/glasskit-elements"><img src="https://img.shields.io/badge/npm-%40jungherz--de%2Fglasskit--elements-cb3837?style=flat-square&logo=npm" alt="npm"></a>
 </p>
 
@@ -153,7 +153,7 @@ The per-component files leave `@jungherz-de/glasskit/glasskit-styles.js` as an e
 
 | Component | Description | Key Attributes |
 |---|---|---|
-| `<glk-button>` | Glass-styled button; `type="submit"` / `"reset"` act on its form | `variant` (primary, secondary, tertiary), `size` (sm, md, lg, auto; `sm auto` since 1.31.0), `disabled`, `type` (button, submit, reset) |
+| `<glk-button>` | Glass-styled button; `type="submit"` / `"reset"` act on its form, `focus()` reaches it (since 1.33.2) | `variant` (primary, secondary, tertiary), `size` (sm, md, lg, auto; `sm auto` since 1.31.0), `disabled`, `type` (button, submit, reset) |
 
 ### Form Elements
 
@@ -177,7 +177,7 @@ All form components support `name`, `value`, `disabled` and participate in nativ
 
 | Component | Description | Key Attributes |
 |---|---|---|
-| `<glk-progress>` | Progress bar | `value`, `label`, `variant` (success, error), `size` (sm, lg) |
+| `<glk-progress>` | Progress bar (`role="progressbar"` since 1.33.2) | `value`, `max`, `value-text` (since 1.33.2), `label`, `variant` (success, error), `size` (sm, lg) |
 | `<glk-modal>` | Modal dialog — a native `<dialog>`: page behind inert and still, focus in and back; `glk-closed` once it has faded out | `open`, `title` |
 | `<glk-toast>` | Notification that hides itself, or an offer with one action and an × | `message`, `variant` (success, error, warning), `duration`, `action-label`, `action-value`, `dismissible` |
 | `<glk-popover>` | Anchored dropdown / menu, in the top layer since 1.32.0: flipped and shifted at the viewport's edges | `open`, `placement` (top, bottom, start, end) |
@@ -475,7 +475,7 @@ class DemoCounter extends GlkElement {
 customElements.define('demo-counter', DemoCounter);
 ```
 
-Hooks: `render()` builds into `this._wrapper`, `setupEvents()` / `teardownEvents()` run on every connect / disconnect, `onAttributeChanged(name, old, value)` after the first render. `static get displayInline()` → `true` for inline elements; `static get observesLightDom()` → `true` re-runs `projectLightDom()` whenever light-DOM children change. `GlkFormElement` adds `setFormValue()`, `setValidity()`, `resetValue()` / `restoreValue()`; since 1.20.0 it delegates focus (`static get delegatesFocus()`) and, when `get _validityField()` returns your native field, reports that field's validity on the host after every `setFormValue()` and attribute change.
+Hooks: `render()` builds into `this._wrapper`, `setupEvents()` / `teardownEvents()` run on every connect / disconnect, `onAttributeChanged(name, old, value)` after the first render. `static get displayInline()` → `true` for inline elements; `static get observesLightDom()` → `true` re-runs `projectLightDom()` whenever light-DOM children change. `GlkFormElement` adds `setFormValue()`, `setValidity()`, `resetValue()` / `restoreValue()`; since 1.20.0 it delegates focus (`static get delegatesFocus()`, on since 1.33.2 for `<glk-button>`, `<glk-pill>`, `<glk-tab-item>` and `<glk-tab-accessory>` as well) and, when `get _validityField()` returns your native field, reports that field's validity on the host after every `setFormValue()` and attribute change.
 
 ---
 

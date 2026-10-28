@@ -249,9 +249,10 @@ class GlkElement extends HTMLElement {
   static get observesLightDom() { return false; }
 
   /**
-   * Turned on by elements built around one native field: focus() on the
-   * host, a click on the label text and a <label for> outside all land in
-   * that field.
+   * Turned on by elements built around one native field or button: focus()
+   * on the host, autofocus, a click on the label text and a <label for>
+   * outside all land in that control. An element with more than one
+   * control leaves it off and hands focus() to its tab stop.
    */
   static get delegatesFocus() { return false; }
 

@@ -265,6 +265,12 @@ class GlkListItem extends GlkElement {
     else this.removeAttribute('variant');
   }
 
+  /** The row takes the focus where it is a tab stop — interactive or sortable (since 1.33.2). */
+  focus(options) {
+    if (this._item?.tabIndex >= 0) this._item.focus(options);
+    else super.focus(options);
+  }
+
   /**
    * A short flash of the row (since 1.32.0), for an item that changed
    * elsewhere — on another device, by an undo — so the eye finds it

@@ -146,6 +146,13 @@ class GlkDateStrip extends GlkElement {
     else this._build();
   }
 
+  /** The chip that is the tab stop takes the focus (since 1.33.2). */
+  focus(options) {
+    const chip = this._strip && this._chips().find(button => button.tabIndex === 0 && !button.disabled);
+    if (chip) chip.focus(options);
+    else super.focus(options);
+  }
+
   get value() { return this.getAttribute('value') ?? ''; }
   set value(v) {
     if (v == null || v === '') this.removeAttribute('value');

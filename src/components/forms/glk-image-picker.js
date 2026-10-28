@@ -153,6 +153,12 @@ class GlkImagePicker extends GlkElement {
     this._update();
   }
 
+  /** The choose button takes the focus (since 1.33.2). */
+  focus(options) {
+    if (this._choose) this._choose.focus(options);
+    else super.focus(options);
+  }
+
   get src() { return this._src; }
   set src(v) {
     this._src = v || '';

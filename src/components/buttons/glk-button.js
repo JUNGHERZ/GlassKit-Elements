@@ -16,6 +16,10 @@ class GlkButton extends GlkElement {
     return ['variant', 'size', 'type', ...FORWARDED_ARIA];
   }
 
+  // focus() and autofocus land on the native button (since 1.33.2; until
+  // then the element could not take the focus from outside).
+  static get delegatesFocus() { return true; }
+
   // The native button sits in the shadow root, outside every form. Form
   // association gives the element its form, so type="submit" and "reset"
   // can act on it (see _activateForm), and a disabled fieldset around it

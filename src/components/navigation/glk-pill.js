@@ -9,6 +9,9 @@ class GlkPill extends GlkElement {
     return ['label', 'disabled', ...FORWARDED_ARIA];
   }
 
+  // focus() lands on the native button (since 1.33.2).
+  static get delegatesFocus() { return true; }
+
   render() {
     this._btn = this.createElement('button', ['glass-pill']);
 

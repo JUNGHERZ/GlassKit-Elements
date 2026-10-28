@@ -17,6 +17,13 @@
 // from its state — the items glide into place either way, once the new
 // order is in the DOM. A drop on a crumb moves nothing: that level is not
 // in the DOM.
+//
+// Since 1.34.0 the item under the pointer is looked up in the root of each
+// list or tree taking part — the document, or the shadow root of an element
+// around it — so a sortable list inside another element's shadow root takes
+// drags too. Items that stand side by side, tiles in a grid, take the
+// horizontal axis: before is the start half, after the end half, inside the
+// middle; the line stands upright (GlassKit's .is-sort-inline).
 
 const groups = new Map();           // group name → Set of hosts
 const DRAG_START = 6;               // px of pointer travel before a drag
@@ -125,6 +132,35 @@ function attachSortable(host, adapter) {
   // ── Targets ──
   const hostOfItem = item => members(host).find(h => h._sortAdapter?.owns(item));
 
+  /**
+   * The roots to ask what lies under the pointer: the document, or the
+   * shadow root a list or a tree sits in. document.elementsFromPoint()
+   * stops at a shadow host and never returns the items inside; until
+   * 1.34.0 a drag in a list in a shadow root found no target at all.
+   */
+  const roots = () => [...new Set([host, ...members(host).filter(h => h._sortAdapter)].map(h => h.getRootNode()))]
+    .filter(root => typeof root.elementsFromPoint === 'function');
+
+  /**
+   * Whether the items of a container stand side by side — tiles in a
+   * grid, a row of them — so before and after lie on the horizontal axis.
+   * Asked of the container, not of one item, so the lone tile of a last
+   * row sorts as its neighbours do; kept for the drag while the number of
+   * items stays.
+   */
+  const flowsInline = (a, container) => {
+    const items = a.childrenOf(container);
+    const known = drag.inline.get(container);
+    if (known && known.count === items.length) return known.inline;
+    const boxes = items.map(i => a.rowOf(i)?.getBoundingClientRect()).filter(r => r && r.width && r.height);
+    let inline = false;
+    for (let i = 1; i < boxes.length && !inline; i++) {
+      inline = boxes[i].top < boxes[i - 1].bottom - 1 && boxes[i].bottom > boxes[i - 1].top + 1;
+    }
+    drag.inline.set(container, { count: items.length, inline });
+    return inline;
+  };
+
   /** What lies under the pointer: an item of a member, or a crumb. */
   const targetAt = (x, y) => {
     for (const crumbs of members(host)) {
@@ -133,17 +169,22 @@ function attachSortable(host, adapter) {
       // The current crumb stands for the level a list shows: its own.
       if (hit && !(hit.current && host.localName === 'glk-list')) return { kind: 'crumb', host: crumbs, ...hit, position: 'inside' };
     }
-    for (const el of document.elementsFromPoint(x, y)) {
-      if (!el.localName.endsWith('-item')) continue;
-      const owner = hostOfItem(el);
-      if (!owner || el.localName !== drag.item.localName) continue;
-      if (el === drag.item || drag.item.contains(el)) return null;
-      const a = owner._sortAdapter;
-      const r = a.rowOf(el).getBoundingClientRect();
-      const rel = (y - r.top) / r.height;
-      if (rel > 1) continue;                        // below its row: a child of it is hit next
-      const inside = a.canContain(el) && rel > 0.25 && rel < 0.75;
-      return { kind: 'item', host: owner, item: el, el: a.rowOf(el), position: inside ? 'inside' : rel < 0.5 ? 'before' : 'after' };
+    for (const root of roots()) {
+      for (const el of root.elementsFromPoint(x, y)) {
+        if (!el.localName.endsWith('-item')) continue;
+        const owner = hostOfItem(el);
+        if (!owner || el.localName !== drag.item.localName) continue;
+        if (el === drag.item || drag.item.contains(el)) return null;
+        const a = owner._sortAdapter;
+        const row = a.rowOf(el);
+        const r = row.getBoundingClientRect();
+        const inline = flowsInline(a, a.containerOf(el));
+        const rtl = inline && getComputedStyle(row).direction === 'rtl';
+        const rel = inline ? (rtl ? r.right - x : x - r.left) / r.width : (y - r.top) / r.height;
+        if (rel > 1) continue;                      // below its row: a child of it is hit next
+        const inside = a.canContain(el) && rel > 0.25 && rel < 0.75;
+        return { kind: 'item', host: owner, item: el, el: row, inline, position: inside ? 'inside' : rel < 0.5 ? 'before' : 'after' };
+      }
     }
     return null;
   };
@@ -167,7 +208,7 @@ function attachSortable(host, adapter) {
     for (const h of members(host)) {
       if (h.localName === 'glk-breadcrumbs') { h._markDrop(null); h._hoverOverflow(false); continue; }
       for (const item of h._sortAdapter?.items() ?? []) {
-        h._sortAdapter.rowOf(item)?.classList.remove('is-sort-before', 'is-sort-after', 'is-sort-inside', 'is-sort-refused');
+        h._sortAdapter.rowOf(item)?.classList.remove('is-sort-before', 'is-sort-after', 'is-sort-inside', 'is-sort-refused', 'is-sort-inline');
       }
     }
   };
@@ -181,6 +222,7 @@ function attachSortable(host, adapter) {
       return;
     }
     target.el.classList.add(`is-sort-${target.position}`);
+    if (target.inline && target.position !== 'inside') target.el.classList.add('is-sort-inline');
     if (refused) target.el.classList.add('is-sort-refused');
   };
 
@@ -254,7 +296,7 @@ function attachSortable(host, adapter) {
   const startDrag = (item, via, x, y) => {
     const row = adapter.rowOf(item);
     const r = row.getBoundingClientRect();
-    drag = { item, via, target: null, refused: false, grab: { x: x - r.left, y: y - r.top }, x, y };
+    drag = { item, via, target: null, refused: false, grab: { x: x - r.left, y: y - r.top }, x, y, inline: new Map() };
     row.classList.add('is-sort-source');
     if (via !== 'keyboard') {
       ghost.textContent = labelOf(item);
@@ -395,9 +437,10 @@ function attachSortable(host, adapter) {
     }
     const list = adapter.childrenOf(container).filter(i => i !== drag.item);
     if (list.length === 0) return container === host ? null : { kind: 'item', host, item: container, el: adapter.rowOf(container), position: 'inside' };
+    const inline = flowsInline(adapter, container);
     return index < list.length
-      ? { kind: 'item', host, item: list[index], el: adapter.rowOf(list[index]), position: 'before' }
-      : { kind: 'item', host, item: list[list.length - 1], el: adapter.rowOf(list[list.length - 1]), position: 'after' };
+      ? { kind: 'item', host, item: list[index], el: adapter.rowOf(list[index]), inline, position: 'before' }
+      : { kind: 'item', host, item: list[list.length - 1], el: adapter.rowOf(list[list.length - 1]), inline, position: 'after' };
   };
   const announcePlace = () => {
     const { container, index } = drag.kb;

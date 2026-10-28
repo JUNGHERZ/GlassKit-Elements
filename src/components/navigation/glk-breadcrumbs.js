@@ -25,14 +25,19 @@ import './glk-breadcrumb.js';
 //
 // As drop targets (drop-target, or the same group as a sortable list or
 // tree): a crumb takes a dragged item into its level and lights up while
-// the item is over it; hovering the "…" crumb during a drag opens its menu.
-// The move itself is the page's: see glk-sort on the list or tree.
+// the item is over it; hovering the "…" crumb during a drag opens its menu,
+// whose folded levels take the item too (since 1.34.0; before, they were
+// looked up in the document, which never returns what lies in a shadow
+// root). The move itself is the page's: see glk-sort on the list or tree.
+// A sorter of the page's own — tiles of its own, say — uses the same
+// targets through dropTargetAt(x, y) and markDrop(target) (since 1.34.0).
 //
 // Attributes: label (default "Breadcrumb"), collapse (auto | never),
 //             drop-target, group, more-label (the "…" crumb's name, with
 //             {count}; default "1 more level", "2 more levels"),
 //             more-label-one (its singular, where a language needs one)
 // Events:     glk-navigate
+// Methods:    dropTargetAt(x, y), markDrop(target, { refused }) (since 1.34.0)
 // Parts:      nav, list, crumb, current, overflow
 
 const CRUMB = 'glk-breadcrumb';
@@ -207,20 +212,21 @@ class GlkBreadcrumbs extends GlkElement {
 
   get _acceptsDrops() { return this.hasAttribute('drop-target') || this.hasAttribute('group'); }
 
-  /** The crumb at a point of the viewport, with its level: { item, index, el }. */
+  /**
+   * The crumb at a point of the viewport, with its level: { item, index,
+   * el }. The crumbs and the "…" menu with the folded levels lie in the
+   * element's own shadow root, so they are looked up there.
+   */
   _dropTargetAt(x, y) {
     if (!this._acceptsDrops) return null;
     for (const node of this.shadowRoot.elementsFromPoint(x, y)) {
       const entry = this._entries?.find(e => e.el === node);
       if (entry) return { item: entry.item, index: entry.index, el: entry.el, current: entry.current };
       if (node === this._menuButton) return { overflow: true, el: node };
-    }
-    // The folded levels, while their menu is open during a drag.
-    if (this._menu?.open) {
-      const option = document.elementsFromPoint(x, y).find(n => n.localName === 'glk-menu-item' && n.parentElement === this._menu);
-      if (option) {
-        const entry = this._entries[Number(option.getAttribute('value'))];
-        return { item: entry.item, index: entry.index, el: option };
+      // A folded level, while its menu is open during a drag.
+      if (this._menu?.open && node.localName === 'glk-menu-item' && node.parentElement === this._menu) {
+        const folded = this._entries[Number(node.getAttribute('value'))];
+        if (folded) return { item: folded.item, index: folded.index, el: node };
       }
     }
     return null;
@@ -229,14 +235,43 @@ class GlkBreadcrumbs extends GlkElement {
   /** Lights a crumb as the target, or shows that it refuses the item. */
   _markDrop(el, state) {
     for (const c of this.shadowRoot.querySelectorAll('.is-drop-target, .is-drop-refused')) c.classList.remove('is-drop-target', 'is-drop-refused');
-    for (const o of this._menu?.querySelectorAll('glk-menu-item') ?? []) o.classList.remove('is-drop-target');
     if (el && state) el.classList.add(state === 'refused' ? 'is-drop-refused' : 'is-drop-target');
   }
 
-  /** Over the "…" crumb during a drag, its menu opens after a moment. */
+  /** Over the "…" crumb during a drag, its menu opens after a moment — once, however often it is asked. */
   _hoverOverflow(on) {
+    if (on && this._hoveringOverflow) return;
+    this._hoveringOverflow = on;
     clearTimeout(this._openTimer);
     if (on && !this._menu.open) this._openTimer = setTimeout(() => this._menu.show(), 600);
+  }
+
+  /**
+   * For a sorter of the page's own (since 1.34.0): what lies at a point of
+   * the viewport — { item, index, current } with the <glk-breadcrumb> of a
+   * level, a folded one too while the "…" menu is open, { overflow: true }
+   * over the "…" crumb, or null. Only with drop-target or group.
+   */
+  dropTargetAt(x, y) {
+    const hit = this._dropTargetAt(x, y);
+    if (!hit) return null;
+    return hit.overflow ? { overflow: true } : { item: hit.item, index: hit.index, current: Boolean(hit.current) };
+  }
+
+  /**
+   * Shows a target from dropTargetAt() while the page's drag is over it
+   * (since 1.34.0): the crumb lights up, or shows that it does not take the
+   * item with { refused: true }; over "…" the menu opens after a moment.
+   * null clears. The move on the drop is the page's.
+   */
+  markDrop(target, { refused = false } = {}) {
+    this._hoverOverflow(Boolean(target?.overflow));
+    const entry = target?.item ? this._entries?.find(e => e.item === target.item) : null;
+    const option = entry && this._menu?.open
+      ? [...this._menu.children].find(o => o.localName === 'glk-menu-item' && Number(o.getAttribute('value')) === entry.index)
+      : null;
+    const el = option || entry?.el || null;
+    this._markDrop(el, el ? (refused ? 'refused' : 'target') : null);
   }
 
   /** The crumb of the level above the current one, for the keyboard. */

@@ -1,5 +1,5 @@
 import { GlkElement } from './base.js';
-import { a as attachSortable } from './shared/sortable-cEOIcAfx.js';
+import { a as attachSortable } from './shared/sortable-DxyHuCmj.js';
 import { k as keepFocus } from './shared/keep-focus-Bvq6y1D0.js';
 import '@jungherz-de/glasskit/glasskit-styles.js';
 

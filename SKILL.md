@@ -1,6 +1,6 @@
 ---
 name: glasskit-elements
-description: GlassKit Elements is a vanilla-JS Web Components library (v1.33.2) wrapping GlassKit CSS v1.33.0. It provides 46 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
+description: GlassKit Elements is a vanilla-JS Web Components library (v1.34.0) wrapping GlassKit CSS v1.34.0. It provides 46 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
 ---
 
 # GlassKit Elements – AI Component Reference
@@ -13,6 +13,8 @@ description: GlassKit Elements is a vanilla-JS Web Components library (v1.33.2) 
 > **New in 1.28.0 — icons of any kind, and a tab that keeps the current one.** `<glk-tab-item>` takes an icon that is not inline SVG in `slot="icon"` — Material Icons, an `<img>`, a custom element — and it follows every state; `<glk-segmented>` takes one per option in `slot="icon-<value>"` and shows them alone with `icon-only`. `glk-tab-select` is cancelable, for an item that opens a drawer or a link. **Where a project styles tab icons through `hostStyles`, or puts `active` back after `glk-tab-select`, replace that** (3.3, 3.25).
 
 > **New in 1.32.0 — one tab bar for every edge, ten elements, panels in the top layer.** `<glk-tab-bar>` leaves the bottom edge: `orientation="vertical"` makes it a sidebar, `dock="start"` or `"end"` fixes it to that side of the viewport — where the thumb rests on a phone held open, or a foldable that moved its system controls to a side — `rail` shows the icons alone with the labels as tooltips, `placement="top"` lays it out for the top of a page, and `<glk-tab-dock orientation="vertical">` stands the floating bar upright. One set of items serves every layout, and the drop runs along y in a column. New: `<glk-tooltip>`, `<glk-menu>` with `<glk-menu-item>`, `-separator` and `-group`, `<glk-tree>` with `<glk-tree-item>` (children that load on opening, with errors and a retry), `<glk-breadcrumbs>` with `<glk-breadcrumb>`, `<glk-table>` around a native table, and `sortable` on `<glk-list>` and `<glk-tree>` — drag and drop by mouse, touch and keyboard, onto breadcrumbs too. Lists and trees change single items in place, keeping the focus, and `highlight()` points a changed item out. `<glk-popover>` opens in the top layer, `<glk-modal>` and `<glk-sheet>` emit `glk-closed` once they are gone, interactive list items take the keyboard. **Where a project builds its own sidebar, tooltip, menu, tree, breadcrumbs or table wrapper, or waits for a sheet's slide-out with a timer, replace that** (3.3, 3.19, 3.24, 3.27, 3.32–3.37).
+
+> **New in 1.34.0 — tiles that sort, a chosen list row, the grip first, sorting in shadow roots.** `<glk-list grid>` lays the items out as glass tiles, and sorted they move on the horizontal axis, into a `container` in the middle (3.24, 3.37). `selected` on `<glk-list-item>` marks the entry a list beside its detail shows (`aria-current`), `handle="start"` puts the grip before the icon, parts `item` and `handle` reach the row. A sortable list or tree inside another element's shadow root takes drags now, and the folded levels of `<glk-breadcrumbs>` take drops; `dropTargetAt()` and `markDrop()` lend the crumbs to a sorter of the page's own (3.35). `<glk-tree-item>` has parts `icon` and `handle`, and GlassKit 1.34.0's `--gl-tree-icon-size` takes a 28px chip. **Where a project patches `document.elementsFromPoint`, adopts stylesheets into list items for the grip or the chosen row, or calls the crumbs' `_dropTargetAt()`, replace that.**
 
 > **New in 1.33.2 — a value of its own on the progress bar, and `focus()` on buttons.** `<glk-progress>` takes `max` (the fill is `value / max`) and `value-text` for its text — "3 of 20" instead of a percentage — and is a `progressbar` for screen readers, named by `label`; parts `label`, `value`, `track`, `fill` (3.21). `focus()` on `<glk-button>`, `<glk-pill>`, `<glk-tab-item>` and `<glk-tab-accessory>` lands on their button or link, `autofocus` too; elements with several controls hand it to the one Tab reaches. **Where a project focuses `shadowRoot.querySelector('button')` of an element or draws a quota bar with GlassKit's own markup, replace that** (3.10, 3.21).
 
@@ -297,6 +299,7 @@ container components are exposed as parts:
 |---|---|
 | `<glk-card>` | `card` |
 | `<glk-list>` | `header`, `list` |
+| `<glk-list-item>` | `item` (the row), `handle` (since 1.34.0) |
 | `<glk-modal>` | `overlay`, `modal`, `header`, `body`, `footer` |
 | `<glk-sheet>` | `overlay`, `sheet`, `title`, `body`, `actions` |
 | `<glk-accordion-item>` | `item`, `trigger`, `content`, `body` (since 1.30.0) |
@@ -312,7 +315,7 @@ container components are exposed as parts:
 | `<glk-progress>` | `label`, `value`, `track`, `fill` (since 1.33.2) |
 | `<glk-tooltip>` | `tooltip` (since 1.32.0) |
 | `<glk-menu>` / `<glk-menu-item>` | `menu` / `item` (since 1.32.0) |
-| `<glk-tree>` / `<glk-tree-item>` | `tree` / `item`, `row`, `twisty`, `label`, `group` (since 1.32.0) |
+| `<glk-tree>` / `<glk-tree-item>` | `tree` / `item`, `row`, `twisty`, `label`, `group` (since 1.32.0), `icon`, `handle` (since 1.34.0) |
 | `<glk-breadcrumbs>` | `nav`, `list`, `crumb`, `current`, `overflow` (since 1.32.0) |
 | `<glk-table>` | `wrap`, `empty` (since 1.32.0) |
 
@@ -1306,6 +1309,8 @@ iOS-style grouped settings list. Items carry a leading icon, title + optional su
 | `bare` | Boolean | Strips background, border, shadow — use inside `<glk-popover>` or `<glk-card>` to avoid double glass surfaces |
 | `sortable` | Boolean | The items can be reordered by mouse, touch and keyboard (since 1.32.0, see 3.37) |
 | `group` | String | Lists with the same group exchange items, and breadcrumbs of the group take them (since 1.32.0) |
+| `grid` | Boolean | The items as tiles side by side, each a pane of glass (since 1.34.0, GlassKit's `.glass-list--grid`) — see below |
+| `handle` | `start` \| `end` | Where every item's handle stands: before the icon, or (default) after the trailing content (since 1.34.0); an item's own `handle` wins |
 
 Property: `messages`, the sorting announcements in the page's language (3.37).
 
@@ -1318,6 +1323,8 @@ Property: `messages`, the sorting announcements in the page's language (3.37).
 | `interactive` | Boolean | Enables hover / focus / active states and `glk-click` event. Since 1.32.0 the row is a button for the keyboard and assistive technology: in the Tab order, Enter and Space click it, a focus ring shows where it is (before, only a pointer reached it). Put no other control inside an interactive item — a button inside a button is lost to assistive technology |
 | `container` | Boolean | In a sortable list: the item takes a dropped item inside it — a submenu, a folder. That level is not in this list, so the page moves the item (since 1.32.0) |
 | `no-drag` | Boolean | In a sortable list: the item stays where it is (since 1.32.0) |
+| `selected` | Boolean | The entry a list beside its detail shows: a pill of raised glass (GlassKit's `.is-selected`) and `aria-current="true"` on the row; the page sets it, a click does not (since 1.34.0) |
+| `handle` | `start` \| `end` | The handle before the icon, or after the trailing content; unset, the list's `handle` (since 1.34.0). The property reads where it stands |
 | `center` | Boolean | Centered single-text variant (for action rows like "Reset to defaults") |
 | `leading-lg` | Boolean | Large 40×40 leading icon with rounded corners (for app icons; use 32×32 SVG or `<img>`) |
 | `wrap` | Boolean | Multi-line subtitle — allows up to 3 lines with ellipsis (requires `subtitle`) |
@@ -1330,7 +1337,45 @@ Property: `messages`, the sorting announcements in the page's language (3.37).
 |---|---|
 | `leading` | Icon slot (24×24 SVG recommended, or 32×32 with `leading-lg`; use `stroke: currentColor`) |
 | `trailing` | Chevron, badge, or button — rendered after `detail` value |
-| `handle` | A grip at the row's end for a sortable list (since 1.32.0), e.g. an `<svg>`: with one, a pointer starts a drag only there — a tap on the row still clicks it — and a finger on it drags at once. The keyboard is not limited by it: Space on the row picks the item up |
+| `handle` | A grip at the row's end — or its start with `handle="start"` (since 1.34.0) — for a sortable list (since 1.32.0), e.g. an `<svg>`: with one, a pointer starts a drag only there — a tap on the row still clicks it — and a finger on it drags at once. The keyboard is not limited by it: Space on the row picks the item up |
+
+Parts (since 1.34.0): `item` (the row) and `handle` on `<glk-list-item>`; `header` and `list` on `<glk-list>`.
+
+#### A list beside its detail (since 1.34.0)
+
+```html
+<glk-list aria-label="Pages">
+  <glk-list-item title="Home" interactive></glk-list-item>
+  <glk-list-item title="Opening hours" interactive selected></glk-list-item>
+</glk-list>
+```
+
+`selected` marks the entry an editor next to the list shows: GlassKit 1.34.0's `.is-selected` lays a pill of raised glass into the row, as the selected tree item has, the title semibold and the icon in the accent, and the row carries `aria-current="true"`. The page sets it and moves it when another entry opens; a click does not. `--gl-list-item-selected-bg` sets the pill's surface (unset `--gl-surface-4`). **Do not** paint a chosen row through adopted stylesheets or `data-*` hooks.
+
+#### Tiles (since 1.34.0)
+
+```html
+<glk-list grid sortable aria-label="Components">
+  <glk-list-item title="News" subtitle="Component"><svg slot="leading">…</svg></glk-list-item>
+  <glk-list-item title="Submenu" subtitle="2 components" container><svg slot="leading">…</svg></glk-list-item>
+  <glk-list-item title="Team" subtitle="Component"><svg slot="leading">…</svg><glk-badge slot="trailing">New</glk-badge></glk-list-item>
+</glk-list>
+```
+
+`grid` lays the items out side by side — as many columns as fit at `--gl-list-tile-width` (140px), `--gl-list-tile-gap` (12px) apart, at least `--gl-list-tile-min-height` (112px) high. Every tile is a pane of glass of its own (the list itself has none): the icon at the top, title and subtitle at its foot, `trailing` in the top end corner, a handle in the bottom end corner, no dividers. Hover, focus ring, `selected` and the drag states work as on rows. Sorted, the tiles move on the horizontal axis (3.37). A tile grid of the page's own made with `::part(list)` loses hover, focus and drag states to the page's `background` and `box-shadow`, which win over the shadow tree — take `grid`.
+
+#### The grip first (since 1.34.0)
+
+```html
+<glk-list sortable handle="start" style="--gl-list-item-divider-inset: 90px">
+  <glk-list-item title="News" subtitle="Component">
+    <svg slot="handle" aria-hidden="true">…</svg>   <!-- 18px grip -->
+    <svg slot="leading">…</svg>                     <!-- 28px icon -->
+  </glk-list-item>
+</glk-list>
+```
+
+`handle="start"` on the list, or on one item, puts the handle before the icon — first in the row and first in the Tab order, so a button in it is reached before the row's other controls. The dividers then run from the row's padding, since the grip's width is the page's; GlassKit's `--gl-list-item-divider-inset` sets where they start — here 20 + 18 + 12 + 28 + 12 = 90px, where the text begins. **Do not** reorder the handle by adopted stylesheets (`order: -1`).
 
 #### Wrapping text (since 1.23.0)
 
@@ -1722,7 +1767,7 @@ Properties: `value` (the selected item's), `items` (the top level), `messages` (
 | `container` | Boolean | In a sortable tree: takes dropped items inside it without children of its own |
 | `no-drag` | Boolean | In a sortable tree: stays where it is |
 
-Properties: the attributes (`loadError` for `load-error`), `items` (the child items), `hasChildren`, `loading` (read-only: children asked for and not there yet). Method: `highlight()`. Slots: default (child items), `icon`, `trailing` (a badge, a status, an action — a click there selects nothing), `handle` (where a pointer starts a drag in a sortable tree). Parts: `item`, `row`, `twisty`, `label`, `group`.
+Properties: the attributes (`loadError` for `load-error`), `items` (the child items), `hasChildren`, `loading` (read-only: children asked for and not there yet). Method: `highlight()`. Slots: default (child items), `icon`, `trailing` (a badge, a status, an action — a click there selects nothing), `handle` (where a pointer starts a drag in a sortable tree). Parts: `item`, `row`, `twisty`, `label`, `group`; `icon` and `handle` (since 1.34.0). The icon field is GlassKit's `--gl-tree-icon-size` square (18px, since 1.34.0) — set `28px` for a tinted chip as list rows show; before, a chip was squeezed to 18px wide.
 
 - **The WAI-ARIA tree view:** one tab stop (the selected item, else the first); Down and Up to the next and previous visible item, Right opens an item or moves to its first child, Left closes it or moves to its parent (mirrored right to left), Home and End to the first and last visible item, Enter and Space select — selection does not follow the focus — `*` opens every sibling, a typed letter moves to the next item that starts with it. A click on a row selects it, a click on its twisty opens or closes it.
 - **Events come first:** cancel `glk-tree-toggle` or `glk-tree-select` and nothing changes — a page that renders from state sets `expanded` and `selected` itself.
@@ -1765,12 +1810,14 @@ The path through nested levels (since 1.32.0) — GlassKit's `.glass-breadcrumbs
 | `more-label` | String | "2 more levels" | The name of the "…" crumb, with `{count}` for the number of folded levels |
 | `more-label-one` | String | "1 more level" | The same for a single folded level, e.g. `more-label-one="1 weitere Ebene" more-label="{count} weitere Ebenen"`; unset, `more-label` serves both |
 
-Event: `glk-navigate` `{ item, value, href, index }` — cancelable; cancelled on a link, it stops the browser's navigation. Parts: `nav`, `list`, `crumb`, `current`, `overflow`.
+Event: `glk-navigate` `{ item, value, href, index }` — cancelable; cancelled on a link, it stops the browser's navigation. Methods (since 1.34.0): `dropTargetAt(x, y)`, `markDrop(target, { refused })` — below. Parts: `nav`, `list`, `crumb`, `current`, `overflow`.
 
 **`<glk-breadcrumb>`** — one level: its text, `href` (a link) or `value` (a button; unset, the text), `current` for the level shown. It renders nothing of its own.
 
 - **Folding:** where the path does not fit, the middle levels fold into one "…" crumb — a `<glk-menu>` that lists them, named like "2 more levels"; the first crumb and the last two stay. Measured on the element, so it folds and unfolds with its own width. A long label is cut with an ellipsis (`--gl-breadcrumbs-crumb-width`, 200px) and shows in full in a tooltip.
 - **Drop targets:** with `drop-target`, or the `group` of a sortable list or tree, a crumb takes a dragged item into its level and lights up while the item is over it; hovering the "…" during a drag opens its menu. The move itself is the page's: `glk-sort` on the list or tree, with `to.container` the `<glk-breadcrumb>` and `to.index` `null`. The current crumb stands for the level a list shows, so it takes no drop from a list (a tree's item may land on it). At the top of a list the keyboard's Left goes to the crumb of the level above. `drop-target` and `group` may change at run time. Without a `group`, `drop-target` crumbs take items from the sortable lists and trees that have no group either.
+- **A sorter of the page's own (since 1.34.0)** — tiles of its own, a board — uses the crumbs as drop targets too: `crumbs.dropTargetAt(x, y)` returns `{ item, index, current }` for the crumb at a point of the viewport (`item` is its `<glk-breadcrumb>`; a folded level counts while the "…" menu is open), `{ overflow: true }` over "…", or `null`; `crumbs.markDrop(target, { refused })` lights it up or shows a refusal while the drag is over it, opens the "…" menu after 600ms however often it is called, and `markDrop(null)` clears. The crumbs need `drop-target` or a `group`; the move is the page's. **Do not** call the internal `_dropTargetAt()`, `_markDrop()` or `_hoverOverflow()`.
+- **Folded levels take drops (since 1.34.0):** the levels in the open "…" menu light up and take the item. Before, they were looked up in the document, which never returns what lies in a shadow root, and a drop there did nothing.
 
 ---
 
@@ -1855,6 +1902,8 @@ list.addEventListener('glk-sort', e => {
 
 - **Keyboard,** on the focused item, with or without a handle: Space picks it up; Up and Down move it within its level, Home and End to the first and last place; Right moves it into the item just above it (one with children or `container`), as its last child; Left moves it out, one level up — at the top of a list onto the crumb of the level above, where breadcrumbs take its items; Space drops it, and the focus stays on it; Escape or Tab put it back. Right and Left are mirrored right to left. In a tree Space picks up and Enter selects; in a list Enter still clicks an `interactive` item.
 - **Pointer and touch:** a handle (`slot="handle"`, an `<svg>` will do) limits where a pointer starts a drag — only there — and a finger on it drags at once, without the long press. A closed item opens after 600ms under the dragged one, a scroller scrolls 40px from its edge, and the "…" crumb opens its menu.
+- **Tiles and rows of items (since 1.34.0):** items that stand side by side — `<glk-list grid>` (3.24), or a layout of the page's own — sort on the horizontal axis: before is an item's start half, after its end half, inside the middle of a `container`, mirrored right to left; the line stands upright (GlassKit's `.is-sort-inline`). The sorter reads the layout, per container, so the lone tile of a last row sorts like its neighbours. The keyboard keeps the order of the items: Up and Down step from place to place, Right goes into a container, Left out.
+- **In a shadow root (since 1.34.0):** the item under the pointer is looked up in the root of each list or tree taking part (`getRootNode().elementsFromPoint()`), so a sortable list inside another element's shadow root takes drags by mouse and touch, and a group may span roots. Before, `document.elementsFromPoint()` stopped at the shadow host: no target, no `glk-sort` — only the keyboard sorted there. **Remove** a patched `document.elementsFromPoint`.
 - **The page may change the items meanwhile:** single items change in place (3.24, 3.34), and removing the dragged item cancels the drag.
 - **Announcements** go to a polite live region inside the element, and each item says that it is sortable and how. English by default; the `messages` property translates them — set it at any time, the items take it at once:
 
@@ -2232,7 +2281,7 @@ All `glk-*` events bubble and are `composed: true`, so they pierce shadow bounda
 | `<glk-toast>` | Feedback | `message`, `variant`, `duration`, `visible`, `action-label`, `action-value`, `dismissible`, `close-label` | `icon` | `glk-action`, `glk-close`, `glk-dismiss` |
 | `<glk-accordion>` | Containers | — | default | — |
 | `<glk-accordion-item>` | Containers | `title`, `open` | default | `glk-toggle` |
-| `<glk-list>` | Containers | `header`, `flush`, `bare`, `sortable`, `group` | default | `glk-sort-start`, `glk-sort-over`, `glk-sort`, `glk-sort-cancel` (when sortable) |
+| `<glk-list>` | Containers | `header`, `flush`, `bare`, `grid`, `sortable`, `group`, `handle` | default | `glk-sort-start`, `glk-sort-over`, `glk-sort`, `glk-sort-cancel` (when sortable) |
 | `<glk-list-item>` | Containers | `title`, `subtitle`, `interactive`, `center`, `leading-lg`, `wrap`, `detail`, `variant`, `container`, `no-drag` | `leading`, `trailing`, `handle` | `glk-click` (when interactive) |
 | `<glk-tree>` | Containers | `label`, `selection`, `sortable`, `group` | default (`<glk-tree-item>`) | `glk-tree-toggle`, `glk-tree-select`, `glk-tree-load`, `glk-sort-*` |
 | `<glk-tree-item>` | Containers | `label`, `value`, `expanded`, `selected`, `disabled`, `has-children`, `load-error`, `container`, `no-drag` | default (child items), `icon`, `trailing`, `handle` | — |

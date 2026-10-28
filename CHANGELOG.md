@@ -7,6 +7,47 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.34.0] – 2026-10-28
+
+Versions stay aligned with GlassKit at 1.34.0, which this release is built against (peer dependency `>=1.34.0`).
+
+### Added
+
+- **Tiles that sort: `grid` on `<glk-list>`.** A grid of components needs the horizontal axis: before is the left half, after the right half, inside the centre of a submenu tile. The sorter decided from the vertical position only, and a project wrote a sorter of its own for its tiles.
+  - `grid` lays the items out as tiles side by side, through GlassKit 1.34.0's `.glass-list--grid` and `.glass-list__item--tile`. Every tile is a pane of glass with the icon at the top, title and subtitle at its foot, and `trailing` in the top end corner.
+  - Items that stand side by side sort on the horizontal axis: before on an item's start half, after on its end half, into a `container` in its middle. This is mirrored right to left, and the line stands upright in the gap.
+  - The sorter reads the layout per container. A layout of the page's own sorts that way too, and the lone tile of a last row sorts like its neighbours.
+  - The keyboard keeps the order of the items: Up and Down step from place to place, Right goes into a container, Left out.
+
+  The issue suggested `sortable="grid"` or a `glk-grid`. The axis comes from the layout instead, and the tiles are a layout of the list, so they keep its items, groups, containers and crumbs. A tile grid made by the page with `::part()` would lose hover, focus ring and drag states to the page's own `background` and `box-shadow`, which win over the shadow tree. ([#40](https://github.com/JUNGHERZ/GlassKit-Elements/issues/40))
+- **The crumbs for a sorter of the page's own: `dropTargetAt(x, y)` and `markDrop(target, { refused })` on `<glk-breadcrumbs>`.** The crumbs took drops only from `<glk-list>` and `<glk-tree>`, through internal hooks.
+  - `dropTargetAt()` returns `{ item, index, current }` for the crumb at a point of the viewport, `{ overflow: true }` over "…", or `null`. `item` is the crumb's `<glk-breadcrumb>`, and a folded level counts while the "…" menu is open.
+  - `markDrop()` lights the crumb up or shows a refusal. Over "…" it opens the menu after 600ms, however often it is called, and `markDrop(null)` clears.
+
+  ([#40](https://github.com/JUNGHERZ/GlassKit-Elements/issues/40))
+- **A chosen entry: `selected` on `<glk-list-item>`.** A compact list next to an editor marks the entry that is open. `selected` and `aria-current` on the element changed nothing, and a project painted the row through an adopted stylesheet. Now the row takes GlassKit 1.34.0's `.is-selected`, a pill of raised glass as the selected tree item has, and `aria-current="true"`. The page sets it; a click does not. The list's rows are buttons, not options of a listbox, so `aria-current` it is. ([#39](https://github.com/JUNGHERZ/GlassKit-Elements/issues/39))
+- **The grip first, and parts on the row: `handle="start"` on `<glk-list-item>` and `<glk-list>`, parts `item` and `handle`.** The handle stood last in the row, after `trailing`, with no part on the row or the handle. A project adopted a stylesheet into every item to move it.
+  - `handle="start"` puts the handle before the icon, on one item or on the list for all of them. An item's own attribute wins, and the `handle` property reads where it stands. The handle comes first in the Tab order too, so a button in it is reached before the row's other controls.
+  - GlassKit 1.34.0's `--gl-list-item-divider-inset` sets where the dividers start. With the grip first they run from the row's padding until the token says where the text begins.
+
+  ([#38](https://github.com/JUNGHERZ/GlassKit-Elements/issues/38))
+- **Parts `icon` and `handle` on `<glk-tree-item>`.** With GlassKit 1.34.0's `--gl-tree-icon-size`, a 28px chip gets a field of its size. ([GlassKit #26](https://github.com/JUNGHERZ/GlassKit/issues/26))
+
+### Fixed
+
+- **Sorting by mouse and touch inside a shadow root.** The sorter found the row under the pointer with `document.elementsFromPoint()`, which stops at a shadow host. A sortable list or tree inside another element's shadow root never found a target, and a drag ended without `glk-sort`; only the keyboard sorted there. That is the usual case in an app built of web components. The sorter now asks the root of each list or tree taking part, so a group may also span several roots. ([#41](https://github.com/JUNGHERZ/GlassKit-Elements/issues/41))
+- **The folded levels of `<glk-breadcrumbs>` take drops.** Hovering "…" during a drag opened the menu, but its levels were looked up in the document too, and never found. They now light up and take the item, also in a shadow root.
+- **From GlassKit 1.34.0:** the tint of an item that takes the dragged one inside shows over the hover of an interactive row and over the chosen state. Before, only its ring showed.
+
+Measured in Chromium 153, WebKit 26.6 and Firefox 151:
+- **Shadow root:** the issue's repro with the first row dragged below the third gives one `glk-sort` in the document and now one in a shadow root (before: none). A drag across a group from the document into a shadow root gives one too. So does a drop on a folded crumb, after the menu opened under the pointer (before: none, and the option was not marked).
+- **Tiles:** a 480px grid of 152 by 112px tiles. The start half of a tile marks before, the end half after, the middle of a container inside. The lone last tile marks on the horizontal axis, and the line stands 2px wide in the 12px gap. Right to left, the halves swap. The keyboard's Down marks the next place, upright.
+- **Rows:** `handle="start"` gives the order handle, icon, content, trailing, with the divider from 20px. An item with `handle="end"` keeps its own, and Tab goes from the handle's button to the row's trailing button. A selected row carries `aria-current="true"` and the pill, and both go with `selected`.
+- **Tree:** with `--gl-tree-icon-size: 28px` the `icon` part and the chip measure 28 by 28px.
+- With GlassKit 1.34.0 the existing docs, showcase and landing pages render as in 1.33.2. The docs differ only where the new examples and paragraphs stand.
+
+---
+
 ## [1.33.2] – 2026-10-28
 
 GlassKit is unchanged; the peer dependency stays `>=1.33.0`.
@@ -1240,6 +1281,7 @@ Starting with this release, GlassKit Elements version numbers are aligned with G
 ---
 
 [Unreleased]: https://github.com/JUNGHERZ/GlassKit-Elements/compare/v1.33.1...HEAD
+[1.34.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.34.0
 [1.33.2]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.33.2
 [1.33.1]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.33.1
 [1.33.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.33.0

@@ -13,10 +13,17 @@ import { keepFocus } from '../../keep-focus.js';
 // list again; an item moves as the same element and the focus stays on it,
 // or, where it went, goes to its neighbour. highlight() on an item flashes
 // it.
+//
+// grid (since 1.34.0) lays the items out as tiles side by side, each a
+// pane of glass of its own (GlassKit's .glass-list--grid and
+// .glass-list__item--tile): components, apps, choices. Sorted, they move
+// on the horizontal axis, and an item with `container` takes one dropped
+// in its middle. handle="start" (since 1.34.0) puts the handle of every
+// item before its icon; an item's own handle attribute wins.
 
 class GlkList extends GlkElement {
   static get observedAttributes() {
-    return ['flush', 'bare', 'header', 'sortable', 'group'];
+    return ['flush', 'bare', 'header', 'sortable', 'group', 'handle', 'grid'];
   }
 
   render() {
@@ -30,6 +37,7 @@ class GlkList extends GlkElement {
     this._ul = this.createElement('ul', ['glass-list'], { part: 'list' });
     if (this.getBoolAttr('flush')) this._ul.classList.add('glass-list--flush');
     if (this.getBoolAttr('bare')) this._ul.classList.add('glass-list--bare');
+    if (this.getBoolAttr('grid')) this._ul.classList.add('glass-list--grid');
     this._ul.appendChild(document.createElement('slot'));
     this._wrapper.appendChild(this._ul);
   }
@@ -110,6 +118,13 @@ class GlkList extends GlkElement {
       case 'sortable':
         this._applySortable();
         break;
+      case 'handle':
+        for (const item of this.querySelectorAll(':scope > glk-list-item')) item._applyHandle?.();
+        break;
+      case 'grid':
+        this._ul.classList.toggle('glass-list--grid', this.getBoolAttr('grid'));
+        for (const item of this.querySelectorAll(':scope > glk-list-item')) item._applyTile?.();
+        break;
       case 'group':
         // A new group: join it afresh.
         if (this._sort) { this._sort.destroy(); this._sort = null; this._applySortable(); }
@@ -129,8 +144,18 @@ class GlkList extends GlkElement {
   get bare() { return this.getBoolAttr('bare'); }
   set bare(v) { this.setBoolAttr('bare', v); }
 
+  get grid() { return this.getBoolAttr('grid'); }
+  set grid(v) { this.setBoolAttr('grid', v); }
+
   get sortable() { return this.getBoolAttr('sortable'); }
   set sortable(v) { this.setBoolAttr('sortable', v); }
+
+  /** Where the items' handles stand, unless an item says otherwise: "start" or "end". */
+  get handle() { return this.getAttribute('handle') === 'start' ? 'start' : 'end'; }
+  set handle(v) {
+    if (v === 'start' || v === 'end') this.setAttribute('handle', v);
+    else this.removeAttribute('handle');
+  }
 
   /** The texts of the announcements, translated (see SORT_MESSAGES); the items take them at once. */
   get messages() { return this._messages ?? null; }

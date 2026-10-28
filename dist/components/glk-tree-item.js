@@ -23,7 +23,7 @@ import '@jungherz-de/glasskit/glasskit-styles.js';
 // Methods:    highlight()
 // Slots:      default (child items), icon, trailing, handle (where a drag
 //             starts in a sortable tree)
-// Parts:      item, row, twisty, label, group
+// Parts:      item, row, twisty, label, group; icon and handle (since 1.34.0)
 
 const TWISTY = '<svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 6 15 12 9 18"/></svg>';
 
@@ -49,14 +49,14 @@ class GlkTreeItem extends GlkElement {
     this._row = this.createElement('div', ['glass-tree__row'], { part: 'row' });
     this._twisty = this.createElement('span', ['glass-tree__twisty'], { part: 'twisty', 'aria-hidden': 'true' });
     this._twisty.innerHTML = TWISTY;
-    this._icon = this.createElement('span', ['glass-tree__icon']);
+    this._icon = this.createElement('span', ['glass-tree__icon'], { part: 'icon' });
     this._iconSlot = this.createElement('slot', [], { name: 'icon' });
     this._icon.appendChild(this._iconSlot);
     this._labelEl = this.createElement('span', ['glass-tree__label'], { part: 'label' });
     this._trailing = this.createElement('span', ['glass-tree__trailing']);
     this._trailingSlot = this.createElement('slot', [], { name: 'trailing' });
     this._trailing.appendChild(this._trailingSlot);
-    this._handle = this.createElement('span', ['glass-sort__handle']);
+    this._handle = this.createElement('span', ['glass-sort__handle'], { part: 'handle' });
     this._handleSlot = this.createElement('slot', [], { name: 'handle' });
     this._handle.appendChild(this._handleSlot);
     this._row.append(this._twisty, this._icon, this._labelEl, this._trailing, this._handle);

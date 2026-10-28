@@ -16,10 +16,17 @@ const VARIANTS = ['danger', 'accent'];
 // and Space click it — in a sortable list Space picks it up — and it is
 // announced as a button. Until then it was a plain list item that only a
 // pointer could reach. highlight() flashes the row.
+//
+// selected (since 1.34.0) marks the entry a list beside its detail shows:
+// GlassKit's .is-selected lays a pill of raised glass into the row, and
+// the row carries aria-current="true". The page sets it; a click does not.
+// handle="start" puts a sortable item's handle before the icon, "end" (the
+// default) after the trailing content; on <glk-list> it is the default of
+// its items. Parts since 1.34.0: item (the row) and handle.
 
 class GlkListItem extends GlkElement {
   static get observedAttributes() {
-    return ['title', 'subtitle', 'interactive', 'center', 'leading-lg', 'wrap', 'detail', 'variant', 'data-last', 'no-drag'];
+    return ['title', 'subtitle', 'interactive', 'center', 'leading-lg', 'wrap', 'detail', 'variant', 'data-last', 'no-drag', 'selected', 'handle'];
   }
 
   constructor() {
@@ -35,8 +42,9 @@ class GlkListItem extends GlkElement {
     const wrap = this.createElement('div');
     wrap.style.display = 'contents';
 
-    this._item = this.createElement('li', ['glass-list__item']);
+    this._item = this.createElement('li', ['glass-list__item'], { part: 'item' });
     this._applyInteractive();
+    this._applySelected();
     if (this.getBoolAttr('center')) this._item.classList.add('glass-list__item--center');
     const initialVariant = this.getAttribute('variant');
     if (initialVariant && VARIANTS.includes(initialVariant)) {
@@ -80,12 +88,14 @@ class GlkListItem extends GlkElement {
     this._item.appendChild(this._content);
     this._item.appendChild(this._trailing);
 
-    // A handle for a sortable list (since 1.32.0), at the row's end.
-    this._handle = this.createElement('span', ['glass-sort__handle']);
+    // A handle for a sortable list (since 1.32.0), at the row's end — or,
+    // since 1.34.0, at its start (handle="start").
+    this._handle = this.createElement('span', ['glass-sort__handle'], { part: 'handle' });
     this._handleSlot = this.createElement('slot', [], { name: 'handle' });
     this._handle.appendChild(this._handleSlot);
     this._handle.hidden = true;
-    this._item.appendChild(this._handle);
+    this._applyHandle();
+    this._applyTile();
 
     // Sentinel sibling so the <li> is never :last-child inside its shadow
     // parent — keeps the glasskit.css ::after divider rule matching.
@@ -136,6 +146,9 @@ class GlkListItem extends GlkElement {
     };
     this._item.addEventListener('keydown', this._onKeydown);
     this._item.addEventListener('keyup', this._onKeyup);
+    // Moved into another list: that list's handle="…" and grid may differ.
+    this._applyHandle();
+    this._applyTile();
     // Defined after its sortable list, or added later: the list marks it now.
     this.parentElement?._sort?.sync();
   }
@@ -160,6 +173,32 @@ class GlkListItem extends GlkElement {
       this._item.removeAttribute('role');
       this._item.removeAttribute('tabindex');
     }
+  }
+
+  _applySelected() {
+    const on = this.getBoolAttr('selected');
+    this._item.classList.toggle('is-selected', on);
+    if (on) this._item.setAttribute('aria-current', 'true');
+    else this._item.removeAttribute('aria-current');
+  }
+
+  /**
+   * The handle's place: the item's own handle="start" or "end", else the
+   * one its <glk-list> sets for all of them. At the start it comes first in
+   * the row, so the keyboard reaches a button in it before the row's other
+   * controls, as the eye does.
+   */
+  _applyHandle() {
+    if (!this._item) return;
+    if (this.handle === 'start') this._item.insertBefore(this._handle, this._item.firstChild);
+    else this._item.appendChild(this._handle);
+  }
+
+  /** A tile in a <glk-list grid> (since 1.34.0). */
+  _applyTile() {
+    if (!this._item) return;
+    const list = this.parentElement?.localName === 'glk-list' ? this.parentElement : null;
+    this._item.classList.toggle('glass-list__item--tile', Boolean(list?.hasAttribute('grid')));
   }
 
   /**
@@ -223,6 +262,12 @@ class GlkListItem extends GlkElement {
       case 'no-drag':
         this.parentElement?._sort?.sync();
         break;
+      case 'selected':
+        this._applySelected();
+        break;
+      case 'handle':
+        this._applyHandle();
+        break;
       case 'data-last':
         // Handled purely via CSS :host([data-last]) — no JS needed here,
         // but observing it makes sure the shadow re-evaluates the rule.
@@ -257,6 +302,19 @@ class GlkListItem extends GlkElement {
   set detail(v) {
     if (v) this.setAttribute('detail', v);
     else this.removeAttribute('detail');
+  }
+
+  get selected() { return this.getBoolAttr('selected'); }
+  set selected(v) { this.setBoolAttr('selected', v); }
+
+  /** Where the handle stands: "start" or "end", by the item's own attribute, else its list's. */
+  get handle() {
+    const list = this.parentElement?.localName === 'glk-list' ? this.parentElement : null;
+    return (this.getAttribute('handle') ?? list?.getAttribute('handle')) === 'start' ? 'start' : 'end';
+  }
+  set handle(v) {
+    if (v === 'start' || v === 'end') this.setAttribute('handle', v);
+    else this.removeAttribute('handle');
   }
 
   get variant() { return this.getAttribute('variant') || ''; }

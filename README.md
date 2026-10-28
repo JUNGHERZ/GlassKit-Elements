@@ -5,7 +5,7 @@
   <a href="#"><img src="https://img.shields.io/badge/vanilla_JS-no_dependencies-44cc11?style=flat-square" alt="Vanilla JS"></a>
   <a href="#"><img src="https://img.shields.io/badge/components-46-7ec8e3?style=flat-square" alt="46 Components"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="MIT License"></a>
-  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/changelog-v1.33.2-lightgrey?style=flat-square" alt="Changelog"></a>
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/changelog-v1.34.0-lightgrey?style=flat-square" alt="Changelog"></a>
   <a href="https://www.npmjs.com/package/@jungherz-de/glasskit-elements"><img src="https://img.shields.io/badge/npm-%40jungherz--de%2Fglasskit--elements-cb3837?style=flat-square&logo=npm" alt="npm"></a>
 </p>
 
@@ -69,7 +69,7 @@ It is the **app layer** of the GlassKit family — three layers, one design lang
 
 ```html
 <!-- 1. GlassKit CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.33/glasskit.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.34/glasskit.min.css">
 
 <!-- 2. GlassKit Elements -->
 <script src="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"></script>
@@ -107,7 +107,7 @@ The per-component files leave `@jungherz-de/glasskit/glasskit-styles.js` as an e
 <!DOCTYPE html>
 <html data-theme="dark">
 <head>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.33/glasskit.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.34/glasskit.min.css">
   <script src="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"></script>
 </head>
 <body>
@@ -134,7 +134,7 @@ The per-component files leave `@jungherz-de/glasskit/glasskit-styles.js` as an e
 | `<glk-tab-accessory>` | Standalone glass capsule (search, compose…), its label under it with `show-label` | `label`, `variant` (accent, success, error), `disabled`, `show-label` |
 | `<glk-steps>` | Progress through a short flow | `steps`, `current`, `label` |
 | `<glk-date-strip>` | Scrolling row of day chips with tone dots; arrow keys, chosen chip centred | `start`, `days`, `value`, `today`, `marks`, `locale`, `label` |
-| `<glk-breadcrumbs>` | The path through nested levels; folds the middle into a "…" menu, crumbs as drop targets, a cancelable `glk-navigate` | `label`, `collapse`, `drop-target`, `group`, `more-label` |
+| `<glk-breadcrumbs>` | The path through nested levels; folds the middle into a "…" menu, crumbs as drop targets — for a sorter of the page's own too, `dropTargetAt()` / `markDrop()` since 1.34.0 —, a cancelable `glk-navigate` | `label`, `collapse`, `drop-target`, `group`, `more-label` |
 | `<glk-breadcrumb>` | One level of the path | `href`, `value`, `current` |
 
 ### Content
@@ -192,8 +192,8 @@ All form components support `name`, `value`, `disabled` and participate in nativ
 |---|---|---|
 | `<glk-accordion>` | Accordion container | — |
 | `<glk-accordion-item>` | Collapsible section | `title`, `open` |
-| `<glk-list>` | iOS-style grouped list; `sortable` by mouse, touch and keyboard | `flush`, `bare`, `sortable`, `group` |
-| `<glk-list-item>` | List row (icon + title + subtitle + trailing); an `interactive` row is a button for the keyboard | `title`, `subtitle`, `interactive`, `center`, `container`, `no-drag` |
+| `<glk-list>` | iOS-style grouped list, or glass tiles side by side (`grid`, since 1.34.0); `sortable` by mouse, touch and keyboard, in a shadow root too | `flush`, `bare`, `grid`, `sortable`, `group`, `handle` |
+| `<glk-list-item>` | List row (icon + title + subtitle + trailing); an `interactive` row is a button for the keyboard; `selected` for the entry beside its detail | `title`, `subtitle`, `interactive`, `selected`, `center`, `container`, `no-drag`, `handle` |
 | `<glk-tree>` | Levels that open and close, the WAI-ARIA tree view; children that load on opening, with an error state and a retry; `sortable` | `label`, `selection`, `sortable`, `group` |
 | `<glk-tree-item>` | One level of a tree, with its children nested | `label`, `value`, `expanded`, `selected`, `disabled`, `has-children` |
 | `<glk-table>` | Around a native `<table>`: sortable headers, a sticky header, row actions, an empty state, cards below a width | `sort`, `direction`, `sticky-header`, `list-below` |

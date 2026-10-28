@@ -152,7 +152,40 @@ inlineHostSheet.replaceSync(`
 const checkControlSheet = new CSSStyleSheet();
 checkControlSheet.replaceSync(`
   .glass-checkbox, .glass-radio, .glass-toggle { vertical-align: top; }
+  /* label-hidden (since 1.33.1): the text stays the control's name, out of
+     sight — a switch at the end of a row whose title stands on the left. */
+  :host([label-hidden]) :is(.glass-toggle__label, .glass-checkbox__label, .glass-radio__label) {
+    position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+    overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0;
+  }
+  /* label-position="start": the text before the control. */
+  :host([label-position="start"]) :is(.glass-toggle, .glass-checkbox, .glass-radio) { flex-direction: row-reverse; }
 `);
+
+/** The host's naming attributes that check controls hand to their native control. */
+const CONTROL_NAME_ATTRS = ['aria-label', 'aria-labelledby'];
+
+/**
+ * Names the native control of glk-toggle, glk-checkbox and glk-radio from the
+ * host (since 1.33.1): aria-label goes on as it is; aria-labelledby through
+ * element reflection, since an id from the light DOM does not reach into
+ * the shadow root, and its text as the aria-label too — the reference wins
+ * where a browser knows it, the text names the control where it does not.
+ * Either names the control instead of its visible label.
+ */
+function applyControlName(host, input) {
+  if (!input) return;
+  const label = host.getAttribute('aria-label');
+  const ids = (host.getAttribute('aria-labelledby') || '').split(/\s+/).filter(Boolean);
+  const root = host.getRootNode();
+  const refs = ids.map(id => root.getElementById?.(id)).filter(Boolean);
+  const reflects = 'ariaLabelledByElements' in input;
+  if (reflects) input.ariaLabelledByElements = refs.length ? refs : null;
+  const text = refs.length ? refs.map(el => el.textContent.trim()).join(' ') : null;
+  const name = label || text;
+  if (name) input.setAttribute('aria-label', name);
+  else input.removeAttribute('aria-label');
+}
 
 // ── Clicks Aimed at the Host ──
 // The innermost target of the latest pointerdown anywhere in the document;
@@ -556,4 +589,4 @@ class GlkFormElement extends GlkElement {
   }
 }
 
-export { GlkElement, GlkFormElement, checkControlSheet, forwardHostClicks };
+export { CONTROL_NAME_ATTRS, GlkElement, GlkFormElement, applyControlName, checkControlSheet, forwardHostClicks };

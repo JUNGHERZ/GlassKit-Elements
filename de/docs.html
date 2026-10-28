@@ -268,7 +268,7 @@
     <aside class="docs-sidebar">
       <div class="docs-sidebar__title">&#129482; <a href="../de/">GlassKit Elements</a></div>
       <div class="docs-sidebar__subtitle">Web Components f&uuml;r GlassKit CSS.</div>
-      <div class="docs-sidebar__version">v1.33.0 &ndash; Jungherz GmbH</div>
+      <div class="docs-sidebar__version">v1.33.1 &ndash; Jungherz GmbH</div>
 
       <div class="docs-sidebar__group">
         <div class="docs-sidebar__group-title">Grundlagen</div>
@@ -360,7 +360,7 @@
         <h1>GlassKit Elements</h1>
         <p>Vollst&auml;ndige Referenz f&uuml;r alle 46 Web Components &ndash; entwickelt von Jungherz GmbH. Vanilla JS, Shadow DOM, native Formular-Teilnahme.</p>
         <div class="docs-hero__badges">
-          <span class="docs-hero__badge">v1.33.0</span>
+          <span class="docs-hero__badge">v1.33.1</span>
           <span class="docs-hero__badge">Shadow DOM</span>
           <span class="docs-hero__badge">46 Komponenten</span>
           <span class="docs-hero__badge">Vanilla JS</span>
@@ -717,9 +717,26 @@ addEventListener(<span class="val">'afterprint'</span>, () =&gt; {
             <tr><td><code>checked</code></td><td>Boolean</td><td>Checked state</td></tr>
             <tr><td><code>disabled</code></td><td>Boolean</td><td>Disabled state</td></tr>
             <tr><td><code>required</code></td><td>Boolean</td><td>Muss an sein, bevor das Formular sendet (seit 1.20.0)</td></tr>
+            <tr><td><code>label-hidden</code></td><td>Boolean</td><td>Das Label bleibt der Name des Schalters, unsichtbar (seit 1.33.1)</td></tr>
+            <tr><td><code>label-position</code></td><td>String</td><td><code>end</code> (Standard) oder <code>start</code>: das Label vor dem Schalter (seit 1.33.1)</td></tr>
+            <tr><td><code>aria-label</code>, <code>aria-labelledby</code></td><td>String</td><td>Benennen den Schalter vom Element aus statt über sein Label (seit 1.33.1)</td></tr>
           </table>
-          <p><strong>Events:</strong> <code>glk-change</code> &rarr; <code>{ checked: boolean }</code></p>
+          <p><strong>Events:</strong> <code>glk-change</code> &rarr; <code>{ checked: boolean }</code> &middot; <strong>Parts:</strong> <code>track</code>, <code>label</code> (seit 1.33.1)</p>
           <p>Der Schalter ist die native Checkbox im Inneren, mit <code>role="switch"</code>: ein Bedienelement f&uuml;r Screenreader, benannt durch <code>label</code>, sein Zustand kommt von der Checkbox. Seit 1.20.0 tr&auml;gt das Element selbst kein <code>role</code>, <code>aria-checked</code> oder <code>aria-disabled</code> mehr &mdash; Styles und Selektoren auf <code>[checked]</code> und <code>[disabled]</code>. <code>element.click()</code> und ein <code>&lt;label&gt;</code> um das Element oder mit Verweis darauf schalten es um, wie bei einer nativen Checkbox; das gilt auch f&uuml;r <code>&lt;glk-checkbox&gt;</code> und <code>&lt;glk-radio&gt;</code>. Ohne <code>label</code> ist das Element genau so gro&szlig; wie seine Spur, 52 &times; 30&nbsp;px.</p>
+          <p id="glk-toggle-name"><strong>Ein Name ohne sichtbares Label</strong> (seit 1.33.1). In einer Einstellungszeile steht der Titel links und der Schalter am Ende, wo sein eigenes Label den Titel ein zweites Mal zeigen würde. <code>label-hidden</code> behält <code>label</code> als Namen des Schalters und blendet es aus. <code>aria-label</code> am Element benennt den Schalter direkt. <code>aria-labelledby</code> verweist per ID auf einen Titel der Seite &mdash; über Element-Referenzen, weil eine ID der Seite nicht in den Shadow Root reicht, mit dem Text des Titels als Ersatzname. <code>label-position="start"</code> stellt ein sichtbares Label vor den Schalter. Dieselben Attribute wirken bei <code>&lt;glk-checkbox&gt;</code> und <code>&lt;glk-radio&gt;</code>.</p>
+          <div class="docs-preview">
+            <glk-list>
+              <glk-list-item title="Kontaktformular" subtitle="Nachrichten aus dem Formular der Website"><glk-toggle slot="trailing" label="Kontaktformular" label-hidden checked></glk-toggle></glk-list-item>
+              <glk-list-item title="Bestellungen" subtitle="Neue und geänderte Bestellungen"><glk-toggle slot="trailing" aria-label="Bestellungen"></glk-toggle></glk-list-item>
+            </glk-list>
+          </div>
+          <div class="docs-code"><span class="tag">&lt;glk-list-item</span> <span class="attr">title</span>=<span class="val">"Kontaktformular"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;glk-toggle</span> <span class="attr">slot</span>=<span class="val">"trailing"</span> <span class="attr">label</span>=<span class="val">"Kontaktformular"</span> <span class="attr">label-hidden</span><span class="tag">&gt;&lt;/glk-toggle&gt;</span>
+<span class="tag">&lt;/glk-list-item&gt;</span>
+
+<span class="cmt">&lt;!-- Oder auf einen eigenen Titel der Seite verweisen --&gt;</span>
+<span class="tag">&lt;span</span> <span class="attr">id</span>=<span class="val">"news-title"</span><span class="tag">&gt;</span>Newsletter<span class="tag">&lt;/span&gt;</span>
+<span class="tag">&lt;glk-toggle</span> <span class="attr">aria-labelledby</span>=<span class="val">"news-title"</span><span class="tag">&gt;&lt;/glk-toggle&gt;</span></div>
         </div>
 
         <div class="docs-component" id="glk-checkbox">
@@ -730,6 +747,7 @@ addEventListener(<span class="val">'afterprint'</span>, () =&gt; {
           </div>
           <div class="docs-code"><span class="tag">&lt;glk-checkbox</span> <span class="attr">label</span>=<span class="val">"I agree"</span> <span class="attr">name</span>=<span class="val">"terms"</span> <span class="attr">checked</span><span class="tag">&gt;&lt;/glk-checkbox&gt;</span></div>
           <p><code>required</code> h&auml;lt das Formular vom Absenden ab, bis das K&auml;stchen angehakt ist (seit 1.20.0).</p>
+          <p>Seit 1.33.1 wirken <code>label-hidden</code>, <code>label-position</code> und <code>aria-label</code> / <code>aria-labelledby</code> am Element wie bei <a href="#glk-toggle-name"><code>&lt;glk-toggle&gt;</code></a>. <strong>Parts:</strong> <code>box</code>, <code>label</code>.</p>
         </div>
 
         <div class="docs-component" id="glk-radio">
@@ -741,6 +759,7 @@ addEventListener(<span class="val">'afterprint'</span>, () =&gt; {
           <div class="docs-code"><span class="tag">&lt;glk-radio</span> <span class="attr">name</span>=<span class="val">"plan"</span> <span class="attr">label</span>=<span class="val">"Free"</span> <span class="attr">value</span>=<span class="val">"free"</span> <span class="attr">checked</span><span class="tag">&gt;&lt;/glk-radio&gt;</span>
 <span class="tag">&lt;glk-radio</span> <span class="attr">name</span>=<span class="val">"plan"</span> <span class="attr">label</span>=<span class="val">"Pro"</span> <span class="attr">value</span>=<span class="val">"pro"</span><span class="tag">&gt;&lt;/glk-radio&gt;</span></div>
           <p><code>required</code> an einem Radio der Gruppe macht die Gruppe zur Pflicht; jedes gew&auml;hlte Radio erf&uuml;llt sie, wie bei nativen Radios (seit 1.20.0).</p>
+          <p>Seit 1.33.1 wirken <code>label-hidden</code>, <code>label-position</code> und <code>aria-label</code> / <code>aria-labelledby</code> am Element wie bei <a href="#glk-toggle-name"><code>&lt;glk-toggle&gt;</code></a>. <strong>Parts:</strong> <code>circle</code>, <code>label</code>.</p>
         </div>
 
         <div class="docs-component" id="glk-range">

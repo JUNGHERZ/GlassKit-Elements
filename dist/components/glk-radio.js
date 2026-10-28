@@ -1,5 +1,11 @@
-import { GlkFormElement, checkControlSheet, forwardHostClicks } from './base.js';
+import { GlkFormElement, CONTROL_NAME_ATTRS, checkControlSheet, applyControlName, forwardHostClicks } from './base.js';
 import '@jungherz-de/glasskit/glasskit-styles.js';
+
+// A name without a visible label (since 1.33.1), for a control at the end of
+// a row whose title stands on the left: aria-label or aria-labelledby on the
+// host name the native control inside, or label-hidden keeps the label's
+// text as the name, out of sight. label-position="start" puts the text
+// before the control. Parts: label, and the control's circle.
 
 // ── Grouping ──
 // Every <glk-radio> keeps its <input type="radio"> in its own shadow root, and
@@ -30,7 +36,7 @@ function syncGroupTabIndex(group) {
 
 class GlkRadio extends GlkFormElement {
   static get observedAttributes() {
-    return ['checked', 'label', 'name', 'value', 'required'];
+    return ['checked', 'label', 'name', 'value', 'required', ...CONTROL_NAME_ATTRS];
   }
 
   static get hostStyles() { return checkControlSheet; }
@@ -48,11 +54,11 @@ class GlkRadio extends GlkFormElement {
     const val = this.getAttribute('value');
     if (val) this._input.setAttribute('value', val);
 
-    const circle = this.createElement('span', ['glass-radio__circle']);
+    const circle = this.createElement('span', ['glass-radio__circle'], { part: 'circle' });
     const dot = this.createElement('span', ['glass-radio__dot']);
     circle.appendChild(dot);
 
-    this._labelEl = this.createElement('span', ['glass-radio__label']);
+    this._labelEl = this.createElement('span', ['glass-radio__label'], { part: 'label' });
     this._labelEl.textContent = this.getAttribute('label') || '';
 
     label.appendChild(this._input);
@@ -63,6 +69,7 @@ class GlkRadio extends GlkFormElement {
 
     this._defaultChecked = this.getBoolAttr('checked');
     this._wrapper.appendChild(label);
+    applyControlName(this, this._input);
     this._syncFormValue();
 
     // Elements upgrade in document order, so the last `checked` one in the
@@ -72,6 +79,8 @@ class GlkRadio extends GlkFormElement {
   }
 
   setupEvents() {
+    // aria-labelledby may name an element parsed after this one.
+    requestAnimationFrame(() => applyControlName(this, this._input));
     this._onChange = () => this._applyChange();
 
     this._onKeyDown = (e) => {
@@ -153,6 +162,10 @@ class GlkRadio extends GlkFormElement {
     if (this._syncing) return;
     if (!this._input) return;
     switch (name) {
+      case 'aria-label':
+      case 'aria-labelledby':
+        applyControlName(this, this._input);
+        break;
       case 'checked':
         this._input.checked = this.getBoolAttr('checked');
         if (this._input.checked) this._uncheckPeers();
@@ -207,6 +220,16 @@ class GlkRadio extends GlkFormElement {
 
   get value() { return this.getAttribute('value'); }
   set value(v) { this.setAttribute('value', v); }
+
+  get labelHidden() { return this.getBoolAttr('label-hidden'); }
+  set labelHidden(v) { this.setBoolAttr('label-hidden', v); }
+
+  /** "end" (the default) or "start". */
+  get labelPosition() { return this.getAttribute('label-position') === 'start' ? 'start' : 'end'; }
+  set labelPosition(v) {
+    if (v === 'start') this.setAttribute('label-position', 'start');
+    else this.removeAttribute('label-position');
+  }
 }
 
 customElements.define('glk-radio', GlkRadio);

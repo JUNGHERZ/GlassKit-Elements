@@ -7,6 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.33.1] – 2026-10-28
+
+GlassKit is unchanged; the peer dependency stays `>=1.33.0`.
+
+### Added
+
+- **A name without a visible label for `<glk-toggle>`, `<glk-checkbox>` and `<glk-radio>`.** A settings row puts its title on the left and the switch at the end. The switch's `label` showed the title a second time beside it, and `aria-label` on the element left the native switch inside without a name (`switch` with none, in both engines). A project shrank the label's text and gap to nothing through `--gl-font-size-base` and `--gl-space-sm`.
+  - `aria-label` on the element now goes onto the native control.
+  - `aria-labelledby` names it through element reflection, since an id from the light DOM does not reach into the shadow root, and the referenced text also goes on as `aria-label` for where reflection is missing.
+  - `label-hidden` keeps `label` as the name and takes the text out of sight, without its gap.
+  - `label-position="start"` puts the text before the control.
+  - Properties are `labelHidden` and `labelPosition`. Parts are `label`, and `track`, `box` or `circle`.
+
+  The issue asked for the toggle. The checkbox and the radio share its build and the same row at the end of a list, so they take the same attributes. ([#35](https://github.com/JUNGHERZ/GlassKit-Elements/issues/35))
+
+Measured in Chromium 153, WebKit 26.6 and Firefox 151:
+- Chromium's accessibility tree names every control:
+  - a switch with `label-hidden` "Contact form", with `aria-label` "Orders", with `aria-labelledby` "Newsletter"
+  - a checkbox "Remember me"
+  - a radio by `aria-labelledby` "Monthly"
+- In WebKit and Firefox the controls carry the same reflected elements and `aria-label`s, and Playwright's own name computation gives the same names in all three.
+- With `label-hidden` the switch is as wide as its track (52px) and the checkbox as its box (24px). With `label-position="start"` the text stands before the switch.
+- The existing docs, showcase and landing pages render as in 1.33.0.
+
+---
+
 ## [1.33.0] – 2026-10-28
 
 Versions stay aligned with GlassKit at 1.33.0, which this release is built against (peer dependency `>=1.33.0`).
@@ -1180,7 +1206,8 @@ Starting with this release, GlassKit Elements version numbers are aligned with G
 
 ---
 
-[Unreleased]: https://github.com/JUNGHERZ/GlassKit-Elements/compare/v1.33.0...HEAD
+[Unreleased]: https://github.com/JUNGHERZ/GlassKit-Elements/compare/v1.33.1...HEAD
+[1.33.1]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.33.1
 [1.33.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.33.0
 [1.32.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.32.0
 [1.31.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.31.0

@@ -1,6 +1,6 @@
 ---
 name: glasskit-elements
-description: GlassKit Elements is a vanilla-JS Web Components library (v1.33.0) wrapping GlassKit CSS v1.33.0. It provides 46 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
+description: GlassKit Elements is a vanilla-JS Web Components library (v1.33.1) wrapping GlassKit CSS v1.33.0. It provides 46 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
 ---
 
 # GlassKit Elements – AI Component Reference
@@ -13,6 +13,8 @@ description: GlassKit Elements is a vanilla-JS Web Components library (v1.33.0) 
 > **New in 1.28.0 — icons of any kind, and a tab that keeps the current one.** `<glk-tab-item>` takes an icon that is not inline SVG in `slot="icon"` — Material Icons, an `<img>`, a custom element — and it follows every state; `<glk-segmented>` takes one per option in `slot="icon-<value>"` and shows them alone with `icon-only`. `glk-tab-select` is cancelable, for an item that opens a drawer or a link. **Where a project styles tab icons through `hostStyles`, or puts `active` back after `glk-tab-select`, replace that** (3.3, 3.25).
 
 > **New in 1.32.0 — one tab bar for every edge, ten elements, panels in the top layer.** `<glk-tab-bar>` leaves the bottom edge: `orientation="vertical"` makes it a sidebar, `dock="start"` or `"end"` fixes it to that side of the viewport — where the thumb rests on a phone held open, or a foldable that moved its system controls to a side — `rail` shows the icons alone with the labels as tooltips, `placement="top"` lays it out for the top of a page, and `<glk-tab-dock orientation="vertical">` stands the floating bar upright. One set of items serves every layout, and the drop runs along y in a column. New: `<glk-tooltip>`, `<glk-menu>` with `<glk-menu-item>`, `-separator` and `-group`, `<glk-tree>` with `<glk-tree-item>` (children that load on opening, with errors and a retry), `<glk-breadcrumbs>` with `<glk-breadcrumb>`, `<glk-table>` around a native table, and `sortable` on `<glk-list>` and `<glk-tree>` — drag and drop by mouse, touch and keyboard, onto breadcrumbs too. Lists and trees change single items in place, keeping the focus, and `highlight()` points a changed item out. `<glk-popover>` opens in the top layer, `<glk-modal>` and `<glk-sheet>` emit `glk-closed` once they are gone, interactive list items take the keyboard. **Where a project builds its own sidebar, tooltip, menu, tree, breadcrumbs or table wrapper, or waits for a sheet's slide-out with a timer, replace that** (3.3, 3.19, 3.24, 3.27, 3.32–3.37).
+
+> **New in 1.33.1 — a name without a visible label for switches, checkboxes and radios.** `<glk-toggle>`, `<glk-checkbox>` and `<glk-radio>` hand `aria-label` and `aria-labelledby` from the element to their native control, and `label-hidden` keeps `label` as the name out of sight — for a switch at the end of a settings row whose title stands on the left. `label-position="start"` puts the text before the control. Parts: `label` and `track` / `box` / `circle`. **Where a project shrinks a label to nothing through `--gl-font-size-base` or `--gl-space-sm`, or leaves a switch nameless with `aria-label` on the host, replace that** (3.18).
 
 > **New in 1.33.0 — a rail that names its items, a link in a field's label row, chips to choose with.** `<glk-tab-bar rail="labels">` keeps each label under its icon; `slot="leading"` takes a mark and the accessory before the items, `slot="trailing"` a foot such as the account, and with `floating` and `dock` the rail is a full-height pane of its own glass at that edge. `<glk-tab-accessory show-label>` names itself under the capsule. `<glk-input>`, `<glk-textarea>` and `<glk-select>` take a link such as "Forgot password?" in `slot="label-end"`, reached by the keyboard after the field. `<glk-badge size="md">` is a 36px chip with a 44px tap target. GlassKit 1.33.0 adds `--gl-tab-bar-icon-size`, `--gl-tab-bar-item-radius` and `--gl-tab-bar-active-weight`, and tab bar items no longer glide when the layout switches. **Where a project wraps a floating bar to make a rail with a mark and an accessory, positions a link absolutely over a field's label, bends `--gl-space-2xs` or `--gl-font-size-xs` to enlarge chips, or overrides `--gl-radius-full` on a tab bar, replace that** (3.3, 3.5, 3.12).
 
@@ -304,6 +306,7 @@ container components are exposed as parts:
 | `<glk-input>` | `box`, `prefix`, `suffix` (since 1.22.0), `label`, `label-end` (since 1.33.0) |
 | `<glk-textarea>` / `<glk-select>` | `label`, `label-end` (since 1.33.0) |
 | `<glk-badge>` | `badge` — the `<span>`, or the `<button>` with `interactive` (since 1.33.0) |
+| `<glk-toggle>` / `<glk-checkbox>` / `<glk-radio>` | `track` / `box` / `circle`, and `label` (since 1.33.1) |
 | `<glk-tooltip>` | `tooltip` (since 1.32.0) |
 | `<glk-menu>` / `<glk-menu-item>` | `menu` / `item` (since 1.32.0) |
 | `<glk-tree>` / `<glk-tree-item>` | `tree` / `item`, `row`, `twisty`, `label`, `group` (since 1.32.0) |
@@ -796,8 +799,9 @@ Form-associated checkbox with glass styling.
 | `name` | String | Form field name |
 | `value` | String | Value submitted when checked (default `"on"`) |
 | `required` | Boolean | The form does not submit until it is ticked (since 1.20.0) |
+| `label-hidden`, `label-position`, `aria-label`, `aria-labelledby` | | As on `<glk-toggle>` (since 1.33.1, 3.18) |
 
-Events: `glk-change` → `{ checked }`; also dispatches native `change`. Property: `.checked`.
+Events: `glk-change` → `{ checked }`; also dispatches native `change`. Property: `.checked`. Parts: `box`, `label` (since 1.33.1).
 
 `element.click()` and a `<label>` around the element or naming it tick it, as they do a native checkbox (since 1.20.0). A press on the element's empty width (it is a block, the control narrower) still does nothing.
 
@@ -874,8 +878,9 @@ Radio button. Group multiple with the same `name`.
 | `checked` | Boolean | Checked state |
 | `disabled` | Boolean | Disabled state |
 | `required` | Boolean | On any radio of the group: the group is required, any checked radio satisfies it (since 1.20.0) |
+| `label-hidden`, `label-position`, `aria-label`, `aria-labelledby` | | As on `<glk-toggle>` (since 1.33.1, 3.18) |
 
-Events: `glk-change` → `{ checked, value }`.
+Events: `glk-change` → `{ checked, value }`. Parts: `circle`, `label` (since 1.33.1).
 
 **Grouping (since 1.11.0).** Each `<glk-radio>` keeps its `<input type="radio">` in
 its own shadow root, and native radio grouping works per tree — it does not cross
@@ -1037,8 +1042,24 @@ Switch-style toggle (form-associated).
 | `name` | String | Form field name |
 | `value` | String | Submitted value when checked (default `"on"`) |
 | `required` | Boolean | Must be on before the form submits (since 1.20.0) |
+| `label-hidden` | Boolean | The label stays the switch's name, out of sight (since 1.33.1) |
+| `label-position` | `end` \| `start` | The label before the switch (since 1.33.1) |
+| `aria-label`, `aria-labelledby` | String | Name the switch from the element instead of its label (since 1.33.1) |
 
-Events: `glk-change` → `{ checked }`. Property: `.checked`.
+Events: `glk-change` → `{ checked }`. Properties: `.checked`, `.labelHidden`, `.labelPosition`. Parts: `track`, `label` (since 1.33.1).
+
+**A name without a visible label (since 1.33.1).** A settings row puts its title on the left and the switch at the end; the switch's own label would show the title twice, and `aria-label` on the host used to leave the switch without a name. Now:
+
+```html
+<glk-list-item title="Contact form">
+  <glk-toggle slot="trailing" label="Contact form" label-hidden></glk-toggle>
+</glk-list-item>
+
+<span id="news-title">Newsletter</span>
+<glk-toggle aria-labelledby="news-title"></glk-toggle>
+```
+
+`aria-label` goes onto the native switch as it is; `aria-labelledby` reaches the page's element through element reflection (an id from the light DOM does not reach into the shadow root), and its text goes on as `aria-label` too, for where reflection is missing. `<glk-checkbox>` and `<glk-radio>` take the same attributes.
 
 **One control (since 1.20.0).** The switch is the native checkbox inside, with `role="switch"`, named by `label`. The element itself no longer carries `role`, `aria-checked` or `aria-disabled` — before 1.20.0 screen readers met a switch with a checkbox inside. Select and style on `[checked]` / `[disabled]`; in tests, `getByRole('switch', { name })` finds the input and `.click()`, `.check()` work on it. `element.click()` and a `<label>` around the element or naming it toggle it, like a native checkbox. Without `label` the element is exactly its track, 52 × 30 px (it was 64 × 34).
 
@@ -2178,14 +2199,14 @@ All `glk-*` events bubble and are `composed: true`, so they pierce shadow bounda
 | `<glk-status>` | Content | `message` | — | — |
 | `<glk-title>` | Content | — | default | — |
 | `<glk-button>` | Buttons | `variant`, `size`, `disabled`, `type` | default | `glk-click` |
-| `<glk-checkbox>` | Forms | `label`, `checked`, `disabled`, `name`, `value`, `required` | — | `glk-change` |
+| `<glk-checkbox>` | Forms | `label`, `checked`, `disabled`, `name`, `value`, `required`, `label-hidden`, `label-position` | — | `glk-change` |
 | `<glk-input>` | Forms | `label`, `type`, `placeholder`, `hint`, `error`, `disabled`, `readonly`, `required`, `name`, `value`, `min`, `max`, `step`, `minlength`, `maxlength`, `pattern`, `autocomplete`, `inputmode` | `prefix`, `suffix`, `label-end` | `glk-input`, `glk-change` |
-| `<glk-radio>` | Forms | `label`, `name`, `value`, `checked`, `disabled`, `required` | — | `glk-change` |
+| `<glk-radio>` | Forms | `label`, `name`, `value`, `checked`, `disabled`, `required`, `label-hidden`, `label-position` | — | `glk-change` |
 | `<glk-range>` | Forms | `label`, `min`, `max`, `value`, `step`, `name`, `disabled` | — | `glk-input`, `glk-change` |
 | `<glk-search>` | Forms | `placeholder`, `label`, `value`, `name`, `disabled` | — | `glk-input`, `glk-change` |
 | `<glk-select>` | Forms | `label`, `name`, `value`, `disabled`, `required` | default (`<option>`), `label-end` | `glk-change` |
 | `<glk-textarea>` | Forms | `label`, `rows`, `placeholder`, `name`, `value`, `disabled`, `readonly`, `required` | `label-end` | `glk-input`, `glk-change` |
-| `<glk-toggle>` | Forms | `label`, `checked`, `disabled`, `name`, `value`, `required` | — | `glk-change` |
+| `<glk-toggle>` | Forms | `label`, `checked`, `disabled`, `name`, `value`, `required`, `label-hidden`, `label-position` | — | `glk-change` |
 | `<glk-modal>` | Feedback | `open`, `title` | default, `actions` | `glk-open`, `glk-close`, `glk-closed` |
 | `<glk-popover>` | Feedback | `open`, `placement` | `trigger`, default | `glk-open`, `glk-close` |
 | `<glk-tooltip>` | Feedback | `for`, `placement`, `show-delay`, `as-label` | default (text), `trigger` | — |

@@ -1,10 +1,16 @@
-import { GlkFormElement, checkControlSheet, forwardHostClicks } from '../../base.js';
+import { GlkFormElement, checkControlSheet, forwardHostClicks, applyControlName, CONTROL_NAME_ATTRS } from '../../base.js';
+
+// A name without a visible label (since 1.33.1), for a control at the end of
+// a row whose title stands on the left: aria-label or aria-labelledby on the
+// host name the native control inside, or label-hidden keeps the label's
+// text as the name, out of sight. label-position="start" puts the text
+// before the control. Parts: label, and the control's box.
 
 const CHECKMARK_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
 
 class GlkCheckbox extends GlkFormElement {
   static get observedAttributes() {
-    return ['checked', 'label', 'name', 'value', 'required'];
+    return ['checked', 'label', 'name', 'value', 'required', ...CONTROL_NAME_ATTRS];
   }
 
   static get hostStyles() { return checkControlSheet; }
@@ -19,10 +25,10 @@ class GlkCheckbox extends GlkFormElement {
     const name = this.getAttribute('name');
     if (name) this._input.setAttribute('name', name);
 
-    const box = this.createElement('span', ['glass-checkbox__box']);
+    const box = this.createElement('span', ['glass-checkbox__box'], { part: 'box' });
     box.innerHTML = CHECKMARK_SVG;
 
-    this._labelEl = this.createElement('span', ['glass-checkbox__label']);
+    this._labelEl = this.createElement('span', ['glass-checkbox__label'], { part: 'label' });
     this._labelEl.textContent = this.getAttribute('label') || '';
 
     label.appendChild(this._input);
@@ -34,10 +40,13 @@ class GlkCheckbox extends GlkFormElement {
 
     this._defaultChecked = this.getBoolAttr('checked');
     this._wrapper.appendChild(label);
+    applyControlName(this, this._input);
     this._syncFormValue();
   }
 
   setupEvents() {
+    // aria-labelledby may name an element parsed after this one.
+    requestAnimationFrame(() => applyControlName(this, this._input));
     this._onChange = () => {
       this._syncing = true;
       this.setBoolAttr('checked', this._input.checked);
@@ -59,6 +68,10 @@ class GlkCheckbox extends GlkFormElement {
     if (this._syncing) return;
     if (!this._input) return;
     switch (name) {
+      case 'aria-label':
+      case 'aria-labelledby':
+        applyControlName(this, this._input);
+        break;
       case 'checked':
         this._input.checked = this.getBoolAttr('checked');
         this._syncFormValue();
@@ -103,6 +116,16 @@ class GlkCheckbox extends GlkFormElement {
 
   get value() { return this.getAttribute('value') || 'on'; }
   set value(v) { this.setAttribute('value', v); }
+
+  get labelHidden() { return this.getBoolAttr('label-hidden'); }
+  set labelHidden(v) { this.setBoolAttr('label-hidden', v); }
+
+  /** "end" (the default) or "start". */
+  get labelPosition() { return this.getAttribute('label-position') === 'start' ? 'start' : 'end'; }
+  set labelPosition(v) {
+    if (v === 'start') this.setAttribute('label-position', 'start');
+    else this.removeAttribute('label-position');
+  }
 }
 
 customElements.define('glk-checkbox', GlkCheckbox);

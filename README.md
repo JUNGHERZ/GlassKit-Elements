@@ -5,7 +5,7 @@
   <a href="#"><img src="https://img.shields.io/badge/vanilla_JS-no_dependencies-44cc11?style=flat-square" alt="Vanilla JS"></a>
   <a href="#"><img src="https://img.shields.io/badge/components-46-7ec8e3?style=flat-square" alt="46 Components"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="MIT License"></a>
-  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/changelog-v1.33.0-lightgrey?style=flat-square" alt="Changelog"></a>
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/changelog-v1.33.1-lightgrey?style=flat-square" alt="Changelog"></a>
   <a href="https://www.npmjs.com/package/@jungherz-de/glasskit-elements"><img src="https://img.shields.io/badge/npm-%40jungherz--de%2Fglasskit--elements-cb3837?style=flat-square&logo=npm" alt="npm"></a>
 </p>
 
@@ -165,9 +165,9 @@ All form components support `name`, `value`, `disabled` and participate in nativ
 | `<glk-textarea>` | Multi-line text input; slot `label-end` | `label`, `rows`, `placeholder`, `required`, `readonly` |
 | `<glk-select>` | Dropdown select; slot `label-end` | `label`, `required` (children: `<option>`) |
 | `<glk-search>` | Search input with icon | `placeholder`, `label` (accessible name) |
-| `<glk-toggle>` | Switch toggle (`role="switch"` on its native checkbox) | `label`, `checked`, `disabled`, `required` |
-| `<glk-checkbox>` | Checkbox | `label`, `checked`, `disabled`, `required` |
-| `<glk-radio>` | Radio button | `label`, `name`, `value`, `checked`, `required` (per group) |
+| `<glk-toggle>` | Switch toggle (`role="switch"` on its native checkbox) | `label`, `checked`, `disabled`, `required`, `label-hidden`, `label-position` (since 1.33.1; `aria-label` / `aria-labelledby` name the switch) |
+| `<glk-checkbox>` | Checkbox | `label`, `checked`, `disabled`, `required`, `label-hidden`, `label-position` (since 1.33.1) |
+| `<glk-radio>` | Radio button | `label`, `name`, `value`, `checked`, `required` (per group), `label-hidden`, `label-position` (since 1.33.1) |
 | `<glk-range>` | Range slider | `label`, `min`, `max`, `value`, `step` |
 | `<glk-segmented>` | Small exclusive choice as one control, icons per option in `slot="icon-<value>"`, a count per option (`badge`, its own colour with `badgeTone`); form-associated | `options` (JSON), `value`, `full`, `overflow` (scroll, wrap), `droplet`, `icon-only`, `label`, `name` |
 | `<glk-calendar>` | One month with a day to pick; keyboard navigation, `Intl` names; form-associated | `month`, `value`, `today`, `min`, `max`, `marks`, `locale`, `week-start`, `label`, `name` |

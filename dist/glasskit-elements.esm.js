@@ -172,7 +172,40 @@ inlineHostSheet.replaceSync(`
 const checkControlSheet = new CSSStyleSheet();
 checkControlSheet.replaceSync(`
   .glass-checkbox, .glass-radio, .glass-toggle { vertical-align: top; }
+  /* label-hidden (since 1.33.1): the text stays the control's name, out of
+     sight — a switch at the end of a row whose title stands on the left. */
+  :host([label-hidden]) :is(.glass-toggle__label, .glass-checkbox__label, .glass-radio__label) {
+    position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+    overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0;
+  }
+  /* label-position="start": the text before the control. */
+  :host([label-position="start"]) :is(.glass-toggle, .glass-checkbox, .glass-radio) { flex-direction: row-reverse; }
 `);
+
+/** The host's naming attributes that check controls hand to their native control. */
+const CONTROL_NAME_ATTRS = ['aria-label', 'aria-labelledby'];
+
+/**
+ * Names the native control of glk-toggle, glk-checkbox and glk-radio from the
+ * host (since 1.33.1): aria-label goes on as it is; aria-labelledby through
+ * element reflection, since an id from the light DOM does not reach into
+ * the shadow root, and its text as the aria-label too — the reference wins
+ * where a browser knows it, the text names the control where it does not.
+ * Either names the control instead of its visible label.
+ */
+function applyControlName(host, input) {
+  if (!input) return;
+  const label = host.getAttribute('aria-label');
+  const ids = (host.getAttribute('aria-labelledby') || '').split(/\s+/).filter(Boolean);
+  const root = host.getRootNode();
+  const refs = ids.map(id => root.getElementById?.(id)).filter(Boolean);
+  const reflects = 'ariaLabelledByElements' in input;
+  if (reflects) input.ariaLabelledByElements = refs.length ? refs : null;
+  const text = refs.length ? refs.map(el => el.textContent.trim()).join(' ') : null;
+  const name = label || text;
+  if (name) input.setAttribute('aria-label', name);
+  else input.removeAttribute('aria-label');
+}
 
 // ── Clicks Aimed at the Host ──
 // The innermost target of the latest pointerdown anywhere in the document;
@@ -4362,9 +4395,15 @@ class GlkSearch extends GlkFormElement {
 
 customElements.define('glk-search', GlkSearch);
 
+// A name without a visible label (since 1.33.1), for a control at the end of
+// a row whose title stands on the left: aria-label or aria-labelledby on the
+// host name the native control inside, or label-hidden keeps the label's
+// text as the name, out of sight. label-position="start" puts the text
+// before the control. Parts: label, and the control's track.
+
 class GlkToggle extends GlkFormElement {
   static get observedAttributes() {
-    return ['checked', 'label', 'name', 'value', 'required'];
+    return ['checked', 'label', 'name', 'value', 'required', ...CONTROL_NAME_ATTRS];
   }
 
   static get hostStyles() { return checkControlSheet; }
@@ -4384,11 +4423,11 @@ class GlkToggle extends GlkFormElement {
     const name = this.getAttribute('name');
     if (name) this._input.setAttribute('name', name);
 
-    const track = this.createElement('span', ['glass-toggle__track']);
+    const track = this.createElement('span', ['glass-toggle__track'], { part: 'track' });
     const thumb = this.createElement('span', ['glass-toggle__thumb']);
     track.appendChild(thumb);
 
-    this._labelEl = this.createElement('span', ['glass-toggle__label']);
+    this._labelEl = this.createElement('span', ['glass-toggle__label'], { part: 'label' });
     this._labelEl.textContent = this.getAttribute('label') || '';
 
     label.appendChild(this._input);
@@ -4400,11 +4439,14 @@ class GlkToggle extends GlkFormElement {
 
     this._defaultChecked = this.getBoolAttr('checked');
     this._wrapper.appendChild(label);
+    applyControlName(this, this._input);
 
     this._syncFormValue();
   }
 
   setupEvents() {
+    // aria-labelledby may name an element parsed after this one.
+    requestAnimationFrame(() => applyControlName(this, this._input));
     this._onChange = () => {
       this._syncing = true;
       this.setBoolAttr('checked', this._input.checked);
@@ -4426,6 +4468,10 @@ class GlkToggle extends GlkFormElement {
     if (this._syncing) return;
     if (!this._input) return;
     switch (name) {
+      case 'aria-label':
+      case 'aria-labelledby':
+        applyControlName(this, this._input);
+        break;
       case 'checked':
         this._input.checked = this.getBoolAttr('checked');
         this._syncFormValue();
@@ -4480,15 +4526,31 @@ class GlkToggle extends GlkFormElement {
 
   get label() { return this.getAttribute('label'); }
   set label(v) { this.setAttribute('label', v); }
+
+  get labelHidden() { return this.getBoolAttr('label-hidden'); }
+  set labelHidden(v) { this.setBoolAttr('label-hidden', v); }
+
+  /** "end" (the default) or "start". */
+  get labelPosition() { return this.getAttribute('label-position') === 'start' ? 'start' : 'end'; }
+  set labelPosition(v) {
+    if (v === 'start') this.setAttribute('label-position', 'start');
+    else this.removeAttribute('label-position');
+  }
 }
 
 customElements.define('glk-toggle', GlkToggle);
+
+// A name without a visible label (since 1.33.1), for a control at the end of
+// a row whose title stands on the left: aria-label or aria-labelledby on the
+// host name the native control inside, or label-hidden keeps the label's
+// text as the name, out of sight. label-position="start" puts the text
+// before the control. Parts: label, and the control's box.
 
 const CHECKMARK_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
 
 class GlkCheckbox extends GlkFormElement {
   static get observedAttributes() {
-    return ['checked', 'label', 'name', 'value', 'required'];
+    return ['checked', 'label', 'name', 'value', 'required', ...CONTROL_NAME_ATTRS];
   }
 
   static get hostStyles() { return checkControlSheet; }
@@ -4503,10 +4565,10 @@ class GlkCheckbox extends GlkFormElement {
     const name = this.getAttribute('name');
     if (name) this._input.setAttribute('name', name);
 
-    const box = this.createElement('span', ['glass-checkbox__box']);
+    const box = this.createElement('span', ['glass-checkbox__box'], { part: 'box' });
     box.innerHTML = CHECKMARK_SVG;
 
-    this._labelEl = this.createElement('span', ['glass-checkbox__label']);
+    this._labelEl = this.createElement('span', ['glass-checkbox__label'], { part: 'label' });
     this._labelEl.textContent = this.getAttribute('label') || '';
 
     label.appendChild(this._input);
@@ -4518,10 +4580,13 @@ class GlkCheckbox extends GlkFormElement {
 
     this._defaultChecked = this.getBoolAttr('checked');
     this._wrapper.appendChild(label);
+    applyControlName(this, this._input);
     this._syncFormValue();
   }
 
   setupEvents() {
+    // aria-labelledby may name an element parsed after this one.
+    requestAnimationFrame(() => applyControlName(this, this._input));
     this._onChange = () => {
       this._syncing = true;
       this.setBoolAttr('checked', this._input.checked);
@@ -4543,6 +4608,10 @@ class GlkCheckbox extends GlkFormElement {
     if (this._syncing) return;
     if (!this._input) return;
     switch (name) {
+      case 'aria-label':
+      case 'aria-labelledby':
+        applyControlName(this, this._input);
+        break;
       case 'checked':
         this._input.checked = this.getBoolAttr('checked');
         this._syncFormValue();
@@ -4587,9 +4656,25 @@ class GlkCheckbox extends GlkFormElement {
 
   get value() { return this.getAttribute('value') || 'on'; }
   set value(v) { this.setAttribute('value', v); }
+
+  get labelHidden() { return this.getBoolAttr('label-hidden'); }
+  set labelHidden(v) { this.setBoolAttr('label-hidden', v); }
+
+  /** "end" (the default) or "start". */
+  get labelPosition() { return this.getAttribute('label-position') === 'start' ? 'start' : 'end'; }
+  set labelPosition(v) {
+    if (v === 'start') this.setAttribute('label-position', 'start');
+    else this.removeAttribute('label-position');
+  }
 }
 
 customElements.define('glk-checkbox', GlkCheckbox);
+
+// A name without a visible label (since 1.33.1), for a control at the end of
+// a row whose title stands on the left: aria-label or aria-labelledby on the
+// host name the native control inside, or label-hidden keeps the label's
+// text as the name, out of sight. label-position="start" puts the text
+// before the control. Parts: label, and the control's circle.
 
 // ── Grouping ──
 // Every <glk-radio> keeps its <input type="radio"> in its own shadow root, and
@@ -4620,7 +4705,7 @@ function syncGroupTabIndex(group) {
 
 class GlkRadio extends GlkFormElement {
   static get observedAttributes() {
-    return ['checked', 'label', 'name', 'value', 'required'];
+    return ['checked', 'label', 'name', 'value', 'required', ...CONTROL_NAME_ATTRS];
   }
 
   static get hostStyles() { return checkControlSheet; }
@@ -4638,11 +4723,11 @@ class GlkRadio extends GlkFormElement {
     const val = this.getAttribute('value');
     if (val) this._input.setAttribute('value', val);
 
-    const circle = this.createElement('span', ['glass-radio__circle']);
+    const circle = this.createElement('span', ['glass-radio__circle'], { part: 'circle' });
     const dot = this.createElement('span', ['glass-radio__dot']);
     circle.appendChild(dot);
 
-    this._labelEl = this.createElement('span', ['glass-radio__label']);
+    this._labelEl = this.createElement('span', ['glass-radio__label'], { part: 'label' });
     this._labelEl.textContent = this.getAttribute('label') || '';
 
     label.appendChild(this._input);
@@ -4653,6 +4738,7 @@ class GlkRadio extends GlkFormElement {
 
     this._defaultChecked = this.getBoolAttr('checked');
     this._wrapper.appendChild(label);
+    applyControlName(this, this._input);
     this._syncFormValue();
 
     // Elements upgrade in document order, so the last `checked` one in the
@@ -4662,6 +4748,8 @@ class GlkRadio extends GlkFormElement {
   }
 
   setupEvents() {
+    // aria-labelledby may name an element parsed after this one.
+    requestAnimationFrame(() => applyControlName(this, this._input));
     this._onChange = () => this._applyChange();
 
     this._onKeyDown = (e) => {
@@ -4743,6 +4831,10 @@ class GlkRadio extends GlkFormElement {
     if (this._syncing) return;
     if (!this._input) return;
     switch (name) {
+      case 'aria-label':
+      case 'aria-labelledby':
+        applyControlName(this, this._input);
+        break;
       case 'checked':
         this._input.checked = this.getBoolAttr('checked');
         if (this._input.checked) this._uncheckPeers();
@@ -4797,6 +4889,16 @@ class GlkRadio extends GlkFormElement {
 
   get value() { return this.getAttribute('value'); }
   set value(v) { this.setAttribute('value', v); }
+
+  get labelHidden() { return this.getBoolAttr('label-hidden'); }
+  set labelHidden(v) { this.setBoolAttr('label-hidden', v); }
+
+  /** "end" (the default) or "start". */
+  get labelPosition() { return this.getAttribute('label-position') === 'start' ? 'start' : 'end'; }
+  set labelPosition(v) {
+    if (v === 'start') this.setAttribute('label-position', 'start');
+    else this.removeAttribute('label-position');
+  }
 }
 
 customElements.define('glk-radio', GlkRadio);

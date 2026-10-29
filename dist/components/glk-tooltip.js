@@ -1,5 +1,5 @@
 import { GlkElement } from './base.js';
-import { t as tooltipBehaviour, f as focusTarget } from './shared/overlay-COVSRs-B.js';
+import { t as tooltipBehaviour, f as focusTarget } from './shared/overlay-zsSL3Ygw.js';
 import '@jungherz-de/glasskit/glasskit-styles.js';
 
 // A short name or hint for a control, on hover and focus (since 1.32.0) —

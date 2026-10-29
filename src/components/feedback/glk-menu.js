@@ -14,7 +14,8 @@ import { openPanel, focusTarget } from '../../overlay.js';
 // go to the ends, typing jumps to the next item that starts with the typed
 // letters, Enter and Space choose, Escape closes and gives the focus back
 // to the button, Tab closes and moves on. A pointer that hovers an item
-// moves the focus to it; a click outside closes. In the top layer, placed
+// moves the focus to it; a click outside closes, and so does Escape with
+// the focus elsewhere (since 1.36.0). In the top layer, placed
 // below the button (above with placement="top"), aligned at its start —
 // placement="end" aligns at its end — and flipped and shifted to stay in
 // the viewport.
@@ -82,6 +83,18 @@ class GlkMenu extends GlkElement {
     this._onKeydown = (e) => this._keydown(e);
     this.addEventListener('keydown', this._onKeydown);
 
+    // Escape closes an open menu wherever the focus is (since 1.36.0), as it
+    // closes a popover: opened by a click, the focus may be outside it —
+    // Safari does not focus a clicked button —, and a modeless sheet around
+    // leaves the key to the menu. Marked as handled. With the focus in the
+    // menu or on its button, _keydown has taken the key already.
+    this._onDocKeydown = (e) => {
+      if (e.key !== 'Escape' || !this.open || e.defaultPrevented) return;
+      e.preventDefault();
+      this.close();
+    };
+    document.addEventListener('keydown', this._onDocKeydown);
+
     this._onPointerMove = (e) => {
       if (e.pointerType === 'touch') return;
       const item = e.composedPath().find(n => n.localName === ITEM);
@@ -101,6 +114,7 @@ class GlkMenu extends GlkElement {
     this._triggerSlot?.removeEventListener('slotchange', this._onSlotChange);
     this.removeEventListener('click', this._onClick);
     this.removeEventListener('keydown', this._onKeydown);
+    document.removeEventListener('keydown', this._onDocKeydown);
     this.removeEventListener('pointermove', this._onPointerMove);
     document.removeEventListener('pointerdown', this._onOutside, true);
     this._handle?.close();

@@ -13,6 +13,26 @@ const EDGE = 8;   // distance kept from the viewport's edges
 
 const OPPOSITE = { top: 'bottom', bottom: 'top', left: 'right', right: 'left' };
 
+// The panels open right now (since 1.36.0), so that a container can tell
+// whether one of them lies inside it: a modeless <glk-sheet> leaves Escape
+// to an open popover or menu in it, which closes first.
+const openPanels = new Set();
+
+/** The node's parent in the flat tree: its slot, its parent, or the shadow root's host. */
+function flatParent(node) {
+  return node.assignedSlot || node.parentNode || node.host || null;
+}
+
+/** Whether a panel opened by openPanel() is open inside container, through slots and shadow roots. */
+function panelOpenWithin(container) {
+  for (const panel of openPanels) {
+    for (let node = flatParent(panel); node; node = flatParent(node)) {
+      if (node === container) return true;
+    }
+  }
+  return false;
+}
+
 /** A popover kind the browser knows, else "manual". */
 function kindOf(panel, kind) {
   panel.popover = kind;
@@ -79,9 +99,11 @@ function openPanel(panel, anchor, { side = 'bottom', align = 'center', offset = 
   ro.observe(anchor);
   window.addEventListener('scroll', update, { capture: true, passive: true });
   window.addEventListener('resize', update, { passive: true });
+  openPanels.add(panel);
   return {
     update,
     close() {
+      openPanels.delete(panel);
       cancelAnimationFrame(frame);
       ro.disconnect();
       window.removeEventListener('scroll', update, { capture: true });
@@ -192,4 +214,4 @@ function tooltipBehaviour(trigger, panel, { side = () => 'top', delay = () => 40
   };
 }
 
-export { focusTarget as f, openPanel as o, tooltipBehaviour as t };
+export { focusTarget as f, openPanel as o, panelOpenWithin as p, tooltipBehaviour as t };

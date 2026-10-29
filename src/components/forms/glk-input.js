@@ -1,4 +1,4 @@
-import { GlkFormElement } from '../../base.js';
+import { GlkFormElement, fieldLabelSheet, applyControlName, CONTROL_NAME_ATTRS } from '../../base.js';
 
 // Attributes that belong to the inner <input> and are handed down unchanged:
 // the picker's range and step, the typing limits, the pattern, autofill and
@@ -30,12 +30,22 @@ affixSheet.replaceSync(`
   .glass-input-wrap__suffix ::slotted([tabindex]:not(:disabled)) { pointer-events: auto; }
 `);
 
+// A name without a visible label (since 1.36.0), for fields in a table
+// under one shared header: label-hidden keeps the label the field's name,
+// out of sight, and aria-label or aria-labelledby on the host name the
+// field instead, as on the check controls.
+//
+// The browser's input event is composed: it reaches the host by itself,
+// retargeted. Until 1.36.0 the element sent one of its own on top, and a
+// listener on the host got every key twice. One that is not composed is
+// still handed on.
+
 class GlkInput extends GlkFormElement {
   static get observedAttributes() {
-    return ['label', 'type', 'placeholder', 'error', 'hint', 'readonly', 'name', 'value', 'required', ...FORWARDED];
+    return ['label', 'type', 'placeholder', 'error', 'hint', 'readonly', 'name', 'value', 'required', ...FORWARDED, ...CONTROL_NAME_ATTRS];
   }
 
-  static get hostStyles() { return affixSheet; }
+  static get hostStyles() { return [affixSheet, fieldLabelSheet]; }
 
   render() {
     const group = this.createElement('div', ['glass-input-group']);
@@ -87,6 +97,7 @@ class GlkInput extends GlkFormElement {
     this._wrapper.appendChild(group);
 
     this._applyDescription();
+    applyControlName(this, this._input);
     this._syncFormValue();
   }
 
@@ -97,10 +108,12 @@ class GlkInput extends GlkFormElement {
   }
 
   setupEvents() {
-    this._onInput = () => {
+    // aria-labelledby may name an element parsed after this one.
+    requestAnimationFrame(() => applyControlName(this, this._input));
+    this._onInput = (e) => {
       this._syncFormValue();
       this.emit('glk-input', { value: this._input.value });
-      this.dispatchEvent(new Event('input', { bubbles: true }));
+      if (!e.composed) this.dispatchEvent(new Event('input', { bubbles: true }));
     };
     this._onChangeNative = () => {
       this.emit('glk-change', { value: this._input.value });
@@ -166,6 +179,10 @@ class GlkInput extends GlkFormElement {
         break;
       case 'required':
         this._input.required = this.getBoolAttr('required');
+        break;
+      case 'aria-label':
+      case 'aria-labelledby':
+        applyControlName(this, this._input);
         break;
       default:
         if (FORWARDED.includes(name)) this._forward(name);
@@ -244,6 +261,9 @@ class GlkInput extends GlkFormElement {
 
   get name() { return this.getAttribute('name'); }
   set name(v) { this.setAttribute('name', v); }
+
+  get labelHidden() { return this.getBoolAttr('label-hidden'); }
+  set labelHidden(v) { this.setBoolAttr('label-hidden', v); }
 }
 
 customElements.define('glk-input', GlkInput);

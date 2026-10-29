@@ -1,5 +1,5 @@
 import { GlkElement } from './base.js';
-import { t as tooltipBehaviour } from './shared/overlay-COVSRs-B.js';
+import { t as tooltipBehaviour } from './shared/overlay-zsSL3Ygw.js';
 import '@jungherz-de/glasskit/glasskit-styles.js';
 
 // The icon: an inline <svg> child is copied into the shadow root, where

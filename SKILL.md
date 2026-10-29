@@ -1,6 +1,6 @@
 ---
 name: glasskit-elements
-description: GlassKit Elements is a vanilla-JS Web Components library (v1.35.0) wrapping GlassKit CSS v1.35.0. It provides 46 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
+description: GlassKit Elements is a vanilla-JS Web Components library (v1.36.0) wrapping GlassKit CSS v1.36.0. It provides 46 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
 ---
 
 # GlassKit Elements – AI Component Reference
@@ -13,6 +13,8 @@ description: GlassKit Elements is a vanilla-JS Web Components library (v1.35.0) 
 > **New in 1.28.0 — icons of any kind, and a tab that keeps the current one.** `<glk-tab-item>` takes an icon that is not inline SVG in `slot="icon"` — Material Icons, an `<img>`, a custom element — and it follows every state; `<glk-segmented>` takes one per option in `slot="icon-<value>"` and shows them alone with `icon-only`. `glk-tab-select` is cancelable, for an item that opens a drawer or a link. **Where a project styles tab icons through `hostStyles`, or puts `active` back after `glk-tab-select`, replace that** (3.3, 3.25).
 
 > **New in 1.32.0 — one tab bar for every edge, ten elements, panels in the top layer.** `<glk-tab-bar>` leaves the bottom edge: `orientation="vertical"` makes it a sidebar, `dock="start"` or `"end"` fixes it to that side of the viewport — where the thumb rests on a phone held open, or a foldable that moved its system controls to a side — `rail` shows the icons alone with the labels as tooltips, `placement="top"` lays it out for the top of a page, and `<glk-tab-dock orientation="vertical">` stands the floating bar upright. One set of items serves every layout, and the drop runs along y in a column. New: `<glk-tooltip>`, `<glk-menu>` with `<glk-menu-item>`, `-separator` and `-group`, `<glk-tree>` with `<glk-tree-item>` (children that load on opening, with errors and a retry), `<glk-breadcrumbs>` with `<glk-breadcrumb>`, `<glk-table>` around a native table, and `sortable` on `<glk-list>` and `<glk-tree>` — drag and drop by mouse, touch and keyboard, onto breadcrumbs too. Lists and trees change single items in place, keeping the focus, and `highlight()` points a changed item out. `<glk-popover>` opens in the top layer, `<glk-modal>` and `<glk-sheet>` emit `glk-closed` once they are gone, interactive list items take the keyboard. **Where a project builds its own sidebar, tooltip, menu, tree, breadcrumbs or table wrapper, or waits for a sheet's slide-out with a timer, replace that** (3.3, 3.19, 3.24, 3.27, 3.32–3.37).
+
+> **New in 1.36.0 — names without visible labels, one `input` per key, Escape in the right order.** `label-hidden`, `aria-label` and `aria-labelledby` on `<glk-input>`, `<glk-select>` and `<glk-textarea>` (3.12) — fields in a table under one header. `<glk-button>` hands `aria-label`, `aria-labelledby` and `aria-describedby` to its native button (3.10). **The browser's `input` now reaches `<glk-input>`, `<glk-textarea>`, `<glk-search>` and `<glk-range>` once per key** — each used to send its own on top, so a listener got every key twice. `<glk-range>` emits `glk-change` when the pointer lets go and on every key (3.14). In a modeless `<glk-sheet>` an open popover or menu closes first on Escape, and an open `<glk-menu>` closes on Escape wherever the focus is (3.27, 3.33). `<glk-sheet>` gets `slot="subtitle"` below the title and the part `close-icon`, GlassKit 1.36.0 the close tokens and per-edge side insets (3.27); `<glk-list-item>` the parts `leading`/`trailing` and `--gl-list-leading-width` (3.24); `<glk-status>` loses the paragraph margins (3.8). **Where a project counts `input` events on these elements expecting two per key, draws its own close button or head in a sheet, hides labels with `::part(label)`, or keeps an own Escape guard for popovers in a side sheet, drop that.**
 
 > **New in 1.35.0 — sheets at a side, modeless, with a head; state events that stay put; dark glass that keeps its contrast.** `<glk-sheet>` takes `placement="end"`/`"start"` (a full-height side panel), `modeless` (`show()` instead of `showModal()`: the page stays usable, Escape inside closes, focus in and back), `dismissible` with `close-label`, slots `eyebrow`, `leading`, `trailing`, and `label` as the name without a title (3.27). **`glk-open`, `glk-close` and `glk-closed` no longer bubble** (popover, menu, modal, sheet, toast): listen on the element itself, not on a container — a sheet's listener used to catch the `glk-close` of a popover inside it. Escape on an open popover is marked handled, so a sheet around it stays open. `<glk-list-item>` gets slots `title-trailing` and `extra`, parts `title`/`subtitle`, and GlassKit 1.35.0's type and chosen-row tokens (3.24); `<glk-status>` takes its message as content with markup (3.8); `<glk-textarea>` emits `glk-change` (3.17); `<glk-segmented icon-style="color">` keeps logos' colours (3.25); `<glk-steps>` takes a state per step (3.26). **Where a project checks `event.target === event.currentTarget` for these events, keeps a hidden title for a sheet's name, draws its own sheet head or side panel, or listens to `focusout` for a text area, replace that.**
 
@@ -146,7 +148,7 @@ addEventListener('afterprint', () => {
 | Rendering | Shadow DOM (`mode: 'open'`) with `adoptedStyleSheets` |
 | Stylesheet sharing | GlassKit's `componentsSheet` is the same `CSSStyleSheet` object in every element — no CSS duplication. Token declarations live on the document, not in the shadow roots |
 | Theme sync | Global MutationObserver on `<html data-theme>`, `<html data-density>` and `<html data-surface>` (since 1.24.0) |
-| Events | Custom `glk-*` events, all `bubbles: true, composed: true` |
+| Events | Custom `glk-*` events, `bubbles: true, composed: true` — except the state events `glk-open`, `glk-close`, `glk-closed`, which stay at the element (since 1.35.0). Native `input` arrives from the browser, once per key (since 1.36.0) |
 | Form participation | `GlkFormElement` uses `ElementInternals` (`static formAssociated = true`): value, reset and — since 1.20.0 — the inner field's validity |
 | Focus | Form elements with one field delegate focus (since 1.20.0): `element.focus()`, a click on the label, a `<label for>` land in the field. Since 1.33.2 `<glk-button>`, `<glk-pill>`, `<glk-tab-item>` and `<glk-tab-accessory>` delegate it to their button or link, `autofocus` included, and elements with several controls hand `focus()` to the one Tab reaches: the chosen option of `<glk-segmented>`, the tab-stop day of `<glk-calendar>` and `<glk-date-strip>`, the choose button of `<glk-image-picker>`, the trigger of `<glk-accordion-item>`, the row of an interactive or sortable `<glk-list-item>`, the button of an interactive `<glk-badge>` |
 | Disabled | Form elements follow their own `disabled` and a `<fieldset disabled>` around them, as native controls do (since 1.22.3); the `disabled` property reflects the attribute |
@@ -301,9 +303,9 @@ container components are exposed as parts:
 |---|---|
 | `<glk-card>` | `card` |
 | `<glk-list>` | `header`, `list` |
-| `<glk-list-item>` | `item` (the row), `handle` (since 1.34.0); `title`, `subtitle`, `title-trailing`, `extra` (since 1.35.0) |
+| `<glk-list-item>` | `item` (the row), `handle` (since 1.34.0); `title`, `subtitle`, `title-trailing`, `extra` (since 1.35.0); `leading`, `trailing` (since 1.36.0) |
 | `<glk-modal>` | `overlay`, `modal`, `header`, `body`, `footer` |
-| `<glk-sheet>` | `overlay`, `sheet`, `title`, `body`, `actions`; `grip`, `head`, `eyebrow`, `leading`, `trailing`, `close` (since 1.35.0) |
+| `<glk-sheet>` | `overlay`, `sheet`, `title`, `body`, `actions`; `grip`, `head`, `eyebrow`, `leading`, `trailing`, `close` (since 1.35.0); `subtitle`, `close-icon` (since 1.36.0) |
 | `<glk-accordion-item>` | `item`, `trigger`, `content`, `body` (since 1.30.0) |
 | `<glk-button>` | `button` (since 1.31.0) |
 | `<glk-segmented>` | `group`, `item`, `badge` (the last two since 1.31.0) |
@@ -741,7 +743,7 @@ Inline status notice (muted surface).
 |---|---|---|
 | `message` | String | Status text — the short form; shows while the content is empty (whitespace does not count) |
 
-Slots: `icon`; default (since 1.35.0) — the message with markup, winning over `message`. Parts (since 1.35.0): `status`, `message`. GlassKit's `--gl-status-color` sets the message's colour; style a `<b>` inside with a rule of your own.
+Slots: `icon`; default (since 1.35.0) — the message with markup, winning over `message`. Parts (since 1.35.0): `status`, `message`. GlassKit's `--gl-status-color` sets the message's colour; style a `<b>` inside with a rule of your own. Since 1.36.0 the message has no margin of its own (GlassKit 1.36.0): the browser's 1em above and below made the notice 82px high instead of 54px — drop a `::part(message) { margin: 0 }`.
 
 ---
 
@@ -780,6 +782,7 @@ Full-width glass button (56 px). Three variants, four sizes; a height and `auto`
 | `size` | String | `md` | `sm`, `md`, `lg`, `auto`, or a height and `auto`: `sm auto`, a small button as wide as its text (since 1.31.0; before, a list gave no size at all) |
 | `disabled` | Boolean | `false` | Disabled state |
 | `type` | String | `button` | `button`, `submit`, `reset` — submit and reset act on the element's form (since 1.20.0) |
+| `aria-label`, `aria-labelledby`, `aria-describedby` | String | — | Name and describe the native button instead of its content (since 1.36.0) |
 
 Events: `glk-click` (suppressed when disabled). Part: `button`, the native button inside (since 1.31.0).
 
@@ -790,6 +793,13 @@ Events: `glk-click` (suppressed when disabled). Part: `button`, the native butto
 **Upgrading from ≤ 1.19:** code that set `type="submit"` and did the work in a `glk-click` handler now gets a real submit as well — handle the form's `submit` event (with `preventDefault()` in an SPA) or drop `type="submit"`, or the browser reloads the page.
 
 `aria-expanded`, `aria-haspopup` and `aria-pressed` set on the element are handed on to the native button inside, which is what screen readers read (since 1.20.0).
+
+**A name and a description (since 1.36.0).** `aria-label` and `aria-labelledby` on the element name the native button instead of its content — an icon-only button, or "Restore" that should say "Restore Info page 55" in every row of a list —, and `aria-describedby` describes it. `aria-labelledby` and `aria-describedby` point at elements of the page through element reflection (an id from the page does not reach into the shadow root), `aria-labelledby` with the text as a fallback name, as on the switches. Before, they stayed on the host, which has no role, and named nothing. **Do not** put visually hidden text into the slot for the name.
+
+```html
+<glk-button variant="tertiary" aria-label="Close"><svg aria-hidden="true">…</svg></glk-button>
+<glk-button aria-label="Restore Info page 55">Restore</glk-button>
+```
 
 **Focus (since 1.33.2).** `element.focus()` focuses the native button inside, and so does `autofocus` — also in a `<glk-modal>` or `<glk-sheet>`, which focus their `[autofocus]` element on opening. Before, the shadow root did not delegate the focus: `focus()` left it on the body, and a page had to reach for `shadowRoot.querySelector('button')`. A disabled button takes no focus, like a native one.
 
@@ -847,8 +857,19 @@ Text input with label + hint.
 | `min`, `max`, `step` | String | Passed to the inner field — range and step of the picker for dates, times and numbers (since 1.17.0) |
 | `minlength`, `maxlength`, `pattern` | String | Passed to the inner field (since 1.17.0) |
 | `autocomplete`, `inputmode` | String | Autofill and on-screen keyboard, passed to the inner field (since 1.17.0) |
+| `label-hidden` | Boolean | The label stays the field's name, out of sight (since 1.36.0) |
+| `aria-label`, `aria-labelledby` | String | Name the field from the host instead of its label (since 1.36.0) |
 
-Events: `glk-input` → `{ value }`, `glk-change` → `{ value }`. Native `input` / `change` also dispatched. Property: `.value`.
+Events: `glk-input` → `{ value }`, `glk-change` → `{ value }`, with a native `change`. The browser's `input` reaches the element once per key (since 1.36.0; before, the element sent one of its own on top and a listener got every key twice). Property: `.value`.
+
+**A name without a visible label (since 1.36.0).** Fields in a table under one shared header — opening hours with From and To for each day — need their label as their name without showing it in every cell. `label-hidden` keeps `label` as the name and takes it out of sight, as on the switches; `aria-label` or `aria-labelledby` on the element name the field directly. A group around each row names the day. `<glk-select>` and `<glk-textarea>` take the same attributes. **Do not** hide the label with `::part(label)` rules of your own.
+
+```html
+<div role="group" aria-label="Monday">
+  <glk-input type="time" label="From" label-hidden></glk-input>
+  <glk-input type="time" label="To" label-hidden></glk-input>
+</div>
+```
 
 **Slots `prefix` and `suffix` (since 1.22.0)** put an icon, a currency, a unit or a button inside the field's box, at its start and end (they swap sides under `dir="rtl"`). Each shows only while something is slotted; its width is measured and the field's padding grows by it, so the text keeps clear of a unit of any length. A click on slotted text, an icon or a disabled control goes through to the field; enabled controls (`<glk-button>`, `<glk-select>` … included — they are form-associated), links and elements with `tabindex` take their own (since 1.22.2 — before, every slotted element took the click). Slot the control itself: one wrapped in a slotted element needs `pointer-events: auto` from the page. A container locked with `pointer-events: none` does not hold a control; lock it with `inert`, or disable the control. Their text is read as part of the field's description. Parts: `box`, `prefix`, `suffix`. Built on GlassKit's `.glass-input-wrap` (GlassKit 1.22.0).
 
@@ -941,7 +962,7 @@ Slider input.
 | `name` | String | Form field name |
 | `disabled` | Boolean | Disabled state |
 
-Events: `glk-input`, `glk-change`. Properties: `.value`, `.disabled` (since 1.22.3).
+Events: `glk-input` → `{ value }` on every step; `glk-change` → `{ value }` once a value is set (since 1.36.0; before, it never fired) — when the pointer lets go of the thumb, and on every key, as the native slider's `change` — with a native `change`. Save there: one request instead of one per step of a drag. The browser's `input` reaches the element once per step (since 1.36.0; before, twice). Properties: `.value`, `.disabled` (since 1.22.3).
 
 ---
 
@@ -961,7 +982,7 @@ Search input with leading icon.
 | `name` | String | Form field name |
 | `disabled` | Boolean | Disabled state |
 
-Events: `glk-input`, `glk-change`. Properties: `.value`, `.disabled` (since 1.22.3).
+Events: `glk-input` → `{ value }` on every key. The browser's `input` reaches the element once per key (since 1.36.0; before, twice). Properties: `.value`, `.disabled` (since 1.22.3).
 
 ---
 
@@ -986,7 +1007,7 @@ Dropdown select. Pass native `<option>` elements as children.
 | `disabled` | Boolean | Disabled state |
 | `required` | Boolean | With an empty first option (`value=""`), the form does not submit until a choice is made (since 1.20.0) |
 
-Children: native `<option>` elements, read from the light DOM. `slot="label-end"` and the parts `label` and `label-end` as on `<glk-input>` (since 1.33.0).
+Children: native `<option>` elements, read from the light DOM. `slot="label-end"` and the parts `label` and `label-end` as on `<glk-input>` (since 1.33.0). `label-hidden`, `aria-label` and `aria-labelledby` as on `<glk-input>` (since 1.36.0).
 
 Events: `glk-change` → `{ value }`.
 
@@ -1034,6 +1055,8 @@ Multi-line text input.
 | `disabled` | Boolean | Disabled state |
 | `required` | Boolean | Required field |
 | `readonly` | Boolean | Read-only, property `.readOnly` (since 1.22.0) |
+| `label-hidden` | Boolean | The label stays the field's name, out of sight (since 1.36.0) |
+| `aria-label`, `aria-labelledby` | String | Name the field from the host instead of its label (since 1.36.0) |
 
 Events: `glk-input` on every key; `glk-change` `{ value }` (since 1.35.0; before, none) once a value is done — on leaving the field with a changed value, as on `<glk-input>`, and on Ctrl/Cmd+Enter; once per value, plus a native `change`. `slot="label-end"` and the parts `label` and `label-end` as on `<glk-input>` (since 1.33.0).
 
@@ -1350,7 +1373,7 @@ Property: `messages`, the sorting announcements in the page's language (3.37).
 | `extra` | Below the subtitle — a link ("Undo"), a line of chips (since 1.35.0; not `content`, which names the row's middle column in GlassKit) |
 | `handle` | A grip at the row's end — or its start with `handle="start"` (since 1.34.0) — for a sortable list (since 1.32.0), e.g. an `<svg>`: with one, a pointer starts a drag only there — a tap on the row still clicks it — and a finger on it drags at once. The keyboard is not limited by it: Space on the row picks the item up |
 
-Parts (since 1.34.0): `item` (the row) and `handle` on `<glk-list-item>`, since 1.35.0 also `title`, `subtitle`, `title-trailing`, `extra`; `header` and `list` on `<glk-list>`. GlassKit 1.35.0's `--gl-list-title-size`, `--gl-list-title-weight`, `--gl-list-subtitle-size` set a row's type, `--gl-list-item-selected-inset`, `-radius`, `-shadow`, `-color`, `-weight` the chosen row's pill (`0`, `0`, `none`: a flat tint). **Do not** adopt stylesheets into list items for type or a flat selection.
+Parts (since 1.34.0): `item` (the row) and `handle` on `<glk-list-item>`, since 1.35.0 also `title`, `subtitle`, `title-trailing`, `extra`; `header` and `list` on `<glk-list>`. GlassKit 1.35.0's `--gl-list-title-size`, `--gl-list-title-weight`, `--gl-list-subtitle-size` set a row's type, `--gl-list-item-selected-inset`, `-radius`, `-shadow`, `-color`, `-weight` the chosen row's pill (`0`, `0`, `none`: a flat tint). Since 1.36.0 the parts `leading` and `trailing` reach the boxes at the row's ends, GlassKit 1.36.0's `--gl-list-leading-width` widens the leading box — a time and a chip before the text, e.g. `84px` with `leading-lg` — and the dividers follow it, and the chosen row's title takes the row's colour, so `--gl-list-item-selected-color` reaches it (before, it kept the text colour). **Do not** adopt stylesheets into list items for type or a flat selection, or keep own rows for a wider leading place.
 
 #### A list beside its detail (since 1.34.0)
 
@@ -1549,7 +1572,9 @@ Bottom sheet (since 1.15.0) — the mobile sibling of `<glk-modal>`, same API sh
 
 Methods: `show()`, `close()` — since 1.32.0 `close()` returns a promise that settles once the sheet has slid out, at once when nothing was shown. Slots: default (content), `actions`. Events: `glk-open` — whenever it opens, by attribute, property or `show()` (since 1.30.0), for instance to hide a page's own fixed bars; `glk-close` — only when the user closes it (scrim click, Escape), like `<glk-modal>`; `close()` does not emit; `glk-closed` — once the sheet has slid out and its dialog has closed, however it closed, at once under `prefers-reduced-motion` (since 1.32.0). A page that renders the sheet from state drops it on `glk-closed` (or after `await sheet.close()`), so the slide-out shows instead of the sheet vanishing. Parts: `overlay` (the `<dialog>`), `sheet`, `title`, `body`, `actions`; since 1.35.0 `grip`, `head`, `eyebrow`, `leading`, `trailing`, `close`. Slots since 1.35.0: `eyebrow` (a line above the title), `leading`, `trailing` (before and after it in the head).
 
-**Since 1.35.0 `glk-open`, `glk-close` and `glk-closed` do not bubble** — listen on the sheet itself; the `glk-close` of a popover inside no longer reaches a sheet's listener. A popover inside takes Escape first (marked handled), so the sheet stays open until the next Escape.
+**Since 1.35.0 `glk-open`, `glk-close` and `glk-closed` do not bubble** — listen on the sheet itself; the `glk-close` of a popover inside no longer reaches a sheet's listener. A popover inside takes Escape first (marked handled), so the sheet stays open until the next Escape. **Since 1.36.0 the same holds in a `modeless` sheet**, wherever the focus is — in the popover, on its trigger, on another field: a popover or menu open in it closes first. In 1.35.0 the modeless sheet closed first and left the popover open in the top layer.
+
+**The head since 1.36.0:** `slot="subtitle"` stands below the title — a badge there leaves the title its width, where one in `trailing` squeezed it in a narrow sheet. GlassKit 1.36.0's `--gl-sheet-close-size` (32px), `--gl-sheet-close-icon-size` (16px) and `--gl-sheet-close-icon-stroke` (2) size the close button and its glyph, the part `close-icon` reaches the glyph, and the head of a sheet without title, places and close button takes no room (it kept 8px in 1.35.0). `--gl-sheet-side-inset-block-start` and `-block-end` set a side sheet's top and bottom on their own, below a fixed bar.
 
 ```html
 <glk-sheet title="Version from 09:41" dismissible close-label="Close">
@@ -1561,9 +1586,16 @@ Methods: `show()`, `close()` — since 1.32.0 `close()` returns a promise that s
 
 <!-- A side panel beside a list that stays usable -->
 <glk-sheet title="Edit entry" placement="end" modeless dismissible>…</glk-sheet>
+
+<!-- Since 1.36.0: a badge below the title, a plain 44px close button -->
+<glk-sheet title="Picture gallery" dismissible style="--gl-sheet-close-size: 44px; --gl-sheet-close-icon-size: 20px; --gl-sheet-close-icon-stroke: 1.8">
+  <span slot="leading" class="chip">…</span>
+  <glk-badge slot="subtitle" variant="success">1× in your app</glk-badge>
+  …
+</glk-sheet>
 ```
 
-**Do not** keep a hidden `title` only for the dialog's name (use `label`), draw a head of your own in the body, or move the sheet to the side with adopted stylesheets.
+**Do not** keep a hidden `title` only for the dialog's name (use `label`), draw a head of your own in the body, put an own close button into `trailing` for its size, or move the sheet to the side with adopted stylesheets.
 
 ---
 
@@ -1743,7 +1775,7 @@ Slots: `trigger`, default (items). Events: `glk-select` `{ item, value, checked 
 
 Slots: default (label), `icon`, `trailing` — a hint such as a shortcut. Part: `item`. `<glk-menu-separator>` is a line between groups (`role="separator"`); `<glk-menu-group label="…">` is a `role="group"` named by `label`, which also shows above its items — radio items check one of their own group.
 
-- **One tab stop, the WAI-ARIA menu button:** on the button Enter, Space and Down open the menu at its first item, Up at its last; in the menu Down and Up move and wrap, Home and End go to the ends, typing jumps to the next item that starts with the typed letters, Enter and Space choose, <kbd>Escape</kbd> closes and gives the focus back to the button, Tab closes and moves on. A hovering pointer moves the focus; a click outside closes.
+- **One tab stop, the WAI-ARIA menu button:** on the button Enter, Space and Down open the menu at its first item, Up at its last; in the menu Down and Up move and wrap, Home and End go to the ends, typing jumps to the next item that starts with the typed letters, Enter and Space choose, <kbd>Escape</kbd> closes and gives the focus back to the button, Tab closes and moves on. A hovering pointer moves the focus; a click outside closes. Since 1.36.0 Escape also closes an open menu while the focus is elsewhere — Safari leaves it off a clicked button — and marks the key handled, so a modeless sheet around stays open.
 - **Choosing:** a plain item closes the menu and gives the focus back to the button; a checkbox item toggles and a radio item is checked — the others of its group unchecked — and both leave the menu open. `glk-select` comes first; cancelled, nothing changes.
 - The button gets `aria-haspopup="menu"` and `aria-expanded` (`<glk-button>` and `<glk-pill>` hand them to their native button); the panel, `role="menu"`, is named by the button. Roles and states sit on the items themselves (`ElementInternals`): `menuitem`, `menuitemcheckbox`, `menuitemradio`, `aria-checked`, `aria-disabled`.
 - A menu with checkable items keeps the check mark's room on every item, so the labels line up. In the top layer, so a table's wrap or a card's `overflow: hidden` does not cut it off.

@@ -1,4 +1,4 @@
-import { GlkFormElement } from './base.js';
+import { GlkFormElement, CONTROL_NAME_ATTRS, fieldLabelSheet, applyControlName } from './base.js';
 import '@jungherz-de/glasskit/glasskit-styles.js';
 
 // glk-input on every key; glk-change { value } once a value is done (since
@@ -6,11 +6,22 @@ import '@jungherz-de/glasskit/glasskit-styles.js';
 // on Ctrl+Enter or Cmd+Enter, where Enter alone breaks the line. Once per
 // value: a change already reported by the keys is not reported again on
 // leaving. A native change goes out with it.
+//
+// label-hidden, aria-label and aria-labelledby as on <glk-input> (since
+// 1.36.0): the label stays the name out of sight, or the host names the
+// field instead.
+//
+// The browser's input event is composed: it reaches the host by itself,
+// retargeted. Until 1.36.0 the element sent one of its own on top, and a
+// listener on the host got every key twice. One that is not composed is
+// still handed on.
 
 class GlkTextarea extends GlkFormElement {
   static get observedAttributes() {
-    return ['label', 'placeholder', 'rows', 'readonly', 'name', 'value', 'required'];
+    return ['label', 'placeholder', 'rows', 'readonly', 'name', 'value', 'required', ...CONTROL_NAME_ATTRS];
   }
+
+  static get hostStyles() { return fieldLabelSheet; }
 
   render() {
     const group = this.createElement('div', ['glass-input-group']);
@@ -43,14 +54,17 @@ class GlkTextarea extends GlkFormElement {
     group.appendChild(this._labelEndPlace(group));
 
     this._wrapper.appendChild(group);
+    applyControlName(this, this._textarea);
     this._syncFormValue();
   }
 
   setupEvents() {
-    this._onInput = () => {
+    // aria-labelledby may name an element parsed after this one.
+    requestAnimationFrame(() => applyControlName(this, this._textarea));
+    this._onInput = (e) => {
       this._syncFormValue();
       this.emit('glk-input', { value: this._textarea.value });
-      this.dispatchEvent(new Event('input', { bubbles: true }));
+      if (!e.composed) this.dispatchEvent(new Event('input', { bubbles: true }));
     };
     this._onFocus = () => { this._committed = this._textarea.value; };
     this._onChangeNative = () => this._commit();
@@ -104,6 +118,10 @@ class GlkTextarea extends GlkFormElement {
       case 'required':
         this._textarea.required = this.getBoolAttr('required');
         break;
+      case 'aria-label':
+      case 'aria-labelledby':
+        applyControlName(this, this._textarea);
+        break;
     }
   }
 
@@ -132,6 +150,9 @@ class GlkTextarea extends GlkFormElement {
 
   get readOnly() { return this.getBoolAttr('readonly'); }
   set readOnly(v) { this.setBoolAttr('readonly', v); }
+
+  get labelHidden() { return this.getBoolAttr('label-hidden'); }
+  set labelHidden(v) { this.setBoolAttr('label-hidden', v); }
 }
 
 customElements.define('glk-textarea', GlkTextarea);

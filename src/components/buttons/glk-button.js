@@ -1,4 +1,4 @@
-import { GlkElement, forwardHostClicks } from '../../base.js';
+import { GlkElement, forwardHostClicks, applyControlName, applyControlDescription, CONTROL_NAME_ATTRS } from '../../base.js';
 
 const VARIANTS = ['primary', 'secondary', 'tertiary'];
 // size takes a height, auto, or since 1.31.0 both: "sm auto" for a small
@@ -11,9 +11,16 @@ const HEIGHTS = ['sm', 'md', 'lg'];
 // inside, so they are handed down to it.
 const FORWARDED_ARIA = ['aria-expanded', 'aria-haspopup', 'aria-pressed'];
 
+// A name and a description from the host (since 1.36.0): aria-label and
+// aria-labelledby name the native button instead of its content — an icon
+// alone, or "Restore" that should say "Restore Info page 55" —, as on the
+// check controls, and aria-describedby describes it. Before, they stayed on
+// the host, which has no role, and named nothing.
+const DESCRIBED = 'aria-describedby';
+
 class GlkButton extends GlkElement {
   static get observedAttributes() {
-    return ['variant', 'size', 'type', ...FORWARDED_ARIA];
+    return ['variant', 'size', 'type', ...FORWARDED_ARIA, ...CONTROL_NAME_ATTRS, DESCRIBED];
   }
 
   // focus() and autofocus land on the native button (since 1.33.2; until
@@ -38,12 +45,19 @@ class GlkButton extends GlkElement {
     });
 
     for (const attr of FORWARDED_ARIA) this._forward(attr);
+    applyControlName(this, this._btn);
+    applyControlDescription(this, this._btn);
 
     this._btn.appendChild(document.createElement('slot'));
     this._wrapper.appendChild(this._btn);
   }
 
   setupEvents() {
+    // aria-labelledby and aria-describedby may name elements parsed after this one.
+    requestAnimationFrame(() => {
+      applyControlName(this, this._btn);
+      applyControlDescription(this, this._btn);
+    });
     this._onClick = (e) => {
       if (this._actuallyDisabled) {
         e.preventDefault();
@@ -106,6 +120,13 @@ class GlkButton extends GlkElement {
         break;
       case 'type':
         this._btn.setAttribute('type', this.getAttribute('type') || 'button');
+        break;
+      case 'aria-label':
+      case 'aria-labelledby':
+        applyControlName(this, this._btn);
+        break;
+      case DESCRIBED:
+        applyControlDescription(this, this._btn);
         break;
       default:
         if (FORWARDED_ARIA.includes(name)) this._forward(name);

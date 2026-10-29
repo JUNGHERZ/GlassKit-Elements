@@ -1,6 +1,11 @@
 import { GlkFormElement } from './base.js';
 import '@jungherz-de/glasskit/glasskit-styles.js';
 
+// The browser's input event is composed: it reaches the host by itself,
+// retargeted. Until 1.36.0 the element sent one of its own on top, and a
+// listener on the host got every key twice. One that is not composed is
+// still handed on.
+
 const SEARCH_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>`;
 
 class GlkSearch extends GlkFormElement {
@@ -41,10 +46,10 @@ class GlkSearch extends GlkFormElement {
   }
 
   setupEvents() {
-    this._onInput = () => {
+    this._onInput = (e) => {
       this._syncFormValue();
       this.emit('glk-input', { value: this._input.value });
-      this.dispatchEvent(new Event('input', { bubbles: true }));
+      if (!e.composed) this.dispatchEvent(new Event('input', { bubbles: true }));
     };
     this._input.addEventListener('input', this._onInput);
   }

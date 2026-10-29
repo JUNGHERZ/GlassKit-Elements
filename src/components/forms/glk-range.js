@@ -1,5 +1,16 @@
 import { GlkFormElement } from '../../base.js';
 
+// glk-input { value } on every step; glk-change { value } once a value is
+// set (since 1.36.0): when the pointer lets go of the thumb, and on every
+// key, as the native slider's change — one request instead of one per step
+// of a drag. A native change goes out with it; the inner one does not leave
+// the shadow root.
+//
+// The browser's input event is composed: it reaches the host by itself,
+// retargeted. Until 1.36.0 the element sent one of its own on top, and a
+// listener on the host got every step twice. One that is not composed is
+// still handed on.
+
 class GlkRange extends GlkFormElement {
   static get observedAttributes() {
     return ['label', 'min', 'max', 'value', 'step', 'name'];
@@ -48,17 +59,23 @@ class GlkRange extends GlkFormElement {
   }
 
   setupEvents() {
-    this._onInput = () => {
+    this._onInput = (e) => {
       this._updateValueDisplay();
       this._syncFormValue();
       this.emit('glk-input', { value: this._input.value });
-      this.dispatchEvent(new Event('input', { bubbles: true }));
+      if (!e.composed) this.dispatchEvent(new Event('input', { bubbles: true }));
+    };
+    this._onChange = () => {
+      this.emit('glk-change', { value: this._input.value });
+      this.dispatchEvent(new Event('change', { bubbles: true }));
     };
     this._input.addEventListener('input', this._onInput);
+    this._input.addEventListener('change', this._onChange);
   }
 
   teardownEvents() {
     this._input?.removeEventListener('input', this._onInput);
+    this._input?.removeEventListener('change', this._onChange);
   }
 
   onAttributeChanged(name) {

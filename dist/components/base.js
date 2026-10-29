@@ -162,12 +162,26 @@ checkControlSheet.replaceSync(`
   :host([label-position="start"]) :is(.glass-toggle, .glass-checkbox, .glass-radio) { flex-direction: row-reverse; }
 `);
 
-/** The host's naming attributes that check controls hand to their native control. */
+/**
+ * Host rule for glk-input, glk-select and glk-textarea (since 1.36.0):
+ * label-hidden keeps the label the field's name, out of sight, as on the
+ * check controls — fields in a table under one shared header.
+ */
+const fieldLabelSheet = new CSSStyleSheet();
+fieldLabelSheet.replaceSync(`
+  :host([label-hidden]) .glass-label {
+    position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+    overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0;
+  }
+`);
+
+/** The host's naming attributes that check controls, fields and glk-button hand to their native control. */
 const CONTROL_NAME_ATTRS = ['aria-label', 'aria-labelledby'];
 
 /**
  * Names the native control of glk-toggle, glk-checkbox and glk-radio from the
- * host (since 1.33.1): aria-label goes on as it is; aria-labelledby through
+ * host (since 1.33.1), and of glk-button, glk-input, glk-select and
+ * glk-textarea (since 1.36.0): aria-label goes on as it is; aria-labelledby through
  * element reflection, since an id from the light DOM does not reach into
  * the shadow root, and its text as the aria-label too — the reference wins
  * where a browser knows it, the text names the control where it does not.
@@ -185,6 +199,20 @@ function applyControlName(host, input) {
   const name = label || text;
   if (name) input.setAttribute('aria-label', name);
   else input.removeAttribute('aria-label');
+}
+
+/**
+ * aria-describedby on the host describes the native control inside (since
+ * 1.36.0, for glk-button), through element reflection: an id from the light
+ * DOM does not reach into the shadow root. A browser without reflection
+ * leaves the control undescribed.
+ */
+function applyControlDescription(host, control) {
+  if (!control || !('ariaDescribedByElements' in control)) return;
+  const ids = (host.getAttribute('aria-describedby') || '').split(/\s+/).filter(Boolean);
+  const root = host.getRootNode();
+  const refs = ids.map(id => root.getElementById?.(id)).filter(Boolean);
+  control.ariaDescribedByElements = refs.length ? refs : null;
 }
 
 // ── Clicks Aimed at the Host ──
@@ -234,8 +262,9 @@ class GlkElement extends HTMLElement {
 
   /**
    * Optional CSSStyleSheet with component-specific host rules, adopted after
-   * the shared sheets. Keeps per-component selectors out of the shared sheet
-   * so an attribute like [fill] only means something where it is documented.
+   * the shared sheets — or an array of them (since 1.36.0). Keeps
+   * per-component selectors out of the shared sheet so an attribute like
+   * [fill] only means something where it is documented.
    */
   static get hostStyles() { return null; }
 
@@ -267,7 +296,7 @@ class GlkElement extends HTMLElement {
     const displaySheet = this.constructor.displayInline ? inlineHostSheet : hostSheet;
     const sheets = [componentsSheet, displaySheet];
     const extra = this.constructor.hostStyles;
-    if (extra) sheets.push(extra);
+    if (extra) sheets.push(...[].concat(extra));
     this._shadow.adoptedStyleSheets = sheets;
   }
 
@@ -594,4 +623,4 @@ class GlkFormElement extends GlkElement {
   }
 }
 
-export { CONTROL_NAME_ATTRS, GlkElement, GlkFormElement, applyControlName, checkControlSheet, forwardHostClicks };
+export { CONTROL_NAME_ATTRS, GlkElement, GlkFormElement, applyControlDescription, applyControlName, checkControlSheet, fieldLabelSheet, forwardHostClicks };

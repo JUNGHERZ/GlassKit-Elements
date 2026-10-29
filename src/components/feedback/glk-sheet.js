@@ -1,5 +1,6 @@
 import { GlkElement } from '../../base.js';
 import { scrollLock } from '../../scroll-lock.js';
+import { panelOpenWithin } from '../../overlay.js';
 
 // Bottom sheet — the mobile sibling of <glk-modal>. Came back from
 // EhrenPfoten in 1.15.0.
@@ -13,7 +14,7 @@ import { scrollLock } from '../../scroll-lock.js';
 //             promise that settles with glk-closed (since 1.32.0)
 // Slots:      default (content), actions; since 1.35.0 eyebrow (a short
 //             line above the title), leading and trailing (before and
-//             after it, in the head)
+//             after it, in the head); since 1.36.0 subtitle (below it)
 // Events:     glk-open — whenever it opens: attribute, property or show()
 //             (since 1.30.0); glk-close — only when the user closes it
 //             (scrim click, Escape), like <glk-modal>; glk-closed — once
@@ -22,7 +23,9 @@ import { scrollLock } from '../../scroll-lock.js';
 //             a page that renders the sheet from state drops it there, and
 //             the slide-out shows
 // Parts:      overlay, sheet, title, body, actions; since 1.35.0 grip,
-//             head, eyebrow, leading, trailing, close
+//             head, eyebrow, leading, trailing, close; since 1.36.0
+//             subtitle, close-icon (the glyph; GlassKit's
+//             --gl-sheet-close-size, -icon-size and -icon-stroke size them)
 //
 // Since 1.35.0 the events glk-open, glk-close and glk-closed stay at the
 // element: they do not bubble, so a sheet's listener no longer takes the
@@ -32,8 +35,9 @@ import { scrollLock } from '../../scroll-lock.js';
 // the window, full height, without a grip and with its actions side by
 // side — a side panel on a desktop. modeless opens it with show() instead
 // of showModal(): no scrim, the page stays usable and other dialogs open
-// above it; Escape inside it closes it, a click outside does not, and the
-// focus moves into it on opening and back where it came from on closing.
+// above it; Escape inside it closes it — a popover or menu open in it
+// first (since 1.36.0) —, a click outside does not, and the focus moves
+// into it on opening and back where it came from on closing.
 //
 // Since 1.30.0 the overlay is a native <dialog> opened with showModal(), as
 // <glk-modal>'s. It lies in the top layer, above every fixed or transformed
@@ -50,7 +54,7 @@ import { scrollLock } from '../../scroll-lock.js';
 
 const HIDE_FALLBACK_MS = 400;
 const PLACEMENTS = ['start', 'end'];
-const CLOSE = '<svg viewBox="0 0 24 24" aria-hidden="true"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>';
+const CLOSE = '<svg viewBox="0 0 24 24" aria-hidden="true" part="close-icon"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>';
 
 /** The element that has the focus, through shadow roots. */
 function deepActive() {
@@ -86,7 +90,8 @@ class GlkSheet extends GlkElement {
     };
     const heading = this.createElement('div', ['glass-sheet__heading']);
     this._titleEl = this.createElement('h2', ['glass-sheet__title'], { id: 'title', part: 'title' });
-    heading.append(place('eyebrow'), this._titleEl);
+    // subtitle (since 1.36.0): below the title, where a badge leaves it its width.
+    heading.append(place('eyebrow'), this._titleEl, place('subtitle'));
     this._closeBtn = this.createElement('button', ['glass-sheet__close'], { type: 'button', part: 'close', hidden: '' });
     this._closeBtn.innerHTML = CLOSE;
     this._head.append(place('leading'), heading, place('trailing'), this._closeBtn);
@@ -231,9 +236,13 @@ class GlkSheet extends GlkElement {
     };
     this._onCloseClick = () => this._dismiss();
     // A modeless sheet has no cancel event: Escape inside it closes it,
-    // unless something inside — a popover, a menu — took the key.
+    // unless something inside — a popover, a menu — took the key. A panel
+    // still open in it closes first (since 1.36.0): the popover hears the
+    // key only at the document, after the dialog, and the sheet used to
+    // close before it and leave it open in the top layer.
     this._onKeydown = (event) => {
       if (event.key !== 'Escape' || !this.modeless || event.defaultPrevented) return;
+      if (panelOpenWithin(this._overlay)) return;
       event.preventDefault();
       this._dismiss();
     };

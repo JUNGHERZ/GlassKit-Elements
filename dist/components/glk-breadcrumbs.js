@@ -1,5 +1,5 @@
 import { GlkElement } from './base.js';
-import { t as tooltipBehaviour } from './shared/overlay-COVSRs-B.js';
+import { t as tooltipBehaviour } from './shared/overlay-zsSL3Ygw.js';
 import { j as joinGroup } from './shared/sortable-DxyHuCmj.js';
 import './glk-menu.js';
 import './glk-menu-item.js';

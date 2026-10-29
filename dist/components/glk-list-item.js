@@ -30,6 +30,11 @@ const VARIANTS = ['danger', 'accent'];
 // slot="extra" something below the subtitle: a link, a line of chips.
 // Parts title and subtitle, and GlassKit's --gl-list-title-size, -weight
 // and --gl-list-subtitle-size, set the row's type.
+//
+// Since 1.36.0 the parts leading and trailing reach the two boxes at the
+// row's ends, and GlassKit's --gl-list-leading-width widens the leading
+// one — a time and a chip before the text. The title of a selected row
+// takes the row's colour, so --gl-list-item-selected-color reaches it.
 
 class GlkListItem extends GlkElement {
   static get observedAttributes() {
@@ -59,7 +64,9 @@ class GlkListItem extends GlkElement {
     }
 
     // Leading slot — hidden until a child with slot="leading" appears.
-    this._leading = this.createElement('span', ['glass-list__leading']);
+    // Parts leading and trailing since 1.36.0; GlassKit's
+    // --gl-list-leading-width widens the box for a time and a chip.
+    this._leading = this.createElement('span', ['glass-list__leading'], { part: 'leading' });
     if (this.getBoolAttr('leading-lg')) this._leading.classList.add('glass-list__leading--lg');
     this._leadingSlot = document.createElement('slot');
     this._leadingSlot.setAttribute('name', 'leading');
@@ -88,7 +95,7 @@ class GlkListItem extends GlkElement {
     this._content.append(titleRow, this._subtitleEl, this._extra);
 
     // Trailing — value span + slot for icons/badges.
-    this._trailing = this.createElement('div', ['glass-list__trailing']);
+    this._trailing = this.createElement('div', ['glass-list__trailing'], { part: 'trailing' });
     this._valueEl = this.createElement('span', ['glass-list__value']);
     const initialDetail = this.getAttribute('detail') || '';
     this._valueEl.textContent = initialDetail;

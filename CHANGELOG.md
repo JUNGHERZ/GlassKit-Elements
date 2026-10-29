@@ -7,6 +7,61 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.36.0] – 2026-10-29
+
+Versions stay aligned with GlassKit at 1.36.0, which this release is built against (peer dependency `>=1.36.0`).
+
+### Added
+
+- **A name without a visible label for fields: `label-hidden`, `aria-label` and `aria-labelledby` on `<glk-input>`, `<glk-select>` and `<glk-textarea>`.** Opening hours with the columns From, To, Break from and Break to for every day of the week make 28 time fields. Each needs its label as its name, but showing it in every cell repeats the header 28 times. A field either showed its label or had no name, and an `aria-label` on the element did not reach the field inside.
+  - `label-hidden` keeps the label the field's name and takes it out of sight, with the rule of the switches.
+  - `aria-label` and `aria-labelledby` on the element name the field instead of its label, as on the switches since 1.33.1.
+
+  ([#51](https://github.com/JUNGHERZ/GlassKit-Elements/issues/51))
+- **`glk-change` on `<glk-range>`.** It fires once a value is set: when the pointer lets go of the thumb, and on every key, as the native slider's `change`. A native `change` goes out with it. A project saved on every step, half a dozen requests for one drag, or used a number field instead of a slider. ([#52](https://github.com/JUNGHERZ/GlassKit-Elements/issues/52))
+- **A name and a description for `<glk-button>`: `aria-label`, `aria-labelledby` and `aria-describedby`.** They stayed on the element, which has no role. So an icon-only button had no name, and "Restore" in every row of a list could not say "Restore Info page 55". They name and describe the native button now, `aria-labelledby` and `aria-describedby` through element reflection, as on the switches. ([#54](https://github.com/JUNGHERZ/GlassKit-Elements/issues/54))
+- **Below the sheet title, and its close glyph: `slot="subtitle"` and the part `close-icon` on `<glk-sheet>`.** A badge in `trailing` stood beside the title and squeezed it, to 92px in a 390px sheet with a German badge; `subtitle` puts it below the title. `::part(close)` reached the close button but not its glyph. GlassKit 1.36.0's `--gl-sheet-close-size`, `--gl-sheet-close-icon-size` and `--gl-sheet-close-icon-stroke` size both, and `close-icon` reaches the glyph. ([#56](https://github.com/JUNGHERZ/GlassKit-Elements/issues/56))
+- **Parts `leading` and `trailing` on `<glk-list-item>`**, with GlassKit 1.36.0's `--gl-list-leading-width` for a time and a chip before the text. ([GlassKit #28](https://github.com/JUNGHERZ/GlassKit/issues/28))
+
+### Changed
+
+- **The browser's `input` reaches `<glk-input>`, `<glk-textarea>`, `<glk-search>` and `<glk-range>` once.** The native event is composed and reached the element by itself. Each element sent one of its own on top, so a listener for `input` on it got every key or step twice. Only an `input` that is not composed is still handed on. `change` stays the element's own, since the native one does not leave the shadow root. A listener that counted two events per key gets one now. ([#53](https://github.com/JUNGHERZ/GlassKit-Elements/issues/53))
+- **Escape closes an open `<glk-menu>` wherever the focus is,** and marks the key as handled. Opened by a click, the focus may lie outside the menu, since Safari does not focus a clicked button, and Escape did nothing then. In a modeless sheet the next point needs it: the sheet leaves the key to the open menu.
+
+### Fixed
+
+- **Escape in a modeless sheet closed the sheet before an open popover in it.** The sheet heard the key on its dialog, the popover only at the document. So the first Escape closed the sheet and left the popover open in the top layer.
+  - A modeless sheet leaves Escape to a popover or menu still open in it, wherever the focus is: in the popover, on its trigger, on another field.
+  - The first Escape closes the popover, the second the sheet, as in a modal sheet.
+
+  ([#55](https://github.com/JUNGHERZ/GlassKit-Elements/issues/55))
+- **From GlassKit 1.36.0:**
+  - The status message has no paragraph margins, and the notice is 54px high instead of 82px ([#57](https://github.com/JUNGHERZ/GlassKit-Elements/issues/57)).
+  - The head of a sheet without title, places and close button takes no room. The content started 8px lower than in 1.34.0 ([GlassKit #27](https://github.com/JUNGHERZ/GlassKit/issues/27)).
+  - The title of a chosen list row takes the row's colour, so `--gl-list-item-selected-color` reaches it ([GlassKit #28](https://github.com/JUNGHERZ/GlassKit/issues/28)).
+  - `--gl-sheet-side-inset-block-start` and `-block-end` set a side sheet's top and bottom on their own ([GlassKit #27](https://github.com/JUNGHERZ/GlassKit/issues/27)).
+
+Measured in Chromium 153, WebKit 26.6 and Firefox 151, 1.35.0 against 1.36.0:
+- **Fields:**
+  - With `label-hidden` the label box is 1 × 1px, and the field starts at the element's top instead of 24px below it (23px in Firefox). The label stays the field's name.
+  - `aria-label="Break to"` names the field "Break to", and `aria-labelledby` pointing at "Break from" names it "Break from", in Chromium's accessibility tree. In WebKit and Firefox the name and the reflected element are on the inner field.
+- **Button:** in Chromium's accessibility tree an icon-only button with `aria-label="Close"` is named "Close" (before: no name). One with `aria-label="Restore Info page 55"` and the content "Restore" is named "Restore Info page 55" (before: "Restore"), and one with `aria-labelledby` and `aria-describedby` is named "Delete the draft" and described "This cannot be undone.". All three engines carry the references on the inner button.
+- **Range:** ArrowRight three times gives three `glk-input`, three `glk-change` and three `input` on the element (before: 3, 0 and 6). A drag in six moves gives six `glk-input`, one `glk-change` and six `input` (before: 6, 0 and 12).
+- **`input` once:** "ab" typed gives two `input` on `<glk-input>`, `<glk-textarea>` and `<glk-search>` (before: four), and "75" in a number field two (before: four).
+- **Modeless sheet:**
+  - With a popover open in it, and the focus in the popover, on its trigger or on another field, the first Escape closes the popover and the sheet stays open. The second closes the sheet. Before, the first closed the sheet and left the popover open.
+  - With a menu opened by a click and the focus on the panel, the first Escape closes the menu, the second the sheet.
+  - A modal sheet behaves as before.
+- **Sheet head:**
+  - A badge in `subtitle` stands below the title, which keeps 180px in a 390px sheet with a chip and a close button. Beside it, in `trailing`, the title kept 0px.
+  - With the close tokens at 44px, 20px and 1.8, the button is 44px, the glyph 20px with a 1.8px stroke, and `::part(close-icon)` colours it.
+  - A sheet named only by `label` starts its content 29px below the panel's top instead of 37px.
+- **List:** `--gl-list-leading-width: 84px` widens a `leading-lg` box from 40 to 84px, the divider starts at 116px instead of 72px, and the parts are there. The chosen row's title is rgb(15, 31, 42) instead of rgb(26, 42, 54), and red with the token set to red.
+- **Status:** a notice with `message` or with content is 54px high instead of 82px.
+- **Pages:** the two status notices of the docs and the one of the showcase are 28px lower each, and the phone of the landing page shows the same showcase. With their margin set back for the comparison, docs and showcase render as in 1.35.0, apart from the title of the chosen list row in light mode.
+
+---
+
 ## [1.35.0] – 2026-10-29
 
 Versions stay aligned with GlassKit at 1.35.0, which this release is built against (peer dependency `>=1.35.0`).
@@ -1348,6 +1403,7 @@ Starting with this release, GlassKit Elements version numbers are aligned with G
 ---
 
 [Unreleased]: https://github.com/JUNGHERZ/GlassKit-Elements/compare/v1.33.1...HEAD
+[1.36.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.36.0
 [1.35.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.35.0
 [1.34.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.34.0
 [1.33.2]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.33.2

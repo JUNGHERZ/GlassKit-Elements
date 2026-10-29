@@ -1,4 +1,4 @@
-import { GlkFormElement } from '../../base.js';
+import { GlkFormElement, fieldLabelSheet, applyControlName, CONTROL_NAME_ATTRS } from '../../base.js';
 
 // The wanted value. A select can show a value only once an option carries it,
 // and the options arrive late: they are copied in a frame after connecting,
@@ -9,11 +9,17 @@ import { GlkFormElement } from '../../base.js';
 // a property set before connecting threw, and one set before the options
 // were copied was lost — the select showed its first option while the app
 // held the other value.
+//
+// label-hidden, aria-label and aria-labelledby as on <glk-input> (since
+// 1.36.0): the label stays the name out of sight, or the host names the
+// field instead.
 
 class GlkSelect extends GlkFormElement {
   static get observedAttributes() {
-    return ['label', 'name', 'value', 'required'];
+    return ['label', 'name', 'value', 'required', ...CONTROL_NAME_ATTRS];
   }
+
+  static get hostStyles() { return fieldLabelSheet; }
 
   static get observesLightDom() { return true; }
 
@@ -39,6 +45,7 @@ class GlkSelect extends GlkFormElement {
     group.appendChild(this._labelEndPlace(group));
 
     this._wrapper.appendChild(group);
+    applyControlName(this, this._select);
 
     // Defer option copying — children may not be parsed yet in connectedCallback
     requestAnimationFrame(() => this.projectLightDom());
@@ -87,6 +94,8 @@ class GlkSelect extends GlkFormElement {
   }
 
   setupEvents() {
+    // aria-labelledby may name an element parsed after this one.
+    requestAnimationFrame(() => applyControlName(this, this._select));
     this._onChange = () => {
       this._wanted = null;            // the user's choice replaces it
       this._syncFormValue();
@@ -116,6 +125,10 @@ class GlkSelect extends GlkFormElement {
         break;
       case 'required':
         this._select.required = this.getBoolAttr('required');
+        break;
+      case 'aria-label':
+      case 'aria-labelledby':
+        applyControlName(this, this._select);
         break;
     }
   }
@@ -147,6 +160,9 @@ class GlkSelect extends GlkFormElement {
     this._applyValue(this._wanted);
     this._syncFormValue();
   }
+
+  get labelHidden() { return this.getBoolAttr('label-hidden'); }
+  set labelHidden(v) { this.setBoolAttr('label-hidden', v); }
 }
 
 customElements.define('glk-select', GlkSelect);

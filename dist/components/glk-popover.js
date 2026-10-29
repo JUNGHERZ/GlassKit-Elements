@@ -1,5 +1,5 @@
 import { GlkElement } from './base.js';
-import { o as openPanel, f as focusTarget } from './shared/overlay-COVSRs-B.js';
+import { o as openPanel, f as focusTarget } from './shared/overlay-zsSL3Ygw.js';
 import '@jungherz-de/glasskit/glasskit-styles.js';
 
 // A panel that opens from the element in slot="trigger" (a click toggles

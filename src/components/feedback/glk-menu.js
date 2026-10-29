@@ -135,7 +135,7 @@ class GlkMenu extends GlkElement {
       }
       if (!this.open) this.setAttribute('open', '');
       this._applyTrigger();
-      this.emit('glk-open');
+      this.emit('glk-open', null, { bubbles: false });
     }
     const items = this._items();
     if (focus === 'first') items[0]?.focus();
@@ -147,7 +147,7 @@ class GlkMenu extends GlkElement {
     this._handle = null;
     if (this.open) this.removeAttribute('open');
     this._applyTrigger();
-    this.emit('glk-close');
+    this.emit('glk-close', null, { bubbles: false });
   }
 
   /** Closes; with focus, gives it back to the button. */

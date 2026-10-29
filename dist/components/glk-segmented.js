@@ -22,9 +22,13 @@ import '@jungherz-de/glasskit/glasskit-styles.js';
 //             dragged — GlassKit's .glass-segmented--droplet), icon-only
 //             (since 1.28.0: the options show their icons alone, each label
 //             becomes the button's aria-label and title — GlassKit's
-//             .glass-segmented--icons)
+//             .glass-segmented--icons), icon-style (since 1.35.0: "line",
+//             the default, strokes an SVG icon in the option's colour;
+//             "color" keeps a coloured logo's own fills and strokes —
+//             GlassKit's .glass-segmented__icon--color; an option's
+//             iconStyle overrides it for that option)
 // Properties: value, options (array or JSON text), full, overflow, label,
-//             disabled, droplet, iconOnly
+//             disabled, droplet, iconOnly, iconStyle
 // Slots:      icon-<value> (since 1.28.0) — the icon of the option with that
 //             value: an <svg>, a font icon, an <img>. It sits in GlassKit's
 //             .glass-segmented__icon before the label and takes the option's
@@ -68,7 +72,7 @@ function badgeText(badge) {
 }
 
 class GlkSegmented extends GlkFormElement {
-  static get observedAttributes() { return ['options', 'value', 'full', 'overflow', 'label', 'droplet', 'icon-only']; }
+  static get observedAttributes() { return ['options', 'value', 'full', 'overflow', 'label', 'droplet', 'icon-only', 'icon-style']; }
 
   // A row of buttons with one tab stop: delegated focus would land on the
   // first button, not the chosen one.
@@ -111,6 +115,7 @@ class GlkSegmented extends GlkFormElement {
     }
     // The label names the button; an icon font's text must not join it.
     const icon = this.createElement('span', ['glass-segmented__icon'], { 'aria-hidden': 'true' });
+    if ((option.iconStyle ?? this.iconStyle) === 'color') icon.classList.add('glass-segmented__icon--color');
     icon.appendChild(this.createElement('slot', [], { name: `icon-${value}` }));
     parts.push(icon);
     if (!iconOnly) parts.push(document.createTextNode(label));
@@ -226,6 +231,7 @@ class GlkSegmented extends GlkFormElement {
       case 'overflow': this._applyLayout(); break;
       case 'droplet': this._applyLayout(); this._applyDroplet(); break;
       case 'icon-only': this._build(); this._applyLayout(); break;
+      case 'icon-style': this._build(); break;
       case 'label': this._applyLabel(); break;
     }
   }
@@ -258,6 +264,13 @@ class GlkSegmented extends GlkFormElement {
 
   get iconOnly() { return this.getBoolAttr('icon-only'); }
   set iconOnly(v) { this.setBoolAttr('icon-only', v); }
+
+  /** "line" (default) or "color", for every option without an iconStyle of its own. */
+  get iconStyle() { return this.getAttribute('icon-style') === 'color' ? 'color' : 'line'; }
+  set iconStyle(v) {
+    if (v === 'color') this.setAttribute('icon-style', 'color');
+    else this.removeAttribute('icon-style');
+  }
 
   get overflow() {
     const v = this.getAttribute('overflow');

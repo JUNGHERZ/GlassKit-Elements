@@ -7,6 +7,73 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.35.0] – 2026-10-29
+
+Versions stay aligned with GlassKit at 1.35.0, which this release is built against (peer dependency `>=1.35.0`).
+
+### Added
+
+- **A sheet at a side, and a modeless one: `placement` and `modeless` on `<glk-sheet>`, part `grip`.** On a desktop a sheet is a panel at the right edge, for restoring a version, or a side sheet beside a list that stays usable, for editing an entry while its row stays marked. The sheet only came from the bottom. A project placed it through a stylesheet in the shadow root and built the modeless one from `inline`, a fixed host and its own Escape handling.
+  - `placement="end"` or `"start"` puts the panel at that side, through GlassKit 1.35.0's `--start` / `--end`. It is full height less 16px at both ends, 440px wide, slides in from the side (mirrored right to left), and has no grip and its actions side by side.
+  - `modeless` opens it with `show()` instead of `showModal()`. There is no scrim, the page stays usable, and a modal opened later lies above it.
+  - Escape inside a modeless sheet closes it; a click outside does not. The focus moves into the panel, or to what carries `autofocus`, and goes back where it came from on closing.
+
+  ([#44](https://github.com/JUNGHERZ/GlassKit-Elements/issues/44))
+- **A head with a close button, and a name without a title: `dismissible`, `close-label`, slots `eyebrow`, `leading`, `trailing`, and `label` on `<glk-sheet>`.** A history sheet shows a 56px icon chip, a line "RESTORE" above the title, a badge after it, and a × at the end. The sheet rendered its title only, and without a title the dialog had no name at all, so a project kept a hidden title just for that.
+  - Each place of the head shows while it holds something.
+  - The close button closes the sheet like a click outside, with `glk-close`.
+  - `label` names the dialog where there is no visible title.
+  - The parts are `head`, `eyebrow`, `leading`, `trailing` and `close`.
+
+  ([#43](https://github.com/JUNGHERZ/GlassKit-Elements/issues/43))
+- **Room beside the title and below the subtitle: slots `title-trailing` and `extra` on `<glk-list-item>`, parts `title` and `subtitle`.** History rows show a badge "AI" beside the title and an "Undo" link below the subtitle, at 64px with a 13px subtitle, and the chosen row should be a flat tint. A project drew the rows itself or adopted stylesheets.
+  - `title-trailing` moves under the title where the row is too narrow, and the title keeps its ellipsis.
+  - GlassKit 1.35.0's `--gl-list-title-size`, `-weight` and `--gl-list-subtitle-size` set the type.
+  - `--gl-list-item-selected-inset`, `-radius`, `-shadow`, `-color` and `-weight` shape the chosen row; `0`, `0` and `none` make a flat tint.
+
+  The issue suggested a slot `content`. That name is already GlassKit's for the row's middle column, so the slot is `extra`. ([#42](https://github.com/JUNGHERZ/GlassKit-Elements/issues/42))
+- **A message with markup: the default slot of `<glk-status>`.** "Included in your package **Premium**" could not be built, because `message` went in as text. The content is the message now, and `message` stays the short form while the content is empty, whitespace aside. GlassKit 1.35.0's `--gl-status-color` sets its colour. The parts are `status` and `message`. ([#45](https://github.com/JUNGHERZ/GlassKit-Elements/issues/45))
+- **`glk-change` on `<glk-textarea>`.** It fires once a value is done: on leaving the field with a changed value, as on `<glk-input>`, and on Ctrl+Enter or Cmd+Enter. It fires once per value, and a native `change` goes out with it. A project saved its text areas on `focusout`. ([#46](https://github.com/JUNGHERZ/GlassKit-Elements/issues/46))
+- **Coloured logos as segmented icons: `icon-style="color"`, or `"iconStyle": "color"` per option.** A logo's shapes inherited the line icon's stroke and came out outlined in the text colour. A project set `stroke="none"` on every shape; an attribute on the `<svg>` itself loses to the slotted rule in all three engines. The attribute gives the icon GlassKit 1.35.0's `.glass-segmented__icon--color`. ([#47](https://github.com/JUNGHERZ/GlassKit-Elements/issues/47))
+- **A state per step: `steps` as JSON with `state`, and `done-label` on `<glk-steps>`.** In a publication flow the address may be approved before the app was ever tested.
+  - Each step may say `done`, `current` or `todo`. `current` stays the short form for steps in order.
+  - A done step also says so to screen readers (", done"), since out of order the position no longer tells.
+  - JSON arrays of labels work too. Before, they were split at the commas, brackets and all.
+
+  ([#49](https://github.com/JUNGHERZ/GlassKit-Elements/issues/49))
+
+### Changed
+
+- **The state events `glk-open`, `glk-close` and `glk-closed` stay at the element** (popover, menu, modal, sheet, toast). Every event bubbled, so a sheet's listener for `glk-close` also took the `glk-close` of a popover inside it. Picking a day in a date field's popover closed a project's sheet and threw away its draft.
+  - The state events no longer bubble and are not composed, as the native `close` and `toggle` are not.
+  - A listener on the element itself, and a capture listener in the same tree, still get them. A listener on an ancestor in the bubble phase does not.
+  - `glk-action`, `glk-dismiss`, `glk-select` and the other `glk-*` events still bubble.
+
+  ([#50](https://github.com/JUNGHERZ/GlassKit-Elements/issues/50))
+- **From GlassKit 1.35.0, dark glass keeps its contrast.** In dark mode the glow of modal and sheet starts lower, and controls on them take darker values. A chosen badge says its label in the text colour, and accent text on cards and dialogs is lighter. ([#48](https://github.com/JUNGHERZ/GlassKit-Elements/issues/48))
+
+### Fixed
+
+- **Escape on an open popover inside a sheet or a modal closed both.** The popover closed on a keydown without marking it, and the dialog around took the same key as its cancel. The popover marks it as handled now (`preventDefault()`): the first Escape closes the popover and the second the sheet, and a container can check `defaultPrevented`. ([#50](https://github.com/JUNGHERZ/GlassKit-Elements/issues/50))
+
+Measured in Chromium 153, WebKit 26.6 and Firefox 151:
+- **Side and modeless:** the end panel is 440px wide and 16px from the right, top and bottom edges, the start panel mirrors it, and right to left `end` lies at the left. Both slide in from their side.
+  - A modeless sheet is not `:modal`, and the button behind it takes the click.
+  - A glk-modal opened over it lies on top.
+  - Escape inside it closes it with `glk-close` and puts the focus back on the button that opened it.
+- **Head:** the eyebrow stands above the title, the chip before it, the badge after it, and the 32px close button at the end, named by `close-label`. A click on it closes the sheet with `glk-close`. Without a title, `label` gives the dialog its `aria-label`.
+- **Events:** a popover closed inside an open sheet sends `glk-close` to its own listener and to a document capture listener, not to the sheet's listener (before: also to the sheet). Escape closes the popover first and is `defaultPrevented`; a second Escape closes the sheet.
+- **List:** `title-trailing` stands beside the title and moves under it in a 260px row; `extra` stands below the subtitle. `--gl-list-title-size: 13px` and `--gl-list-subtitle-size: 11px` give 13 and 11px, and the flat chosen row has no inset, radius or shadow.
+- **Others:**
+  - `<glk-status>` keeps `message` beside whitespace children and shows slotted markup bold.
+  - Typing and Tab give one `glk-change` on `<glk-textarea>`. Ctrl/Cmd+Enter gives a second for the new value, and the next Tab none.
+  - A logo's path keeps its own fill and has no stroke with `icon-style="color"`, while a line icon beside it still strokes.
+  - Steps out of order carry the right classes, `aria-current="step"` and the spoken "done".
+- **Dark glass**, at the top of a tall dark sheet: see GlassKit 1.35.0's table. Every text measured there now reaches 4.66:1 or more.
+- Light docs and showcase pages render as in 1.34.0, apart from the new examples. On the landing page only the phone differs, which shows the showcase dark. In dark mode the chosen badges and the inline sheet differ, as GlassKit 1.35.0 intends.
+
+---
+
 ## [1.34.0] – 2026-10-28
 
 Versions stay aligned with GlassKit at 1.34.0, which this release is built against (peer dependency `>=1.34.0`).
@@ -1281,6 +1348,7 @@ Starting with this release, GlassKit Elements version numbers are aligned with G
 ---
 
 [Unreleased]: https://github.com/JUNGHERZ/GlassKit-Elements/compare/v1.33.1...HEAD
+[1.35.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.35.0
 [1.34.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.34.0
 [1.33.2]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.33.2
 [1.33.1]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.33.1

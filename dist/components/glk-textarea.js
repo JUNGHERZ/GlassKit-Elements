@@ -1,6 +1,12 @@
 import { GlkFormElement } from './base.js';
 import '@jungherz-de/glasskit/glasskit-styles.js';
 
+// glk-input on every key; glk-change { value } once a value is done (since
+// 1.35.0) — on leaving the field with a changed value, as <glk-input>, and
+// on Ctrl+Enter or Cmd+Enter, where Enter alone breaks the line. Once per
+// value: a change already reported by the keys is not reported again on
+// leaving. A native change goes out with it.
+
 class GlkTextarea extends GlkFormElement {
   static get observedAttributes() {
     return ['label', 'placeholder', 'rows', 'readonly', 'name', 'value', 'required'];
@@ -46,11 +52,31 @@ class GlkTextarea extends GlkFormElement {
       this.emit('glk-input', { value: this._textarea.value });
       this.dispatchEvent(new Event('input', { bubbles: true }));
     };
+    this._onFocus = () => { this._committed = this._textarea.value; };
+    this._onChangeNative = () => this._commit();
+    this._onKeydown = (e) => {
+      if (e.key === 'Enter' && (e.ctrlKey || e.metaKey) && !e.isComposing) this._commit();
+    };
     this._textarea.addEventListener('input', this._onInput);
+    this._textarea.addEventListener('focus', this._onFocus);
+    this._textarea.addEventListener('change', this._onChangeNative);
+    this._textarea.addEventListener('keydown', this._onKeydown);
   }
 
   teardownEvents() {
     this._textarea?.removeEventListener('input', this._onInput);
+    this._textarea?.removeEventListener('focus', this._onFocus);
+    this._textarea?.removeEventListener('change', this._onChangeNative);
+    this._textarea?.removeEventListener('keydown', this._onKeydown);
+  }
+
+  /** glk-change and a native change, once for each value that is done. */
+  _commit() {
+    const value = this._textarea.value;
+    if (value === this._committed) return;
+    this._committed = value;
+    this.emit('glk-change', { value });
+    this.dispatchEvent(new Event('change', { bubbles: true }));
   }
 
   onAttributeChanged(name) {

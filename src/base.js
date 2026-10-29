@@ -472,11 +472,15 @@ export class GlkElement extends HTMLElement {
   /**
    * Dispatch a bubbling, composed CustomEvent. With { cancelable: true } a
    * listener may call preventDefault(); the return value is false then.
+   * { bubbles: false } (since 1.35.0) keeps the event at the element, as the
+   * native close and toggle events do: the state events glk-open, glk-close
+   * and glk-closed of an overlay, which a container around it must not take
+   * for its own.
    */
-  emit(eventName, detail = null, { cancelable = false } = {}) {
+  emit(eventName, detail = null, { cancelable = false, bubbles = true } = {}) {
     return this.dispatchEvent(new CustomEvent(eventName, {
-      bubbles: true,
-      composed: true,
+      bubbles,
+      composed: bubbles,
       cancelable,
       detail
     }));

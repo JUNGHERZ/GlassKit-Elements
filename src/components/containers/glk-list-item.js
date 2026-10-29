@@ -23,6 +23,12 @@ const VARIANTS = ['danger', 'accent'];
 // handle="start" puts a sortable item's handle before the icon, "end" (the
 // default) after the trailing content; on <glk-list> it is the default of
 // its items. Parts since 1.34.0: item (the row) and handle.
+//
+// Since 1.35.0 slot="title-trailing" sets something beside the title — a
+// badge, a mark — which moves under it where the row is too narrow, and
+// slot="extra" something below the subtitle: a link, a line of chips.
+// Parts title and subtitle, and GlassKit's --gl-list-title-size, -weight
+// and --gl-list-subtitle-size, set the row's type.
 
 class GlkListItem extends GlkElement {
   static get observedAttributes() {
@@ -59,18 +65,26 @@ class GlkListItem extends GlkElement {
     this._leading.appendChild(this._leadingSlot);
     this._leading.hidden = true;
 
-    // Content — title + optional subtitle.
+    // Content — title + optional subtitle; beside the title and below the
+    // subtitle a place each (since 1.35.0), hidden until something is slotted.
     this._content = this.createElement('div', ['glass-list__content']);
-    this._titleEl = this.createElement('div', ['glass-list__title']);
+    const titleRow = this.createElement('div', ['glass-list__title-row']);
+    this._titleEl = this.createElement('div', ['glass-list__title'], { part: 'title' });
     this.takeTitle();
     this._titleEl.textContent = this._title || '';
-    this._subtitleEl = this.createElement('div', ['glass-list__subtitle']);
+    this._titleTrailing = this.createElement('span', ['glass-list__title-trailing'], { part: 'title-trailing', hidden: '' });
+    this._titleTrailingSlot = this.createElement('slot', [], { name: 'title-trailing' });
+    this._titleTrailing.appendChild(this._titleTrailingSlot);
+    titleRow.append(this._titleEl, this._titleTrailing);
+    this._subtitleEl = this.createElement('div', ['glass-list__subtitle'], { part: 'subtitle' });
     if (this.getBoolAttr('wrap')) this._subtitleEl.classList.add('glass-list__subtitle--wrap');
     const initialSubtitle = this.getAttribute('subtitle') || '';
     this._subtitleEl.textContent = initialSubtitle;
     this._subtitleEl.hidden = !initialSubtitle;
-    this._content.appendChild(this._titleEl);
-    this._content.appendChild(this._subtitleEl);
+    this._extra = this.createElement('div', ['glass-list__extra'], { part: 'extra', hidden: '' });
+    this._extraSlot = this.createElement('slot', [], { name: 'extra' });
+    this._extra.appendChild(this._extraSlot);
+    this._content.append(titleRow, this._subtitleEl, this._extra);
 
     // Trailing — value span + slot for icons/badges.
     this._trailing = this.createElement('div', ['glass-list__trailing']);
@@ -119,6 +133,13 @@ class GlkListItem extends GlkElement {
       this._trailing.hidden = !hasSlotted && !hasDetail;
     };
     this._onHandleSlotChange = () => { this._handle.hidden = this._handleSlot.assignedNodes().length === 0; };
+    this._onPlaceSlotChange = () => {
+      this._titleTrailing.hidden = this._titleTrailingSlot.assignedNodes().length === 0;
+      this._extra.hidden = this._extraSlot.assignedNodes().length === 0;
+    };
+    this._titleTrailingSlot.addEventListener('slotchange', this._onPlaceSlotChange);
+    this._extraSlot.addEventListener('slotchange', this._onPlaceSlotChange);
+    this._onPlaceSlotChange();
     this._handleSlot.addEventListener('slotchange', this._onHandleSlotChange);
     this._leadingSlot.addEventListener('slotchange', this._onLeadingSlotChange);
     this._trailingSlot.addEventListener('slotchange', this._onTrailingSlotChange);
@@ -160,6 +181,8 @@ class GlkListItem extends GlkElement {
     this._item?.removeEventListener('keydown', this._onKeydown);
     this._item?.removeEventListener('keyup', this._onKeyup);
     this._handleSlot?.removeEventListener('slotchange', this._onHandleSlotChange);
+    this._titleTrailingSlot?.removeEventListener('slotchange', this._onPlaceSlotChange);
+    this._extraSlot?.removeEventListener('slotchange', this._onPlaceSlotChange);
   }
 
   _applyInteractive() {

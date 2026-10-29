@@ -207,7 +207,7 @@ class GlkToast extends GlkElement {
 
   _close() {
     this.removeAttribute('visible');
-    this.emit('glk-close');
+    this.emit('glk-close', null, { bubbles: false });
   }
 
   _takeAction() {

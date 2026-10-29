@@ -20,7 +20,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="GlassKit Elements — Documentation">
   <meta name="twitter:description" content="Complete documentation for all 46 GlassKit Elements web components with live examples.">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.34/glasskit.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.35/glasskit.min.css">
   <script src="/dist/glasskit-elements.min.js"></script>
   <style>
     html { scroll-behavior: smooth; }
@@ -266,7 +266,7 @@
     <aside class="docs-sidebar">
       <div class="docs-sidebar__title">&#129482; <a href="/">GlassKit Elements</a></div>
       <div class="docs-sidebar__subtitle">Web Components for GlassKit CSS.</div>
-      <div class="docs-sidebar__version">v1.34.0 &ndash; Jungherz GmbH</div>
+      <div class="docs-sidebar__version">v1.35.0 &ndash; Jungherz GmbH</div>
 
       <div class="docs-sidebar__group">
         <div class="docs-sidebar__group-title">Basics</div>
@@ -358,7 +358,7 @@
         <h1>GlassKit Elements</h1>
         <p>Complete reference for all 46 web components &ndash; built by Jungherz GmbH. Vanilla JS, Shadow DOM, native form participation.</p>
         <div class="docs-hero__badges">
-          <span class="docs-hero__badge">v1.34.0</span>
+          <span class="docs-hero__badge">v1.35.0</span>
           <span class="docs-hero__badge">Shadow DOM</span>
           <span class="docs-hero__badge">46 Components</span>
           <span class="docs-hero__badge">Vanilla JS</span>
@@ -371,7 +371,7 @@
 
         <h3>CDN (quickest)</h3>
         <div class="docs-code"><span class="cmt">&lt;!-- 1. GlassKit CSS --&gt;</span>
-<span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span> <span class="attr">href</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.34/glasskit.min.css"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span> <span class="attr">href</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.35/glasskit.min.css"</span><span class="tag">&gt;</span>
 
 <span class="cmt">&lt;!-- 2. GlassKit Elements --&gt;</span>
 <span class="tag">&lt;script</span> <span class="attr">src</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"</span><span class="tag">&gt;&lt;/script&gt;</span></div>
@@ -559,8 +559,8 @@ addEventListener(<span class="val">'afterprint'</span>, () =&gt; {
 
         <div class="docs-component" id="glk-status">
           <h3><code>&lt;glk-status&gt;</code></h3>
-          <p>Status notice with message.</p>
-          <div class="docs-preview"><glk-status message="No results found"></glk-status></div>
+          <p>Status notice with message. Since 1.35.0 the message may be the element&rsquo;s content, with markup; <code>message</code> stays the short form for plain text and shows while the content is empty (whitespace does not count). GlassKit&rsquo;s <code>--gl-status-color</code> sets its colour. <strong>Parts</strong> (since 1.35.0): <code>status</code>, <code>message</code>.</p>
+          <div class="docs-preview" style="display:flex;flex-direction:column;gap:12px;"><glk-status message="No results found"></glk-status><glk-status><span>Included in your package <b style="color: var(--gl-color-text)">Premium</b></span></glk-status></div>
           <div class="docs-code"><span class="tag">&lt;glk-status</span> <span class="attr">message</span>=<span class="val">"No results found"</span><span class="tag">&gt;&lt;/glk-status&gt;</span></div>
         </div>
         <div class="docs-component" id="glk-empty">
@@ -677,6 +677,7 @@ addEventListener(<span class="val">'afterprint'</span>, () =&gt; {
           <div class="docs-preview"><glk-textarea label="Message" placeholder="Type here..." rows="3"></glk-textarea></div>
           <div class="docs-code"><span class="tag">&lt;glk-textarea</span> <span class="attr">label</span>=<span class="val">"Message"</span> <span class="attr">rows</span>=<span class="val">"4"</span><span class="tag">&gt;&lt;/glk-textarea&gt;</span></div>
           <p>Attributes: <code>label</code>, <code>rows</code>, <code>placeholder</code>, <code>required</code>, <code>readonly</code> (since 1.22.0), <code>name</code>, <code>value</code>, <code>disabled</code>. The label names the field. <code>slot="label-end"</code> and the parts <code>label</code> and <code>label-end</code> as on <a href="#glk-input-label-end"><code>&lt;glk-input&gt;</code></a> (since 1.33.0).</p>
+          <p><strong>Events:</strong> <code>glk-input</code> <code>{ value }</code> on every key; since 1.35.0 <code>glk-change</code> <code>{ value }</code> once a value is done &mdash; on leaving the field with a changed value, as on <code>&lt;glk-input&gt;</code>, and on Ctrl+Enter or Cmd+Enter, where Enter alone breaks the line. Once for each value: a change reported by the keys is not reported again on leaving. A native <code>change</code> goes out with it.</p>
         </div>
 
         <div class="docs-component" id="glk-select">
@@ -810,6 +811,7 @@ addEventListener(<span class="val">'afterprint'</span>, () =&gt; {
           </div>
           <div class="docs-code"><span class="tag">&lt;glk-segmented</span> <span class="attr">droplet full overflow</span>=<span class="val">"scroll"</span> <span class="attr">label</span>=<span class="val">"Area"</span> <span class="attr">value</span>=<span class="val">"a"</span> <span class="attr">options</span>=<span class="val">'[…]'</span><span class="tag">&gt;&lt;/glk-segmented&gt;</span></div>
           <p><strong>Icons (since 1.28.0).</strong> Each option takes an icon from the slot <code>icon-&lt;value&gt;</code> &mdash; an <code>&lt;svg&gt;</code>, a font icon such as Material Icons, an <code>&lt;img&gt;</code>. It sits in GlassKit&rsquo;s <code>.glass-segmented__icon</code> before the label, in the option&rsquo;s colour, and grows under the drop; an option without one has no icon box. <code>icon-only</code> shows the icons alone, for a light / dark / auto switch: the options become square, and each label becomes the button&rsquo;s <code>aria-label</code> and <code>title</code>. The icon box is hidden from assistive technology, so a font icon&rsquo;s text never joins the name.</p>
+          <p><strong>Coloured logos (since 1.35.0).</strong> An SVG icon strokes in the option&rsquo;s colour, which outlines a coloured logo &mdash; the mark of an image source &mdash; in the text colour. <code>icon-style="color"</code> keeps the logos&rsquo; own fills and strokes for every option, <code>"iconStyle": "color"</code> in an option&rsquo;s JSON for that one (GlassKit&rsquo;s <code>.glass-segmented__icon--color</code>). Attributes on the <code>&lt;svg&gt;</code> itself do not help: the slotted rule wins over them in all three engines.</p>
           <div class="docs-preview" style="display:flex;flex-direction:column;gap:10px;align-items:flex-start;">
             <glk-segmented droplet label="View" value="list" options='[{"value":"list","label":"List"},{"value":"grid","label":"Grid"}]'><svg slot="icon-list" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg><svg slot="icon-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></glk-segmented>
             <glk-segmented droplet icon-only label="Theme" value="dark" options='[{"value":"light","label":"Light"},{"value":"dark","label":"Dark"},{"value":"auto","label":"Auto"}]'><svg slot="icon-light" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg><svg slot="icon-dark" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><svg slot="icon-auto" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="13" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></glk-segmented>
@@ -1160,10 +1162,14 @@ apply();</div>
           <div class="docs-code"><span class="tag">&lt;glk-steps</span> <span class="attr">steps</span>=<span class="val">"Day,Slot,Dog,Confirm"</span> <span class="attr">current</span>=<span class="val">"2"</span><span class="tag">&gt;&lt;/glk-steps&gt;</span></div>
           <table class="docs-table">
             <tr><th>Attribute</th><th>Type</th><th>Values</th></tr>
-            <tr><td><code>steps</code></td><td>String</td><td>Comma-separated labels</td></tr>
-            <tr><td><code>current</code></td><td>Number</td><td>0-based index of the current step</td></tr>
+            <tr><td><code>steps</code></td><td>String</td><td>Comma-separated labels, or since 1.35.0 a JSON array of labels or of <code>{ "label", "state" }</code> with <code>done</code>, <code>current</code> or <code>todo</code></td></tr>
+            <tr><td><code>current</code></td><td>Number</td><td>0-based index of the current step; the short form for steps in order &mdash; a step without a state takes it from here</td></tr>
             <tr><td><code>label</code></td><td>String</td><td><code>aria-label</code> of the list (optional)</td></tr>
+            <tr><td><code>done-label</code></td><td>String</td><td>What a screen reader hears after a done step, &ldquo;done&rdquo; by default (since 1.35.0)</td></tr>
           </table>
+          <p><strong>A state per step</strong> (since 1.35.0), for steps done in any order: in a publication flow the address may be approved while the app is still untested. A done step says so in words too, since the position no longer tells.</p>
+          <div class="docs-preview"><glk-steps steps='[{"label":"Test the app","state":"todo"},{"label":"Set the address","state":"done"},{"label":"Spread it","state":"current"}]'></glk-steps></div>
+          <div class="docs-code"><span class="tag">&lt;glk-steps</span> <span class="attr">steps</span>=<span class="val">'[{"label":"Test the app","state":"todo"},{"label":"Set the address","state":"done"},{"label":"Spread it","state":"current"}]'</span><span class="tag">&gt;&lt;/glk-steps&gt;</span></div>
           <p>Property <code>current</code> reflects the attribute; <code>steps</code> accepts an array or comma-separated text. <strong>Part:</strong> <code>steps</code>.</p>
         </div>
         <div class="docs-component" id="glk-date-strip">
@@ -1301,6 +1307,7 @@ document.getElementById(<span class="val">'my-modal'</span>).close();</div>
             <tr><td><code>title</code></td><td>String</td><td>Header title</td></tr>
           </table>
           <p><strong>Methods:</strong> <code>.show()</code>, <code>.close()</code> (a promise since 1.32.0) &nbsp; <strong>Events:</strong> <code>glk-open</code> (whenever it opens, since 1.30.0), <code>glk-close</code>, <code>glk-closed</code> (since 1.32.0)</p>
+          <p>Since 1.35.0 <code>glk-open</code>, <code>glk-close</code> and <code>glk-closed</code> stay at the element: they do not bubble, as the native <code>close</code> and <code>toggle</code> do not, so a container around it no longer takes them for its own. Listen on the element itself.</p>
           <p>While the modal is open the page behind it does not scroll (since 1.30.0): the top layer kept it inert for pointer and keyboard, but a wheel or a finger over the dimmed area still moved it.</p>
           <p><strong><code>glk-closed</code> (since 1.32.0)</strong> follows once the modal has faded out and its dialog has closed, however it closed &mdash; Escape, the dimmed area, <code>.close()</code>, the attribute &mdash; and at once under <code>prefers-reduced-motion</code>; <code>.close()</code> returns a promise that settles at the same moment. A page that renders the modal from its state removes it there, and the fade shows; before, it had to guess the duration or cut the fade short.</p>
           <div class="docs-code">modal.addEventListener(<span class="val">'glk-closed'</span>, () =&gt; { state.dialog = null; render(); });
@@ -1341,6 +1348,7 @@ toast.addEventListener(<span class="val">'glk-action'</span>, e =&gt; { if (e.de
             <tr><td><code>close-label</code></td><td>String</td><td>Name of the &times;, &ldquo;Close&rdquo; by default (since 1.19.0)</td></tr>
           </table>
           <p><strong>Methods:</strong> <code>.show(message, variant, duration)</code>, <code>.show(message, { variant, duration, action: { label, value }, dismissible })</code>, <code>.dismiss()</code>. <strong>Slot:</strong> <code>icon</code> &mdash; replaces the built-in icon; leave its stroke unset and it takes the variant colour. <strong>Events:</strong> <code>glk-action</code> <code>{ action, label }</code> (cancelable), <code>glk-close</code> (&times; or Escape), <code>glk-dismiss</code> (timed out).</p>
+          <p>Since 1.35.0 <code>glk-close</code> stays at the toast and does not bubble; <code>glk-action</code> and <code>glk-dismiss</code> still do.</p>
           <script>
             (() => { const t = document.getElementById('docs-toast-offer'), out = document.querySelector('[data-docs-toast-out]');
               t.addEventListener('glk-action', e => { out.textContent = 'glk-action → ' + e.detail.action; });
@@ -1385,7 +1393,7 @@ document.querySelector(<span class="val">'glk-popover'</span>).toggle();</div>
             <tr><td><code>trigger</code></td><td>Element that toggles the popover when clicked</td></tr>
             <tr><td><em>(default)</em></td><td>Floating content shown while open</td></tr>
           </table>
-          <p><strong>Events:</strong> <code>glk-open</code>, <code>glk-close</code></p>
+          <p><strong>Events:</strong> <code>glk-open</code>, <code>glk-close</code>. Since 1.35.0 <code>glk-open</code>, <code>glk-close</code> and <code>glk-closed</code> stay at the element: they do not bubble, as the native <code>close</code> and <code>toggle</code> do not, so a container around it no longer takes them for its own. Listen on the element itself. Escape closes the popover and is marked as handled (<code>preventDefault()</code>, since 1.35.0): a sheet or a modal around it stays open, and a container can tell from <code>defaultPrevented</code> that the popover took the key.</p>
           <p><strong>Methods:</strong> <code>.show()</code>, <code>.close()</code>, <code>.toggle()</code></p>
           <p><strong>Heads-up:</strong> the method is deliberately called <code>.toggle()</code> — not <code>.togglePopover()</code>, which collides with the native <code>HTMLElement.togglePopover()</code> API.</p>
           <p>The trigger tells whether the popover is open: it gets <code>aria-expanded</code>, also after it is swapped (since 1.20.0). <code>&lt;glk-button&gt;</code> and <code>&lt;glk-pill&gt;</code> hand it on to their native button.</p>
@@ -1477,7 +1485,7 @@ menu.addEventListener(<span class="val">'glk-select'</span>, (event) =&gt; {
             <tr><td><code>label</code></td><td>glk-menu-group</td><td>Shown above its items, and the group&rsquo;s name</td></tr>
           </table>
           <p><strong>Keyboard:</strong> one tab stop. On the button, Enter, Space and Down open the menu at its first item, Up at its last. In the menu, Down and Up move and wrap, Home and End go to the ends, typed letters jump to the next item that starts with them, Enter and Space choose, Escape closes and gives the focus back to the button &mdash; a dialog around it stays open &mdash;, Tab closes and moves on. A pointer that hovers an item moves the focus to it; a click outside closes.</p>
-          <p><strong>Events:</strong> <code>glk-select</code> <code>{ item, value, checked }</code>, cancelable and before anything happens: an item closes the menu and gives the focus back to the button; a checkbox item toggles and a radio item is checked, the others of its group unchecked, and both leave the menu open. Cancelled, nothing changes. <code>glk-open</code>, <code>glk-close</code>. <strong>Methods:</strong> <code>show()</code>, <code>close()</code> &mdash; <code>close({ focus: true })</code> gives the focus back to the button &mdash;, <code>toggle()</code>. <strong>Slots:</strong> <code>trigger</code>, default (the items); on <code>&lt;glk-menu-item&gt;</code> default (the label), <code>icon</code>, <code>trailing</code> (a hint such as a shortcut). <strong>Parts:</strong> <code>menu</code> on the menu, <code>item</code> on each item.</p>
+          <p><strong>Events:</strong> <code>glk-select</code> <code>{ item, value, checked }</code>, cancelable and before anything happens: an item closes the menu and gives the focus back to the button; a checkbox item toggles and a radio item is checked, the others of its group unchecked, and both leave the menu open. Cancelled, nothing changes. <code>glk-open</code>, <code>glk-close</code>. <strong>Methods:</strong> <code>show()</code>, <code>close()</code> &mdash; <code>close({ focus: true })</code> gives the focus back to the button &mdash;, <code>toggle()</code>. <strong>Slots:</strong> <code>trigger</code>, default (the items); on <code>&lt;glk-menu-item&gt;</code> default (the label), <code>icon</code>, <code>trailing</code> (a hint such as a shortcut). <strong>Parts:</strong> <code>menu</code> on the menu, <code>item</code> on each item. Since 1.35.0 the menu&rsquo;s <code>glk-open</code> and <code>glk-close</code> stay at the element and do not bubble; <code>glk-select</code> still does.</p>
           <p>The panel lies in the top layer like the popover&rsquo;s, never cut off by an <code>overflow: hidden</code> around it, so a menu in a table row or a card opens in full. The roles and states sit on the elements themselves (<code>ElementInternals</code>), so the items are the menu&rsquo;s own across the slot; <code>&lt;glk-menu-separator&gt;</code> is <code>role="separator"</code>, <code>&lt;glk-menu-group&gt;</code> <code>role="group"</code>.</p>
           <script>
             (() => { const out = document.querySelector('[data-docs-menu-out]');
@@ -1503,9 +1511,43 @@ menu.addEventListener(<span class="val">'glk-select'</span>, (event) =&gt; {
             <tr><td><code>open</code></td><td>Boolean</td><td>Shown as an overlay</td></tr>
             <tr><td><code>inline</code></td><td>Boolean</td><td>In the flow, no overlay, always visible</td></tr>
             <tr><td><code>title</code></td><td>String</td><td>Heading and <code>aria-label</code></td></tr>
+            <tr><td><code>label</code></td><td>String</td><td>The dialog&rsquo;s name without a visible title (since 1.35.0; before, it had none)</td></tr>
+            <tr><td><code>dismissible</code></td><td>Boolean</td><td>A round close button at the end of the head (since 1.35.0); a click on it closes like a click outside, with <code>glk-close</code></td></tr>
+            <tr><td><code>close-label</code></td><td>String</td><td>Its name, &ldquo;Close&rdquo; by default (since 1.35.0)</td></tr>
+            <tr><td><code>placement</code></td><td>String</td><td><code>bottom</code> (default) | <code>start</code> | <code>end</code>: a panel at that side, full height, without grip, actions side by side (since 1.35.0)</td></tr>
+            <tr><td><code>modeless</code></td><td>Boolean</td><td>Opened with <code>show()</code>: no scrim, the page stays usable, other dialogs open above it (since 1.35.0)</td></tr>
           </table>
-          <p><strong>Methods:</strong> <code>show()</code>, <code>close()</code>. <strong>Slots:</strong> default (content), <code>actions</code>. <strong>Events:</strong> <code>glk-close</code> — only when the user closes it (scrim, Escape); <code>glk-closed</code> &mdash; once it has slid out (since 1.32.0). <strong>Parts:</strong> <code>overlay</code>, <code>sheet</code>, <code>title</code>, <code>body</code>, <code>actions</code>.</p>
+          <p><strong>Methods:</strong> <code>show()</code>, <code>close()</code>. <strong>Slots:</strong> default (content), <code>actions</code>; since 1.35.0 <code>eyebrow</code> (a short line above the title), <code>leading</code> and <code>trailing</code> (before and after it in the head). <strong>Parts:</strong> <code>overlay</code>, <code>sheet</code>, <code>title</code>, <code>body</code>, <code>actions</code>; since 1.35.0 <code>grip</code>, <code>head</code>, <code>eyebrow</code>, <code>leading</code>, <code>trailing</code>, <code>close</code>. <strong>Events:</strong> <code>glk-close</code> — only when the user closes it (scrim, Escape); <code>glk-closed</code> &mdash; once it has slid out (since 1.32.0). <strong>Parts:</strong> <code>overlay</code>, <code>sheet</code>, <code>title</code>, <code>body</code>, <code>actions</code>.</p>
           <p><strong><code>glk-closed</code> (since 1.32.0)</strong> follows once the sheet has slid out and its dialog has closed, however it closed &mdash; scrim, Escape, <code>close()</code>, the attribute &mdash; and at once under <code>prefers-reduced-motion</code>; <code>close()</code> returns a promise that settles at the same moment. A page that renders the sheet from its state removes it there, and the slide shows. An inline sheet shows no overlay, so nothing slides: <code>close()</code> settles at once.</p>
+          <p id="glk-sheet-head"><strong>The head</strong> (since 1.35.0): <code>slot="eyebrow"</code> puts a short line above the title, <code>leading</code> a mark or an icon chip before it, <code>trailing</code> a badge after it, and <code>dismissible</code> a round close button at its end, named by <code>close-label</code>. Each place shows only while it holds something; a title alone stands as before. Without a title, <code>label</code> names the dialog.</p>
+          <div class="docs-preview">
+            <glk-sheet inline title="Version from 09:41" dismissible>
+              <span slot="eyebrow">Restore</span>
+              <span slot="leading" style="display:inline-flex;width:56px;height:56px;border-radius:14px;align-items:center;justify-content:center;background:color-mix(in srgb, var(--gl-color-primary) 28%, transparent)"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg></span>
+              <glk-badge slot="trailing">1&times; in your app</glk-badge>
+              <p style="margin:0">Restoring replaces the current version.</p>
+            </glk-sheet>
+          </div>
+          <p id="glk-sheet-side"><strong>At a side, modeless</strong> (since 1.35.0): <code>placement="end"</code> or <code>"start"</code> puts the panel at that side of the window, as high as the window less 16&nbsp;px at both ends, 440&nbsp;px wide (GlassKit&rsquo;s <code>--gl-sheet-side-inset</code> and <code>--gl-sheet-side-width</code>), sliding in from that side, mirrored right to left, without a grip and with its actions side by side &mdash; a side panel on a desktop. <code>modeless</code> opens it with <code>show()</code> instead of <code>showModal()</code>: no scrim, the page stays usable and its chosen row in view, a modal opened later lies above it, Escape inside it closes it and a click outside does not, and the focus moves into the panel on opening &mdash; or to what carries <code>autofocus</code> &mdash; and back where it came from on closing.</p>
+          <div class="docs-preview" style="display:flex;gap:12px;flex-wrap:wrap;">
+            <glk-button size="sm auto" variant="secondary" id="docs-side-open">Open at the side</glk-button>
+            <glk-button size="sm auto" variant="secondary" id="docs-modeless-open">Open modeless</glk-button>
+            <glk-sheet id="docs-side" title="Edit entry" placement="end" dismissible><span slot="eyebrow">Component</span><p style="margin:0">A modal panel at the end edge, full height.</p><glk-button slot="actions" size="sm auto" id="docs-side-cancel">Cancel</glk-button><glk-button slot="actions" size="sm auto" variant="primary" id="docs-side-save">Save</glk-button></glk-sheet>
+            <glk-sheet id="docs-modeless" title="Edit entry" placement="end" modeless dismissible><p style="margin:0">The page stays usable beside it. Escape closes it.</p></glk-sheet>
+          </div>
+          <div class="docs-code"><span class="tag">&lt;glk-sheet</span> <span class="attr">title</span>=<span class="val">"Version from 09:41"</span> <span class="attr">dismissible</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;span</span> <span class="attr">slot</span>=<span class="val">"eyebrow"</span><span class="tag">&gt;</span>Restore<span class="tag">&lt;/span&gt;</span>
+  <span class="tag">&lt;span</span> <span class="attr">slot</span>=<span class="val">"leading"</span> <span class="attr">class</span>=<span class="val">"chip"</span><span class="tag">&gt;</span>…<span class="tag">&lt;/span&gt;</span>
+  <span class="tag">&lt;glk-badge</span> <span class="attr">slot</span>=<span class="val">"trailing"</span><span class="tag">&gt;</span>1× in your app<span class="tag">&lt;/glk-badge&gt;</span>
+  <span class="tag">&lt;p&gt;</span>Restoring replaces the current version.<span class="tag">&lt;/p&gt;</span>
+<span class="tag">&lt;/glk-sheet&gt;</span>
+
+<span class="tag">&lt;glk-sheet</span> <span class="attr">title</span>=<span class="val">"Edit entry"</span> <span class="attr">placement</span>=<span class="val">"end"</span> <span class="attr">modeless</span> <span class="attr">dismissible</span><span class="tag">&gt;</span>…<span class="tag">&lt;/glk-sheet&gt;</span>   <span class="cmt">&lt;!-- beside the list --&gt;</span></div>
+          <p><strong>Events</strong> (since 1.35.0): <code>glk-open</code>, <code>glk-close</code> and <code>glk-closed</code> stay at the element: they do not bubble, as the native <code>close</code> and <code>toggle</code> do not, so a container around it no longer takes them for its own. Listen on the element itself. On dark mode&rsquo;s glass the sheet&rsquo;s glow starts lower, and the controls on it keep their contrast &mdash; see GlassKit 1.35.0&rsquo;s <a href="https://glasskit.jungherz.com/docs.html#sheet-dark">dark glass</a>.</p>
+          <script>
+            for (const [open, id] of [['docs-side-open', 'docs-side'], ['docs-modeless-open', 'docs-modeless']]) document.getElementById(open).addEventListener('click', () => document.getElementById(id).show());
+            for (const b of ['docs-side-cancel', 'docs-side-save']) document.getElementById(b).addEventListener('click', () => document.getElementById('docs-side').close());
+          </script>
           <script>
             document.getElementById('docs-sheet-open').addEventListener('click', () => document.getElementById('docs-sheet-el').show());
             document.getElementById('docs-sheet-close').addEventListener('click', () => document.getElementById('docs-sheet-el').close());
@@ -1592,10 +1634,18 @@ menu.addEventListener(<span class="val">'glk-select'</span>, (event) =&gt; {
             <tr><th>Slot</th><th>Component</th><th>Purpose</th></tr>
             <tr><td><code>leading</code></td><td>glk-list-item</td><td>Icon slot (24&times;24 SVG, or 32&times;32 with <code>leading-lg</code>)</td></tr>
             <tr><td><code>trailing</code></td><td>glk-list-item</td><td>Chevron, badge, or button (rendered after <code>detail</code> value)</td></tr>
+            <tr><td><code>title-trailing</code></td><td>glk-list-item</td><td>Beside the title &mdash; a badge such as &ldquo;AI&rdquo;, a mark &mdash;; it moves under the title where the row is too narrow (since 1.35.0)</td></tr>
+            <tr><td><code>extra</code></td><td>glk-list-item</td><td>Below the subtitle: a link (&ldquo;Undo&rdquo;), a line of chips (since 1.35.0)</td></tr>
             <tr><td><code>handle</code></td><td>glk-list-item</td><td>A grip at the row&rsquo;s end, or its start with <code>handle="start"</code> (since 1.34.0): in a sortable list a pointer starts a drag only there, a finger at once; the keyboard still picks the item up on its row (since 1.32.0)</td></tr>
           </table>
           <p><strong>Events:</strong> <code>glk-click</code> on <code>&lt;glk-list-item&gt;</code> when <code>interactive</code> is set. A sortable list emits the <code>glk-sort</code> events and takes <code>messages</code>, the texts it announces &mdash; see <a href="#sorting">Sorting</a>.</p>
-          <p><strong>Parts</strong> (since 1.34.0): <code>item</code>, the row, and <code>handle</code> on <code>&lt;glk-list-item&gt;</code>; <code>header</code> and <code>list</code> on <code>&lt;glk-list&gt;</code>.</p>
+          <p><strong>Parts</strong> (since 1.34.0): <code>item</code>, the row, and <code>handle</code> on <code>&lt;glk-list-item&gt;</code>; since 1.35.0 also <code>title</code>, <code>subtitle</code>, <code>title-trailing</code> and <code>extra</code>; <code>header</code> and <code>list</code> on <code>&lt;glk-list&gt;</code>. GlassKit&rsquo;s <code>--gl-list-title-size</code>, <code>--gl-list-title-weight</code> and <code>--gl-list-subtitle-size</code> set a row&rsquo;s type (since 1.35.0), and <code>--gl-list-item-selected-inset</code>, <code>-radius</code>, <code>-shadow</code>, <code>-color</code> and <code>-weight</code> shape the <a href="#glk-list-selected">chosen row</a> &mdash; <code>0</code>, <code>0</code>, <code>none</code> make a flat tint over the whole row.</p>
+          <div class="docs-preview">
+            <glk-list aria-label="History" style="--gl-list-item-min-height: 64px">
+              <glk-list-item title="Opening hours" subtitle="Changed today, 09:41" interactive><svg slot="leading" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg><glk-badge slot="title-trailing" variant="primary">AI</glk-badge><a slot="extra" href="#glk-list" style="color: var(--gl-color-primary-text)">Undo</a></glk-list-item>
+              <glk-list-item title="News" subtitle="Changed yesterday" interactive><svg slot="leading" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg></glk-list-item>
+            </glk-list>
+          </div>
           <p id="glk-list-selected"><strong>A list beside its detail</strong> (since 1.34.0): <code>selected</code> marks the entry an editor next to the list shows. GlassKit&rsquo;s <code>.is-selected</code> lays a pill of raised glass into the row, as the selected item of a <a href="#glk-tree"><code>&lt;glk-tree&gt;</code></a> has, and the row says <code>aria-current="true"</code>. The page sets it &mdash; a click does not &mdash; and moves it when another entry opens.</p>
           <div class="docs-preview">
             <glk-list aria-label="Pages">

@@ -104,9 +104,13 @@ class GlkPopover extends GlkElement {
     };
     document.addEventListener('click', this._onDocClick);
 
-    // Close on Escape; focus inside the panel goes back to the trigger.
+    // Close on Escape; focus inside the panel goes back to the trigger. The
+    // key is marked as handled (since 1.35.0): a dialog around — a sheet, a
+    // modal — no longer closes with the popover, and a container can tell
+    // from defaultPrevented that the popover took it.
     this._onKeydown = (e) => {
-      if (e.key !== 'Escape' || !this.getBoolAttr('open')) return;
+      if (e.key !== 'Escape' || !this.getBoolAttr('open') || e.defaultPrevented) return;
+      e.preventDefault();
       const inside = this.contains(document.activeElement) && !this._triggerSlot.assignedElements().some(t => t.contains(document.activeElement));
       this.close();
       if (inside) {
@@ -134,7 +138,7 @@ class GlkPopover extends GlkElement {
         const isOpen = this.getBoolAttr('open');
         this._applyOpen();
         this._applyExpanded();
-        this.emit(isOpen ? 'glk-open' : 'glk-close');
+        this.emit(isOpen ? 'glk-open' : 'glk-close', null, { bubbles: false });
         break;
       }
       case 'placement':

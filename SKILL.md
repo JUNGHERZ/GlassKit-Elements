@@ -1,6 +1,6 @@
 ---
 name: glasskit-elements
-description: GlassKit Elements is a vanilla-JS Web Components library (v1.34.0) wrapping GlassKit CSS v1.34.0. It provides 46 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
+description: GlassKit Elements is a vanilla-JS Web Components library (v1.35.0) wrapping GlassKit CSS v1.35.0. It provides 46 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
 ---
 
 # GlassKit Elements – AI Component Reference
@@ -13,6 +13,8 @@ description: GlassKit Elements is a vanilla-JS Web Components library (v1.34.0) 
 > **New in 1.28.0 — icons of any kind, and a tab that keeps the current one.** `<glk-tab-item>` takes an icon that is not inline SVG in `slot="icon"` — Material Icons, an `<img>`, a custom element — and it follows every state; `<glk-segmented>` takes one per option in `slot="icon-<value>"` and shows them alone with `icon-only`. `glk-tab-select` is cancelable, for an item that opens a drawer or a link. **Where a project styles tab icons through `hostStyles`, or puts `active` back after `glk-tab-select`, replace that** (3.3, 3.25).
 
 > **New in 1.32.0 — one tab bar for every edge, ten elements, panels in the top layer.** `<glk-tab-bar>` leaves the bottom edge: `orientation="vertical"` makes it a sidebar, `dock="start"` or `"end"` fixes it to that side of the viewport — where the thumb rests on a phone held open, or a foldable that moved its system controls to a side — `rail` shows the icons alone with the labels as tooltips, `placement="top"` lays it out for the top of a page, and `<glk-tab-dock orientation="vertical">` stands the floating bar upright. One set of items serves every layout, and the drop runs along y in a column. New: `<glk-tooltip>`, `<glk-menu>` with `<glk-menu-item>`, `-separator` and `-group`, `<glk-tree>` with `<glk-tree-item>` (children that load on opening, with errors and a retry), `<glk-breadcrumbs>` with `<glk-breadcrumb>`, `<glk-table>` around a native table, and `sortable` on `<glk-list>` and `<glk-tree>` — drag and drop by mouse, touch and keyboard, onto breadcrumbs too. Lists and trees change single items in place, keeping the focus, and `highlight()` points a changed item out. `<glk-popover>` opens in the top layer, `<glk-modal>` and `<glk-sheet>` emit `glk-closed` once they are gone, interactive list items take the keyboard. **Where a project builds its own sidebar, tooltip, menu, tree, breadcrumbs or table wrapper, or waits for a sheet's slide-out with a timer, replace that** (3.3, 3.19, 3.24, 3.27, 3.32–3.37).
+
+> **New in 1.35.0 — sheets at a side, modeless, with a head; state events that stay put; dark glass that keeps its contrast.** `<glk-sheet>` takes `placement="end"`/`"start"` (a full-height side panel), `modeless` (`show()` instead of `showModal()`: the page stays usable, Escape inside closes, focus in and back), `dismissible` with `close-label`, slots `eyebrow`, `leading`, `trailing`, and `label` as the name without a title (3.27). **`glk-open`, `glk-close` and `glk-closed` no longer bubble** (popover, menu, modal, sheet, toast): listen on the element itself, not on a container — a sheet's listener used to catch the `glk-close` of a popover inside it. Escape on an open popover is marked handled, so a sheet around it stays open. `<glk-list-item>` gets slots `title-trailing` and `extra`, parts `title`/`subtitle`, and GlassKit 1.35.0's type and chosen-row tokens (3.24); `<glk-status>` takes its message as content with markup (3.8); `<glk-textarea>` emits `glk-change` (3.17); `<glk-segmented icon-style="color">` keeps logos' colours (3.25); `<glk-steps>` takes a state per step (3.26). **Where a project checks `event.target === event.currentTarget` for these events, keeps a hidden title for a sheet's name, draws its own sheet head or side panel, or listens to `focusout` for a text area, replace that.**
 
 > **New in 1.34.0 — tiles that sort, a chosen list row, the grip first, sorting in shadow roots.** `<glk-list grid>` lays the items out as glass tiles, and sorted they move on the horizontal axis, into a `container` in the middle (3.24, 3.37). `selected` on `<glk-list-item>` marks the entry a list beside its detail shows (`aria-current`), `handle="start"` puts the grip before the icon, parts `item` and `handle` reach the row. A sortable list or tree inside another element's shadow root takes drags now, and the folded levels of `<glk-breadcrumbs>` take drops; `dropTargetAt()` and `markDrop()` lend the crumbs to a sorter of the page's own (3.35). `<glk-tree-item>` has parts `icon` and `handle`, and GlassKit 1.34.0's `--gl-tree-icon-size` takes a 28px chip. **Where a project patches `document.elementsFromPoint`, adopts stylesheets into list items for the grip or the chosen row, or calls the crumbs' `_dropTargetAt()`, replace that.**
 
@@ -299,9 +301,9 @@ container components are exposed as parts:
 |---|---|
 | `<glk-card>` | `card` |
 | `<glk-list>` | `header`, `list` |
-| `<glk-list-item>` | `item` (the row), `handle` (since 1.34.0) |
+| `<glk-list-item>` | `item` (the row), `handle` (since 1.34.0); `title`, `subtitle`, `title-trailing`, `extra` (since 1.35.0) |
 | `<glk-modal>` | `overlay`, `modal`, `header`, `body`, `footer` |
-| `<glk-sheet>` | `overlay`, `sheet`, `title`, `body`, `actions` |
+| `<glk-sheet>` | `overlay`, `sheet`, `title`, `body`, `actions`; `grip`, `head`, `eyebrow`, `leading`, `trailing`, `close` (since 1.35.0) |
 | `<glk-accordion-item>` | `item`, `trigger`, `content`, `body` (since 1.30.0) |
 | `<glk-button>` | `button` (since 1.31.0) |
 | `<glk-segmented>` | `group`, `item`, `badge` (the last two since 1.31.0) |
@@ -730,11 +732,16 @@ Inline status notice (muted surface).
 
 ```html
 <glk-status message="No results found"></glk-status>
+
+<!-- Since 1.35.0: the message as content, with markup -->
+<glk-status><span>Included in your package <b>Premium</b></span></glk-status>
 ```
 
 | Attribute | Type | Description |
 |---|---|---|
-| `message` | String | Status text |
+| `message` | String | Status text — the short form; shows while the content is empty (whitespace does not count) |
+
+Slots: `icon`; default (since 1.35.0) — the message with markup, winning over `message`. Parts (since 1.35.0): `status`, `message`. GlassKit's `--gl-status-color` sets the message's colour; style a `<b>` inside with a rule of your own.
 
 ---
 
@@ -1028,7 +1035,7 @@ Multi-line text input.
 | `required` | Boolean | Required field |
 | `readonly` | Boolean | Read-only, property `.readOnly` (since 1.22.0) |
 
-Events: `glk-input`, `glk-change`. `slot="label-end"` and the parts `label` and `label-end` as on `<glk-input>` (since 1.33.0).
+Events: `glk-input` on every key; `glk-change` `{ value }` (since 1.35.0; before, none) once a value is done — on leaving the field with a changed value, as on `<glk-input>`, and on Ctrl/Cmd+Enter; once per value, plus a native `change`. `slot="label-end"` and the parts `label` and `label-end` as on `<glk-input>` (since 1.33.0).
 
 ---
 
@@ -1158,6 +1165,8 @@ The trigger gets `aria-expanded`, kept in step with `open` and set again when th
 
 **Naming warning:** the toggle method is deliberately called `.toggle()`, **not** `.togglePopover()` — the latter collides with the native `HTMLElement.togglePopover()` API from the HTML Popover specification.
 
+
+**Escape (since 1.35.0)** closes an open popover and is marked handled (`preventDefault()`): a sheet or modal around it stays open, and a container that closes on Escape checks `event.defaultPrevented`. `glk-open` and `glk-close` stay at the popover (no bubbling).
 ---
 
 ### 3.21 `<glk-progress>`
@@ -1337,9 +1346,11 @@ Property: `messages`, the sorting announcements in the page's language (3.37).
 |---|---|
 | `leading` | Icon slot (24×24 SVG recommended, or 32×32 with `leading-lg`; use `stroke: currentColor`) |
 | `trailing` | Chevron, badge, or button — rendered after `detail` value |
+| `title-trailing` | Beside the title — a badge such as "AI", a mark; moves under the title where the row is too narrow (since 1.35.0) |
+| `extra` | Below the subtitle — a link ("Undo"), a line of chips (since 1.35.0; not `content`, which names the row's middle column in GlassKit) |
 | `handle` | A grip at the row's end — or its start with `handle="start"` (since 1.34.0) — for a sortable list (since 1.32.0), e.g. an `<svg>`: with one, a pointer starts a drag only there — a tap on the row still clicks it — and a finger on it drags at once. The keyboard is not limited by it: Space on the row picks the item up |
 
-Parts (since 1.34.0): `item` (the row) and `handle` on `<glk-list-item>`; `header` and `list` on `<glk-list>`.
+Parts (since 1.34.0): `item` (the row) and `handle` on `<glk-list-item>`, since 1.35.0 also `title`, `subtitle`, `title-trailing`, `extra`; `header` and `list` on `<glk-list>`. GlassKit 1.35.0's `--gl-list-title-size`, `--gl-list-title-weight`, `--gl-list-subtitle-size` set a row's type, `--gl-list-item-selected-inset`, `-radius`, `-shadow`, `-color`, `-weight` the chosen row's pill (`0`, `0`, `none`: a flat tint). **Do not** adopt stylesheets into list items for type or a flat selection.
 
 #### A list beside its detail (since 1.34.0)
 
@@ -1449,9 +1460,11 @@ A small, exclusive choice as one control (since 1.15.0) — traffic light, morni
 | `droplet` | Boolean | The chosen option sits on a drop of glass that glides to the next one and can be dragged (since 1.27.0) — recommended |
 | `icon-only` | Boolean | The options show their icons alone, square; each label becomes the button's `aria-label` and `title` (since 1.28.0) |
 
-Properties: `value`, `options` (array or JSON text), `full`, `overflow`, `label`, `disabled`, `droplet`, `iconOnly`. Slots: `icon-<value>` (since 1.28.0). Events: `glk-change` `{ value }` — only on a change made by the user, not on `.value = …`. Parts: `group`, `item` (each option's button), `badge` (its count) — the last two since 1.31.0.
+Properties: `value`, `options` (array or JSON text), `full`, `overflow`, `label`, `disabled`, `droplet`, `iconOnly`, `iconStyle`. Slots: `icon-<value>` (since 1.28.0). Events: `glk-change` `{ value }` — only on a change made by the user, not on `.value = …`. Parts: `group`, `item` (each option's button), `badge` (its count) — the last two since 1.31.0.
 
 **Icons (since 1.28.0).** Each option takes its icon from the slot `icon-<value>` — an `<svg>`, a font icon, an `<img>`. It sits in GlassKit's `.glass-segmented__icon` before the label, in the option's colour, and grows under the drop; an option without one has no icon box, and an icon added or removed later shows or hides it. The icon box is `aria-hidden`, so a font icon's text never joins the name. `icon-only` is for a row of icons alone — a light / dark / auto switch:
+
+**Coloured logos (since 1.35.0).** An SVG icon strokes as a line icon, which outlines a coloured logo in the text colour. `icon-style="color"` keeps every option's logo in its own fills and strokes, `"iconStyle": "color"` in an option's JSON that one (GlassKit's `.glass-segmented__icon--color`). Attributes on the `<svg>` itself lose to the slotted rule — use the attribute, never `stroke="none"` on every shape.
 
 ```html
 <glk-segmented droplet icon-only label="Theme" value="dark"
@@ -1495,15 +1508,19 @@ Progress through a short flow (since 1.15.0), purely presentational: the current
 
 ```html
 <glk-steps steps="Day,Slot,Dog,Confirm" current="2" label="Progress"></glk-steps>
+
+<!-- Since 1.35.0: a state per step, for steps done in any order -->
+<glk-steps steps='[{"label":"Test","state":"todo"},{"label":"Address","state":"done"},{"label":"Spread","state":"current"}]'></glk-steps>
 ```
 
 | Attribute | Type | Description |
 |---|---|---|
-| `steps` | String | Comma-separated labels (property also accepts an array) |
-| `current` | Number | 0-based index of the current step (reflected property) |
+| `steps` | String | Comma-separated labels, or since 1.35.0 a JSON array of labels or of `{ label, state }` with `done`, `current`, `todo` (property also accepts an array) |
+| `current` | Number | 0-based index of the current step (reflected property) — the short form for steps in order; a step without a state takes it from here |
 | `label` | String | `aria-label` of the list, optional |
+| `done-label` | String | What a screen reader hears after a done step (since 1.35.0; default "done") |
 
-Part: `steps`.
+Part: `steps`. A done step says so in words too (visually hidden), since out of order the position no longer tells.
 
 ---
 
@@ -1524,8 +1541,29 @@ Bottom sheet (since 1.15.0) — the mobile sibling of `<glk-modal>`, same API sh
 | `open` | Boolean | Shown as an overlay (reflected property) |
 | `inline` | Boolean | In the flow, no overlay, always visible — e.g. inside a phone frame or a card |
 | `title` | String | Heading; names the dialog |
+| `label` | String | The dialog's name without a visible title (since 1.35.0; before, it had none) |
+| `dismissible` | Boolean | A round close button at the end of the head (since 1.35.0); a click closes like a click outside, with `glk-close` |
+| `close-label` | String | Its name, default "Close" (since 1.35.0) |
+| `placement` | `bottom` \| `start` \| `end` | A full-height panel at that side, 440px wide and 16px from the edges (GlassKit's `--gl-sheet-side-width`, `--gl-sheet-side-inset`), sliding in from the side, no grip, actions side by side (since 1.35.0) |
+| `modeless` | Boolean | Opened with `show()`: no scrim, the page stays usable and other dialogs open above it, Escape inside closes it, a click outside does not, focus moves into the panel (or to `[autofocus]`) and back (since 1.35.0) |
 
-Methods: `show()`, `close()` — since 1.32.0 `close()` returns a promise that settles once the sheet has slid out, at once when nothing was shown. Slots: default (content), `actions`. Events: `glk-open` — whenever it opens, by attribute, property or `show()` (since 1.30.0), for instance to hide a page's own fixed bars; `glk-close` — only when the user closes it (scrim click, Escape), like `<glk-modal>`; `close()` does not emit; `glk-closed` — once the sheet has slid out and its dialog has closed, however it closed, at once under `prefers-reduced-motion` (since 1.32.0). A page that renders the sheet from state drops it on `glk-closed` (or after `await sheet.close()`), so the slide-out shows instead of the sheet vanishing. Parts: `overlay` (the `<dialog>`), `sheet`, `title`, `body`, `actions`.
+Methods: `show()`, `close()` — since 1.32.0 `close()` returns a promise that settles once the sheet has slid out, at once when nothing was shown. Slots: default (content), `actions`. Events: `glk-open` — whenever it opens, by attribute, property or `show()` (since 1.30.0), for instance to hide a page's own fixed bars; `glk-close` — only when the user closes it (scrim click, Escape), like `<glk-modal>`; `close()` does not emit; `glk-closed` — once the sheet has slid out and its dialog has closed, however it closed, at once under `prefers-reduced-motion` (since 1.32.0). A page that renders the sheet from state drops it on `glk-closed` (or after `await sheet.close()`), so the slide-out shows instead of the sheet vanishing. Parts: `overlay` (the `<dialog>`), `sheet`, `title`, `body`, `actions`; since 1.35.0 `grip`, `head`, `eyebrow`, `leading`, `trailing`, `close`. Slots since 1.35.0: `eyebrow` (a line above the title), `leading`, `trailing` (before and after it in the head).
+
+**Since 1.35.0 `glk-open`, `glk-close` and `glk-closed` do not bubble** — listen on the sheet itself; the `glk-close` of a popover inside no longer reaches a sheet's listener. A popover inside takes Escape first (marked handled), so the sheet stays open until the next Escape.
+
+```html
+<glk-sheet title="Version from 09:41" dismissible close-label="Close">
+  <span slot="eyebrow">Restore</span>
+  <span slot="leading" class="chip">…</span>
+  <glk-badge slot="trailing">1× in your app</glk-badge>
+  <p>Restoring replaces the current version.</p>
+</glk-sheet>
+
+<!-- A side panel beside a list that stays usable -->
+<glk-sheet title="Edit entry" placement="end" modeless dismissible>…</glk-sheet>
+```
+
+**Do not** keep a hidden `title` only for the dialog's name (use `label`), draw a head of your own in the body, or move the sheet to the side with adopted stylesheets.
 
 ---
 
@@ -2149,7 +2187,7 @@ Key points:
 | `<glk-tab-item>` | — | `active` (`aria-current="page"` since 1.32.0) | `glk-tab-select` (cancelable since 1.28.0; `glk-tab-change` `{ tab }` follows on the bar) | — |
 | `<glk-tab-accessory>` | — | `disabled` | `glk-click` | — |
 | `<glk-input>` | `.value` | `value` | `glk-input`, `glk-change` (+ native `input`, `change`) | `{ value }` |
-| `<glk-textarea>` | `.value` | `value` | `glk-input`, `glk-change` | `{ value }` |
+| `<glk-textarea>` | `.value` | `value` | `glk-input`, `glk-change` (since 1.35.0) | `{ value }` |
 | `<glk-select>` | `.value` | `value` | `glk-change` | `{ value }` |
 | `<glk-search>` | `.value` | `value` | `glk-input`, `glk-change` | `{ value }` |
 | `<glk-toggle>` | `.checked` | `checked` | `glk-change` (+ native `change`) | `{ checked }` |
@@ -2174,7 +2212,7 @@ Key points:
 | `<glk-badge>` | `.selected` | `interactive`, `selected` | `glk-click` (only when interactive) | — |
 | `<glk-toast>` | `.show()` | `visible` | `glk-action`, `glk-close`, `glk-dismiss` | `{ action, label }`, —, — |
 
-All `glk-*` events bubble and are `composed: true`, so they pierce shadow boundaries naturally.
+All `glk-*` events bubble and are `composed: true`, so they pierce shadow boundaries naturally — **except the state events `glk-open`, `glk-close` and `glk-closed`** of popover, menu, modal, sheet and toast (since 1.35.0): like the native `close` and `toggle` they stay at the element, so a container around it never takes them for its own. Listen on the element itself (a capture listener in the same tree still sees them).
 
 ---
 
@@ -2251,15 +2289,15 @@ All `glk-*` events bubble and are `composed: true`, so they pierce shadow bounda
 | `<glk-avatar>` | Content | `size`, `src` | default (initials) | — |
 | `<glk-badge>` | Content | `variant`, `interactive`, `selected`, `size` | default | `glk-click` (only when interactive) |
 | `<glk-empty>` | Content | `title`, `text` | default (icon), `action` | — |
-| `<glk-segmented>` | Forms | `options`, `value`, `full`, `overflow`, `droplet`, `icon-only`, `label`, `name` | `icon-<value>` | `glk-change` |
-| `<glk-steps>` | Navigation | `steps`, `current`, `label` | — | — |
-| `<glk-sheet>` | Feedback | `open`, `inline`, `title` | default, `actions` | `glk-open`, `glk-close`, `glk-closed` |
+| `<glk-segmented>` | Forms | `options`, `value`, `full`, `overflow`, `droplet`, `icon-only`, `icon-style`, `label`, `name` | `icon-<value>` | `glk-change` |
+| `<glk-steps>` | Navigation | `steps` (JSON with states since 1.35.0), `current`, `label`, `done-label` | — | — |
+| `<glk-sheet>` | Feedback | `open`, `inline`, `title`, `label`, `dismissible`, `close-label`, `placement`, `modeless` | default, `actions`, `eyebrow`, `leading`, `trailing` | `glk-open`, `glk-close`, `glk-closed` (not bubbling since 1.35.0) |
 | `<glk-date-strip>` | Navigation | `start`, `days`, `value`, `today`, `marks`, `locale`, `label` | — | `glk-change` |
 | `<glk-calendar>` | Forms | `month`, `value`, `today`, `min`, `max`, `marks`, `locale`, `week-start`, `label`, `name` | — | `glk-change`, `glk-month` |
 | `<glk-image-picker>` | Forms | `src`, `label`, `hint`, `round`, `max`, `type`, `quality`, `accept` | — | `glk-change`, `glk-error` |
 | `<glk-card>` | Content | `glow` | default | — |
 | `<glk-divider>` | Content | — | — | — |
-| `<glk-status>` | Content | `message` | — | — |
+| `<glk-status>` | Content | `message` | default (message, since 1.35.0), `icon` | — |
 | `<glk-title>` | Content | — | default | — |
 | `<glk-button>` | Buttons | `variant`, `size`, `disabled`, `type` | default | `glk-click` |
 | `<glk-checkbox>` | Forms | `label`, `checked`, `disabled`, `name`, `value`, `required`, `label-hidden`, `label-position` | — | `glk-change` |
@@ -2282,7 +2320,7 @@ All `glk-*` events bubble and are `composed: true`, so they pierce shadow bounda
 | `<glk-accordion>` | Containers | — | default | — |
 | `<glk-accordion-item>` | Containers | `title`, `open` | default | `glk-toggle` |
 | `<glk-list>` | Containers | `header`, `flush`, `bare`, `grid`, `sortable`, `group`, `handle` | default | `glk-sort-start`, `glk-sort-over`, `glk-sort`, `glk-sort-cancel` (when sortable) |
-| `<glk-list-item>` | Containers | `title`, `subtitle`, `interactive`, `center`, `leading-lg`, `wrap`, `detail`, `variant`, `container`, `no-drag` | `leading`, `trailing`, `handle` | `glk-click` (when interactive) |
+| `<glk-list-item>` | Containers | `title`, `subtitle`, `interactive`, `selected`, `center`, `leading-lg`, `wrap`, `detail`, `variant`, `container`, `no-drag`, `handle` | `leading`, `trailing`, `handle`, `title-trailing`, `extra` | `glk-click` (when interactive) |
 | `<glk-tree>` | Containers | `label`, `selection`, `sortable`, `group` | default (`<glk-tree-item>`) | `glk-tree-toggle`, `glk-tree-select`, `glk-tree-load`, `glk-sort-*` |
 | `<glk-tree-item>` | Containers | `label`, `value`, `expanded`, `selected`, `disabled`, `has-children`, `load-error`, `container`, `no-drag` | default (child items), `icon`, `trailing`, `handle` | — |
 | `<glk-table>` | Containers | `sort`, `direction`, `sticky-header`, `list-below` | default (`<table>`), `empty` | `glk-table-sort` (cancelable) |

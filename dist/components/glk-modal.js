@@ -172,7 +172,7 @@ class GlkModal extends GlkElement {
 
   /** The dialog has closed: glk-closed, and the promises of close() settle. */
   _closed() {
-    this.emit('glk-closed');
+    this.emit('glk-closed', null, { bubbles: false });
     this._settleClosing();
   }
 
@@ -203,7 +203,7 @@ class GlkModal extends GlkElement {
       this._scrollLock.hold();
       // The actions are copies in the shadow root; the originals are not shown.
       (this._footer.querySelector('[autofocus]') || this.querySelector('[autofocus]'))?.focus();
-      this.emit('glk-open');
+      this.emit('glk-open', null, { bubbles: false });
     }
     void dialog.offsetHeight; // reflow, so the fade starts from the closed state
     requestAnimationFrame(() => {
@@ -232,7 +232,7 @@ class GlkModal extends GlkElement {
   _dismiss() {
     if (!this.open) return;               // Escape again while it fades out
     this.removeAttribute('open');
-    this.emit('glk-close');
+    this.emit('glk-close', null, { bubbles: false });
   }
 
   show() { this.setAttribute('open', ''); }

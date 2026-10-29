@@ -541,13 +541,40 @@ class GlkFormElement extends GlkElement {
   _labelEndPlace(group) {
     const place = this.createElement('span', ['glass-input-group__label-end'], { part: 'label-end', hidden: '' });
     const slot = this.createElement('slot', [], { name: 'label-end' });
-    slot.addEventListener('slotchange', () => {
-      const on = slot.assignedNodes().length > 0;
-      place.hidden = !on;
-      group.classList.toggle('glass-input-group--label-end', on);
-    });
-    place.appendChild(slot);
+    // The counter of glk-input and glk-textarea (since 1.37.0) shares the
+    // place, after a slotted link: GlassKit's .glass-input-group__counter.
+    const counter = this.createElement('span', ['glass-input-group__counter'], { id: 'counter', part: 'counter', hidden: '' });
+    this._labelEnd = { place, slot, counter, group };
+    slot.addEventListener('slotchange', () => this._applyLabelEnd());
+    place.append(slot, counter);
     return place;
+  }
+
+  /** The label-end place shows while it holds a link or a counter. */
+  _applyLabelEnd() {
+    const { place, slot, counter, group } = this._labelEnd;
+    const on = slot.assignedNodes().length > 0 || !counter.hidden;
+    place.hidden = !on;
+    group.classList.toggle('glass-input-group--label-end', on);
+  }
+
+  /**
+   * counter (since 1.37.0): the length of the field's value, with its
+   * maxlength "12/145", in the error colour past it — a value set by
+   * script may be longer, the limit only stops typing. Part of the field's
+   * description, so a screen reader reads it with the field.
+   */
+  _applyCounter(field) {
+    const counter = this._labelEnd?.counter;
+    if (!counter || !field) return;
+    const on = this.getBoolAttr('counter');
+    counter.hidden = !on;
+    if (on) {
+      const length = field.value.length, max = field.maxLength;
+      counter.textContent = max >= 0 ? `${length}/${max}` : String(length);
+      counter.classList.toggle('is-over', max >= 0 && length > max);
+    }
+    this._applyLabelEnd();
   }
 
   attributeChangedCallback(name, oldValue, newValue) {

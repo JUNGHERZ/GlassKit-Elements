@@ -7,6 +7,52 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.37.0] – 2026-10-29
+
+Versions stay aligned with GlassKit at 1.37.0, which this release is built against (peer dependency `>=1.37.0`).
+
+### Added
+
+- **Avatars that fit a list row: GlassKit 1.37.0's sizing in the leading box, and parts `avatar` and `image` on `<glk-avatar>`.** A contact list shows a 40px avatar per row. In the 40px box of `leading-lg` a 44px avatar was cut and a 32px one looked lost, and there was no token or part for the size.
+  - An avatar in the leading box of a `<glk-list-item>` takes the box's size, whatever its `size`: 40px with `leading-lg`, and 28px without.
+  - GlassKit's `--gl-avatar-size` sets any other size, on the element or around it, and `--gl-avatar-font-size` the initials' size.
+  - The issue suggested a step `md` with 40px. Until now `md` was not a size and gave the default 44px, and the AI reference called it the default. A 40px `md` would have shrunk avatars that use it, so `md` stays 44px, and the box sets the size instead.
+  - The part `leading` on the list item came with 1.36.0.
+
+  ([#58](https://github.com/JUNGHERZ/GlassKit-Elements/issues/58))
+- **A placeholder for `<glk-select>`: `placeholder`.** A record without a choice yet showed the first option as chosen, and picking it fired no `glk-change`, so the page could not tell "nothing chosen" from "the first one".
+  - The attribute puts the native pattern in front of the options, an option with an empty value, `disabled` and `hidden`. It is shown while no value matches an option, in GlassKit 1.37.0's placeholder colour.
+  - It cannot be picked, `required` keeps the form from submitting while it shows, and the form gets no value for it, as from a native select.
+  - With a placeholder the empty value means "nothing chosen", unless an option of the page carries it.
+
+  ([#59](https://github.com/JUNGHERZ/GlassKit-Elements/issues/59))
+- **The field attributes and a counter for `<glk-textarea>`.**
+  - `minlength`, `maxlength`, `autocomplete` and `inputmode` reach the inner field, as on `<glk-input>`. A text area took any number of characters.
+  - `counter` shows the value's length at the end of the label row: "48/145" with `maxlength`, the length alone without. Past the limit, as a value set by script may be, it turns to the error colour.
+  - The counter is part of the field's description, stands after a link in `slot="label-end"`, and is GlassKit 1.37.0's `.glass-input-group__counter`, with the part `counter`.
+  - `<glk-input>` has `counter` too.
+
+  ([#60](https://github.com/JUNGHERZ/GlassKit-Elements/issues/60))
+
+Measured in Chromium 153, WebKit 26.6 and Firefox 151, 1.36.0 against 1.37.0:
+- **Avatar:**
+  - In a `leading-lg` box an avatar is 40px with 15px initials, with `size="sm"`, `md` or none (before: 44px cut to 40, or 32px).
+  - In a plain leading box it is 28px with 13px initials (before: 44px).
+  - With `--gl-avatar-size: 44px` on the avatar itself it stays 44px.
+  - Outside lists `sm`, `md` and none give 32, 44 and 44px as before, and `--gl-avatar-size: 36px` on a container gives 36px.
+- **Select:**
+  - With `placeholder` and `value=""`, a value that names no option, or no value at all, the field shows the placeholder (disabled, hidden), its value is "", and its text is in the placeholder colour. Before, it showed "Facebook" with the value "a".
+  - With `required` the field reports `valueMissing`, and the form data hold no entry for it (before: "a").
+  - A value set as a property before the options arrive reads back and is chosen once they are there.
+  - An option of the page with the empty value still wins over the placeholder.
+- **Text area:**
+  - With `maxlength="10"` twenty typed characters leave ten in the field (before: twenty), and `minlength`, `autocomplete` and `inputmode` are on the inner field.
+  - The counter shows "10/10", and "12/10" in the error colour after a value of twelve set by script.
+  - On `<glk-input>` it shows "0/12" after a slotted link. The counter is in the field's `aria-describedby`.
+- **Pages:** docs, showcase and landing pages render as in 1.36.0.
+
+---
+
 ## [1.36.0] – 2026-10-29
 
 Versions stay aligned with GlassKit at 1.36.0, which this release is built against (peer dependency `>=1.36.0`).
@@ -1403,6 +1449,7 @@ Starting with this release, GlassKit Elements version numbers are aligned with G
 ---
 
 [Unreleased]: https://github.com/JUNGHERZ/GlassKit-Elements/compare/v1.33.1...HEAD
+[1.37.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.37.0
 [1.36.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.36.0
 [1.35.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.35.0
 [1.34.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.34.0

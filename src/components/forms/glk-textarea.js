@@ -14,10 +14,17 @@ import { GlkFormElement, fieldLabelSheet, applyControlName, CONTROL_NAME_ATTRS }
 // retargeted. Until 1.36.0 the element sent one of its own on top, and a
 // listener on the host got every key twice. One that is not composed is
 // still handed on.
+//
+// The field's limits and hints are handed down as on <glk-input> (since
+// 1.37.0): minlength, maxlength, autocomplete and inputmode — before, a
+// text area took any number of characters. counter shows the length at the
+// end of the label row, "12/145" with maxlength.
+
+const FORWARDED = ['minlength', 'maxlength', 'autocomplete', 'inputmode'];
 
 class GlkTextarea extends GlkFormElement {
   static get observedAttributes() {
-    return ['label', 'placeholder', 'rows', 'readonly', 'name', 'value', 'required', ...CONTROL_NAME_ATTRS];
+    return ['label', 'placeholder', 'rows', 'readonly', 'name', 'value', 'required', 'counter', ...FORWARDED, ...CONTROL_NAME_ATTRS];
   }
 
   static get hostStyles() { return fieldLabelSheet; }
@@ -46,6 +53,7 @@ class GlkTextarea extends GlkFormElement {
 
     if (this.getBoolAttr('readonly')) this._textarea.readOnly = true;
     if (this.getBoolAttr('required')) this._textarea.required = true;
+    for (const attr of FORWARDED) this._forward(attr);
 
     group.appendChild(this._labelEl);
     group.appendChild(this._textarea);
@@ -54,6 +62,7 @@ class GlkTextarea extends GlkFormElement {
 
     this._wrapper.appendChild(group);
     applyControlName(this, this._textarea);
+    this._applyDescription();
     this._syncFormValue();
   }
 
@@ -121,6 +130,15 @@ class GlkTextarea extends GlkFormElement {
       case 'aria-labelledby':
         applyControlName(this, this._textarea);
         break;
+      case 'counter':
+        this._applyDescription();
+        this._applyCounter(this._textarea);
+        break;
+      default:
+        if (FORWARDED.includes(name)) {
+          this._forward(name);
+          this._applyCounter(this._textarea);
+        }
     }
   }
 
@@ -128,8 +146,21 @@ class GlkTextarea extends GlkFormElement {
 
   get _validityField() { return this._textarea; }
 
+  _forward(attr) {
+    const value = this.getAttribute(attr);
+    if (value === null) this._textarea.removeAttribute(attr);
+    else this._textarea.setAttribute(attr, value);
+  }
+
+  /** The counter describes the field while it shows. */
+  _applyDescription() {
+    if (this.getBoolAttr('counter')) this._textarea.setAttribute('aria-describedby', 'counter');
+    else this._textarea.removeAttribute('aria-describedby');
+  }
+
   _syncFormValue() {
     this.setFormValue(this._textarea.value);
+    this._applyCounter(this._textarea);
   }
 
   resetValue() {

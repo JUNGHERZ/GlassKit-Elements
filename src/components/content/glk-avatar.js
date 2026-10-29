@@ -1,5 +1,11 @@
 import { GlkElement } from '../../base.js';
 
+// size: sm (32px), lg (56px); 44px without, or with md. GlassKit's
+// --gl-avatar-size (since 1.37.0) sets any other size, on the element or
+// around it, and --gl-avatar-font-size the initials' size with it; in the
+// leading box of a <glk-list-item> the avatar takes the box's size, 28px,
+// 40px with leading-lg. Parts (since 1.37.0): avatar, the circle, and
+// image, the picture in it.
 const SIZES = ['sm', 'lg'];
 
 class GlkAvatar extends GlkElement {
@@ -9,7 +15,7 @@ class GlkAvatar extends GlkElement {
   }
 
   render() {
-    this._avatar = this.createElement('div', this._computeClasses());
+    this._avatar = this.createElement('div', this._computeClasses(), { part: 'avatar' });
     this._updateContent();
     this._wrapper.appendChild(this._avatar);
   }
@@ -29,7 +35,8 @@ class GlkAvatar extends GlkElement {
     if (src) {
       const img = this.createElement('img', [], {
         src,
-        alt: this.getAttribute('alt') || ''
+        alt: this.getAttribute('alt') || '',
+        part: 'image'
       });
       this._avatar.appendChild(img);
     } else {

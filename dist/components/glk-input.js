@@ -40,10 +40,13 @@ affixSheet.replaceSync(`
 // retargeted. Until 1.36.0 the element sent one of its own on top, and a
 // listener on the host got every key twice. One that is not composed is
 // still handed on.
+//
+// counter (since 1.37.0) shows the value's length at the end of the label
+// row, "12/58" with maxlength, as on <glk-textarea>.
 
 class GlkInput extends GlkFormElement {
   static get observedAttributes() {
-    return ['label', 'type', 'placeholder', 'error', 'hint', 'readonly', 'name', 'value', 'required', ...FORWARDED, ...CONTROL_NAME_ATTRS];
+    return ['label', 'type', 'placeholder', 'error', 'hint', 'readonly', 'name', 'value', 'required', 'counter', ...FORWARDED, ...CONTROL_NAME_ATTRS];
   }
 
   static get hostStyles() { return [affixSheet, fieldLabelSheet]; }
@@ -185,8 +188,15 @@ class GlkInput extends GlkFormElement {
       case 'aria-labelledby':
         applyControlName(this, this._input);
         break;
+      case 'counter':
+        this._applyDescription();
+        this._applyCounter(this._input);
+        break;
       default:
-        if (FORWARDED.includes(name)) this._forward(name);
+        if (FORWARDED.includes(name)) {
+          this._forward(name);
+          if (name === 'maxlength') this._applyCounter(this._input);
+        }
     }
   }
 
@@ -212,6 +222,7 @@ class GlkInput extends GlkFormElement {
   _applyDescription() {
     const ids = [this._prefix, this._suffix].filter(affix => affix && !affix.hidden).map(affix => affix.id);
     if (this.getAttribute('hint')) ids.push('hint');
+    if (this.getBoolAttr('counter')) ids.push('counter');
     if (ids.length) this._input.setAttribute('aria-describedby', ids.join(' '));
     else this._input.removeAttribute('aria-describedby');
     if (this.getBoolAttr('error')) this._input.setAttribute('aria-invalid', 'true');
@@ -240,6 +251,7 @@ class GlkInput extends GlkFormElement {
 
   _syncFormValue() {
     this.setFormValue(this._input.value);
+    this._applyCounter(this._input);
   }
 
   resetValue() {

@@ -13,10 +13,19 @@ import { GlkFormElement, fieldLabelSheet, applyControlName, CONTROL_NAME_ATTRS }
 // label-hidden, aria-label and aria-labelledby as on <glk-input> (since
 // 1.36.0): the label stays the name out of sight, or the host names the
 // field instead.
+//
+// placeholder (since 1.37.0) is the native pattern: a first option with an
+// empty value, disabled and hidden, chosen while no value matches an
+// option, in GlassKit's placeholder colour. It cannot be picked, required
+// keeps the form from submitting while it shows, and the form gets no
+// value for it, as from a native select. Before, a value that matched no
+// option showed the first real one as chosen, and picking it changed
+// nothing. With a placeholder the empty value means "nothing chosen",
+// unless an option of the page carries it.
 
 class GlkSelect extends GlkFormElement {
   static get observedAttributes() {
-    return ['label', 'name', 'value', 'required', ...CONTROL_NAME_ATTRS];
+    return ['label', 'name', 'value', 'required', 'placeholder', ...CONTROL_NAME_ATTRS];
   }
 
   static get hostStyles() { return fieldLabelSheet; }
@@ -55,7 +64,7 @@ class GlkSelect extends GlkFormElement {
     // The options are pure data — the clones carry no listeners — so skipping an
     // unchanged rebuild is safe, and it keeps an open dropdown from snapping shut
     // on light-DOM churn elsewhere.
-    const signature = [...this.querySelectorAll('option')].map(o => o.outerHTML).join('');
+    const signature = `${this.getAttribute('placeholder') ?? ''}\n${[...this.querySelectorAll('option')].map(o => o.outerHTML).join('')}`;
     if (signature === this._optionSignature) return;
     this._optionSignature = signature;
 
@@ -68,17 +77,31 @@ class GlkSelect extends GlkFormElement {
 
     // The wanted value first, then the live selection if it survived the
     // rebuild — without that, the selection would jump back to the first entry
-    // every time the list is updated.
-    if (!this._applyValue(this._wanted)) this._applyValue(previous);
+    // every time the list is updated. With neither, the placeholder shows.
+    if (!this._applyValue(this._wanted) && !this._applyValue(previous) && this._placeholderOption) {
+      this._placeholderOption.selected = true;
+    }
     this._syncFormValue();
   }
 
   _moveOptions() {
     this._select.innerHTML = '';
+    const placeholder = this.getAttribute('placeholder');
+    this._placeholderOption = null;
+    if (placeholder !== null) {
+      this._placeholderOption = this.createElement('option', [], { value: '', disabled: '', hidden: '' });
+      this._placeholderOption.textContent = placeholder;
+      this._select.appendChild(this._placeholderOption);
+    }
     const options = this.querySelectorAll('option');
     options.forEach(opt => {
       this._select.appendChild(opt.cloneNode(true));
     });
+  }
+
+  /** The options of the page, the placeholder left out. */
+  get _realOptions() {
+    return [...this._select.options].filter(o => o !== this._placeholderOption);
   }
 
   /**
@@ -88,9 +111,18 @@ class GlkSelect extends GlkFormElement {
    */
   _applyValue(value) {
     if (value === null) return false;
-    if (![...this._select.options].some(o => o.value === value)) return false;
-    this._select.value = value;
-    return true;
+    const option = this._realOptions.find(o => o.value === value);
+    if (option) {
+      option.selected = true;
+      return true;
+    }
+    // With a placeholder the empty value is "nothing chosen" — after an
+    // option of the page that carries it.
+    if (value === '' && this._placeholderOption) {
+      this._placeholderOption.selected = true;
+      return true;
+    }
+    return false;
   }
 
   setupEvents() {
@@ -120,11 +152,14 @@ class GlkSelect extends GlkFormElement {
         break;
       case 'value':
         this._wanted = this.getAttribute('value');
-        this._applyValue(this._wanted);
+        this._showWanted();
         this._syncFormValue();
         break;
       case 'required':
         this._select.required = this.getBoolAttr('required');
+        break;
+      case 'placeholder':
+        this.projectLightDom();
         break;
       case 'aria-label':
       case 'aria-labelledby':
@@ -138,11 +173,13 @@ class GlkSelect extends GlkFormElement {
   get _validityField() { return this._select; }
 
   _syncFormValue() {
-    this.setFormValue(this._select.value);
+    // The placeholder is no value: a native select sends none for it.
+    const placeholder = this._placeholderOption?.selected;
+    this.setFormValue(placeholder ? null : this._select.value);
   }
 
   resetValue() {
-    // Back to what the markup asked for, else the first option.
+    // Back to what the markup asked for, else the placeholder or the first option.
     this._wanted = this.getAttribute('value');
     if (!this._applyValue(this._wanted)) this._select.selectedIndex = 0;
     this._syncFormValue();
@@ -151,14 +188,24 @@ class GlkSelect extends GlkFormElement {
   get value() {
     // Until options are there, the wanted value is the answer: a framework
     // reads back what it has just set.
-    if (!this._select?.options.length) return this._wanted ?? this.getAttribute('value') ?? '';
+    if (!this._select || !this._realOptions.length) return this._wanted ?? this.getAttribute('value') ?? '';
     return this._select.value;
   }
   set value(v) {
     this._wanted = v == null ? '' : String(v);
     if (!this._select) return;        // render() takes it from here
-    this._applyValue(this._wanted);
+    this._showWanted();
     this._syncFormValue();
+  }
+
+  /**
+   * The wanted value, or with a placeholder the placeholder while no option
+   * carries it — without one the selection stays, as before.
+   */
+  _showWanted() {
+    if (!this._applyValue(this._wanted) && this._placeholderOption && this._realOptions.length) {
+      this._placeholderOption.selected = true;
+    }
   }
 
   get labelHidden() { return this.getBoolAttr('label-hidden'); }

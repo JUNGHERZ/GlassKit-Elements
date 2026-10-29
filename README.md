@@ -5,7 +5,7 @@
   <a href="#"><img src="https://img.shields.io/badge/vanilla_JS-no_dependencies-44cc11?style=flat-square" alt="Vanilla JS"></a>
   <a href="#"><img src="https://img.shields.io/badge/components-46-7ec8e3?style=flat-square" alt="46 Components"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="MIT License"></a>
-  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/changelog-v1.36.0-lightgrey?style=flat-square" alt="Changelog"></a>
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/changelog-v1.37.0-lightgrey?style=flat-square" alt="Changelog"></a>
   <a href="https://www.npmjs.com/package/@jungherz-de/glasskit-elements"><img src="https://img.shields.io/badge/npm-%40jungherz--de%2Fglasskit--elements-cb3837?style=flat-square&logo=npm" alt="npm"></a>
 </p>
 
@@ -69,7 +69,7 @@ It is the **app layer** of the GlassKit family — three layers, one design lang
 
 ```html
 <!-- 1. GlassKit CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.36/glasskit.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.37/glasskit.min.css">
 
 <!-- 2. GlassKit Elements -->
 <script src="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"></script>
@@ -107,7 +107,7 @@ The per-component files leave `@jungherz-de/glasskit/glasskit-styles.js` as an e
 <!DOCTYPE html>
 <html data-theme="dark">
 <head>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.36/glasskit.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.37/glasskit.min.css">
   <script src="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"></script>
 </head>
 <body>
@@ -143,7 +143,7 @@ The per-component files leave `@jungherz-de/glasskit/glasskit-styles.js` as an e
 |---|---|---|
 | `<glk-card>` | Glass-effect content card | `glow`, `fill` |
 | `<glk-badge>` | Inline status badge, or a filter chip with `interactive`; a 36px chip to choose with in a form with `size="md"` | `variant` (primary, success, warning, error), `interactive`, `selected`, `size` (sm, md) |
-| `<glk-avatar>` | Circular avatar | `size` (sm, lg), `src` |
+| `<glk-avatar>` | Circular avatar; in a list row's leading box it takes the box's size, 40px with `leading-lg` (since 1.37.0) | `size` (sm, lg), `src` |
 | `<glk-title>` | Styled heading | — |
 | `<glk-divider>` | Horizontal divider | — |
 | `<glk-status>` | Status notice; the message as content with markup since 1.35.0, without the paragraph margins since 1.36.0 | `message` |
@@ -161,9 +161,9 @@ All form components support `name`, `value`, `disabled` and participate in nativ
 
 | Component | Description | Key Attributes |
 |---|---|---|
-| `<glk-input>` | Text input with label & hint; slots `prefix` / `suffix` for an icon, unit or button in the field, `label-end` for a link such as "Forgot password?" in the label row | `label`, `type`, `placeholder`, `hint`, `error`, `required`, `readonly`, `min`, `max`, `step`, `maxlength`, `pattern`, `autocomplete`, `inputmode`, `label-hidden` (since 1.36.0; `aria-label` / `aria-labelledby` name the field) |
-| `<glk-textarea>` | Multi-line text input; slot `label-end`; `glk-change` once a value is done (since 1.35.0) | `label`, `rows`, `placeholder`, `required`, `readonly`, `label-hidden` (since 1.36.0) |
-| `<glk-select>` | Dropdown select; slot `label-end` | `label`, `required`, `label-hidden` (since 1.36.0) (children: `<option>`) |
+| `<glk-input>` | Text input with label & hint; slots `prefix` / `suffix` for an icon, unit or button in the field, `label-end` for a link such as "Forgot password?" in the label row | `label`, `type`, `placeholder`, `hint`, `error`, `required`, `readonly`, `min`, `max`, `step`, `maxlength`, `pattern`, `autocomplete`, `inputmode`, `label-hidden` (since 1.36.0; `aria-label` / `aria-labelledby` name the field), `counter` (since 1.37.0) |
+| `<glk-textarea>` | Multi-line text input; slot `label-end`; `glk-change` once a value is done (since 1.35.0); a character counter (since 1.37.0) | `label`, `rows`, `placeholder`, `required`, `readonly`, `label-hidden` (since 1.36.0), `minlength`, `maxlength`, `autocomplete`, `inputmode`, `counter` (since 1.37.0) |
+| `<glk-select>` | Dropdown select; slot `label-end`; a placeholder while nothing is chosen (since 1.37.0) | `label`, `required`, `label-hidden` (since 1.36.0), `placeholder` (since 1.37.0) (children: `<option>`) |
 | `<glk-search>` | Search input with icon | `placeholder`, `label` (accessible name) |
 | `<glk-toggle>` | Switch toggle (`role="switch"` on its native checkbox) | `label`, `checked`, `disabled`, `required`, `label-hidden`, `label-position` (since 1.33.1; `aria-label` / `aria-labelledby` name the switch) |
 | `<glk-checkbox>` | Checkbox | `label`, `checked`, `disabled`, `required`, `label-hidden`, `label-position` (since 1.33.1) |

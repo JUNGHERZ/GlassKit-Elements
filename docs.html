@@ -20,7 +20,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="GlassKit Elements — Documentation">
   <meta name="twitter:description" content="Complete documentation for all 46 GlassKit Elements web components with live examples.">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.36/glasskit.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.37/glasskit.min.css">
   <script src="/dist/glasskit-elements.min.js"></script>
   <style>
     html { scroll-behavior: smooth; }
@@ -268,7 +268,7 @@
     <aside class="docs-sidebar">
       <div class="docs-sidebar__title">&#129482; <a href="/">GlassKit Elements</a></div>
       <div class="docs-sidebar__subtitle">Web Components for GlassKit CSS.</div>
-      <div class="docs-sidebar__version">v1.36.0 &ndash; Jungherz GmbH</div>
+      <div class="docs-sidebar__version">v1.37.0 &ndash; Jungherz GmbH</div>
 
       <div class="docs-sidebar__group">
         <div class="docs-sidebar__group-title">Basics</div>
@@ -360,7 +360,7 @@
         <h1>GlassKit Elements</h1>
         <p>Complete reference for all 46 web components &ndash; built by Jungherz GmbH. Vanilla JS, Shadow DOM, native form participation.</p>
         <div class="docs-hero__badges">
-          <span class="docs-hero__badge">v1.36.0</span>
+          <span class="docs-hero__badge">v1.37.0</span>
           <span class="docs-hero__badge">Shadow DOM</span>
           <span class="docs-hero__badge">46 Components</span>
           <span class="docs-hero__badge">Vanilla JS</span>
@@ -373,7 +373,7 @@
 
         <h3>CDN (quickest)</h3>
         <div class="docs-code"><span class="cmt">&lt;!-- 1. GlassKit CSS --&gt;</span>
-<span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span> <span class="attr">href</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.36/glasskit.min.css"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span> <span class="attr">href</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.37/glasskit.min.css"</span><span class="tag">&gt;</span>
 
 <span class="cmt">&lt;!-- 2. GlassKit Elements --&gt;</span>
 <span class="tag">&lt;script</span> <span class="attr">src</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"</span><span class="tag">&gt;&lt;/script&gt;</span></div>
@@ -536,9 +536,21 @@ addEventListener(<span class="val">'afterprint'</span>, () =&gt; {
 <span class="tag">&lt;glk-avatar</span> <span class="attr">src</span>=<span class="val">"photo.jpg"</span><span class="tag">&gt;&lt;/glk-avatar&gt;</span></div>
           <table class="docs-table">
             <tr><th>Attribute</th><th>Type</th><th>Values</th></tr>
-            <tr><td><code>size</code></td><td>String</td><td><code>sm</code> | (default) | <code>lg</code></td></tr>
+            <tr><td><code>size</code></td><td>String</td><td><code>sm</code> (32&nbsp;px) | (default, also <code>md</code>, 44&nbsp;px) | <code>lg</code> (56&nbsp;px)</td></tr>
             <tr><td><code>src</code></td><td>String</td><td>Image URL</td></tr>
           </table>
+          <p>Since 1.37.0 an avatar in the leading box of a <code>&lt;glk-list-item&gt;</code> takes the box&rsquo;s size: 40&nbsp;px with <code>leading-lg</code>, the avatar of a contact list, and 28&nbsp;px without. A 44&nbsp;px one was cut by the box, a 32&nbsp;px one looked lost in it. GlassKit&rsquo;s <code>--gl-avatar-size</code> sets any other size, on the element or a container around it, and <code>--gl-avatar-font-size</code> the initials&rsquo; size with it; on the avatar itself it wins over the box. <strong>Parts</strong> (since 1.37.0): <code>avatar</code>, the circle, and <code>image</code>, the picture in it.</p>
+          <div class="docs-preview">
+            <glk-list aria-label="Contacts">
+              <glk-list-item title="Lena Hoffmann" subtitle="lena@example.com" leading-lg><glk-avatar slot="leading">LH</glk-avatar></glk-list-item>
+              <glk-list-item title="Tom Berger" subtitle="tom@example.com" leading-lg><glk-avatar slot="leading">TB</glk-avatar></glk-list-item>
+            </glk-list>
+          </div>
+          <div class="docs-code"><span class="tag">&lt;glk-list-item</span> <span class="attr">title</span>=<span class="val">"Lena Hoffmann"</span> <span class="attr">leading-lg</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;glk-avatar</span> <span class="attr">slot</span>=<span class="val">"leading"</span><span class="tag">&gt;</span>LH<span class="tag">&lt;/glk-avatar&gt;</span>
+<span class="tag">&lt;/glk-list-item&gt;</span>
+
+<span class="cls">.contacts</span> { <span class="attr">--gl-avatar-size</span>: <span class="val">36px</span>; <span class="attr">--gl-avatar-font-size</span>: <span class="val">14px</span>; }</div>
         </div>
 
         <div class="docs-component" id="glk-card">
@@ -660,6 +672,7 @@ addEventListener(<span class="val">'afterprint'</span>, () =&gt; {
             <tr><td><code>autocomplete</code>, <code>inputmode</code></td><td>String</td><td>Autofill and on-screen keyboard, passed to the inner field (since 1.17.0)</td></tr>
             <tr><td><code>label-hidden</code></td><td>Boolean</td><td>The label stays the field&rsquo;s name, out of sight (since 1.36.0) &mdash; <a href="#glk-input-name">below</a></td></tr>
             <tr><td><code>aria-label</code>, <code>aria-labelledby</code></td><td>String</td><td>Name the field from the host instead of its label (since 1.36.0)</td></tr>
+            <tr><td><code>counter</code></td><td>Boolean</td><td>The value&rsquo;s length at the end of the label row, &ldquo;12/58&rdquo; with <code>maxlength</code> (since 1.37.0) &mdash; as on <a href="#glk-textarea-counter"><code>&lt;glk-textarea&gt;</code></a></td></tr>
           </table>
           <p><strong>Events:</strong> <code>glk-input</code>, <code>glk-change</code></p>
           <p><strong>Slots</strong> (since 1.22.0): <code>prefix</code> and <code>suffix</code> put an icon, a currency, a unit or a button inside the field&rsquo;s box, at its start and end &mdash; right to left they swap sides. Each shows only while something is slotted into it; its width is measured and the text keeps clear of it. A click on slotted text, an icon or a disabled control goes through to the field; enabled controls, <code>&lt;glk-button&gt;</code> and <code>&lt;glk-select&gt;</code> included, links and elements with <code>tabindex</code> take their own (since 1.22.2 &mdash; before, every slotted element took the click). Slot the control itself: one wrapped in a slotted element needs <code>pointer-events: auto</code> from the page. A container locked with <code>pointer-events: none</code> does not hold a control; lock it with <code>inert</code>, or disable the control. Their text is read with the field as its description. The box is the part <code>box</code>, the affixes <code>prefix</code> and <code>suffix</code>.</p>
@@ -695,8 +708,12 @@ addEventListener(<span class="val">'afterprint'</span>, () =&gt; {
           <h3><code>&lt;glk-textarea&gt;</code></h3>
           <div class="docs-preview"><glk-textarea label="Message" placeholder="Type here..." rows="3"></glk-textarea></div>
           <div class="docs-code"><span class="tag">&lt;glk-textarea</span> <span class="attr">label</span>=<span class="val">"Message"</span> <span class="attr">rows</span>=<span class="val">"4"</span><span class="tag">&gt;&lt;/glk-textarea&gt;</span></div>
-          <p>Attributes: <code>label</code>, <code>rows</code>, <code>placeholder</code>, <code>required</code>, <code>readonly</code> (since 1.22.0), <code>name</code>, <code>value</code>, <code>disabled</code>. The label names the field. <code>slot="label-end"</code> and the parts <code>label</code> and <code>label-end</code> as on <a href="#glk-input-label-end"><code>&lt;glk-input&gt;</code></a> (since 1.33.0). Since 1.36.0 <code>label-hidden</code>, <code>aria-label</code> and <code>aria-labelledby</code> as on <a href="#glk-input-name"><code>&lt;glk-input&gt;</code></a>.</p>
+          <p>Attributes: <code>label</code>, <code>rows</code>, <code>placeholder</code>, <code>required</code>, <code>readonly</code> (since 1.22.0), <code>name</code>, <code>value</code>, <code>disabled</code>. The label names the field. <code>slot="label-end"</code> and the parts <code>label</code> and <code>label-end</code> as on <a href="#glk-input-label-end"><code>&lt;glk-input&gt;</code></a> (since 1.33.0). Since 1.36.0 <code>label-hidden</code>, <code>aria-label</code> and <code>aria-labelledby</code> as on <a href="#glk-input-name"><code>&lt;glk-input&gt;</code></a>. Since 1.37.0 <code>minlength</code>, <code>maxlength</code>, <code>autocomplete</code> and <code>inputmode</code> reach the field, as on <code>&lt;glk-input&gt;</code> &mdash; before, a text area took any number of characters &mdash;, and <code>counter</code> counts its characters (<a href="#glk-textarea-counter">below</a>).</p>
           <p><strong>Events:</strong> <code>glk-input</code> <code>{ value }</code> on every key; since 1.35.0 <code>glk-change</code> <code>{ value }</code> once a value is done &mdash; on leaving the field with a changed value, as on <code>&lt;glk-input&gt;</code>, and on Ctrl+Enter or Cmd+Enter, where Enter alone breaks the line. Once for each value: a change reported by the keys is not reported again on leaving. A native <code>change</code> goes out with it.</p>
+          <p id="glk-textarea-counter"><strong>A character counter</strong> (since 1.37.0): <code>counter</code> shows the length of the value at the end of the label row &mdash; &ldquo;48/145&rdquo; with <code>maxlength</code>, the length alone without &mdash;, in GlassKit&rsquo;s <code>.glass-input-group__counter</code>. Past the limit, as a value set by script may be, it turns to the error colour. It is part of the field&rsquo;s description, so a screen reader reads it with the field, and it stands after a link in <code>slot="label-end"</code>. <code>&lt;glk-input&gt;</code> has it too. <strong>Part:</strong> <code>counter</code>.</p>
+          <div class="docs-preview"><glk-textarea label="Meta description" maxlength="145" rows="3" counter value="Opening hours, the team and the way to the shelter."></glk-textarea></div>
+          <div class="docs-code"><span class="tag">&lt;glk-textarea</span> <span class="attr">label</span>=<span class="val">"Meta description"</span> <span class="attr">maxlength</span>=<span class="val">"145"</span> <span class="attr">counter</span><span class="tag">&gt;&lt;/glk-textarea&gt;</span>
+<span class="tag">&lt;glk-input</span> <span class="attr">label</span>=<span class="val">"Meta title"</span> <span class="attr">maxlength</span>=<span class="val">"58"</span> <span class="attr">counter</span><span class="tag">&gt;&lt;/glk-input&gt;</span></div>
         </div>
 
         <div class="docs-component" id="glk-select">
@@ -713,6 +730,14 @@ addEventListener(<span class="val">'afterprint'</span>, () =&gt; {
   <span class="tag">&lt;option</span> <span class="attr">value</span>=<span class="val">"pro"</span><span class="tag">&gt;</span>Pro<span class="tag">&lt;/option&gt;</span>
 <span class="tag">&lt;/glk-select&gt;</span></div>
           <p>Children: native <code>&lt;option&gt;</code> elements. With <code>required</code> and an empty first option (<code>value=""</code>) the form does not submit until a choice is made (since 1.20.0). The label names the field. A <code>value</code> &mdash; attribute or property &mdash; that names no option yet is kept and selected once its option arrives, until the user picks another (since 1.22.0; before, a value set as a property before the options were copied was lost). A form reset returns to the <code>value</code> attribute. <code>slot="label-end"</code> and the parts <code>label</code> and <code>label-end</code> as on <a href="#glk-input-label-end"><code>&lt;glk-input&gt;</code></a> (since 1.33.0). Since 1.36.0 <code>label-hidden</code>, <code>aria-label</code> and <code>aria-labelledby</code> as on <a href="#glk-input-name"><code>&lt;glk-input&gt;</code></a>.</p>
+          <p id="glk-select-placeholder"><strong>A placeholder</strong> (since 1.37.0): <code>placeholder</code> puts the native pattern in front of the options &mdash; an option with an empty value, <code>disabled</code> and <code>hidden</code> &mdash; and shows it in GlassKit&rsquo;s placeholder colour while no value matches an option: a record without a choice yet, <code>value=""</code>, a value that names no option. It cannot be picked, <code>required</code> keeps the form from submitting while it shows, and the form gets no value for it, as from a native select. Before, the first option showed as chosen, and picking it changed nothing, so the page could not tell &ldquo;nothing chosen&rdquo; from &ldquo;the first one&rdquo;. With a placeholder the empty value means &ldquo;nothing chosen&rdquo;, unless an option of the page carries it.</p>
+          <div class="docs-preview">
+            <glk-select label="Kind" placeholder="Choose a kind…" value=""><option value="facebook">Facebook</option><option value="instagram">Instagram</option></glk-select>
+          </div>
+          <div class="docs-code"><span class="tag">&lt;glk-select</span> <span class="attr">label</span>=<span class="val">"Kind"</span> <span class="attr">placeholder</span>=<span class="val">"Choose a kind…"</span> <span class="attr">value</span>=<span class="val">""</span> <span class="attr">required</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;option</span> <span class="attr">value</span>=<span class="val">"facebook"</span><span class="tag">&gt;</span>Facebook<span class="tag">&lt;/option&gt;</span>
+  <span class="tag">&lt;option</span> <span class="attr">value</span>=<span class="val">"instagram"</span><span class="tag">&gt;</span>Instagram<span class="tag">&lt;/option&gt;</span>
+<span class="tag">&lt;/glk-select&gt;</span></div>
         </div>
 
         <div class="docs-component" id="glk-search">

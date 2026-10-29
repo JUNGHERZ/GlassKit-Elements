@@ -1,6 +1,6 @@
 ---
 name: glasskit-elements
-description: GlassKit Elements is a vanilla-JS Web Components library (v1.36.0) wrapping GlassKit CSS v1.36.0. It provides 46 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
+description: GlassKit Elements is a vanilla-JS Web Components library (v1.37.0) wrapping GlassKit CSS v1.37.0. It provides 46 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
 ---
 
 # GlassKit Elements – AI Component Reference
@@ -13,6 +13,8 @@ description: GlassKit Elements is a vanilla-JS Web Components library (v1.36.0) 
 > **New in 1.28.0 — icons of any kind, and a tab that keeps the current one.** `<glk-tab-item>` takes an icon that is not inline SVG in `slot="icon"` — Material Icons, an `<img>`, a custom element — and it follows every state; `<glk-segmented>` takes one per option in `slot="icon-<value>"` and shows them alone with `icon-only`. `glk-tab-select` is cancelable, for an item that opens a drawer or a link. **Where a project styles tab icons through `hostStyles`, or puts `active` back after `glk-tab-select`, replace that** (3.3, 3.25).
 
 > **New in 1.32.0 — one tab bar for every edge, ten elements, panels in the top layer.** `<glk-tab-bar>` leaves the bottom edge: `orientation="vertical"` makes it a sidebar, `dock="start"` or `"end"` fixes it to that side of the viewport — where the thumb rests on a phone held open, or a foldable that moved its system controls to a side — `rail` shows the icons alone with the labels as tooltips, `placement="top"` lays it out for the top of a page, and `<glk-tab-dock orientation="vertical">` stands the floating bar upright. One set of items serves every layout, and the drop runs along y in a column. New: `<glk-tooltip>`, `<glk-menu>` with `<glk-menu-item>`, `-separator` and `-group`, `<glk-tree>` with `<glk-tree-item>` (children that load on opening, with errors and a retry), `<glk-breadcrumbs>` with `<glk-breadcrumb>`, `<glk-table>` around a native table, and `sortable` on `<glk-list>` and `<glk-tree>` — drag and drop by mouse, touch and keyboard, onto breadcrumbs too. Lists and trees change single items in place, keeping the focus, and `highlight()` points a changed item out. `<glk-popover>` opens in the top layer, `<glk-modal>` and `<glk-sheet>` emit `glk-closed` once they are gone, interactive list items take the keyboard. **Where a project builds its own sidebar, tooltip, menu, tree, breadcrumbs or table wrapper, or waits for a sheet's slide-out with a timer, replace that** (3.3, 3.19, 3.24, 3.27, 3.32–3.37).
+
+> **New in 1.37.0 — avatars that fit a list row, a placeholder for the select, a character counter.** An avatar in the leading box of a `<glk-list-item>` takes the box's size, 40px with `leading-lg` — a contact list —, GlassKit 1.37.0's `--gl-avatar-size` and `--gl-avatar-font-size` set any other, and `<glk-avatar>` gets the parts `avatar` and `image` (3.4). `<glk-select placeholder>` shows the native placeholder option while no value matches, in the placeholder colour; `required` holds the form while it shows (3.16). `<glk-textarea>` hands `minlength`, `maxlength`, `autocomplete` and `inputmode` to its field (it took any number of characters), and `counter` on `<glk-textarea>` and `<glk-input>` counts characters at the end of the label row (3.17, 3.12). **Where a project draws its own avatar sign for a list, keeps a first option for "nothing chosen", or sets the limit and a counter of its own on the inner text area, drop that.**
 
 > **New in 1.36.0 — names without visible labels, one `input` per key, Escape in the right order.** `label-hidden`, `aria-label` and `aria-labelledby` on `<glk-input>`, `<glk-select>` and `<glk-textarea>` (3.12) — fields in a table under one header. `<glk-button>` hands `aria-label`, `aria-labelledby` and `aria-describedby` to its native button (3.10). **The browser's `input` now reaches `<glk-input>`, `<glk-textarea>`, `<glk-search>` and `<glk-range>` once per key** — each used to send its own on top, so a listener got every key twice. `<glk-range>` emits `glk-change` when the pointer lets go and on every key (3.14). In a modeless `<glk-sheet>` an open popover or menu closes first on Escape, and an open `<glk-menu>` closes on Escape wherever the focus is (3.27, 3.33). `<glk-sheet>` gets `slot="subtitle"` below the title and the part `close-icon`, GlassKit 1.36.0 the close tokens and per-edge side insets (3.27); `<glk-list-item>` the parts `leading`/`trailing` and `--gl-list-leading-width` (3.24); `<glk-status>` loses the paragraph margins (3.8). **Where a project counts `input` events on these elements expecting two per key, draws its own close button or head in a sheet, hides labels with `::part(label)`, or keeps an own Escape guard for popovers in a side sheet, drop that.**
 
@@ -312,8 +314,9 @@ container components are exposed as parts:
 | `<glk-tab-bar>` | `nav` (since 1.32.0), `leading`, `trailing` (since 1.33.0) |
 | `<glk-tab-item>` | `item` — the `<button>`, or the `<a>` with `href` (since 1.32.0) |
 | `<glk-tab-accessory>` | `label` — the visible name with `show-label` (since 1.33.0) |
-| `<glk-input>` | `box`, `prefix`, `suffix` (since 1.22.0), `label`, `label-end` (since 1.33.0) |
-| `<glk-textarea>` / `<glk-select>` | `label`, `label-end` (since 1.33.0) |
+| `<glk-input>` | `box`, `prefix`, `suffix` (since 1.22.0), `label`, `label-end` (since 1.33.0), `counter` (since 1.37.0) |
+| `<glk-textarea>` / `<glk-select>` | `label`, `label-end` (since 1.33.0); `counter` on `<glk-textarea>` (since 1.37.0) |
+| `<glk-avatar>` | `avatar`, `image` (since 1.37.0) |
 | `<glk-badge>` | `badge` — the `<span>`, or the `<button>` with `interactive` (since 1.33.0) |
 | `<glk-toggle>` / `<glk-checkbox>` / `<glk-radio>` | `track` / `box` / `circle`, and `label` (since 1.33.1) |
 | `<glk-progress>` | `label`, `value`, `track`, `fill` (since 1.33.2) |
@@ -616,8 +619,16 @@ Inline avatar circle.
 
 | Attribute | Type | Description |
 |---|---|---|
-| `size` | String | `sm`, `md` (default), `lg` |
+| `size` | String | `sm` (32px), `md` or none (44px, the default), `lg` (56px) |
 | `src` | String | Image URL; if omitted, text content is shown as initials |
+
+**In a list row (since 1.37.0)** an avatar in the leading box of a `<glk-list-item>` takes the box's size, whatever its `size`: 40px with `leading-lg` — a contact list — and 28px without. Before, a 44px avatar was cut by the 40px box and a 32px one looked lost in it. GlassKit 1.37.0's `--gl-avatar-size` sets any other size, on the element or around it, and `--gl-avatar-font-size` the initials' size; on the avatar itself it wins over the box. Parts (since 1.37.0): `avatar` (the circle), `image`. **Do not** draw an own round sign for list rows.
+
+```html
+<glk-list-item title="Lena Hoffmann" subtitle="lena@example.com" leading-lg>
+  <glk-avatar slot="leading">LH</glk-avatar>   <!-- 40px -->
+</glk-list-item>
+```
 
 ---
 
@@ -859,6 +870,7 @@ Text input with label + hint.
 | `autocomplete`, `inputmode` | String | Autofill and on-screen keyboard, passed to the inner field (since 1.17.0) |
 | `label-hidden` | Boolean | The label stays the field's name, out of sight (since 1.36.0) |
 | `aria-label`, `aria-labelledby` | String | Name the field from the host instead of its label (since 1.36.0) |
+| `counter` | Boolean | The value's length at the end of the label row, "12/58" with `maxlength` (since 1.37.0), as on `<glk-textarea>` |
 
 Events: `glk-input` → `{ value }`, `glk-change` → `{ value }`, with a native `change`. The browser's `input` reaches the element once per key (since 1.36.0; before, the element sent one of its own on top and a listener got every key twice). Property: `.value`.
 
@@ -1009,6 +1021,15 @@ Dropdown select. Pass native `<option>` elements as children.
 
 Children: native `<option>` elements, read from the light DOM. `slot="label-end"` and the parts `label` and `label-end` as on `<glk-input>` (since 1.33.0). `label-hidden`, `aria-label` and `aria-labelledby` as on `<glk-input>` (since 1.36.0).
 
+**`placeholder` (since 1.37.0)** puts the native pattern in front of the options — an option with an empty value, `disabled` and `hidden` — and shows it, in GlassKit's placeholder colour, while no value matches an option: a record without a choice yet, `value=""`, a value that names no option. It cannot be picked, `required` keeps the form from submitting while it shows, and the form gets no value for it, as from a native select. Before, the first option showed as chosen and picking it fired no `glk-change`. With a placeholder the empty value means "nothing chosen", unless an option of the page carries it. **Do not** add a first option of your own for "nothing chosen".
+
+```html
+<glk-select label="Kind" placeholder="Choose a kind…" value="" required>
+  <option value="facebook">Facebook</option>
+  <option value="instagram">Instagram</option>
+</glk-select>
+```
+
 Events: `glk-change` → `{ value }`.
 
 **Changing the options later (since 1.12.0).** The options are copied into the
@@ -1057,6 +1078,8 @@ Multi-line text input.
 | `readonly` | Boolean | Read-only, property `.readOnly` (since 1.22.0) |
 | `label-hidden` | Boolean | The label stays the field's name, out of sight (since 1.36.0) |
 | `aria-label`, `aria-labelledby` | String | Name the field from the host instead of its label (since 1.36.0) |
+| `minlength`, `maxlength`, `autocomplete`, `inputmode` | String | Passed to the inner field, as on `<glk-input>` (since 1.37.0; before, a text area took any number of characters) |
+| `counter` | Boolean | The value's length at the end of the label row: "48/145" with `maxlength`, the length alone without; in the error colour past the limit, as a value set by script may be. Part of the field's description; part `counter` (since 1.37.0) |
 
 Events: `glk-input` on every key; `glk-change` `{ value }` (since 1.35.0; before, none) once a value is done — on leaving the field with a changed value, as on `<glk-input>`, and on Ctrl/Cmd+Enter; once per value, plus a native `change`. `slot="label-end"` and the parts `label` and `label-end` as on `<glk-input>` (since 1.33.0).
 
@@ -2318,7 +2341,7 @@ All `glk-*` events bubble and are `composed: true`, so they pierce shadow bounda
 | `<glk-breadcrumbs>` | Navigation | `label`, `collapse`, `drop-target`, `group`, `more-label`, `more-label-one` | default (`<glk-breadcrumb>`) | `glk-navigate` (cancelable) |
 | `<glk-breadcrumb>` | Navigation | `href`, `value`, `current` | default (text) | — |
 | `<glk-tab-accessory>` | Navigation | `label`, `variant`, `disabled`, `show-label` | default (icon) | `glk-click` |
-| `<glk-avatar>` | Content | `size`, `src` | default (initials) | — |
+| `<glk-avatar>` | Content | `size`, `src` | default (initials) | `avatar`, `image` |
 | `<glk-badge>` | Content | `variant`, `interactive`, `selected`, `size` | default | `glk-click` (only when interactive) |
 | `<glk-empty>` | Content | `title`, `text` | default (icon), `action` | — |
 | `<glk-segmented>` | Forms | `options`, `value`, `full`, `overflow`, `droplet`, `icon-only`, `icon-style`, `label`, `name` | `icon-<value>` | `glk-change` |

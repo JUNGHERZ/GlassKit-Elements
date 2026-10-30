@@ -47,6 +47,13 @@ class GlkMenu extends GlkElement {
 
   get _trigger() { return this._triggerSlot?.assignedElements()[0] ?? null; }
 
+  /**
+   * The element with the focus in the menu's own tree (since 1.38.0): in a
+   * shadow root document.activeElement is only the outermost host, and the
+   * arrows lost their place.
+   */
+  _focused() { return this.getRootNode().activeElement; }
+
   /** The items in order, those in groups included, hidden ones left out. */
   _items() {
     return [...this.querySelectorAll(ITEM)].filter(item => !item.hidden && item.closest('glk-menu') === this);
@@ -98,7 +105,7 @@ class GlkMenu extends GlkElement {
     this._onPointerMove = (e) => {
       if (e.pointerType === 'touch') return;
       const item = e.composedPath().find(n => n.localName === ITEM);
-      if (item && item !== document.activeElement && item.closest('glk-menu') === this) item.focus({ preventScroll: true });
+      if (item && item !== this._focused() && item.closest('glk-menu') === this) item.focus({ preventScroll: true });
     };
     this.addEventListener('pointermove', this._onPointerMove);
 
@@ -208,7 +215,7 @@ class GlkMenu extends GlkElement {
     }
     if (!this.open) return;
     const items = this._items();
-    const current = items.indexOf(document.activeElement);
+    const current = items.indexOf(this._focused());
     const go = (i) => { e.preventDefault(); items[(i + items.length) % items.length]?.focus(); };
     switch (e.key) {
       case 'ArrowDown': go(current + 1); break;

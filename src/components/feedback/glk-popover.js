@@ -107,16 +107,18 @@ class GlkPopover extends GlkElement {
     // Close on Escape; focus inside the panel goes back to the trigger. The
     // key is marked as handled (since 1.35.0): a dialog around — a sheet, a
     // modal — no longer closes with the popover, and a container can tell
-    // from defaultPrevented that the popover took it.
+    // from defaultPrevented that the popover took it. The key's path tells
+    // where the focus was (since 1.38.0): document.activeElement is only the
+    // outermost host when the popover lies in a shadow root, and the focus
+    // stayed behind in the hidden panel.
     this._onKeydown = (e) => {
       if (e.key !== 'Escape' || !this.getBoolAttr('open') || e.defaultPrevented) return;
       e.preventDefault();
-      const inside = this.contains(document.activeElement) && !this._triggerSlot.assignedElements().some(t => t.contains(document.activeElement));
+      const path = e.composedPath();
+      const triggers = this._triggerSlot.assignedElements();
+      const inside = path.includes(this._popover) && !triggers.some(t => path.includes(t));
       this.close();
-      if (inside) {
-        const trigger = this._triggerSlot.assignedElements()[0];
-        if (trigger) focusTarget(trigger).focus();
-      }
+      if (inside && triggers[0]) focusTarget(triggers[0]).focus();
     };
     document.addEventListener('keydown', this._onKeydown);
     this._applyOpen();

@@ -1,6 +1,6 @@
 import { GlkElement } from './base.js';
 import { a as attachSortable } from './shared/sortable-DxyHuCmj.js';
-import { k as keepFocus } from './shared/keep-focus-Bvq6y1D0.js';
+import { k as keepFocus } from './shared/keep-focus-G4BvcQC6.js';
 import '@jungherz-de/glasskit/glasskit-styles.js';
 
 // sortable (since 1.32.0): the items can be reordered by mouse, touch and

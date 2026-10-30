@@ -20,7 +20,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="GlassKit Elements — Dokumentation">
   <meta name="twitter:description" content="Vollständige Dokumentation aller 46 GlassKit Elements Web Components mit Live-Beispielen.">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.37/glasskit.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.38/glasskit.min.css">
   <script src="/dist/glasskit-elements.min.js"></script>
   <style>
     html { scroll-behavior: smooth; }
@@ -270,7 +270,7 @@
     <aside class="docs-sidebar">
       <div class="docs-sidebar__title">&#129482; <a href="../de/">GlassKit Elements</a></div>
       <div class="docs-sidebar__subtitle">Web Components f&uuml;r GlassKit CSS.</div>
-      <div class="docs-sidebar__version">v1.37.0 &ndash; Jungherz GmbH</div>
+      <div class="docs-sidebar__version">v1.38.0 &ndash; Jungherz GmbH</div>
 
       <div class="docs-sidebar__group">
         <div class="docs-sidebar__group-title">Grundlagen</div>
@@ -362,7 +362,7 @@
         <h1>GlassKit Elements</h1>
         <p>Vollst&auml;ndige Referenz f&uuml;r alle 46 Web Components &ndash; entwickelt von Jungherz GmbH. Vanilla JS, Shadow DOM, native Formular-Teilnahme.</p>
         <div class="docs-hero__badges">
-          <span class="docs-hero__badge">v1.37.0</span>
+          <span class="docs-hero__badge">v1.38.0</span>
           <span class="docs-hero__badge">Shadow DOM</span>
           <span class="docs-hero__badge">46 Komponenten</span>
           <span class="docs-hero__badge">Vanilla JS</span>
@@ -375,7 +375,7 @@
 
         <h3>CDN (schnellste Variante)</h3>
         <div class="docs-code"><span class="cmt">&lt;!-- 1. GlassKit CSS --&gt;</span>
-<span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span> <span class="attr">href</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.37/glasskit.min.css"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span> <span class="attr">href</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.38/glasskit.min.css"</span><span class="tag">&gt;</span>
 
 <span class="cmt">&lt;!-- 2. GlassKit Elements --&gt;</span>
 <span class="tag">&lt;script</span> <span class="attr">src</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"</span><span class="tag">&gt;&lt;/script&gt;</span></div>
@@ -692,7 +692,8 @@ addEventListener(<span class="val">'afterprint'</span>, () =&gt; {
 <span class="tag">&lt;/glk-input&gt;</span>
 
 <span class="cls">glk-input::part(label)</span> { <span class="attr">letter-spacing</span>: <span class="val">0.01em</span>; }</div>
-          <p id="glk-input-name"><strong>Ein Name ohne sichtbares Label</strong> (seit 1.36.0). Felder in einer Tabelle unter einem gemeinsamen Kopf &mdash; Öffnungszeiten mit den Spalten Von und Bis für jeden Tag &mdash; brauchen jeweils ihr Label als Namen, aber es in jeder Zelle zu zeigen, wiederholt den Kopf. <code>label-hidden</code> behält <code>label</code> als Namen des Feldes und nimmt es aus dem Blick, wie bei den <a href="#glk-toggle-name">Schaltern</a>; <code>aria-label</code> oder <code>aria-labelledby</code> am Element benennen das Feld direkt. Eine Gruppe um jede Zeile nennt den Tag. <code>&lt;glk-select&gt;</code> und <code>&lt;glk-textarea&gt;</code> nehmen dieselben Attribute.</p>
+          <p id="glk-input-name"><strong>Ein Name ohne sichtbares Label</strong> (seit 1.36.0). Felder in einer Tabelle unter einem gemeinsamen Kopf &mdash; Öffnungszeiten mit den Spalten Von und Bis für jeden Tag &mdash; brauchen jeweils ihr Label als Namen, aber es in jeder Zelle zu zeigen, wiederholt den Kopf. <code>label-hidden</code> behält <code>label</code> als Namen des Feldes und nimmt es aus dem Blick, wie bei den <a href="#glk-toggle-name">Schaltern</a>; <code>aria-label</code> oder <code>aria-labelledby</code> am Element benennen das Feld direkt. Eine Gruppe um jede Zeile nennt den Tag. <code>&lt;glk-select&gt;</code> und <code>&lt;glk-textarea&gt;</code> nehmen dieselben Attribute. Seit 1.38.0 tut GlassKits <code>--gl-label-hidden: 1</code> dasselbe für jedes Feld in einem Container und lässt sich aus einer Container- oder Media-Query setzen, der das Attribut nicht folgen kann: die Labels unsichtbar, solange die Woche eine Tabelle ist, über den Feldern, wenn sie zur Liste wird.</p>
+          <div class="docs-code"><span class="tag">@container</span> week (min-width: 560px) { <span class="cls">.day</span> { <span class="attr">--gl-label-hidden</span>: <span class="val">1</span>; } }</div>
           <div class="docs-preview">
             <div style="display:flex;flex-direction:column;gap:8px;max-width:440px">
               <div style="display:flex;gap:12px;align-items:center"><span style="width:96px;font-size:13px;color:var(--gl-color-text-muted)">Tag</span><span style="flex:1;font-size:13px;color:var(--gl-color-text-muted)">Von</span><span style="flex:1;font-size:13px;color:var(--gl-color-text-muted)">Bis</span></div>
@@ -998,6 +999,7 @@ glk-segmented::part(badge) { letter-spacing: 0.02em; }</div>
             <tr><td><code>active</code></td><td>glk-tab-item</td><td>Aktiver Zustand; das Item trägt <code>aria-current="page"</code> (seit 1.32.0)</td></tr>
             <tr><td><code>badge</code></td><td>glk-tab-item</td><td>Badge count</td></tr>
             <tr><td><code>badge-label</code></td><td>glk-tab-item</td><td>Der Zähler in Worten für den Namen des Items: &bdquo;Kunden, 3 neu&ldquo; statt &bdquo;Kunden, 3&ldquo; (seit 1.32.0)</td></tr>
+            <tr><td><code>badge-dot</code></td><td>glk-tab-item</td><td>Ein Punkt ohne Zahl &mdash; hier braucht es dich; <code>badge-label</code> sagt im Namen des Items, warum (seit 1.38.0, <a href="#glk-tab-bar-dot">unten</a>)</td></tr>
             <tr><td><code>href</code></td><td>glk-tab-item</td><td>Das Item ist ein Link, seine Ansicht öffnet sich also auch in einem neuen Tab: Ein Klick mit Strg, Cmd, Umschalt oder Alt öffnet sie anderswo und lässt den aktuellen Tab aktiv; ein abgebrochenes <code>glk-tab-select</code> hält auch die Navigation an (seit 1.32.0)</td></tr>
             <tr><td><code>slot="icon"</code></td><td>glk-tab-item</td><td>Ein Icon, das kein Inline-SVG ist &mdash; ein Font-Icon, ein <code>&lt;img&gt;</code>, ein eigenes Element; es nimmt die Farbe des Zustands an (seit 1.28.0). Ein <code>&lt;svg&gt;</code> ohne <code>slot</code> wird wie bisher hineinkopiert.</td></tr>
             <tr><td><code>orientation</code></td><td>glk-tab-bar</td><td><code>vertical</code>: eine Spalte, für eine Seitenleiste (seit 1.32.0)</td></tr>
@@ -1096,6 +1098,22 @@ apply();</div>
   <span class="attr">--gl-tab-bar-item-radius</span>: <span class="val">12px</span>;
   <span class="attr">--gl-tab-bar-active-weight</span>: <span class="val">600</span>;
 }</div>
+          <p id="glk-tab-bar-dot"><strong>Ein Punkt ohne Zahl (seit 1.38.0).</strong> <code>badge-dot</code> markiert ein Item ohne Zahl &mdash; eine offene Zahlung am Konto-Tab &mdash;: GlassKits <code>.glass-tab-bar__badge--dot</code> aus 1.38.0, 10&nbsp;px im einfachen Fehlerrot mit einem 2&nbsp;px breiten Ring in der Farbe hinter der Leiste, an der Ecke des Icons, in einer Seitenleiste am Ende der Zeile. Einem Screenreader sagt der Punkt nichts, also sagt <code>badge-label</code>, warum: Das Item heißt &bdquo;Konto, eine Zahlung ist offen&ldquo;. GlassKits <code>--gl-tab-bar-badge-size</code>, <code>-top</code>, <code>-end</code>, <code>-ring-width</code> und <code>-ring-color</code> setzen Zahl und Punkt, und der Part <code>badge</code> erreicht beide.</p>
+          <div class="docs-preview" style="display:grid;grid-template-columns:minmax(0,220px) auto;gap:16px;height:200px;">
+            <glk-tab-bar orientation="vertical" label="Seitenleiste">
+              <glk-tab-item label="Start" active><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></glk-tab-item>
+              <glk-tab-item label="Nachrichten" badge="3"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="22 6 12 13 2 6"/></svg></glk-tab-item>
+              <glk-tab-item label="Konto" badge-dot badge-label="eine Zahlung ist offen"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/></svg></glk-tab-item>
+            </glk-tab-bar>
+            <glk-tab-bar orientation="vertical" rail label="Rail">
+              <glk-tab-item label="Start" active><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></glk-tab-item>
+              <glk-tab-item label="Nachrichten" badge="3"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="22 6 12 13 2 6"/></svg></glk-tab-item>
+              <glk-tab-item label="Konto" badge-dot badge-label="eine Zahlung ist offen"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/></svg></glk-tab-item>
+            </glk-tab-bar>
+          </div>
+          <div class="docs-code"><span class="tag">&lt;glk-tab-item</span> <span class="attr">label</span>=<span class="val">"Konto"</span> <span class="attr">badge-dot</span> <span class="attr">badge-label</span>=<span class="val">"eine Zahlung ist offen"</span><span class="tag">&gt;</span>…<span class="tag">&lt;/glk-tab-item&gt;</span>
+
+<span class="cls">glk-tab-bar</span> { <span class="attr">--gl-tab-bar-badge-ring-color</span>: <span class="val">var(--app-bar-bg)</span>; }</div>
         </div>
 
         <div class="docs-component" id="glk-tab-dock">
@@ -1405,7 +1423,7 @@ toast.addEventListener(<span class="val">'glk-action'</span>, e =&gt; { if (e.de
 
         <div class="docs-component" id="glk-popover">
           <h3><code>&lt;glk-popover&gt;</code></h3>
-          <p>Anchored Dropdown- / Menü-Container. Wrappt ein Trigger-Element (via <code>slot="trigger"</code>) und dessen Floating-Inhalt. Das Element verwaltet <code>.is-open</code>-Toggle, Outside-Click-Dismiss und <kbd>Escape</kbd>-Key-Close intern — kein manuelles Klassen-Umschalten nötig.</p>
+          <p>Anchored Dropdown- / Menü-Container. Wrappt ein Trigger-Element (via <code>slot="trigger"</code>) und dessen Floating-Inhalt. Das Element verwaltet <code>.is-open</code>-Toggle, Outside-Click-Dismiss und <kbd>Escape</kbd>-Key-Close intern — kein manuelles Klassen-Umschalten nötig. Nach Escape geht der Fokus an den Trigger zurück, wenn er im Panel war, seit 1.38.0 auch im Shadow Root eigener Elemente einer App, wo er im versteckten Panel zurückblieb.</p>
           <div class="docs-preview" style="min-height:220px;display:flex;justify-content:center;align-items:flex-start;padding-top:24px;">
             <glk-popover>
               <glk-button slot="trigger" variant="secondary" size="auto">Menü öffnen</glk-button>

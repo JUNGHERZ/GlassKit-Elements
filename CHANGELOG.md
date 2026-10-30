@@ -7,6 +7,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.38.0] – 2026-10-30
+
+Versions stay aligned with GlassKit at 1.38.0, which this release is built against (peer dependency `>=1.38.0`).
+
+### Added
+
+- **A dot without a count on `<glk-tab-item>`: `badge-dot`, and the part `badge`.** "Something needs you here" at a tab, such as an open payment at the account tab, could only be the pill with "!" in it, and the badge had no part, so a page adopted a stylesheet into every item.
+  - `badge-dot` shows GlassKit 1.38.0's dot: 10px with a 2px ring at the icon's corner, and at the row's end in a sidebar.
+  - The dot says nothing to a screen reader, so `badge-label` gives the reason, and the item is named "Account, A payment is open".
+  - The part `badge` reaches the count or the dot, and GlassKit's `--gl-tab-bar-badge-size`, `-top`, `-end`, `-ring-width` and `-ring-color` set both.
+
+  ([#61](https://github.com/JUNGHERZ/GlassKit-Elements/issues/61), [GlassKit #29](https://github.com/JUNGHERZ/GlassKit/issues/29))
+- **Labels hidden from a container query: GlassKit 1.38.0's `--gl-label-hidden: 1`.** `label-hidden` is an attribute, and a container or media query cannot set one. The token, set by a query on a container around the fields, hides the labels of `<glk-input>`, `<glk-select>` and `<glk-textarea>` as `label-hidden` does. The labels stay the fields' names. ([#62](https://github.com/JUNGHERZ/GlassKit-Elements/issues/62))
+
+### Fixed
+
+- **Focus in an app's shadow root.** `document.activeElement` is only the outermost host when the focus lies in a shadow root, and three elements asked it.
+  - **`<glk-popover>`:** after Escape the focus went back to the trigger only in the document. In a shadow root it stayed behind in the hidden panel and fell to the body, so in a modeless sheet the next Escape no longer reached the sheet. The key's path now tells whether the focus was in the panel ([#63](https://github.com/JUNGHERZ/GlassKit-Elements/issues/63)).
+  - **`<glk-menu>`:** the arrow keys lost their place and went back to the first item each time.
+  - **`<glk-tree>` and `<glk-list>`:** the focus on an item in a level that closed fell to the body instead of going to the open item around it.
+
+  The last two have the same cause as #63, and turned up while looking for it.
+
+Measured in Chromium 153, WebKit 26.6 and Firefox 151, 1.37.0 against 1.38.0:
+- **Dot:**
+  - `badge-dot` with `badge-label="A payment is open"` gives a 10 × 10px dot, 2px above and 3px beyond the icon's corner, with a 2px ring and the part `badge`. The item is named "Account, A payment is open". The rail and the top bar place it the same way, and the sidebar 16px from the row's end.
+  - The count keeps its 16px at -4/-8, and now carries the part.
+- **Labels:** with `--gl-label-hidden: 1` from a container query at 560px, the label of a `<glk-input>` in a 700px container is 1 × 1px (before: 345 × 16px). In a 400px container it keeps 195 × 16px.
+- **Shadow root:**
+  - A popover in a modeless sheet inside a shadow root: the first Escape closes the popover and puts the focus on its trigger, and the second closes the sheet. Before, the focus fell to the body and the sheet stayed open.
+  - A menu inside a shadow root: ArrowDown on the button opens it at "Rename", and the next ArrowDown keys go to "Duplicate" and "Delete". Before, they stayed on "Rename".
+  - A tree inside a shadow root: with the focus on a child, closing its parent moves the focus to the parent. Before, it fell to the body.
+- **Pages:** docs, showcase and landing pages render as in 1.37.0, the counts of the tab bars included.
+
+---
+
 ## [1.37.0] – 2026-10-29
 
 Versions stay aligned with GlassKit at 1.37.0, which this release is built against (peer dependency `>=1.37.0`).
@@ -1449,6 +1485,7 @@ Starting with this release, GlassKit Elements version numbers are aligned with G
 ---
 
 [Unreleased]: https://github.com/JUNGHERZ/GlassKit-Elements/compare/v1.33.1...HEAD
+[1.38.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.38.0
 [1.37.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.37.0
 [1.36.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.36.0
 [1.35.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.35.0

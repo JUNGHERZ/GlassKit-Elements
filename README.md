@@ -5,7 +5,7 @@
   <a href="#"><img src="https://img.shields.io/badge/vanilla_JS-no_dependencies-44cc11?style=flat-square" alt="Vanilla JS"></a>
   <a href="#"><img src="https://img.shields.io/badge/components-46-7ec8e3?style=flat-square" alt="46 Components"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="MIT License"></a>
-  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/changelog-v1.37.0-lightgrey?style=flat-square" alt="Changelog"></a>
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/changelog-v1.38.0-lightgrey?style=flat-square" alt="Changelog"></a>
   <a href="https://www.npmjs.com/package/@jungherz-de/glasskit-elements"><img src="https://img.shields.io/badge/npm-%40jungherz--de%2Fglasskit--elements-cb3837?style=flat-square&logo=npm" alt="npm"></a>
 </p>
 
@@ -69,7 +69,7 @@ It is the **app layer** of the GlassKit family — three layers, one design lang
 
 ```html
 <!-- 1. GlassKit CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.37/glasskit.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.38/glasskit.min.css">
 
 <!-- 2. GlassKit Elements -->
 <script src="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"></script>
@@ -107,7 +107,7 @@ The per-component files leave `@jungherz-de/glasskit/glasskit-styles.js` as an e
 <!DOCTYPE html>
 <html data-theme="dark">
 <head>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.37/glasskit.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.38/glasskit.min.css">
   <script src="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"></script>
 </head>
 <body>
@@ -129,7 +129,7 @@ The per-component files leave `@jungherz-de/glasskit/glasskit-styles.js` as an e
 | `<glk-nav>` | Horizontal navigation bar | — |
 | `<glk-pill>` | Circular icon button (46×46px) | `label`, `disabled` |
 | `<glk-tab-bar>` | Tab bar navigation: at the bottom, at the top, as a sidebar or an icon rail — with its labels under the icons since 1.33.0 —, docked at a side; slots `leading` and `trailing` for a mark, the accessory and the account | `static`, `floating`, `droplet`, `orientation`, `rail` (or `rail="labels"`), `dock`, `placement`, `label` |
-| `<glk-tab-item>` | Tab bar item; any icon in `slot="icon"`, a cancelable `glk-tab-select`, a link with `href`, `aria-current` on the open view | `label`, `active`, `badge`, `badge-label`, `href` |
+| `<glk-tab-item>` | Tab bar item; any icon in `slot="icon"`, a cancelable `glk-tab-select`, a link with `href`, `aria-current` on the open view; a dot without a count (since 1.38.0) | `label`, `active`, `badge`, `badge-label`, `badge-dot`, `href` |
 | `<glk-tab-dock>` | Wrapper for floating tab bar + optional accessory, upright at a side with `orientation="vertical"` | `accessory-left`, `orientation`, `dock` |
 | `<glk-tab-accessory>` | Standalone glass capsule (search, compose…), its label under it with `show-label` | `label`, `variant` (accent, success, error), `disabled`, `show-label` |
 | `<glk-steps>` | Progress through a short flow; a state per step since 1.35.0 | `steps` (labels, or JSON with `state`), `current`, `label`, `done-label` |

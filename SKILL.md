@@ -1,6 +1,6 @@
 ---
 name: glasskit-elements
-description: GlassKit Elements is a vanilla-JS Web Components library (v1.37.0) wrapping GlassKit CSS v1.37.0. It provides 46 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
+description: GlassKit Elements is a vanilla-JS Web Components library (v1.38.0) wrapping GlassKit CSS v1.38.0. It provides 46 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
 ---
 
 # GlassKit Elements – AI Component Reference
@@ -13,6 +13,8 @@ description: GlassKit Elements is a vanilla-JS Web Components library (v1.37.0) 
 > **New in 1.28.0 — icons of any kind, and a tab that keeps the current one.** `<glk-tab-item>` takes an icon that is not inline SVG in `slot="icon"` — Material Icons, an `<img>`, a custom element — and it follows every state; `<glk-segmented>` takes one per option in `slot="icon-<value>"` and shows them alone with `icon-only`. `glk-tab-select` is cancelable, for an item that opens a drawer or a link. **Where a project styles tab icons through `hostStyles`, or puts `active` back after `glk-tab-select`, replace that** (3.3, 3.25).
 
 > **New in 1.32.0 — one tab bar for every edge, ten elements, panels in the top layer.** `<glk-tab-bar>` leaves the bottom edge: `orientation="vertical"` makes it a sidebar, `dock="start"` or `"end"` fixes it to that side of the viewport — where the thumb rests on a phone held open, or a foldable that moved its system controls to a side — `rail` shows the icons alone with the labels as tooltips, `placement="top"` lays it out for the top of a page, and `<glk-tab-dock orientation="vertical">` stands the floating bar upright. One set of items serves every layout, and the drop runs along y in a column. New: `<glk-tooltip>`, `<glk-menu>` with `<glk-menu-item>`, `-separator` and `-group`, `<glk-tree>` with `<glk-tree-item>` (children that load on opening, with errors and a retry), `<glk-breadcrumbs>` with `<glk-breadcrumb>`, `<glk-table>` around a native table, and `sortable` on `<glk-list>` and `<glk-tree>` — drag and drop by mouse, touch and keyboard, onto breadcrumbs too. Lists and trees change single items in place, keeping the focus, and `highlight()` points a changed item out. `<glk-popover>` opens in the top layer, `<glk-modal>` and `<glk-sheet>` emit `glk-closed` once they are gone, interactive list items take the keyboard. **Where a project builds its own sidebar, tooltip, menu, tree, breadcrumbs or table wrapper, or waits for a sheet's slide-out with a timer, replace that** (3.3, 3.19, 3.24, 3.27, 3.32–3.37).
+
+> **New in 1.38.0 — a dot without a count, labels hidden from a container query, focus that finds its way in shadow roots.** `<glk-tab-item badge-dot badge-label="A payment is open">` shows GlassKit 1.38.0's dot at the icon's corner, or the sidebar row's end, and the item is named "Account, A payment is open"; part `badge`, and `--gl-tab-bar-badge-size`, `-top`, `-end`, `-ring-width`, `-ring-color` (3.3). GlassKit's `--gl-label-hidden: 1`, set from a container or media query, hides the labels of `<glk-input>`, `<glk-select>` and `<glk-textarea>` as `label-hidden` does (3.12). In an app's shadow root a `<glk-popover>` gives the focus back to its trigger after Escape, `<glk-menu>` keeps its arrow keys' place and `<glk-tree>`/`<glk-list>` keep the focus when a level closes. **Where a project adopts stylesheets into tab items for a dot, sets `label-hidden` from a ResizeObserver or puts `::part(label)` rules into a container query, or closes popovers itself in a capture listener, drop that.**
 
 > **New in 1.37.0 — avatars that fit a list row, a placeholder for the select, a character counter.** An avatar in the leading box of a `<glk-list-item>` takes the box's size, 40px with `leading-lg` — a contact list —, GlassKit 1.37.0's `--gl-avatar-size` and `--gl-avatar-font-size` set any other, and `<glk-avatar>` gets the parts `avatar` and `image` (3.4). `<glk-select placeholder>` shows the native placeholder option while no value matches, in the placeholder colour; `required` holds the form while it shows (3.16). `<glk-textarea>` hands `minlength`, `maxlength`, `autocomplete` and `inputmode` to its field (it took any number of characters), and `counter` on `<glk-textarea>` and `<glk-input>` counts characters at the end of the label row (3.17, 3.12). **Where a project draws its own avatar sign for a list, keeps a first option for "nothing chosen", or sets the limit and a counter of its own on the inner text area, drop that.**
 
@@ -312,7 +314,7 @@ container components are exposed as parts:
 | `<glk-button>` | `button` (since 1.31.0) |
 | `<glk-segmented>` | `group`, `item`, `badge` (the last two since 1.31.0) |
 | `<glk-tab-bar>` | `nav` (since 1.32.0), `leading`, `trailing` (since 1.33.0) |
-| `<glk-tab-item>` | `item` — the `<button>`, or the `<a>` with `href` (since 1.32.0) |
+| `<glk-tab-item>` | `item` — the `<button>`, or the `<a>` with `href` (since 1.32.0); `badge` — the count or the dot (since 1.38.0) |
 | `<glk-tab-accessory>` | `label` — the visible name with `show-label` (since 1.33.0) |
 | `<glk-input>` | `box`, `prefix`, `suffix` (since 1.22.0), `label`, `label-end` (since 1.33.0), `counter` (since 1.37.0) |
 | `<glk-textarea>` / `<glk-select>` | `label`, `label-end` (since 1.33.0); `counter` on `<glk-textarea>` (since 1.37.0) |
@@ -425,6 +427,7 @@ Fixed bottom navigation. Requires `.glass-bg--has-tab-bar` on the outer backgrou
 | `active` | Boolean | Active state — gets a soft radial Spotlight halo when inside a `floating` bar (since 1.27.0 really: before, the items of a floating bar kept the fixed bar's look), the drop when inside a `droplet` bar. Carries `aria-current="page"` since 1.32.0, so a screen reader tells which view is open |
 | `badge` | String / Number | Numeric badge on the icon |
 | `badge-label` | String | Words the count for the item's name: `label="Customers" badge="3" badge-label="3 new"` is read "Customers, 3 new" (since 1.32.0; without it "Customers, 3" — before, "3 Customers") |
+| `badge-dot` | Boolean | A dot without a count — "something needs you here", an open payment at the account tab — GlassKit 1.38.0's `.glass-tab-bar__badge--dot`: 10px with a 2px ring at the icon's corner, at the row's end in a sidebar. The dot says nothing to a screen reader: give `badge-label` the reason, the item is named "Account, A payment is open" (since 1.38.0). **Do not** use `badge="!"` or adopt a stylesheet for a dot |
 | `href` | String | Makes the item a link, which can open its view in a new tab; a cancelled `glk-tab-select` stops the navigation. A middle click, or a click with Ctrl, Cmd, Shift or Alt, opens the view elsewhere and leaves the current tab active — no `glk-tab-select` (since 1.32.0) |
 
 Part: `item` — the `<button>`, or the `<a>` with `href` (since 1.32.0). Every bar shows a focus ring on the item that has the keyboard focus (GlassKit 1.32.0).
@@ -881,6 +884,13 @@ Events: `glk-input` → `{ value }`, `glk-change` → `{ value }`, with a native
   <glk-input type="time" label="From" label-hidden></glk-input>
   <glk-input type="time" label="To" label-hidden></glk-input>
 </div>
+```
+
+**From a container query (since 1.38.0):** GlassKit's `--gl-label-hidden: 1` on a container does what `label-hidden` does, for every field in it, and a container or media query can set it — the attribute cannot follow one. Labels out of sight while the week is a table, above the fields when it becomes a list:
+
+```css
+.week { container: week / inline-size; }
+@container week (min-width: 560px) { .day { --gl-label-hidden: 1; } }
 ```
 
 **Slots `prefix` and `suffix` (since 1.22.0)** put an icon, a currency, a unit or a button inside the field's box, at its start and end (they swap sides under `dir="rtl"`). Each shows only while something is slotted; its width is measured and the field's padding grows by it, so the text keeps clear of a unit of any length. A click on slotted text, an icon or a disabled control goes through to the field; enabled controls (`<glk-button>`, `<glk-select>` … included — they are form-associated), links and elements with `tabindex` take their own (since 1.22.2 — before, every slotted element took the click). Slot the control itself: one wrapped in a slotted element needs `pointer-events: auto` from the page. A container locked with `pointer-events: none` does not hold a control; lock it with `inert`, or disable the control. Their text is read as part of the field's description. Parts: `box`, `prefix`, `suffix`. Built on GlassKit's `.glass-input-wrap` (GlassKit 1.22.0).
@@ -2336,7 +2346,7 @@ All `glk-*` events bubble and are `composed: true`, so they pierce shadow bounda
 | `<glk-nav>` | Navigation | — | default | — |
 | `<glk-pill>` | Navigation | `label`, `disabled` | default (icon) | `glk-click` |
 | `<glk-tab-bar>` | Navigation | `static`, `floating`, `droplet`, `orientation`, `rail` (or `rail="labels"`), `dock`, `placement`, `label` | default, `leading`, `trailing` | `glk-tab-change` |
-| `<glk-tab-item>` | Navigation | `label`, `active`, `badge`, `badge-label`, `href` | `icon`; an unslotted `<svg>` is copied | `glk-tab-select` (cancelable) |
+| `<glk-tab-item>` | Navigation | `label`, `active`, `badge`, `badge-label`, `badge-dot`, `href` | `icon`; an unslotted `<svg>` is copied | `glk-tab-select` (cancelable) |
 | `<glk-tab-dock>` | Navigation | `accessory-left`, `orientation`, `dock` | default | — |
 | `<glk-breadcrumbs>` | Navigation | `label`, `collapse`, `drop-target`, `group`, `more-label`, `more-label-one` | default (`<glk-breadcrumb>`) | `glk-navigate` (cancelable) |
 | `<glk-breadcrumb>` | Navigation | `href`, `value`, `current` | default (text) | — |

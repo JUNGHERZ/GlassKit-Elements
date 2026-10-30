@@ -23,10 +23,16 @@ import '@jungherz-de/glasskit/glasskit-styles.js';
 // from view and shows as a tooltip on hover, focus and a long press, beside
 // the rail — unless the rail keeps its labels (rail="labels", since
 // 1.33.0), where it stands under the icon. Part: item.
+//
+// badge-dot (since 1.38.0) shows a dot without a count — "something needs
+// you here", an open payment at the account tab — GlassKit's
+// .glass-tab-bar__badge--dot; badge-label says why in the item's name.
+// Part badge on the count or the dot (since 1.38.0); GlassKit's
+// --gl-tab-bar-badge-size, -top, -end, -ring-width and -ring-color set both.
 
 class GlkTabItem extends GlkElement {
   static get observedAttributes() {
-    return ['label', 'active', 'badge', 'badge-label', 'href'];
+    return ['label', 'active', 'badge', 'badge-label', 'badge-dot', 'href'];
   }
 
   static get observesLightDom() { return true; }
@@ -47,12 +53,7 @@ class GlkTabItem extends GlkElement {
     this._labelEl.textContent = this.getAttribute('label') || '';
 
     // Badge inside icon container (position: absolute relative to icon)
-    const badge = this.getAttribute('badge');
-    if (badge) {
-      this._badgeEl = this.createElement('span', ['glass-tab-bar__badge']);
-      this._badgeEl.textContent = badge;
-      this._iconEl.appendChild(this._badgeEl);
-    }
+    this._applyBadge();
 
     this._btn.appendChild(this._iconEl);
     this._btn.appendChild(this._labelEl);
@@ -120,12 +121,34 @@ class GlkTabItem extends GlkElement {
     else this._btn.removeAttribute('aria-current');
   }
 
-  /** With a count, the name says it after the label, in words where given. */
+  /** The count, or with badge-dot a dot without one; none without either. */
+  _applyBadge() {
+    const badge = this.getAttribute('badge');
+    const dot = this.getBoolAttr('badge-dot');
+    if (!badge && !dot) {
+      this._badgeEl?.remove();
+      this._badgeEl = null;
+      return;
+    }
+    if (!this._badgeEl) {
+      this._badgeEl = this.createElement('span', ['glass-tab-bar__badge'], { part: 'badge' });
+      this._iconEl.appendChild(this._badgeEl);
+    }
+    this._badgeEl.classList.toggle('glass-tab-bar__badge--dot', dot);
+    this._badgeEl.textContent = dot ? '' : badge;
+  }
+
+  /**
+   * With a count, the name says it after the label, in words where given;
+   * with a dot, badge-label alone says why.
+   */
   _applyName() {
     const label = this.getAttribute('label') || '';
     const badge = this.getAttribute('badge');
-    if (badge && label) {
-      this._btn.setAttribute('aria-label', `${label}, ${this.getAttribute('badge-label') || badge}`);
+    const words = this.getAttribute('badge-label');
+    const said = this.getBoolAttr('badge-dot') ? words : (words || badge);
+    if ((badge || this.getBoolAttr('badge-dot')) && said && label) {
+      this._btn.setAttribute('aria-label', `${label}, ${said}`);
     } else {
       this._btn.removeAttribute('aria-label');
     }
@@ -218,21 +241,11 @@ class GlkTabItem extends GlkElement {
         if ((this.getAttribute('href') === null) !== (this._btn.localName === 'button')) this._swapItem();
         else if (this._btn.localName === 'a') this._btn.setAttribute('href', this.getAttribute('href'));
         break;
-      case 'badge': {
-        const badge = this.getAttribute('badge');
-        if (badge) {
-          if (!this._badgeEl) {
-            this._badgeEl = this.createElement('span', ['glass-tab-bar__badge']);
-            this._iconEl.appendChild(this._badgeEl);
-          }
-          this._badgeEl.textContent = badge;
-        } else if (this._badgeEl) {
-          this._badgeEl.remove();
-          this._badgeEl = null;
-        }
+      case 'badge':
+      case 'badge-dot':
+        this._applyBadge();
         this._applyName();
         break;
-      }
     }
   }
 }

@@ -56,7 +56,10 @@ export function keepFocus(host, { isItem, focusOf, shown = () => true }) {
 
   const restore = (records) => {
     if (!last) return;
-    const active = document.activeElement;
+    // Through shadow roots (since 1.38.0): in an app's shadow root
+    // document.activeElement is only its outermost host.
+    let active = document.activeElement;
+    while (active?.shadowRoot?.activeElement) active = active.shadowRoot.activeElement;
     if (active && active !== document.body && active !== document.documentElement) {
       // Still focused, in a level that just closed — the browser drops the
       // focus at the next frame: the open item around it takes it now.

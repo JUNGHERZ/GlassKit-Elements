@@ -1,6 +1,6 @@
 import { GlkElement } from './base.js';
 import { a as attachSortable } from './shared/sortable-DxyHuCmj.js';
-import { k as keepFocus } from './shared/keep-focus-Bvq6y1D0.js';
+import { k as keepFocus } from './shared/keep-focus-G4BvcQC6.js';
 import '@jungherz-de/glasskit/glasskit-styles.js';
 
 // A tree with levels that open and close (since 1.32.0) — GlassKit's

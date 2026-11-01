@@ -1,6 +1,6 @@
 ---
 name: glasskit-elements
-description: GlassKit Elements is a vanilla-JS Web Components library (v1.38.0) wrapping GlassKit CSS v1.38.0. It provides 46 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
+description: GlassKit Elements is a vanilla-JS Web Components library (v1.39.0) wrapping GlassKit CSS v1.39.0. It provides 46 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
 ---
 
 # GlassKit Elements – AI Component Reference
@@ -13,6 +13,8 @@ description: GlassKit Elements is a vanilla-JS Web Components library (v1.38.0) 
 > **New in 1.28.0 — icons of any kind, and a tab that keeps the current one.** `<glk-tab-item>` takes an icon that is not inline SVG in `slot="icon"` — Material Icons, an `<img>`, a custom element — and it follows every state; `<glk-segmented>` takes one per option in `slot="icon-<value>"` and shows them alone with `icon-only`. `glk-tab-select` is cancelable, for an item that opens a drawer or a link. **Where a project styles tab icons through `hostStyles`, or puts `active` back after `glk-tab-select`, replace that** (3.3, 3.25).
 
 > **New in 1.32.0 — one tab bar for every edge, ten elements, panels in the top layer.** `<glk-tab-bar>` leaves the bottom edge: `orientation="vertical"` makes it a sidebar, `dock="start"` or `"end"` fixes it to that side of the viewport — where the thumb rests on a phone held open, or a foldable that moved its system controls to a side — `rail` shows the icons alone with the labels as tooltips, `placement="top"` lays it out for the top of a page, and `<glk-tab-dock orientation="vertical">` stands the floating bar upright. One set of items serves every layout, and the drop runs along y in a column. New: `<glk-tooltip>`, `<glk-menu>` with `<glk-menu-item>`, `-separator` and `-group`, `<glk-tree>` with `<glk-tree-item>` (children that load on opening, with errors and a retry), `<glk-breadcrumbs>` with `<glk-breadcrumb>`, `<glk-table>` around a native table, and `sortable` on `<glk-list>` and `<glk-tree>` — drag and drop by mouse, touch and keyboard, onto breadcrumbs too. Lists and trees change single items in place, keeping the focus, and `highlight()` points a changed item out. `<glk-popover>` opens in the top layer, `<glk-modal>` and `<glk-sheet>` emit `glk-closed` once they are gone, interactive list items take the keyboard. **Where a project builds its own sidebar, tooltip, menu, tree, breadcrumbs or table wrapper, or waits for a sheet's slide-out with a timer, replace that** (3.3, 3.19, 3.24, 3.27, 3.32–3.37).
+
+> **New in 1.39.0 — the switch at the row's end, toasts above dialogs, tooltips per segmented option, a summary in the accordion's head.** `full` with `label-position="start"` on `<glk-toggle>`, `<glk-checkbox>` or `<glk-radio>` puts the text at the row's start and the control at its end, as in the settings of iOS (3.18). `<glk-toast>` goes into the top layer on every show, above an open sheet or modal (3.22). An icon-only `<glk-segmented>` shows each label in a tooltip instead of a native `title`, and an option's `hint` is its second line; `tooltip-placement` (3.25). `<glk-accordion-item>` takes `slot="summary"` beside its title, inside the trigger (3.23). `<glk-sheet initial-focus="panel">` starts a modal sheet at its panel, not at a text field, and a sheet slides in whatever takes the focus (3.27). **Where a project puts a toast into the top layer itself, keeps an empty element first in a sheet for the focus, builds its own icon buttons with `glk-tooltip` for a segmented row, draws its own accordion for a summary, or sets `overflow: clip` on a sheet's overlay, drop that.**
 
 > **New in 1.38.0 — a dot without a count, labels hidden from a container query, focus that finds its way in shadow roots.** `<glk-tab-item badge-dot badge-label="A payment is open">` shows GlassKit 1.38.0's dot at the icon's corner, or the sidebar row's end, and the item is named "Account, A payment is open"; part `badge`, and `--gl-tab-bar-badge-size`, `-top`, `-end`, `-ring-width`, `-ring-color` (3.3). GlassKit's `--gl-label-hidden: 1`, set from a container or media query, hides the labels of `<glk-input>`, `<glk-select>` and `<glk-textarea>` as `label-hidden` does (3.12). In an app's shadow root a `<glk-popover>` gives the focus back to its trigger after Escape, `<glk-menu>` keeps its arrow keys' place and `<glk-tree>`/`<glk-list>` keep the focus when a level closes. **Where a project adopts stylesheets into tab items for a dot, sets `label-hidden` from a ResizeObserver or puts `::part(label)` rules into a container query, or closes popovers itself in a capture listener, drop that.**
 
@@ -310,9 +312,9 @@ container components are exposed as parts:
 | `<glk-list-item>` | `item` (the row), `handle` (since 1.34.0); `title`, `subtitle`, `title-trailing`, `extra` (since 1.35.0); `leading`, `trailing` (since 1.36.0) |
 | `<glk-modal>` | `overlay`, `modal`, `header`, `body`, `footer` |
 | `<glk-sheet>` | `overlay`, `sheet`, `title`, `body`, `actions`; `grip`, `head`, `eyebrow`, `leading`, `trailing`, `close` (since 1.35.0); `subtitle`, `close-icon` (since 1.36.0) |
-| `<glk-accordion-item>` | `item`, `trigger`, `content`, `body` (since 1.30.0) |
+| `<glk-accordion-item>` | `item`, `trigger`, `content`, `body` (since 1.30.0), `summary` (since 1.39.0) |
 | `<glk-button>` | `button` (since 1.31.0) |
-| `<glk-segmented>` | `group`, `item`, `badge` (the last two since 1.31.0) |
+| `<glk-segmented>` | `group`, `item`, `badge` (the last two since 1.31.0), `tooltip` (since 1.39.0) |
 | `<glk-tab-bar>` | `nav` (since 1.32.0), `leading`, `trailing` (since 1.33.0) |
 | `<glk-tab-item>` | `item` — the `<button>`, or the `<a>` with `href` (since 1.32.0); `badge` — the count or the dot (since 1.38.0) |
 | `<glk-tab-accessory>` | `label` — the visible name with `show-label` (since 1.33.0) |
@@ -893,6 +895,17 @@ Events: `glk-input` → `{ value }`, `glk-change` → `{ value }`, with a native
 @container week (min-width: 560px) { .day { --gl-label-hidden: 1; } }
 ```
 
+It needs style queries on custom properties — Chrome 111, Safari 18, Firefox 151. Without them the token does nothing and the labels stay above their fields. For older browsers set `label-hidden` from a script, or put the rules of a visually hidden label on `::part(label)` in the same query:
+
+```css
+@container week (min-width: 560px) {
+  .day :is(glk-input, glk-select, glk-textarea)::part(label) {
+    position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+    overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0;
+  }
+}
+```
+
 **Slots `prefix` and `suffix` (since 1.22.0)** put an icon, a currency, a unit or a button inside the field's box, at its start and end (they swap sides under `dir="rtl"`). Each shows only while something is slotted; its width is measured and the field's padding grows by it, so the text keeps clear of a unit of any length. A click on slotted text, an icon or a disabled control goes through to the field; enabled controls (`<glk-button>`, `<glk-select>` … included — they are form-associated), links and elements with `tabindex` take their own (since 1.22.2 — before, every slotted element took the click). Slot the control itself: one wrapped in a slotted element needs `pointer-events: auto` from the page. A container locked with `pointer-events: none` does not hold a control; lock it with `inert`, or disable the control. Their text is read as part of the field's description. Parts: `box`, `prefix`, `suffix`. Built on GlassKit's `.glass-input-wrap` (GlassKit 1.22.0).
 
 ```html
@@ -1134,6 +1147,12 @@ Events: `glk-change` → `{ checked }`. Properties: `.checked`, `.labelHidden`, 
 
 **One control (since 1.20.0).** The switch is the native checkbox inside, with `role="switch"`, named by `label`. The element itself no longer carries `role`, `aria-checked` or `aria-disabled` — before 1.20.0 screen readers met a switch with a checkbox inside. Select and style on `[checked]` / `[disabled]`; in tests, `getByRole('switch', { name })` finds the input and `.click()`, `.check()` work on it. `element.click()` and a `<label>` around the element or naming it toggle it, like a native checkbox. Without `label` the element is exactly its track, 52 × 30 px (it was 64 × 34).
 
+**The switch at the row's end (since 1.39.0).** `full` spreads the control over its row; with `label-position="start"` the text stands at the row's start and the switch at its end, as in the settings of iOS, mirrored right to left. Without the elements, GlassKit 1.39.0's `--label-start` and `--full` do the same. The whole row is the label, so a click anywhere on it switches. `<glk-checkbox>` and `<glk-radio>` take the same attributes. In a list row put the switch into `slot="trailing"` with `label-hidden` instead, the row's title as its name.
+
+```html
+<glk-toggle label="Notifications" label-position="start" full></glk-toggle>
+```
+
 ---
 
 ### 3.19 `<glk-modal>`
@@ -1288,6 +1307,8 @@ Events: `glk-action { action, label }` — the action was used; the toast closes
 
 While the pointer or the focus is on a toast with buttons, it does not time out. The toast is a polite live region (`role="status"`), so the message is announced; hidden, its buttons are inert, and closing it from the keyboard hands the focus back. Where it sits comes from GlassKit's `--gl-toast-top` — set it on an ancestor to place the toast below your header (with `viewport-fit=cover`, add `env(safe-area-inset-top)`).
 
+**Above a sheet or a modal (since 1.39.0).** `<glk-sheet>` and `<glk-modal>` lie in the top layer as native dialogs; the toast stood under them and their blurred overlay, unreadable — a form in a sheet that fails to save. The toast is a `popover="manual"` now, open while it is in the document (hidden it stays invisible and lets the pointer through, and as a live region it keeps being read), and every `show()` puts it in again, last and so on top. Beside a modal it can be seen but, as everything outside the dialog, not used or announced: a message a screen reader must hear belongs into the dialog. A toast shown before a dialog opens lies under it until its next `show()`. **Do not** put the toast into the top layer yourself.
+
 ---
 
 ### 3.23 `<glk-accordion>` + `<glk-accordion-item>`
@@ -1319,6 +1340,15 @@ Default slot: body content. Events: `glk-toggle` → `{ open }`. Property: `.ope
 The trigger carries `aria-expanded` and `aria-controls`; a closed section is `inert`, so its links and fields are out of the tab order and the accessibility tree until it opens (since 1.20.0 — before, they were only squeezed to zero height and Tab still reached them).
 
 An open section takes the height of its content, however long, and slides to it (GlassKit 1.30.0: a grid row from `0fr` to `1fr`). Until then it ended at 500px and cut off the rest — a list of 40 rows showed 500 of 1,220px. Never lift a cap with `max-height` of your own; there is none to lift.
+
+**A summary in the head (since 1.39.0).** `slot="summary"` puts the values of a closed entry beside its title — a headline, a date — in GlassKit's `.glass-accordion__summary`: the room up to the chevron, one muted line with an ellipsis. It is inside the trigger: a click on it, Enter and Space open the item, and it is part of the trigger's name. It shows while something is slotted, open or closed; hide it while open with `glk-accordion-item[open] [slot="summary"] { display: none; }`. Part `summary`. The trigger shows a focus ring for the keyboard since GlassKit 1.39.0.
+
+```html
+<glk-accordion-item title="Details of the news">
+  <span slot="summary">Summer party · 31.10.2026 · Lena Hoffmann</span>
+  …
+</glk-accordion-item>
+```
 
 ---
 
@@ -1556,6 +1586,16 @@ The attribute is `overflow`, not `scroll`: `scroll` is a method of every element
 <glk-segmented droplet full overflow="scroll" label="Area" value="a" options='[…]'></glk-segmented>
 ```
 
+**Tooltips per option (since 1.39.0).** An icon-only row shows each label in a tooltip — on hover after a moment, at once on keyboard focus, on a long press, as `<glk-tooltip>` — instead of the native `title`, which showed neither on focus nor on touch. An option's `hint` is the tooltip's second line (GlassKit's `.glass-tooltip__hint`) and the button's `aria-description`; in a row with labels, an option with a hint shows the hint alone. `tooltip-placement`: `top` (default), `bottom`, `start`, `end`. Part `tooltip`. The row keeps its drop, form value, `glk-change` and badges. **Do not** build own icon buttons with `glk-tooltip` for this.
+
+```html
+<glk-segmented icon-only tooltip-placement="bottom" label="Where the editor opens" value="col"
+  options='[{"value":"col","label":"In the column","hint":"The preview stays on the right"},
+            {"value":"preview","label":"Instead of the preview","hint":"A wider editor, the fields stay in the middle"}]'>
+  <svg slot="icon-col">…</svg><svg slot="icon-preview">…</svg>
+</glk-segmented>
+```
+
 ---
 
 ### 3.26 `<glk-steps>`
@@ -1629,6 +1669,8 @@ Methods: `show()`, `close()` — since 1.32.0 `close()` returns a promise that s
 ```
 
 **Do not** keep a hidden `title` only for the dialog's name (use `label`), draw a head of your own in the body, put an own close button into `trailing` for its size, or move the sheet to the side with adopted stylesheets.
+
+**Where the focus starts (since 1.39.0).** `showModal()` focuses the first thing a sheet holds; when that is a text field a phone brings up its keyboard over a sheet opened to be read. `initial-focus="panel"` starts a modal sheet at its panel, as a modeless one does; an element with `autofocus` still wins. The sheet slides in whatever takes the focus: GlassKit 1.39.0's overlay clips without scrolling and the sheet focuses with `preventScroll` — a focus while it slid in used to scroll the overlay, so the panel stood at its place at once or swung past it. **Do not** put an empty element first into a sheet to catch the focus.
 
 ---
 

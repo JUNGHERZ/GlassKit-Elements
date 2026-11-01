@@ -5,7 +5,7 @@
   <a href="#"><img src="https://img.shields.io/badge/vanilla_JS-no_dependencies-44cc11?style=flat-square" alt="Vanilla JS"></a>
   <a href="#"><img src="https://img.shields.io/badge/components-46-7ec8e3?style=flat-square" alt="46 Components"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="MIT License"></a>
-  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/changelog-v1.38.0-lightgrey?style=flat-square" alt="Changelog"></a>
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/changelog-v1.39.0-lightgrey?style=flat-square" alt="Changelog"></a>
   <a href="https://www.npmjs.com/package/@jungherz-de/glasskit-elements"><img src="https://img.shields.io/badge/npm-%40jungherz--de%2Fglasskit--elements-cb3837?style=flat-square&logo=npm" alt="npm"></a>
 </p>
 
@@ -69,7 +69,7 @@ It is the **app layer** of the GlassKit family — three layers, one design lang
 
 ```html
 <!-- 1. GlassKit CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.38/glasskit.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.39/glasskit.min.css">
 
 <!-- 2. GlassKit Elements -->
 <script src="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"></script>
@@ -107,7 +107,7 @@ The per-component files leave `@jungherz-de/glasskit/glasskit-styles.js` as an e
 <!DOCTYPE html>
 <html data-theme="dark">
 <head>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.38/glasskit.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.39/glasskit.min.css">
   <script src="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"></script>
 </head>
 <body>
@@ -165,11 +165,11 @@ All form components support `name`, `value`, `disabled` and participate in nativ
 | `<glk-textarea>` | Multi-line text input; slot `label-end`; `glk-change` once a value is done (since 1.35.0); a character counter (since 1.37.0) | `label`, `rows`, `placeholder`, `required`, `readonly`, `label-hidden` (since 1.36.0), `minlength`, `maxlength`, `autocomplete`, `inputmode`, `counter` (since 1.37.0) |
 | `<glk-select>` | Dropdown select; slot `label-end`; a placeholder while nothing is chosen (since 1.37.0) | `label`, `required`, `label-hidden` (since 1.36.0), `placeholder` (since 1.37.0) (children: `<option>`) |
 | `<glk-search>` | Search input with icon | `placeholder`, `label` (accessible name) |
-| `<glk-toggle>` | Switch toggle (`role="switch"` on its native checkbox) | `label`, `checked`, `disabled`, `required`, `label-hidden`, `label-position` (since 1.33.1; `aria-label` / `aria-labelledby` name the switch) |
-| `<glk-checkbox>` | Checkbox | `label`, `checked`, `disabled`, `required`, `label-hidden`, `label-position` (since 1.33.1) |
-| `<glk-radio>` | Radio button | `label`, `name`, `value`, `checked`, `required` (per group), `label-hidden`, `label-position` (since 1.33.1) |
+| `<glk-toggle>` | Switch toggle (`role="switch"` on its native checkbox) | `label`, `checked`, `disabled`, `required`, `label-hidden`, `label-position` (since 1.33.1; `aria-label` / `aria-labelledby` name the switch), `full` (since 1.39.0: with `label-position="start"` the switch at the row's end, as on iOS) |
+| `<glk-checkbox>` | Checkbox | `label`, `checked`, `disabled`, `required`, `label-hidden`, `label-position` (since 1.33.1), `full` (since 1.39.0) |
+| `<glk-radio>` | Radio button | `label`, `name`, `value`, `checked`, `required` (per group), `label-hidden`, `label-position` (since 1.33.1), `full` (since 1.39.0) |
 | `<glk-range>` | Range slider; `glk-change` once a value is set (since 1.36.0) | `label`, `min`, `max`, `value`, `step` |
-| `<glk-segmented>` | Small exclusive choice as one control, icons per option in `slot="icon-<value>"`, a count per option (`badge`, its own colour with `badgeTone`); form-associated; `icon-style="color"` keeps coloured logos (since 1.35.0) | `options` (JSON), `value`, `full`, `overflow` (scroll, wrap), `droplet`, `icon-only`, `label`, `name` |
+| `<glk-segmented>` | Small exclusive choice as one control, icons per option in `slot="icon-<value>"`, a count per option (`badge`, its own colour with `badgeTone`); form-associated; `icon-style="color"` keeps coloured logos (since 1.35.0) | `options` (JSON), `value`, `full`, `overflow` (scroll, wrap), `droplet`, `icon-only`, `label`, `name`, `tooltip-placement` (since 1.39.0: tooltips per option, a `hint` as their second line) |
 | `<glk-calendar>` | One month with a day to pick; keyboard navigation, `Intl` names; form-associated | `month`, `value`, `today`, `min`, `max`, `marks`, `locale`, `week-start`, `label`, `name` |
 | `<glk-image-picker>` | One image with preview, resized on the client, EXIF rotation applied; not form-associated | `src`, `label`, `hint`, `round`, `max`, `type`, `quality`, `accept` |
 
@@ -179,19 +179,19 @@ All form components support `name`, `value`, `disabled` and participate in nativ
 |---|---|---|
 | `<glk-progress>` | Progress bar (`role="progressbar"` since 1.33.2) | `value`, `max`, `value-text` (since 1.33.2), `label`, `variant` (success, error), `size` (sm, lg) |
 | `<glk-modal>` | Modal dialog — a native `<dialog>`: page behind inert and still, focus in and back; `glk-closed` once it has faded out | `open`, `title` |
-| `<glk-toast>` | Notification that hides itself, or an offer with one action and an × | `message`, `variant` (success, error, warning), `duration`, `action-label`, `action-value`, `dismissible` |
+| `<glk-toast>` | Notification that hides itself, or an offer with one action and an ×; in the top layer, above an open sheet or modal (since 1.39.0) | `message`, `variant` (success, error, warning), `duration`, `action-label`, `action-value`, `dismissible` |
 | `<glk-popover>` | Anchored dropdown / menu, in the top layer since 1.32.0: flipped and shifted at the viewport's edges; Escape marked handled, so a sheet around stays open (since 1.35.0) | `open`, `placement` (top, bottom, start, end) |
 | `<glk-tooltip>` | A short name or hint on hover, focus and a long press; the pointer may rest on it | `for`, `placement`, `show-delay`, `as-label` |
 | `<glk-menu>` | A menu button: menu roles, arrows, typeahead, Escape back to the button — and wherever the focus is (since 1.36.0); `glk-select` | `open`, `placement` |
 | `<glk-menu-item>` | An action in a menu, checkable, destructive or disabled; `<glk-menu-separator>` and `<glk-menu-group>` part them | `value`, `type` (checkbox, radio), `checked`, `disabled`, `variant` (danger) |
-| `<glk-sheet>` | Bottom sheet, the mobile sibling of the modal — a native `<dialog>` in the top layer since 1.30.0; `glk-closed` once it has slid out; since 1.35.0 a side panel (`placement`), modeless, a head with eyebrow, leading, trailing and a close button; since 1.36.0 a `subtitle` below the title, and a popover or menu in a modeless sheet closes first on Escape | `open`, `inline`, `title`, `label`, `dismissible`, `placement`, `modeless` |
+| `<glk-sheet>` | Bottom sheet, the mobile sibling of the modal — a native `<dialog>` in the top layer since 1.30.0; `glk-closed` once it has slid out; since 1.35.0 a side panel (`placement`), modeless, a head with eyebrow, leading, trailing and a close button; since 1.36.0 a `subtitle` below the title, and a popover or menu in a modeless sheet closes first on Escape | `open`, `inline`, `title`, `label`, `dismissible`, `placement`, `modeless`, `initial-focus` (since 1.39.0) |
 
 ### Containers
 
 | Component | Description | Key Attributes |
 |---|---|---|
 | `<glk-accordion>` | Accordion container | — |
-| `<glk-accordion-item>` | Collapsible section | `title`, `open` |
+| `<glk-accordion-item>` | Collapsible section; `slot="summary"` beside the title (since 1.39.0) | `title`, `open` |
 | `<glk-list>` | iOS-style grouped list, or glass tiles side by side (`grid`, since 1.34.0); `sortable` by mouse, touch and keyboard, in a shadow root too | `flush`, `bare`, `grid`, `sortable`, `group`, `handle` |
 | `<glk-list-item>` | List row (icon + title + subtitle + trailing); an `interactive` row is a button for the keyboard; `selected` for the entry beside its detail; slots `title-trailing` and `extra` (since 1.35.0); parts `leading` and `trailing` (since 1.36.0) | `title`, `subtitle`, `interactive`, `selected`, `center`, `container`, `no-drag`, `handle` |
 | `<glk-tree>` | Levels that open and close, the WAI-ARIA tree view; children that load on opening, with an error state and a retry; `sortable` | `label`, `selection`, `sortable`, `group` |
@@ -520,7 +520,9 @@ glasskit-elements/
 
 The floor is GlassKit's: its tokens are derived with `color-mix()`. The elements also need constructable stylesheets, `ElementInternals`, `delegatesFocus`, `<dialog>` and `inert` — all inside that floor. A few refinements come later and fall back quietly: first-line alignment of toggle, checkbox and radio (`lh`, Firefox 120), the divider of list rows without icon (`:has()`, Firefox 121), right-to-left mirroring of select chevron, toggle thumb and progress fill (`:dir()`, Chrome 120).
 
-Since 1.32.0 the panels that open over the page — `<glk-popover>`, `<glk-tooltip>`, `<glk-menu>`, the "…" of `<glk-breadcrumbs>`, the labels of a rail and the dragged copy of a sortable item — open with the popover API, so these need Chrome and Edge 114, Safari 17 and Firefox 125. A side bar and the upright `<glk-tab-dock>` find their edge everywhere; only the padding for the safe area of the physical side waits for `:dir()` (Chrome 120).
+Since 1.32.0 the panels that open over the page — `<glk-popover>`, `<glk-tooltip>`, `<glk-menu>`, the "…" of `<glk-breadcrumbs>`, the labels of a rail and the dragged copy of a sortable item — open with the popover API, so these need Chrome and Edge 114, Safari 17 and Firefox 125. A side bar and the upright `<glk-tab-dock>` find their edge everywhere; only the padding for the safe area of the physical side waits for `:dir()` (Chrome 120). Since 1.39.0 `<glk-toast>` goes into the top layer the same way, above an open sheet or modal; without the popover API it stays in the page, as before.
+
+One refinement does not fall back quietly: GlassKit's `--gl-label-hidden` (since 1.38.0) needs style queries on custom properties (Chrome 111, Safari 18, Firefox 151). Without them the labels of `<glk-input>`, `<glk-select>` and `<glk-textarea>` stay above their fields. For older browsers set `label-hidden` from a script, or put the rules of a visually hidden label on `::part(label)` in the same container query.
 
 ---
 

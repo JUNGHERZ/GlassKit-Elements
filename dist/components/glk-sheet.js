@@ -9,10 +9,13 @@ import '@jungherz-de/glasskit/glasskit-styles.js';
 // Attributes: open, inline (no overlay, always visible), title; since
 //             1.35.0 label (the name without a visible title), dismissible
 //             and close-label (a close button in the head; default
-//             "Close"), placement (bottom | start | end) and modeless
+//             "Close"), placement (bottom | start | end) and modeless;
+//             since 1.39.0 initial-focus ("panel": a modal sheet starts at
+//             its panel, not at the first field it holds)
 // Properties: open, inline, label, dismissible, closeLabel, placement,
-//             modeless · Methods: show(), close() — close() returns a
-//             promise that settles with glk-closed (since 1.32.0)
+//             modeless, initialFocus · Methods: show(), close() —
+//             close() returns a promise that settles with glk-closed
+//             (since 1.32.0)
 // Slots:      default (content), actions; since 1.35.0 eyebrow (a short
 //             line above the title), leading and trailing (before and
 //             after it, in the head); since 1.36.0 subtitle (below it)
@@ -70,7 +73,7 @@ function reducedMotion() {
 
 class GlkSheet extends GlkElement {
   static get observedAttributes() {
-    return ['open', 'inline', 'title', 'label', 'dismissible', 'close-label', 'placement', 'modeless'];
+    return ['open', 'inline', 'title', 'label', 'dismissible', 'close-label', 'placement', 'modeless', 'initial-focus'];
   }
 
   render() {
@@ -154,9 +157,14 @@ class GlkSheet extends GlkElement {
   _applyPlacement() {
     for (const p of PLACEMENTS) this._overlay.classList.toggle(`glass-sheet-overlay--${p}`, this.placement === p);
     this._overlay.classList.toggle('glass-sheet-overlay--modeless', this.modeless);
-    // Modeless, the panel takes the focus when nothing inside asks for it.
-    if (this.modeless) this._panel.tabIndex = -1;
+    // Modeless, or with initial-focus="panel" (since 1.39.0), the panel takes
+    // the focus when nothing inside asks for it. As the dialog's autofocus
+    // the panel is what showModal() focuses, not the first field: a text
+    // field there brought up the keyboard of a phone over the sheet.
+    const panel = this.modeless || this.initialFocus === 'panel';
+    if (panel) this._panel.tabIndex = -1;
     else this._panel.removeAttribute('tabindex');
+    this._panel.autofocus = !this.modeless && this.initialFocus === 'panel';
   }
 
   /** Inline the panel sits in the flow; else it lives in the dialog. */
@@ -197,9 +205,15 @@ class GlkSheet extends GlkElement {
       }
       // Modal, the dialog puts the focus on what it holds first; modeless, the
       // browsers differ, so the panel takes it — or what asks with autofocus.
+      // Without scrolling (since 1.39.0): the panel still slides in, and a
+      // scroll to the focus moved it to its place at once.
       const autofocus = this.querySelector('[autofocus]');
-      if (autofocus) autofocus.focus();
-      else if (this.modeless) this._panel.focus({ preventScroll: true });
+      if (autofocus) autofocus.focus({ preventScroll: true });
+      else if (this.modeless || this.initialFocus === 'panel') this._panel.focus({ preventScroll: true });
+      // A browser's own scroll to its first focus undone; GlassKit 1.39.0's
+      // overlay clips without scrolling anyway.
+      dialog.scrollTop = 0;
+      dialog.scrollLeft = 0;
       this.emit('glk-open', null, { bubbles: false });
     }
     void dialog.offsetHeight; // reflow, so the transition starts from the closed state
@@ -315,7 +329,8 @@ class GlkSheet extends GlkElement {
       case 'label': this._applyTitle(); break;
       case 'dismissible':
       case 'close-label': this._applyClose(); break;
-      case 'placement': this._applyPlacement(); break;
+      case 'placement':
+      case 'initial-focus': this._applyPlacement(); break;
       case 'modeless':
         this._applyPlacement();
         // Open, it reopens in the other mode.
@@ -374,6 +389,13 @@ class GlkSheet extends GlkElement {
   set placement(v) {
     if (PLACEMENTS.includes(v)) this.setAttribute('placement', v);
     else this.removeAttribute('placement');
+  }
+
+  /** "panel" starts a modal sheet at its panel; unset, at what it holds first. */
+  get initialFocus() { return this.getAttribute('initial-focus') === 'panel' ? 'panel' : ''; }
+  set initialFocus(v) {
+    if (v === 'panel') this.setAttribute('initial-focus', 'panel');
+    else this.removeAttribute('initial-focus');
   }
 
   get modeless() { return this.getBoolAttr('modeless'); }

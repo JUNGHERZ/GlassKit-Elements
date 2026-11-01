@@ -5,7 +5,9 @@ import '@jungherz-de/glasskit/glasskit-styles.js';
 // a row whose title stands on the left: aria-label or aria-labelledby on the
 // host name the native control inside, or label-hidden keeps the label's
 // text as the name, out of sight. label-position="start" puts the text
-// before the control. Parts: label, and the control's track.
+// before the control, and full (since 1.39.0) spreads the control over
+// its row — with label-position="start" the control at the row's end, as
+// in the settings of iOS. Parts: label, and the control's track.
 
 class GlkToggle extends GlkFormElement {
   static get observedAttributes() {
@@ -135,6 +137,10 @@ class GlkToggle extends GlkFormElement {
 
   get labelHidden() { return this.getBoolAttr('label-hidden'); }
   set labelHidden(v) { this.setBoolAttr('label-hidden', v); }
+
+  /** The control over the whole row, text and control at its ends (since 1.39.0). */
+  get full() { return this.getBoolAttr('full'); }
+  set full(v) { this.setBoolAttr('full', v); }
 
   /** "end" (the default) or "start". */
   get labelPosition() { return this.getAttribute('label-position') === 'start' ? 'start' : 'end'; }

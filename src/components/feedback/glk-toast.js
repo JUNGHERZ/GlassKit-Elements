@@ -24,6 +24,16 @@ import { GlkElement } from '../../base.js';
 // with buttons, it does not time out. It is a polite live region, so the
 // message is announced; hidden, its buttons are inert. Closing it from the
 // keyboard hands the focus back to where it came from.
+//
+// In the top layer (since 1.39.0): a <glk-sheet> or <glk-modal> lies there
+// as a native dialog, and the toast, fixed in the page, stood under it and
+// its blurred overlay — the "That name is taken" of a sheet's form could
+// not be read. The toast is a popover="manual" now, open while it is in the
+// document — hidden it stays invisible and lets the pointer through, and as
+// a live region it keeps being read — and every show() puts it in again,
+// last and so above a dialog opened since. Beside a modal it can be seen
+// but, as everything outside the dialog, not used or announced. A browser
+// without the popover API keeps it in the page, as before.
 
 const VARIANTS = ['success', 'error', 'warning'];
 const DEFAULT_DURATION = 3000;
@@ -62,7 +72,16 @@ class GlkToast extends GlkElement {
     if (this.getBoolAttr('visible')) this._show();
   }
 
+  /** Into the top layer, last and so on top; open already, in again. */
+  _raise() {
+    if (typeof this._toast.showPopover !== 'function' || !this.isConnected) return;
+    this._toast.popover = 'manual';
+    if (this._toast.matches(':popover-open')) this._toast.hidePopover();
+    this._toast.showPopover();
+  }
+
   setupEvents() {
+    this._raise();
     this._onClick = (event) => {
       const path = event.composedPath();
       if (path.includes(this._closeBtn)) this._close();
@@ -185,6 +204,7 @@ class GlkToast extends GlkElement {
   }
 
   _show() {
+    this._raise();
     this._toast.classList.add('is-visible');
     this._syncInert();
     this._arm();

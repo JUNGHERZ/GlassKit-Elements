@@ -160,6 +160,10 @@ checkControlSheet.replaceSync(`
   }
   /* label-position="start": the text before the control. */
   :host([label-position="start"]) :is(.glass-toggle, .glass-checkbox, .glass-radio) { flex-direction: row-reverse; }
+  /* full (since 1.39.0): the control over the whole row, text and control at
+     its two ends — with label-position="start" the switch at the row's end,
+     as in the settings of iOS. GlassKit's --full does the same. */
+  :host([full]) :is(.glass-toggle, .glass-checkbox, .glass-radio) { display: flex; width: 100%; justify-content: space-between; }
 `);
 
 /**

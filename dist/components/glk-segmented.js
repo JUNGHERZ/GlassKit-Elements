@@ -1,5 +1,6 @@
 import { GlkFormElement } from './base.js';
 import { r as revealCentered } from './shared/reveal-CjjzoxTa.js';
+import { t as tooltipBehaviour } from './shared/overlay-zsSL3Ygw.js';
 import { a as attachDroplet } from './shared/glasskit-droplet-hzz2ey4D.js';
 import '@jungherz-de/glasskit/glasskit-styles.js';
 
@@ -26,7 +27,17 @@ import '@jungherz-de/glasskit/glasskit-styles.js';
 //             the default, strokes an SVG icon in the option's colour;
 //             "color" keeps a coloured logo's own fills and strokes —
 //             GlassKit's .glass-segmented__icon--color; an option's
-//             iconStyle overrides it for that option)
+//             iconStyle overrides it for that option), tooltip-placement
+//             (since 1.39.0: top, the default, bottom, start or end — where
+//             the options' tooltips open)
+//
+// Tooltips (since 1.39.0): an option of an icon-only row shows its label in
+// a tooltip, as <glk-tooltip> does — on hover after a moment, at once on
+// keyboard focus, on a long press — where it had a native title, which
+// showed neither on focus nor on touch. An option's hint ("hint" in
+// options) is the tooltip's second line, GlassKit's .glass-tooltip__hint,
+// and the button's aria-description; in a row with labels an option with a
+// hint shows the hint alone.
 // Properties: value, options (array or JSON text), full, overflow, label,
 //             disabled, droplet, iconOnly, iconStyle
 // Slots:      icon-<value> (since 1.28.0) — the icon of the option with that
@@ -54,6 +65,7 @@ import '@jungherz-de/glasskit/glasskit-styles.js';
 const TONES = ['success', 'warning', 'error'];
 const BADGE_TONES = ['primary', ...TONES];
 const OVERFLOWS = ['scroll', 'wrap'];
+const PLACEMENTS = ['top', 'bottom', 'start', 'end'];
 
 function parseList(json) {
   try {
@@ -72,7 +84,7 @@ function badgeText(badge) {
 }
 
 class GlkSegmented extends GlkFormElement {
-  static get observedAttributes() { return ['options', 'value', 'full', 'overflow', 'label', 'droplet', 'icon-only', 'icon-style']; }
+  static get observedAttributes() { return ['options', 'value', 'full', 'overflow', 'label', 'droplet', 'icon-only', 'icon-style', 'tooltip-placement']; }
 
   // A row of buttons with one tab stop: delegated focus would land on the
   // first button, not the chosen one.
@@ -95,7 +107,10 @@ class GlkSegmented extends GlkFormElement {
     const buttons = [...this._group.children];
     const same = buttons.length === list.length
       && list.every((option, i) => buttons[i].dataset.value === String(option.value ?? ''));
-    if (!same) this._group.replaceChildren(...list.map(() => this.createElement('button', [], { type: 'button', part: 'item' })));
+    if (!same) {
+      for (const button of buttons) this._applyTip(button, '', '');
+      this._group.replaceChildren(...list.map(() => this.createElement('button', [], { type: 'button', part: 'item' })));
+    }
     [...this._group.children].forEach((button, i) => this._fill(button, list[i], iconOnly));
     this._syncIcons();
     this.applyDisabled(this._actuallyDisabled);
@@ -134,8 +149,44 @@ class GlkSegmented extends GlkFormElement {
     button.replaceChildren(...parts);
     if (iconOnly || badge) button.setAttribute('aria-label', name);
     else button.removeAttribute('aria-label');
-    if (iconOnly) button.title = name;
-    else button.removeAttribute('title');
+    // A tooltip instead of the native title (since 1.39.0).
+    button.removeAttribute('title');
+    const hint = option.hint == null ? '' : String(option.hint);
+    if (hint) button.setAttribute('aria-description', hint);
+    else button.removeAttribute('aria-description');
+    this._applyTip(button, iconOnly ? label : '', hint);
+  }
+
+  /**
+   * An option's tooltip: its label in an icon-only row, its hint as the
+   * second line — or alone where the label shows. None without either.
+   */
+  _applyTip(button, label, hint) {
+    this._tips ??= new Map();
+    let entry = this._tips.get(button);
+    if (!label && !hint) {
+      if (entry) {
+        entry.tip.destroy();
+        entry.panel.remove();
+        this._tips.delete(button);
+      }
+      return;
+    }
+    if (!entry) {
+      const panel = this.createElement('div', ['glass-tooltip'], { 'aria-hidden': 'true', part: 'tooltip' });
+      this._wrapper.appendChild(panel);
+      const tip = tooltipBehaviour(button, panel, {
+        side: () => this.tooltipPlacement,
+        anchor: () => button,
+        offset: () => parseFloat(getComputedStyle(panel).getPropertyValue('--gl-tooltip-offset')) || 8,
+      });
+      entry = { panel, tip };
+      this._tips.set(button, entry);
+    }
+    const lines = label ? [document.createTextNode(label)] : [];
+    if (hint && label) lines.push(Object.assign(this.createElement('span', ['glass-tooltip__hint']), { textContent: hint }));
+    else if (hint) lines.push(document.createTextNode(hint));
+    entry.panel.replaceChildren(...lines);
   }
 
   /** An option shows its icon box only while an icon is slotted into it. */
@@ -212,6 +263,7 @@ class GlkSegmented extends GlkFormElement {
     this._resizeObserver = null;
     this._droplet?.destroy();
     this._droplet = null;
+    for (const { tip } of this._tips?.values() ?? []) tip.hide();
   }
 
   // The drop follows aria-pressed inside this shadow root by itself; a drag
@@ -258,6 +310,16 @@ class GlkSegmented extends GlkFormElement {
 
   get full() { return this.getBoolAttr('full'); }
   set full(v) { this.setBoolAttr('full', v); }
+
+  /** Where the options' tooltips open: top (the default), bottom, start or end. */
+  get tooltipPlacement() {
+    const p = this.getAttribute('tooltip-placement');
+    return PLACEMENTS.includes(p) ? p : 'top';
+  }
+  set tooltipPlacement(v) {
+    if (PLACEMENTS.includes(v)) this.setAttribute('tooltip-placement', v);
+    else this.removeAttribute('tooltip-placement');
+  }
 
   get droplet() { return this.getBoolAttr('droplet'); }
   set droplet(v) { this.setBoolAttr('droplet', v); }

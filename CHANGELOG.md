@@ -7,6 +7,76 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.39.0] – 2026-11-01
+
+Versions stay aligned with GlassKit at 1.39.0, which this release is built against (peer dependency `>=1.39.0`).
+
+### Added
+
+- **The switch at the row's end: `full` on `<glk-toggle>`, `<glk-checkbox>` and `<glk-radio>`.** With `label-position="start"` the switch stood right after its text. Nothing put it at the row's end outside a list row's `slot="trailing"`.
+  - `full` spreads the control over its row. With `label-position="start"` the text stands at the row's start and the switch at its end, as in the settings of iOS, mirrored right to left.
+  - The whole row is the label, so a click anywhere on it switches.
+  - Without the elements, GlassKit 1.39.0's `--label-start` and `--full` do the same.
+- **A summary in the accordion's head: `slot="summary"` on `<glk-accordion-item>`, and the part `summary`.** The fields of an entry stand in an accordion above its text, and closed, the head should show their values beside the title. A child with `slot="summary"` was not rendered at all, and the values in `title` took the title's size and wrapped it.
+  - The slot stands after the title, inside the trigger, in GlassKit 1.39.0's `.glass-accordion__summary`: the room up to the chevron, one muted line with an ellipsis.
+  - A click on it, Enter and Space open the item as on the title, and it is part of the trigger's name.
+  - The issue's app shows the summary only while the item is closed. The element shows it while something is slotted, open or closed, and a page hides it while open with `glk-accordion-item[open] [slot="summary"] { display: none; }`.
+
+  ([#67](https://github.com/JUNGHERZ/GlassKit-Elements/issues/67))
+- **Tooltips for the options of `<glk-segmented>`, a `hint` per option, and `tooltip-placement`.** An option of an icon-only row was named only by a native `title`, which shows neither on keyboard focus nor on touch. A `<glk-tooltip>` could not reach an option in the shadow root, and around the whole row it stood at the first option.
+  - An option of an icon-only row shows its label in a tooltip, as `<glk-tooltip>` does: on hover after a moment, at once on keyboard focus, on a long press, in the top layer. The native `title` is gone.
+  - `hint` in `options` is the tooltip's second line, in GlassKit 1.39.0's `.glass-tooltip__hint`, and the button's `aria-description`. In a row with labels, an option with a hint shows the hint alone.
+  - `tooltip-placement` (top, the default, bottom, start or end) says where the tooltips open, and the part `tooltip` reaches them.
+  - The row keeps the drop, the form value, `glk-change` and the counts. The issue's other idea, a slot `hint-<value>`, is not part of it: a hint is text, and `options` carries it.
+
+  ([#66](https://github.com/JUNGHERZ/GlassKit-Elements/issues/66))
+- **A modal sheet that starts at its panel: `initial-focus="panel"` on `<glk-sheet>`.** `showModal()` puts the focus on the first thing the sheet holds. In a sheet to read, with an optional text field, Chromium focused the field, and on a phone its keyboard came up over the sheet.
+  - With `initial-focus="panel"` the panel is the dialog's `autofocus`, so `showModal()` focuses it, on the first opening too. Tab goes on to the first field.
+  - An `[autofocus]` inside the sheet still comes first. Unset, nothing changes. Property `initialFocus`.
+
+  ([#65](https://github.com/JUNGHERZ/GlassKit-Elements/issues/65))
+- **Toasts above an open sheet or modal: `<glk-toast>` in the top layer.** `<glk-sheet>` and `<glk-modal>` lie in the top layer as native dialogs, where no `z-index` reaches. A toast in the page stood under the open dialog and its blurred overlay and could not be read. That hit the common case of a form in a sheet that fails to save.
+  - The toast is a `popover="manual"`, and every `show()` puts it into the top layer again, last and so above a dialog opened since, as the issue proposed.
+  - It stays open while it is in the document, so its live region is in place before a message comes. Hidden, it is invisible and lets the pointer through.
+  - The issue's wrapper was a popover over the whole window around the toast. The element makes the toast itself the popover, and GlassKit 1.39.0's `.glass-toast[popover]` undoes the popover's own box.
+  - Beside a modal the toast can be seen, but like everything outside the dialog it cannot be used or announced. A toast shown before a dialog opens stays below it until its next `show()`. Without the popover API it stays in the page, as before.
+
+  ([#64](https://github.com/JUNGHERZ/GlassKit-Elements/issues/64))
+
+### Fixed
+
+- **A sheet showed up at its place at once, or swung past it.** While the panel slid in, a focus inside it scrolled the overlay: `showModal()`'s, or a page's on a field right after opening. Both parts of the issue's proposal are in:
+  - GlassKit 1.39.0's overlay clips with `overflow: clip`, which is no scroll container.
+  - The sheet focuses `[autofocus]` and the panel with `preventScroll`, and sets the overlay's scroll back to 0 after its first focus.
+
+  ([#68](https://github.com/JUNGHERZ/GlassKit-Elements/issues/68))
+- **The accordion's trigger showed no ring for the keyboard.** GlassKit 1.39.0's inset ring shows on the trigger of `<glk-accordion-item>`. ([GlassKit #31](https://github.com/JUNGHERZ/GlassKit/issues/31))
+- **The texts did not name what `--gl-label-hidden` needs.** It needs style queries on custom properties: Chrome 111, Safari 18 and Firefox 151. Without them the labels stay above their fields. The README, the docs and SKILL.md now name the versions and the fallback: `label-hidden` from a script, or the rules of a visually hidden label on `::part(label)` in the same query. ([GlassKit #30](https://github.com/JUNGHERZ/GlassKit/issues/30))
+
+Measured in Chromium 153, WebKit 26.6 and Firefox 151, 1.38.0 against 1.39.0:
+- **Switch:**
+  - `<glk-toggle label-position="start" full>` in a 420px row: the text starts at the row's start and the switch ends at the row's end, 0px from it. Before, it ended 274px from it.
+  - The same for `<glk-checkbox>`. Right to left the switch ends at the row's left edge.
+  - A click in the row's middle switches it, where it did nothing before.
+- **Accordion:**
+  - A summary of 283 × 17px stands beside the title in a 50px head, as high as without it. Before, the slotted child was not rendered (0 × 0px).
+  - A click on the summary opens the item. An item without a summary keeps its place hidden.
+  - With the focus from Tab the trigger shows the ring in Chromium and Firefox. WebKit's Tab does not reach buttons in Playwright.
+- **Segmented:**
+  - Over an option with a hint, a tooltip of 240 × 71px opens 8px below the row with `tooltip-placement="bottom"`: "Instead of the preview", and below it "A wider editor, the fields stay in the middle".
+  - Keyboard focus shows the tooltip at once.
+  - The buttons carry no `title`, and the hint is their `aria-description`. Before, there was no tooltip, only the `title`.
+- **Sheet:**
+  - With `initial-focus="panel"`, the panel of a modal sheet with a text field takes the focus. Before, Chromium focused the field, and WebKit and Firefox the dialog.
+  - A side sheet that a page focuses a field in right after opening slides from x 1440 to 984, and the overlay's scroll stays 0. Before, it stood at x 1000 from the first frame in Chromium and Firefox, with the overlay scrolled by 440px. In WebKit it swung to x 529 and back.
+  - A bottom sheet slides up from y 900 to its place. Before, it stood at its place at once in Chromium.
+- **Toast:**
+  - Shown over an open sheet, the toast is in the top layer above the sheet and its overlay, and sharp. Before, it lay under the overlay's blur.
+  - Hidden, it has opacity 0 and takes no pointer events: a click there reaches the page. It still fades in.
+- **Pages:** docs, showcase and landing pages render as in 1.38.0.
+
+---
+
 ## [1.38.0] – 2026-10-30
 
 Versions stay aligned with GlassKit at 1.38.0, which this release is built against (peer dependency `>=1.38.0`).
@@ -1485,6 +1555,7 @@ Starting with this release, GlassKit Elements version numbers are aligned with G
 ---
 
 [Unreleased]: https://github.com/JUNGHERZ/GlassKit-Elements/compare/v1.33.1...HEAD
+[1.39.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.39.0
 [1.38.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.38.0
 [1.37.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.37.0
 [1.36.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.36.0

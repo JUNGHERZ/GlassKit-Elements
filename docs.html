@@ -20,7 +20,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="GlassKit Elements — Documentation">
   <meta name="twitter:description" content="Complete documentation for all 46 GlassKit Elements web components with live examples.">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.38/glasskit.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.39/glasskit.min.css">
   <script src="/dist/glasskit-elements.min.js"></script>
   <style>
     html { scroll-behavior: smooth; }
@@ -268,7 +268,7 @@
     <aside class="docs-sidebar">
       <div class="docs-sidebar__title">&#129482; <a href="/">GlassKit Elements</a></div>
       <div class="docs-sidebar__subtitle">Web Components for GlassKit CSS.</div>
-      <div class="docs-sidebar__version">v1.38.0 &ndash; Jungherz GmbH</div>
+      <div class="docs-sidebar__version">v1.39.0 &ndash; Jungherz GmbH</div>
 
       <div class="docs-sidebar__group">
         <div class="docs-sidebar__group-title">Basics</div>
@@ -360,7 +360,7 @@
         <h1>GlassKit Elements</h1>
         <p>Complete reference for all 46 web components &ndash; built by Jungherz GmbH. Vanilla JS, Shadow DOM, native form participation.</p>
         <div class="docs-hero__badges">
-          <span class="docs-hero__badge">v1.38.0</span>
+          <span class="docs-hero__badge">v1.39.0</span>
           <span class="docs-hero__badge">Shadow DOM</span>
           <span class="docs-hero__badge">46 Components</span>
           <span class="docs-hero__badge">Vanilla JS</span>
@@ -373,7 +373,7 @@
 
         <h3>CDN (quickest)</h3>
         <div class="docs-code"><span class="cmt">&lt;!-- 1. GlassKit CSS --&gt;</span>
-<span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span> <span class="attr">href</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.38/glasskit.min.css"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span> <span class="attr">href</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.39/glasskit.min.css"</span><span class="tag">&gt;</span>
 
 <span class="cmt">&lt;!-- 2. GlassKit Elements --&gt;</span>
 <span class="tag">&lt;script</span> <span class="attr">src</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"</span><span class="tag">&gt;&lt;/script&gt;</span></div>
@@ -690,7 +690,7 @@ addEventListener(<span class="val">'afterprint'</span>, () =&gt; {
 <span class="tag">&lt;/glk-input&gt;</span>
 
 <span class="cls">glk-input::part(label)</span> { <span class="attr">letter-spacing</span>: <span class="val">0.01em</span>; }</div>
-          <p id="glk-input-name"><strong>A name without a visible label</strong> (since 1.36.0). Fields in a table under one shared header &mdash; opening hours with the columns From and To for each day &mdash; each need their label as their name, but showing it in every cell repeats the header. <code>label-hidden</code> keeps <code>label</code> as the field&rsquo;s name and takes it out of sight, as on the <a href="#glk-toggle-name">switches</a>; <code>aria-label</code> or <code>aria-labelledby</code> on the element name the field directly. A group around each row names the day. <code>&lt;glk-select&gt;</code> and <code>&lt;glk-textarea&gt;</code> take the same attributes. Since 1.38.0 GlassKit&rsquo;s <code>--gl-label-hidden: 1</code> does the same for every field in a container and can be set from a container or media query, where the attribute cannot follow: the labels out of sight while the week is a table, above the fields when it turns into a list.</p>
+          <p id="glk-input-name"><strong>A name without a visible label</strong> (since 1.36.0). Fields in a table under one shared header &mdash; opening hours with the columns From and To for each day &mdash; each need their label as their name, but showing it in every cell repeats the header. <code>label-hidden</code> keeps <code>label</code> as the field&rsquo;s name and takes it out of sight, as on the <a href="#glk-toggle-name">switches</a>; <code>aria-label</code> or <code>aria-labelledby</code> on the element name the field directly. A group around each row names the day. <code>&lt;glk-select&gt;</code> and <code>&lt;glk-textarea&gt;</code> take the same attributes. Since 1.38.0 GlassKit&rsquo;s <code>--gl-label-hidden: 1</code> does the same for every field in a container and can be set from a container or media query, where the attribute cannot follow: the labels out of sight while the week is a table, above the fields when it turns into a list. It needs style queries on custom properties: Chrome 111, Safari 18 and Firefox 151. Without them the labels stay above their fields &mdash; for older browsers set <code>label-hidden</code> from a script, or put the rules of a visually hidden label on <code>::part(label)</code> in the same query.</p>
           <div class="docs-code"><span class="tag">@container</span> week (min-width: 560px) { <span class="cls">.day</span> { <span class="attr">--gl-label-hidden</span>: <span class="val">1</span>; } }</div>
           <div class="docs-preview">
             <div style="display:flex;flex-direction:column;gap:8px;max-width:440px">
@@ -764,6 +764,7 @@ addEventListener(<span class="val">'afterprint'</span>, () =&gt; {
             <tr><td><code>required</code></td><td>Boolean</td><td>Must be on before the form submits (since 1.20.0)</td></tr>
             <tr><td><code>label-hidden</code></td><td>Boolean</td><td>The label stays the switch&rsquo;s name, out of sight (since 1.33.1)</td></tr>
             <tr><td><code>label-position</code></td><td>String</td><td><code>end</code> (default) or <code>start</code>: the label before the switch (since 1.33.1)</td></tr>
+            <tr><td><code>full</code></td><td>Boolean</td><td>The control over the whole row, text and switch at its two ends; with <code>label-position="start"</code> the switch at the row&rsquo;s end, as in the settings of iOS (since 1.39.0)</td></tr>
             <tr><td><code>aria-label</code>, <code>aria-labelledby</code></td><td>String</td><td>Name the switch from the host instead of its label (since 1.33.1)</td></tr>
           </table>
           <p><strong>Events:</strong> <code>glk-change</code> &rarr; <code>{ checked: boolean }</code> &middot; <strong>Parts:</strong> <code>track</code>, <code>label</code> (since 1.33.1)</p>
@@ -782,6 +783,12 @@ addEventListener(<span class="val">'afterprint'</span>, () =&gt; {
 <span class="cmt">&lt;!-- Or point at a title of the page's own --&gt;</span>
 <span class="tag">&lt;span</span> <span class="attr">id</span>=<span class="val">"news-title"</span><span class="tag">&gt;</span>Newsletter<span class="tag">&lt;/span&gt;</span>
 <span class="tag">&lt;glk-toggle</span> <span class="attr">aria-labelledby</span>=<span class="val">"news-title"</span><span class="tag">&gt;&lt;/glk-toggle&gt;</span></div>
+          <p id="glk-toggle-full"><strong>The switch at the row&rsquo;s end</strong> (since 1.39.0). <code>full</code> spreads the control over its row: with <code>label-position="start"</code> the text stands at the row&rsquo;s start and the switch at its end, as in the settings of iOS, mirrored right to left. GlassKit 1.39.0&rsquo;s <code>--label-start</code> and <code>--full</code> do the same without the elements. The whole row is the label, so a click anywhere on it switches. <code>&lt;glk-checkbox&gt;</code> and <code>&lt;glk-radio&gt;</code> take the same attributes. In a list row the switch goes into <code>slot="trailing"</code> with <code>label-hidden</code> instead, the row&rsquo;s title as its name (<a href="#glk-toggle-name">above</a>).</p>
+          <div class="docs-preview" style="display:flex;flex-direction:column;gap:12px;max-width:420px;">
+            <glk-toggle label="Notifications" label-position="start" full checked></glk-toggle>
+            <glk-toggle label="Sounds" label-position="start" full></glk-toggle>
+          </div>
+          <div class="docs-code"><span class="tag">&lt;glk-toggle</span> <span class="attr">label</span>=<span class="val">"Notifications"</span> <span class="attr">label-position</span>=<span class="val">"start"</span> <span class="attr">full</span><span class="tag">&gt;&lt;/glk-toggle&gt;</span></div>
         </div>
 
         <div class="docs-component" id="glk-checkbox">
@@ -896,6 +903,11 @@ glk-segmented::part(badge) { letter-spacing: 0.02em; }</div>
           <script>
             document.getElementById('docs-seg').addEventListener('glk-change', e => { document.querySelector('[data-docs-seg-out]').textContent = 'glk-change → ' + e.detail.value; });
           </script>
+          <p id="glk-segmented-tooltips"><strong>Tooltips per option</strong> (since 1.39.0): an icon-only row shows each label in a tooltip &mdash; on hover after a moment, at once on keyboard focus, on a long press, as <code>&lt;glk-tooltip&gt;</code> &mdash; where it had the browser&rsquo;s <code>title</code>, which showed neither on focus nor on touch. An option&rsquo;s <code>hint</code> in <code>options</code> is the tooltip&rsquo;s second line, GlassKit&rsquo;s <code>.glass-tooltip__hint</code>, and the button&rsquo;s description; in a row with labels an option with a hint shows the hint alone. <code>tooltip-placement</code> (<code>top</code>, the default, <code>bottom</code>, <code>start</code>, <code>end</code>) says where they open &mdash; <code>bottom</code> for a row in a head. <strong>Part:</strong> <code>tooltip</code>. Hover or focus an option:</p>
+          <div class="docs-preview">
+            <glk-segmented icon-only tooltip-placement="bottom" label="Where the editor opens" value="col" options='[{"value":"col","label":"In the column","hint":"The preview stays on the right"},{"value":"preview","label":"Instead of the preview","hint":"A wider editor, the fields stay in the middle"},{"value":"full","label":"Full width"}]'><svg slot="icon-col" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="15" y1="4" x2="15" y2="20"/></svg><svg slot="icon-preview" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="9" y1="4" x2="9" y2="20"/></svg><svg slot="icon-full" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/></svg></glk-segmented>
+          </div>
+          <div class="docs-code"><span class="tag">&lt;glk-segmented</span> <span class="attr">icon-only</span> <span class="attr">tooltip-placement</span>=<span class="val">"bottom"</span> <span class="attr">options</span>=<span class="val">'[{"value":"preview","label":"…","hint":"…"}, …]'</span><span class="tag">&gt;</span>…<span class="tag">&lt;/glk-segmented&gt;</span></div>
         </div>
         <div class="docs-component" id="glk-calendar">
           <h3><code>&lt;glk-calendar&gt;</code></h3>
@@ -1417,6 +1429,7 @@ toast.addEventListener(<span class="val">'glk-action'</span>, e =&gt; { if (e.de
               t.addEventListener('glk-action', e => { out.textContent = 'glk-action → ' + e.detail.action; });
               t.addEventListener('glk-close', () => { out.textContent = 'glk-close'; }); })();
           </script>
+          <p id="glk-toast-top"><strong>Above a sheet or a modal</strong> (since 1.39.0): a <code>&lt;glk-sheet&gt;</code> or <code>&lt;glk-modal&gt;</code> lies in the top layer as a native dialog, and the toast, fixed in the page, stood under it and its blurred overlay &mdash; &ldquo;That name is taken&rdquo; for a sheet&rsquo;s form could not be read. The toast is a <code>popover="manual"</code> now, open while it is in the document &mdash; hidden it stays invisible and lets the pointer through, and as a live region it keeps being read &mdash; and every <code>show()</code> puts it in again, last and so on top. Beside a modal it can be seen, but, as everything outside the dialog, not used or announced: put a message a screen reader must hear into the dialog itself. A toast shown before a dialog opens lies under it until its next <code>show()</code>.</p>
         </div>
 
         <div class="docs-component" id="glk-popover">
@@ -1579,6 +1592,7 @@ menu.addEventListener(<span class="val">'glk-select'</span>, (event) =&gt; {
             <tr><td><code>close-label</code></td><td>String</td><td>Its name, &ldquo;Close&rdquo; by default (since 1.35.0)</td></tr>
             <tr><td><code>placement</code></td><td>String</td><td><code>bottom</code> (default) | <code>start</code> | <code>end</code>: a panel at that side, full height, without grip, actions side by side (since 1.35.0)</td></tr>
             <tr><td><code>modeless</code></td><td>Boolean</td><td>Opened with <code>show()</code>: no scrim, the page stays usable, other dialogs open above it (since 1.35.0)</td></tr>
+            <tr><td><code>initial-focus</code></td><td>String</td><td><code>panel</code>: a modal sheet starts at its panel, not at the first field it holds &mdash; no on-screen keyboard over a sheet that is opened to be read (since 1.39.0)</td></tr>
           </table>
           <p><strong>Methods:</strong> <code>show()</code>, <code>close()</code>. <strong>Slots:</strong> default (content), <code>actions</code>; since 1.35.0 <code>eyebrow</code> (a short line above the title), <code>leading</code> and <code>trailing</code> (before and after it in the head); since 1.36.0 <code>subtitle</code> (below it). <strong>Parts:</strong> <code>overlay</code>, <code>sheet</code>, <code>title</code>, <code>body</code>, <code>actions</code>; since 1.35.0 <code>grip</code>, <code>head</code>, <code>eyebrow</code>, <code>leading</code>, <code>trailing</code>, <code>close</code>; since 1.36.0 <code>subtitle</code> and <code>close-icon</code>, the glyph of the close button. <strong>Events:</strong> <code>glk-close</code> — only when the user closes it (scrim, Escape); <code>glk-closed</code> &mdash; once it has slid out (since 1.32.0).</p>
           <p><strong><code>glk-closed</code> (since 1.32.0)</strong> follows once the sheet has slid out and its dialog has closed, however it closed &mdash; scrim, Escape, <code>close()</code>, the attribute &mdash; and at once under <code>prefers-reduced-motion</code>; <code>close()</code> returns a promise that settles at the same moment. A page that renders the sheet from its state removes it there, and the slide shows. An inline sheet shows no overlay, so nothing slides: <code>close()</code> settles at once.</p>
@@ -1630,6 +1644,7 @@ menu.addEventListener(<span class="val">'glk-select'</span>, (event) =&gt; {
             document.getElementById('docs-sheet-open').addEventListener('click', () => document.getElementById('docs-sheet-el').show());
             document.getElementById('docs-sheet-close').addEventListener('click', () => document.getElementById('docs-sheet-el').close());
           </script>
+          <p id="glk-sheet-focus"><strong>Where the focus starts</strong> (since 1.39.0): <code>showModal()</code> focuses the first thing a sheet holds, and when that is a text field a phone brings up its keyboard over the sheet. <code>initial-focus="panel"</code> starts a modal sheet at its panel instead, as a modeless one does; an element with <code>autofocus</code> still wins. The sheet slides in whatever takes the focus: GlassKit 1.39.0&rsquo;s overlay clips without scrolling, and the sheet focuses without scrolling &mdash; a focus while it slid in used to scroll the overlay, and the panel stood at its place at once or swung past it.</p>
         </div>
       </section>
 
@@ -1658,6 +1673,16 @@ menu.addEventListener(<span class="val">'glk-select'</span>, (event) =&gt; {
           </table>
           <p><strong>Events:</strong> <code>glk-toggle</code> &rarr; <code>{ open: boolean }</code> &nbsp; <strong>Parts:</strong> <code>item</code>, <code>trigger</code>, <code>content</code>, <code>body</code> (since 1.30.0)</p>
           <p>The trigger carries <code>aria-expanded</code> and <code>aria-controls</code>; a closed section is inert, so its links and fields are out of the tab order and out of the accessibility tree until it opens (since 1.20.0). An open section takes the height of its content, however long, and slides to it (GlassKit 1.30.0) &mdash; until then it ended at 500&nbsp;px and cut off the rest.</p>
+          <p id="glk-accordion-summary"><strong>A summary in the head</strong> (since 1.39.0): <code>slot="summary"</code> puts the values of a closed entry beside its title &mdash; a headline, a date &mdash; in GlassKit&rsquo;s <code>.glass-accordion__summary</code>: the room up to the chevron, one muted line with an ellipsis. It stands inside the trigger, so a click on it, Enter and Space open the item as on the title, and it is part of the trigger&rsquo;s name. It shows while something is slotted; hide it while the item is open, where the fields show the values themselves, with <code>glk-accordion-item[open] [slot="summary"] { display: none; }</code>. <strong>Part:</strong> <code>summary</code>. Since GlassKit 1.39.0 the trigger also shows a ring for the keyboard.</p>
+          <div class="docs-preview">
+            <glk-accordion>
+              <glk-accordion-item title="Details of the news"><span slot="summary">Summer party · 31.10.2026 · Lena Hoffmann</span>The fields of the entry.</glk-accordion-item>
+            </glk-accordion>
+          </div>
+          <div class="docs-code"><span class="tag">&lt;glk-accordion-item</span> <span class="attr">title</span>=<span class="val">"Details of the news"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;span</span> <span class="attr">slot</span>=<span class="val">"summary"</span><span class="tag">&gt;</span>Summer party · 31.10.2026 · Lena Hoffmann<span class="tag">&lt;/span&gt;</span>
+  …
+<span class="tag">&lt;/glk-accordion-item&gt;</span></div>
         </div>
 
         <div class="docs-component" id="glk-list">

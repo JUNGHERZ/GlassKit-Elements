@@ -6,6 +6,14 @@ const CHEVRON_SVG = `<span class="glass-accordion__trigger-icon"><svg viewBox="0
 // Open, the content takes its own height (GlassKit 1.30.0: a grid row that
 // slides from 0fr to 1fr; until then it ended at 500 px). Parts since
 // 1.30.0: item, trigger, content, body.
+//
+// slot="summary" (since 1.39.0) puts a summary into the head, after the
+// title — the values of a closed entry, a headline and a date — inside the
+// trigger, so a click on it, Enter and Space open the item as on the
+// title: GlassKit's .glass-accordion__summary, one muted line with an
+// ellipsis. It shows while something is slotted, open or closed; a page
+// hides it while open with glk-accordion-item[open] [slot="summary"].
+// Part summary.
 
 class GlkAccordionItem extends GlkElement {
   static get observedAttributes() {
@@ -24,6 +32,13 @@ class GlkAccordionItem extends GlkElement {
     this.takeTitle();
     this._triggerText = document.createTextNode(this._title || '');
     this._trigger.appendChild(this._triggerText);
+    this._summary = this.createElement('span', ['glass-accordion__summary'], { part: 'summary', hidden: '' });
+    const summarySlot = this.createElement('slot', [], { name: 'summary' });
+    summarySlot.addEventListener('slotchange', () => {
+      this._summary.hidden = summarySlot.assignedNodes().length === 0;
+    });
+    this._summary.appendChild(summarySlot);
+    this._trigger.appendChild(this._summary);
     this._trigger.insertAdjacentHTML('beforeend', CHEVRON_SVG);
 
     // Content

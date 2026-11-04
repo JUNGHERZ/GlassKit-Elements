@@ -31,6 +31,10 @@ const sheet = new CSSStyleSheet();
 sheet.replaceSync(`
   :host { display: block; outline: none; }
   :host(:focus-visible) .glass-tree__row { box-shadow: inset 0 0 0 2px var(--gl-border-focus); }
+  /* In forced colors the browser drops the ring (since 1.40.0). */
+  @media (forced-colors: active) {
+    :host(:focus-visible) .glass-tree__row { outline: 2px solid; outline-offset: -2px; }
+  }
 `);
 
 class GlkTreeItem extends GlkElement {

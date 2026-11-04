@@ -23,12 +23,16 @@ sheet.replaceSync(`
   :host { outline: none; }
   :host(:focus) .glass-menu__item { background: var(--gl-surface-2); }
   :host(:focus-visible) .glass-menu__item { box-shadow: inset 0 0 0 2px var(--gl-border-focus); }
+  /* In forced colors the browser drops the ring (since 1.40.0). */
+  @media (forced-colors: active) {
+    :host(:focus-visible) .glass-menu__item { outline: 2px solid; outline-offset: -2px; }
+  }
   /* A folded level of <glk-breadcrumbs> as the target of a drag (since
      1.34.0), lit as its crumb would be. */
   :host(.is-drop-target) .glass-menu__item {
     color: var(--gl-color-text);
     background: color-mix(in srgb, var(--gl-color-primary) 18%, transparent);
-    box-shadow: inset 0 0 0 1.5px var(--gl-border-focus);
+    box-shadow: inset 0 0 0 1.5px var(--gl-color-primary);
   }
   :host(.is-drop-refused) .glass-menu__item { background: var(--gl-color-error-surface); box-shadow: inset 0 0 0 1.5px var(--gl-color-error-border); }
 `);

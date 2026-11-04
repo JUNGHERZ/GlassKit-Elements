@@ -20,7 +20,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="GlassKit Elements — Dokumentation">
   <meta name="twitter:description" content="Vollständige Dokumentation aller 46 GlassKit Elements Web Components mit Live-Beispielen.">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.39/glasskit.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.40/glasskit.min.css">
   <script src="/dist/glasskit-elements.min.js"></script>
   <style>
     html { scroll-behavior: smooth; }
@@ -208,7 +208,7 @@
       font-weight: 500; text-decoration: none; border-radius: 6px;
     }
     .docs-preview a[slot="label-end"]:hover { text-decoration: underline; }
-    .docs-preview a[slot="label-end"]:focus-visible { outline: none; box-shadow: var(--gl-shadow-focus); }
+    .docs-preview a[slot="label-end"]:focus-visible { outline: 2px solid var(--gl-focus-ring); outline-offset: 2px; }
     .docs-preview--contained {
       position: relative; overflow: hidden; height: 80px;
       display: flex; align-items: flex-end;
@@ -244,6 +244,7 @@
     .docs-component > p { margin-bottom: 12px; }
     /* The plain close button of the sheet head example (1.36.0) */
     #docs-sheet-plain::part(close) { background: transparent; border-color: transparent; box-shadow: none; color: var(--gl-color-text); }
+    #docs-sheet-plain::part(close):focus-visible { box-shadow: var(--gl-shadow-focus); }
 
     /* ── Responsive ── */
     @media (max-width: 768px) {
@@ -270,7 +271,7 @@
     <aside class="docs-sidebar">
       <div class="docs-sidebar__title">&#129482; <a href="../de/">GlassKit Elements</a></div>
       <div class="docs-sidebar__subtitle">Web Components f&uuml;r GlassKit CSS.</div>
-      <div class="docs-sidebar__version">v1.39.0 &ndash; Jungherz GmbH</div>
+      <div class="docs-sidebar__version">v1.40.0 &ndash; Jungherz GmbH</div>
 
       <div class="docs-sidebar__group">
         <div class="docs-sidebar__group-title">Grundlagen</div>
@@ -362,7 +363,7 @@
         <h1>GlassKit Elements</h1>
         <p>Vollst&auml;ndige Referenz f&uuml;r alle 46 Web Components &ndash; entwickelt von Jungherz GmbH. Vanilla JS, Shadow DOM, native Formular-Teilnahme.</p>
         <div class="docs-hero__badges">
-          <span class="docs-hero__badge">v1.39.0</span>
+          <span class="docs-hero__badge">v1.40.0</span>
           <span class="docs-hero__badge">Shadow DOM</span>
           <span class="docs-hero__badge">46 Komponenten</span>
           <span class="docs-hero__badge">Vanilla JS</span>
@@ -375,7 +376,7 @@
 
         <h3>CDN (schnellste Variante)</h3>
         <div class="docs-code"><span class="cmt">&lt;!-- 1. GlassKit CSS --&gt;</span>
-<span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span> <span class="attr">href</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.39/glasskit.min.css"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span> <span class="attr">href</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.40/glasskit.min.css"</span><span class="tag">&gt;</span>
 
 <span class="cmt">&lt;!-- 2. GlassKit Elements --&gt;</span>
 <span class="tag">&lt;script</span> <span class="attr">src</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"</span><span class="tag">&gt;&lt;/script&gt;</span></div>
@@ -407,6 +408,20 @@
         <p>Die Token-Namen bleiben global; eine eigene Komponente, die <code>var(--gl-…, fallback)</code> liest, bekommt GlassKits Wert. Eine Seite, die die Tokens selbst deklariert oder nur in einem Teil der Seite haben will, schaltet die Vorgaben ab &mdash; das Attribut wird beobachtet, darf also auch später kommen oder gehen:</p>
         <div class="docs-code"><span class="tag">&lt;html</span> <span class="attr">data-glk-defaults</span>=<span class="val">"off"</span><span class="tag">&gt;</span></div>
         <p>Die Elemente nehmen die Tokens dann von dort, wo sie sie erben: aus <code>glasskit.css</code> oder aus einem eigenen Block auf einem Container um sie herum.</p>
+
+        <h3 id="focus-marks">Fokusmarkierungen</h3>
+        <p>Seit GlassKit 1.40.0 zeigt jedes Element, wo die Tastatur steht, in einer deckenden Farbe: <code>--gl-focus-ring</code>. <code>&lt;glk-button&gt;</code>, <code>&lt;glk-pill&gt;</code> und die Aktionen von <code>&lt;glk-modal&gt;</code> zeichnen sie als Outline; sie hatten gar keine Markierung, und eine Regel der Seite erreichte sie in ihren Shadow Roots nicht. Die anderen Elemente nehmen den Ring, 2&nbsp;px breit und keine Tönung mehr. GlassKits Orange erreicht 3:1 oder mehr auf der Seite und auf Glas. Drücke hier die Tab-Taste:</p>
+        <div class="docs-preview" style="display:flex;flex-wrap:wrap;gap:16px;align-items:center;">
+          <glk-button variant="primary" size="sm auto">Primär</glk-button>
+          <glk-button variant="secondary" size="sm auto">Sekundär</glk-button>
+          <glk-checkbox label="Checkbox"></glk-checkbox>
+          <glk-toggle label="Schalter" checked></glk-toggle>
+        </div>
+        <p>Die Farbe folgt der Marke. Wie hell Glas wird, entscheidet aber, was dahinter liegt, und eine dunklere Marke kann an der hellsten Stelle darunter bleiben: Glas auf einer Glow-Karte in der Seitenmitte, im Dark Mode. Eine eigene Farbe gehört deckend in das Token; miss sie dort.</p>
+        <div class="docs-code"><span class="cmt">/* Eine eigene, in beiden Themes */</span>
+<span class="cls">:root</span>, [data-theme=<span class="val">"dark"</span>] { <span class="attr">--gl-focus-ring</span>: <span class="val">#66afff</span>; }
+[data-theme=<span class="val">"light"</span>] { <span class="attr">--gl-focus-ring</span>: <span class="val">#0055cc</span>; }</div>
+        <p>Ein Projekt, das <code>--gl-border-focus</code> oder <code>--gl-shadow-focus</code> selbst gesetzt hat, behält seinen Ring, bis es sie entfernt. In Forced Colors, dem Hochkontrastmodus von Windows, verwirft der Browser <code>box-shadow</code>, und jedes Element zeigt eine Outline in der Textfarbe.</p>
 
         <h3>Dichte</h3>
         <p>F&uuml;r Admin-Oberfl&auml;chen, Desktop-Layouts und schmale Formulare macht <code>data-density="compact"</code> auf dem <code>&lt;html&gt;</code>-Element jedes Bedienelement dichter: Felder und Buttons 40px hoch statt 52 und 56, kleinere Toggles, Checkboxen und Radios, dichtere Listenzeilen und Modal-Aktionen. Die Gr&ouml;&szlig;en sind die Dichte-Tokens von GlassKit (GlassKit 1.21.0) und erreichen so jeden Shadow Root durch Vererbung &mdash; auch die eigenen Werte eines Projekts; mit <code>data-glk-defaults="off"</code> kommt die Vorgabe wie jedes andere Token aus <code>glasskit.css</code> auf der Seite. Derselbe Observer spiegelt das Attribut auf den Theme-Wrapper jedes Elements; zum Umschalten zur Laufzeit braucht es nichts weiter.</p>
@@ -1593,7 +1608,7 @@ menu.addEventListener(<span class="val">'glk-select'</span>, (event) =&gt; {
             <tr><td><code>dismissible</code></td><td>Boolean</td><td>Ein runder Schließen-Button am Ende des Kopfs (seit 1.35.0); ein Klick darauf schließt wie ein Klick daneben, mit <code>glk-close</code></td></tr>
             <tr><td><code>close-label</code></td><td>String</td><td>Sein Name, standardmäßig &bdquo;Close&ldquo; (seit 1.35.0)</td></tr>
             <tr><td><code>placement</code></td><td>String</td><td><code>bottom</code> (Standard) | <code>start</code> | <code>end</code>: ein Panel an dieser Seite, volle Höhe, ohne Griff, Aktionen nebeneinander (seit 1.35.0)</td></tr>
-            <tr><td><code>modeless</code></td><td>Boolean</td><td>Mit <code>show()</code> geöffnet: kein Scrim, die Seite bleibt bedienbar, andere Dialoge öffnen sich darüber (seit 1.35.0)</td></tr>
+            <tr><td><code>modeless</code></td><td>Boolean</td><td>Mit <code>show()</code> geöffnet: kein Scrim, die Seite bleibt bedienbar, andere Dialoge öffnen sich darüber (seit 1.35.0). An einem offenen Sheet gesetzt oder entfernt, öffnet es im anderen Modus neu, und die Scroll-Sperre der Seite folgt (seit 1.40.0)</td></tr>
             <tr><td><code>initial-focus</code></td><td>String</td><td><code>panel</code>: Ein modales Sheet beginnt bei seinem Panel, nicht beim ersten Feld darin &mdash; keine Bildschirmtastatur über einem Sheet, das zum Lesen geöffnet wird (seit 1.39.0)</td></tr>
           </table>
           <p><strong>Methoden:</strong> <code>show()</code>, <code>close()</code>. <strong>Slots:</strong> Standard (Inhalt), <code>actions</code>; seit 1.35.0 <code>eyebrow</code> (eine kurze Zeile über dem Titel), <code>leading</code> und <code>trailing</code> (davor und danach im Kopf); seit 1.36.0 <code>subtitle</code> (darunter). <strong>Parts:</strong> <code>overlay</code>, <code>sheet</code>, <code>title</code>, <code>body</code>, <code>actions</code>; seit 1.35.0 <code>grip</code>, <code>head</code>, <code>eyebrow</code>, <code>leading</code>, <code>trailing</code>, <code>close</code>; seit 1.36.0 <code>subtitle</code> und <code>close-icon</code>, das Zeichen des Schließen-Buttons. <strong>Events:</strong> <code>glk-close</code> — nur beim Schließen durch den Nutzer (Scrim, Escape); <code>glk-closed</code> &mdash; sobald es hinausgeglitten ist (seit 1.32.0).</p>
@@ -1621,7 +1636,8 @@ menu.addEventListener(<span class="val">'glk-select'</span>, (event) =&gt; {
 <span class="tag">&lt;/glk-sheet&gt;</span>
 
 <span class="cls">glk-sheet</span> { <span class="attr">--gl-sheet-close-size</span>: <span class="val">44px</span>; <span class="attr">--gl-sheet-close-icon-size</span>: <span class="val">20px</span>; <span class="attr">--gl-sheet-close-icon-stroke</span>: <span class="val">1.8</span>; }
-<span class="cls">glk-sheet::part(close)</span> { <span class="attr">background</span>: <span class="val">transparent</span>; <span class="attr">border-color</span>: <span class="val">transparent</span>; <span class="attr">box-shadow</span>: <span class="val">none</span>; }</div>
+<span class="cls">glk-sheet::part(close)</span> { <span class="attr">background</span>: <span class="val">transparent</span>; <span class="attr">border-color</span>: <span class="val">transparent</span>; <span class="attr">box-shadow</span>: <span class="val">none</span>; }
+<span class="cls">glk-sheet::part(close):focus-visible</span> { <span class="attr">box-shadow</span>: <span class="val">var(--gl-shadow-focus)</span>; }</div>
           <p id="glk-sheet-side"><strong>An einer Seite, nicht-modal</strong> (seit 1.35.0): <code>placement="end"</code> oder <code>"start"</code> setzt das Panel an diese Seite des Fensters, so hoch wie das Fenster weniger 16&nbsp;px an beiden Enden, 440&nbsp;px breit (GlassKits <code>--gl-sheet-side-inset</code> und <code>--gl-sheet-side-width</code>), es gleitet von dieser Seite herein, von rechts nach links gespiegelt, ohne Griff und mit nebeneinanderstehenden Aktionen &mdash; ein Seitenpanel auf dem Desktop. <code>modeless</code> öffnet es mit <code>show()</code> statt <code>showModal()</code>: kein Scrim, die Seite bleibt bedienbar und ihre gewählte Zeile sichtbar, ein später geöffnetes Modal liegt darüber, Escape darin schließt es und ein Klick daneben nicht, und der Fokus geht beim Öffnen ins Panel &mdash; oder zu dem, was <code>autofocus</code> trägt &mdash; und beim Schließen dorthin zurück, wo er herkam. Seit 1.36.0 schließt ein Popover oder Menü, das in einem nicht-modalen Sheet offen ist, bei Escape zuerst &mdash; vorher schloss das Sheet und ließ es offen in der obersten Ebene &mdash;, und GlassKits <code>--gl-sheet-side-inset-block-start</code> und <code>-block-end</code> setzen oben und unten für sich, unter einer festen Leiste der Seite.</p>
           <div class="docs-preview" style="display:flex;gap:12px;flex-wrap:wrap;">
             <glk-button size="sm auto" variant="secondary" id="docs-side-open">An der Seite öffnen</glk-button>

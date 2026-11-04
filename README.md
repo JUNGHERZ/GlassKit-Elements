@@ -5,7 +5,7 @@
   <a href="#"><img src="https://img.shields.io/badge/vanilla_JS-no_dependencies-44cc11?style=flat-square" alt="Vanilla JS"></a>
   <a href="#"><img src="https://img.shields.io/badge/components-46-7ec8e3?style=flat-square" alt="46 Components"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="MIT License"></a>
-  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/changelog-v1.39.0-lightgrey?style=flat-square" alt="Changelog"></a>
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/changelog-v1.40.0-lightgrey?style=flat-square" alt="Changelog"></a>
   <a href="https://www.npmjs.com/package/@jungherz-de/glasskit-elements"><img src="https://img.shields.io/badge/npm-%40jungherz--de%2Fglasskit--elements-cb3837?style=flat-square&logo=npm" alt="npm"></a>
 </p>
 
@@ -69,7 +69,7 @@ It is the **app layer** of the GlassKit family — three layers, one design lang
 
 ```html
 <!-- 1. GlassKit CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.39/glasskit.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.40/glasskit.min.css">
 
 <!-- 2. GlassKit Elements -->
 <script src="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"></script>
@@ -107,7 +107,7 @@ The per-component files leave `@jungherz-de/glasskit/glasskit-styles.js` as an e
 <!DOCTYPE html>
 <html data-theme="dark">
 <head>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.39/glasskit.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.40/glasskit.min.css">
   <script src="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"></script>
 </head>
 <body>
@@ -429,6 +429,8 @@ inherits them — no JavaScript, no per-element setup:
 `--gl-tab-bar-active-color` colours the icon and label of the active tab alone; unset, they take `--gl-color-primary-text`.
 
 **Accent fills with white text (GlassKit 1.32.0).** `--gl-btn-primary-bg` (the background of `<glk-button variant="primary">`) and `--gl-color-primary-fill` (the chosen day of `<glk-date-strip>` and `<glk-calendar>`, the current step of `<glk-steps>`) darken the fills alone, so white text reaches AA without a darker brand colour; the dot of `<glk-radio>` follows `--gl-color-on-primary` like the checkbox tick. The recipe with the measured ratios is in GlassKit's README.
+
+**Focus marks (GlassKit 1.40.0).** Every element shows where the keyboard is, in one solid colour, `--gl-focus-ring`; GlassKit's orange reads 3:1 or more on the page and on glass. `<glk-button>`, `<glk-pill>` and the actions of `<glk-modal>` draw it as an outline: they had no mark at all, and a rule of the page could not reach them in their shadow roots. The other elements take the ring, 2px wide and no longer a tint. The colour follows the brand; one of your own goes into the token, solid. A darker brand can fall short on the brightest glass, a glow card in the middle of the page in dark mode, so measure it there. A project that set `--gl-border-focus` or `--gl-shadow-focus` itself keeps its own ring until it drops them. In forced colors, where the browser drops `box-shadow`, every element shows an outline in the text colour.
 
 Token defaults are placed on the document once, inside `@layer glasskit-defaults`, so
 pages that never load `glasskit.css` still work and your brand file always wins.

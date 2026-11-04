@@ -336,6 +336,10 @@ class GlkSheet extends GlkElement {
         if (this.open && !this.inline && this.isConnected && this._overlay.open) {
           this._settle();
           this._overlay.close();
+          // The page's lock follows the mode (since 1.40.0). The dialog's close
+          // event comes late and finds it open again, so _onClose leaves the
+          // lock alone: a sheet turned modeless held the page until it closed.
+          if (this.modeless) this._scrollLock.release();
           this._show();
         }
         break;

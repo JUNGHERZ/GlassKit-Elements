@@ -7,6 +7,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.40.0] – 2026-11-04
+
+Versions stay aligned with GlassKit at 1.40.0, which this release is built against (peer dependency `>=1.40.0`).
+
+### Changed
+
+- **A focus mark on every element, and one that can be seen: GlassKit 1.40.0's `--gl-focus-ring`.** It is one solid colour that follows the brand.
+  - `<glk-button>`, `<glk-pill>` and the actions of `<glk-modal>` show an outline. They had no mark at all, and a page's own `:focus-visible` rule could not reach them in their shadow roots.
+  - The rings of the other elements are solid and 2px wide. As tints they read 1.2 to 2.9:1, and GlassKit's orange reads 3:1 or more now. A darker brand can fall short on the brightest glass, a glow card in the middle of the page in dark mode, and sets the token.
+  - In forced colors every element shows an outline in the text colour. `<glk-menu-item>` and `<glk-tree-item>` mark the focus on the host, so they have rules of their own for it.
+  - A project that set `--gl-border-focus` or `--gl-shadow-focus` itself keeps its own ring until it drops them.
+  - The rim of a folded level of `<glk-breadcrumbs>` as a drop target takes `--gl-color-primary`, as GlassKit's drop targets do now.
+
+  ([GlassKit #32](https://github.com/JUNGHERZ/GlassKit/issues/32))
+
+### Fixed
+
+- **An open `<glk-sheet>` turned `modeless` held the page until it closed.** Set on an open sheet, `modeless` closes the dialog and shows it again without its modality. The dialog's `close` event comes late, finds it open again and left the lock of the modal sheet alone, so the page beside a side sheet did not scroll, by wheel or touch.
+  - That hit a template that sets `open` before `modeless`, and a layout that switches a sheet at a breakpoint while it is open, such as turning a tablet.
+  - The lock now follows the mode at the switch, as the issue proposed.
+  - The issue's other idea, a counted API or a class on the root for pages with a lock of their own, is not part of this. `<glk-modal>` and `<glk-sheet>` already share one count, so one closing keeps the lock of the other.
+
+  ([#69](https://github.com/JUNGHERZ/GlassKit-Elements/issues/69))
+- **The docs' plain close button of a sheet lost its focus ring.** The example set `box-shadow: none` on `::part(close)`, which outranks the ring in the shadow root. It now brings the ring back on `::part(close):focus-visible`.
+
+Measured in Chromium 153, WebKit 26.6 and Firefox 151, 1.39.0 against 1.40.0:
+- **Focus:** a Tab through every example of the docs reaches 211 stops, and each shows a mark, at 5:1 or more on the docs' dark page. `<glk-button>` and `<glk-pill>` changed 0 pixels before.
+- **Sheet, in a 1180 × 820 window:**
+  - `open`, then `modeless`: the page scrolls by the wheel from 400 to 700, and `html` holds no `overflow`. Before, it stayed at 400 with `overflow: hidden`.
+  - `modeless` removed again: the page is held, and let go on closing.
+  - Switched four times in a row, it ends in the mode it was set to and lets go on closing.
+  - With a `<glk-modal>` open too, the page stays held until the modal closes, and then scrolls. Before, it stayed held until the sheet closed.
+  - An `overflow` of the page's own comes back at the switch.
+- **Pages:** docs, showcase and landing pages render as in 1.39.0.
+
+---
+
 ## [1.39.0] – 2026-11-01
 
 Versions stay aligned with GlassKit at 1.39.0, which this release is built against (peer dependency `>=1.39.0`).
@@ -1555,6 +1592,7 @@ Starting with this release, GlassKit Elements version numbers are aligned with G
 ---
 
 [Unreleased]: https://github.com/JUNGHERZ/GlassKit-Elements/compare/v1.33.1...HEAD
+[1.40.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.40.0
 [1.39.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.39.0
 [1.38.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.38.0
 [1.37.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.37.0

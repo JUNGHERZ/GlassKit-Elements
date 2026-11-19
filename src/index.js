@@ -30,6 +30,7 @@ export { GlkEmpty } from './components/content/glk-empty.js';
 
 // Buttons
 export { GlkButton } from './components/buttons/glk-button.js';
+export { GlkThemeToggle } from './components/buttons/glk-theme-toggle.js';
 
 // Forms
 export { GlkInput } from './components/forms/glk-input.js';

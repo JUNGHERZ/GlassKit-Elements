@@ -3,8 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>
+    // The stored choice of <glk-theme-toggle>, set before the page is drawn
+    try {
+      const mode = localStorage.getItem('glk-theme');
+      if (['light', 'dark', 'auto'].includes(mode)) {
+        document.documentElement.dataset.themeMode = mode;
+        document.documentElement.dataset.theme = mode === 'auto' ? (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark') : mode;
+      }
+    } catch {}
+  </script>
   <title>GlassKit Elements — Web Components for GlassKit CSS</title>
-  <meta name="description" content="Drop-in vanilla JavaScript Web Components that wrap GlassKit's glassmorphism CSS into simple HTML tags. Shadow DOM, native form participation, 46 components.">
+  <meta name="description" content="Drop-in vanilla JavaScript Web Components that wrap GlassKit's glassmorphism CSS into simple HTML tags. Shadow DOM, native form participation, 47 components.">
   <meta name="keywords" content="web components, custom elements, glassmorphism, glasskit, ui components, css, vanilla js, shadow dom">
   <meta name="author" content="Jungherz GmbH">
   <meta name="robots" content="index, follow">
@@ -13,15 +23,16 @@
   <link rel="alternate" hreflang="de" href="https://glasskit-elements.jungherz.com/de/">
   <meta property="og:type" content="website">
   <meta property="og:title" content="GlassKit Elements — Web Components for GlassKit CSS">
-  <meta property="og:description" content="29 vanilla JS Web Components wrapping GlassKit's glassmorphism CSS. Shadow DOM, form participation, zero dependencies.">
+  <meta property="og:description" content="47 vanilla JS Web Components wrapping GlassKit's glassmorphism CSS. Shadow DOM, form participation, zero dependencies.">
   <meta property="og:url" content="https://glasskit-elements.jungherz.com/">
   <meta property="og:site_name" content="GlassKit Elements">
   <meta property="og:locale" content="en_US">
   <meta property="og:locale:alternate" content="de_DE">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="GlassKit Elements — Web Components for GlassKit CSS">
-  <meta name="twitter:description" content="29 vanilla JS Web Components wrapping GlassKit's glassmorphism CSS. Shadow DOM, form participation, zero dependencies.">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.40/glasskit.min.css">
+  <meta name="twitter:description" content="47 vanilla JS Web Components wrapping GlassKit's glassmorphism CSS. Shadow DOM, form participation, zero dependencies.">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.41/glasskit.min.css">
+  <script src="/dist/glasskit-elements.min.js" defer></script>
   <style>
     :root {
       --idx-bg: #0c1a24;
@@ -81,10 +92,7 @@
     }
     .header-btn:hover { background: var(--idx-accent-glow); transform: scale(1.05); }
     .header-btn svg { width: 18px; height: 18px; fill: currentColor; stroke: none; }
-    .theme-btn svg {
-      width: 18px; height: 18px; fill: none; stroke: currentColor;
-      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
-    }
+    .theme-btn::part(button) { width: 36px; height: 36px; }
     .lang-switch {
       display: flex; align-items: center; gap: 4px; flex: none; white-space: nowrap;
       font-size: 13px; font-weight: 600; padding: 6px 12px;
@@ -96,9 +104,6 @@
       color: var(--idx-accent); background: var(--idx-accent-glow);
       border-color: var(--idx-accent);
     }
-    .icon-sun { display: none; }
-    [data-theme="light"] .icon-sun { display: block; }
-    [data-theme="light"] .icon-moon { display: none; }
 
     /* ── Hero ── */
     .hero { padding: 40px 0 80px; }
@@ -304,7 +309,7 @@
       <div class="brand">
         <div class="brand__logo">&#129482;</div>
         <h1>GlassKit <span>Elements</span></h1>
-        <span class="version">v1.40.0</span>
+        <span class="version">v1.41.0</span>
       </div>
       <div class="header-actions">
         <a href="showcase.html">Demo</a>
@@ -313,10 +318,7 @@
         <a href="https://github.com/JUNGHERZ/GlassKit-Elements" target="_blank" rel="noopener" class="header-btn" aria-label="GitHub" title="GitHub">
           <svg viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.741 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
         </a>
-        <button class="header-btn theme-btn" onclick="toggleTheme()" aria-label="Toggle theme">
-          <svg class="icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-          <svg class="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-        </button>
+        <glk-theme-toggle class="theme-btn"></glk-theme-toggle>
       </div>
     </div>
   </header>
@@ -328,7 +330,7 @@
       <div class="hero__info">
         <div class="hero__badges">
           <span class="hero__badge">Shadow DOM</span>
-          <span class="hero__badge">46 Components</span>
+          <span class="hero__badge">47 Components</span>
           <span class="hero__badge">Vanilla JS</span>
           <span class="hero__badge">Form-Ready</span>
         </div>
@@ -408,7 +410,7 @@
             <div class="feature-icon">
               <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="var(--idx-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M9 14l2 2 4-4"/></svg>
             </div>
-            <h3>46 Components</h3>
+            <h3>47 Components</h3>
             <p>From buttons to modals to tab bars &ndash; everything a modern app needs.</p>
           </div>
           <div class="feature-card">
@@ -424,7 +426,7 @@
         <h3 style="font-size:16px;margin-bottom:16px;">Quick Start</h3>
         <div class="code-block">
           <span class="code-comment">&lt;!-- 1. Load GlassKit CSS --&gt;</span><br>
-          <span class="code-tag">&lt;link</span> <span class="code-attr">rel=</span><span class="code-str">"stylesheet"</span> <span class="code-attr">href=</span><span class="code-str">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.40/glasskit.min.css"</span><span class="code-tag">&gt;</span><br><br>
+          <span class="code-tag">&lt;link</span> <span class="code-attr">rel=</span><span class="code-str">"stylesheet"</span> <span class="code-attr">href=</span><span class="code-str">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.41/glasskit.min.css"</span><span class="code-tag">&gt;</span><br><br>
           <span class="code-comment">&lt;!-- 2. Load GlassKit Elements --&gt;</span><br>
           <span class="code-tag">&lt;script</span> <span class="code-attr">src=</span><span class="code-str">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"</span><span class="code-tag">&gt;&lt;/script&gt;</span><br><br>
           <span class="code-comment">&lt;!-- 3. Use components --&gt;</span><br>
@@ -458,7 +460,7 @@
         <div class="family-card family-card--here">
           <div class="family-card__layer">App layer <span class="family-card__here">you are here</span></div>
           <h3>GlassKit Elements</h3>
-          <p>29 vanilla web components with Shadow DOM and native form participation &ndash; GlassKit for application UIs.</p>
+          <p>47 vanilla web components with Shadow DOM and native form participation &ndash; GlassKit for application UIs.</p>
         </div>
         <a class="family-card" href="https://glasskit-web.jungherz.com" target="_blank" rel="noopener">
           <div class="family-card__layer">Website layer</div>
@@ -483,12 +485,5 @@
     </div>
   </footer>
 
-  <script>
-    function toggleTheme() {
-      const html = document.documentElement;
-      const current = html.getAttribute('data-theme') || 'dark';
-      html.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
-    }
-  </script>
 </body>
 </html>

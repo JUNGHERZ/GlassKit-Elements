@@ -1,6 +1,6 @@
 ---
 name: glasskit-elements
-description: GlassKit Elements is a vanilla-JS Web Components library (v1.40.0) wrapping GlassKit CSS v1.40.0. It provides 46 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
+description: GlassKit Elements is a vanilla-JS Web Components library (v1.41.0) wrapping GlassKit CSS v1.41.0. It provides 47 custom elements with the `glk-` prefix, Dark/Light mode with automatic theme sync, Shadow DOM encapsulation, and form-associated custom elements. Use this reference whenever generating HTML that uses `<glk-*>` tags to ensure correct attributes, slots, events, and composition.
 ---
 
 # GlassKit Elements – AI Component Reference
@@ -13,6 +13,8 @@ description: GlassKit Elements is a vanilla-JS Web Components library (v1.40.0) 
 > **New in 1.28.0 — icons of any kind, and a tab that keeps the current one.** `<glk-tab-item>` takes an icon that is not inline SVG in `slot="icon"` — Material Icons, an `<img>`, a custom element — and it follows every state; `<glk-segmented>` takes one per option in `slot="icon-<value>"` and shows them alone with `icon-only`. `glk-tab-select` is cancelable, for an item that opens a drawer or a link. **Where a project styles tab icons through `hostStyles`, or puts `active` back after `glk-tab-select`, replace that** (3.3, 3.25).
 
 > **New in 1.32.0 — one tab bar for every edge, ten elements, panels in the top layer.** `<glk-tab-bar>` leaves the bottom edge: `orientation="vertical"` makes it a sidebar, `dock="start"` or `"end"` fixes it to that side of the viewport — where the thumb rests on a phone held open, or a foldable that moved its system controls to a side — `rail` shows the icons alone with the labels as tooltips, `placement="top"` lays it out for the top of a page, and `<glk-tab-dock orientation="vertical">` stands the floating bar upright. One set of items serves every layout, and the drop runs along y in a column. New: `<glk-tooltip>`, `<glk-menu>` with `<glk-menu-item>`, `-separator` and `-group`, `<glk-tree>` with `<glk-tree-item>` (children that load on opening, with errors and a retry), `<glk-breadcrumbs>` with `<glk-breadcrumb>`, `<glk-table>` around a native table, and `sortable` on `<glk-list>` and `<glk-tree>` — drag and drop by mouse, touch and keyboard, onto breadcrumbs too. Lists and trees change single items in place, keeping the focus, and `highlight()` points a changed item out. `<glk-popover>` opens in the top layer, `<glk-modal>` and `<glk-sheet>` emit `glk-closed` once they are gone, interactive list items take the keyboard. **Where a project builds its own sidebar, tooltip, menu, tree, breadcrumbs or table wrapper, or waits for a sheet's slide-out with a timer, replace that** (3.3, 3.19, 3.24, 3.27, 3.32–3.37).
+
+> **New in 1.41.0 — a theme toggle with light, dark and auto.** `<glk-theme-toggle>` is a round button, GlassKit 1.41.0's `.glass-theme-toggle`, that switches the page between light, dark and auto, the sun with an A. Auto follows the system's colour scheme, also while the page is open; the choice is kept in `localStorage` and goes on `<html>` as `data-theme-mode`, so every toggle shows the same state (3.38). **Where a project builds its own light / dark button with a script, or a light / dark / auto switch from `<glk-segmented>`, it can use this instead.**
 
 > **New in 1.40.0 — a focus mark on every element, and a page that scrolls beside a sheet turned modeless.** `<glk-button>`, `<glk-pill>` and the actions of `<glk-modal>` show GlassKit 1.40.0's outline, where they had no mark at all, and every other ring is solid and 2px wide, with GlassKit's orange at 3:1 or more on the page and on glass: `--gl-focus-ring` sets the colour of them all (9). In forced colors every element shows an outline. An open `<glk-sheet>` turned `modeless` lets go of the page's scroll lock at once; it held the page until it closed (3.27). **Where a project keeps a tint in `--gl-border-focus` or `--gl-shadow-focus`, or sets `modeless` before `open` only to keep the page scrolling, drop that.**
 
@@ -49,7 +51,7 @@ Peer dependency `@jungherz-de/glasskit >=1.32.0` is required — 1.32.0 brings t
 ### Import (ES modules)
 
 ```js
-// Full bundle — registers all 46 elements
+// Full bundle — registers all 47 elements
 import '@jungherz-de/glasskit-elements';
 
 // Named imports (for direct references to constructor classes)
@@ -310,6 +312,7 @@ container components are exposed as parts:
 | Element | Parts |
 |---|---|
 | `<glk-card>` | `card` |
+| `<glk-theme-toggle>` | `button` (since 1.41.0) |
 | `<glk-list>` | `header`, `list` |
 | `<glk-list-item>` | `item` (the row), `handle` (since 1.34.0); `title`, `subtitle`, `title-trailing`, `extra` (since 1.35.0); `leading`, `trailing` (since 1.36.0) |
 | `<glk-modal>` | `overlay`, `modal`, `header`, `body`, `footer` |
@@ -343,7 +346,7 @@ to resolve against. A host stretched by a grid keeps `height: auto`, which is wh
 
 ---
 
-## 3. Element Catalog (46 elements)
+## 3. Element Catalog (47 elements)
 
 ### 3.1 `<glk-nav>`
 
@@ -2071,6 +2074,49 @@ list.messages = {
 
 ---
 
+### 3.38 `<glk-theme-toggle>`
+
+A round button that switches the page between light, dark and auto (since 1.41.0) — GlassKit's `.glass-theme-toggle`, with the moon, the sun and, for auto, the sun with an A. Auto follows the system's colour scheme, also when it changes while the page is open.
+
+```html
+<glk-theme-toggle></glk-theme-toggle>
+<glk-theme-toggle mode="auto" label="Darstellung" light-label="Hell" dark-label="Dunkel" auto-label="Automatisch"></glk-theme-toggle>
+```
+
+| Attribute | Type | Description |
+|---|---|---|
+| `mode` | `light` / `dark` / `auto` | The start, until a choice was made; set later, it sets the mode |
+| `label` | String | The button's name with the state: "Theme: Auto" (default "Theme") |
+| `light-label`, `dark-label`, `auto-label` | String | The states' words (default "Light", "Dark", "Auto") |
+| `storage-key` | String | The `localStorage` key of the choice (default `glk-theme`); empty, the choice holds for the page alone |
+| `disabled` | Boolean | Disabled state |
+
+- **On `<html>`:** `data-theme` names the theme that is on, and `data-theme-mode` the choice itself, `auto` included. Every toggle of the page shows the same state, GlassKit's plain `.glass-theme-toggle` too.
+- **The order:** each press moves on from auto to the theme the system does not show, then to the other one, and back to auto, so the first press always changes what one sees.
+- **Start:** a `data-theme-mode` already on `<html>` stands; else the stored choice; else `mode`; else the page's `data-theme` as it is, without a `data-theme-mode`.
+- **Property `mode`** reads the page's mode and sets it, stored as a press would; `glk-change { mode, theme }` follows a press. Part: `button`.
+- **No flash:** the element loads after the page has started to draw. A script in `<head>` sets the stored choice before that:
+
+```html
+<head>
+  <script>
+    // The stored choice, set before the page is drawn
+    try {
+      const mode = localStorage.getItem('glk-theme');
+      if (['light', 'dark', 'auto'].includes(mode)) {
+        document.documentElement.dataset.themeMode = mode;
+        document.documentElement.dataset.theme = mode === 'auto' ? (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark') : mode;
+      }
+    } catch {}
+  </script>
+  …
+</head>
+```
+
+- A page script that switches only `data-theme` removes `data-theme-mode` too, or the toggles keep showing auto.
+
+---
+
 ## 4. Composition Patterns
 
 ### Login Screen
@@ -2293,6 +2339,7 @@ Key points:
 |---|---|---|---|---|
 | `<glk-button>` | — | `disabled` | `glk-click` | — |
 | `<glk-pill>` | — | `disabled` | `glk-click` | — |
+| `<glk-theme-toggle>` | `.mode` | `mode` | `glk-change` (after a press; since 1.41.0) | `{ mode, theme }` |
 | `<glk-tab-item>` | — | `active` (`aria-current="page"` since 1.32.0) | `glk-tab-select` (cancelable since 1.28.0; `glk-tab-change` `{ tab }` follows on the bar) | — |
 | `<glk-tab-accessory>` | — | `disabled` | `glk-click` | — |
 | `<glk-input>` | `.value` | `value` | `glk-input`, `glk-change` (+ native `input`, `change`) | `{ value }` |
@@ -2409,6 +2456,7 @@ All `glk-*` events bubble and are `composed: true`, so they pierce shadow bounda
 | `<glk-status>` | Content | `message` | default (message, since 1.35.0), `icon` | — |
 | `<glk-title>` | Content | — | default | — |
 | `<glk-button>` | Buttons | `variant`, `size`, `disabled`, `type` | default | `glk-click` |
+| `<glk-theme-toggle>` | Buttons | `mode`, `label`, `light-label`, `dark-label`, `auto-label`, `storage-key`, `disabled` | — | `glk-change` |
 | `<glk-checkbox>` | Forms | `label`, `checked`, `disabled`, `name`, `value`, `required`, `label-hidden`, `label-position` | — | `glk-change` |
 | `<glk-input>` | Forms | `label`, `type`, `placeholder`, `hint`, `error`, `disabled`, `readonly`, `required`, `name`, `value`, `min`, `max`, `step`, `minlength`, `maxlength`, `pattern`, `autocomplete`, `inputmode` | `prefix`, `suffix`, `label-end` | `glk-input`, `glk-change` |
 | `<glk-radio>` | Forms | `label`, `name`, `value`, `checked`, `disabled`, `required`, `label-hidden`, `label-position` | — | `glk-change` |
@@ -2560,7 +2608,7 @@ GlassKit 1.33.0 adds, by inheritance as well: `--gl-tab-bar-icon-size`, `--gl-ta
 | Theme sync | Single module-level `MutationObserver` in `base.js` |
 | Adopted stylesheets | `componentsSheet` (from `@jungherz-de/glasskit/glasskit-styles.js`) + module-level `hostSheet` / `inlineHostSheet` (they also set `color-scheme` per theme) + an element's own `hostStyles` |
 | Per-component structure | One `.js` file per element in `src/components/{category}/glk-{name}.js` |
-| Barrel | `src/index.js` — exports and registers all 46 elements, and exports `GlkElement` / `GlkFormElement` (since 1.14.0) |
+| Barrel | `src/index.js` — exports and registers all 47 elements, and exports `GlkElement` / `GlkFormElement` (since 1.14.0) |
 | Shared behaviour | `src/overlay.js` — panels in the top layer, their placement and the tooltip's behaviour (`<glk-popover>`, `<glk-tooltip>`, `<glk-menu>`, the rail's labels, the "…" crumb); `src/sortable.js` — drag and drop for `<glk-list>`, `<glk-tree>` and `<glk-breadcrumbs>` (since 1.32.0) |
 | Build | Rollup → IIFE (`glasskit-elements.js`), minified IIFE, ESM (`glasskit-elements.esm.js`), and per-element ESM in `dist/components/` with `base.js` as a stable entry and the shared modules in `dist/components/shared/` |
 

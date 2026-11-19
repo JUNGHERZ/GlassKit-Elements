@@ -7,6 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.41.0] – 2026-11-19
+
+Versions stay aligned with GlassKit at 1.41.0, which this release is built against (peer dependency `>=1.41.0`).
+
+### Added
+
+- **A theme toggle with light, dark and auto: `<glk-theme-toggle>`.** Pages built their own button for the theme, with two states and a script, and a page that follows the system's colour scheme could not offer that choice.
+  - It is a round button, GlassKit 1.41.0's `.glass-theme-toggle`: the moon in the dark theme, the sun in the light one, and for auto the sun with an A. Auto follows the system's colour scheme, also when it changes while the page is open.
+  - Each press moves on from auto to the theme the system does not show, then to the other one, and back to auto, so the first press always changes what one sees.
+  - The choice goes on `<html>`: `data-theme` for the theme that is on, `data-theme-mode` for the choice itself, so every toggle of the page shows the same state. It is kept in `localStorage` under `storage-key` (`glk-theme`) and comes back on the next visit. An empty key keeps it for the page alone.
+  - It is named by `label` and the state, "Theme: Auto", and `light-label`, `dark-label` and `auto-label` word the states. Property `mode`, `glk-change { mode, theme }` after a press, part `button`.
+  - Until a choice was made, the page keeps its `data-theme`. `mode` names a start of its own, `mode="auto"` for a page that follows the system from the first visit.
+- **The docs, the showcase and the landing pages use it** for their theme button, with a script in `<head>` that sets the stored choice before the page is drawn. The landing pages load the bundle for it now. The element count says 47 everywhere, where the landing pages' descriptions still said 29.
+
+Measured in Chromium 153, WebKit 26.6 and Firefox 151:
+- **Presses** on a page in the dark theme, with the system light: light, then auto (the page stays light), then dark, then light again. In auto the page turns dark at once when the system does, and the next press goes to light.
+- **Two toggles and GlassKit's plain `.glass-theme-toggle`** show the same state after every press. The second toggle, named in German, reads "Darstellung: Automatisch".
+- **Stored:** after a reload with auto stored and the system dark, the page comes up dark, in auto. With `storage-key=""` nothing is stored.
+- **Keyboard:** Enter and Space move on, and the focus ring shows; WebKit's Tab does not reach buttons under Playwright. A `disabled` toggle does nothing.
+- **Pages:** docs, showcase and landing pages render as in 1.40.0, apart from the theme button and the new section.
+
+---
+
 ## [1.40.0] – 2026-11-04
 
 Versions stay aligned with GlassKit at 1.40.0, which this release is built against (peer dependency `>=1.40.0`).
@@ -1592,6 +1615,7 @@ Starting with this release, GlassKit Elements version numbers are aligned with G
 ---
 
 [Unreleased]: https://github.com/JUNGHERZ/GlassKit-Elements/compare/v1.33.1...HEAD
+[1.41.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.41.0
 [1.40.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.40.0
 [1.39.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.39.0
 [1.38.0]: https://github.com/JUNGHERZ/GlassKit-Elements/releases/tag/v1.38.0

@@ -3,15 +3,15 @@
 <p align="center">
   <a href="https://www.npmjs.com/package/@jungherz-de/glasskit-elements"><img src="https://img.shields.io/npm/v/@jungherz-de/glasskit-elements?style=flat-square&color=f5a623&label=version" alt="Version"></a>
   <a href="#"><img src="https://img.shields.io/badge/vanilla_JS-no_dependencies-44cc11?style=flat-square" alt="Vanilla JS"></a>
-  <a href="#"><img src="https://img.shields.io/badge/components-46-7ec8e3?style=flat-square" alt="46 Components"></a>
+  <a href="#"><img src="https://img.shields.io/badge/components-47-7ec8e3?style=flat-square" alt="47 Components"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="MIT License"></a>
-  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/changelog-v1.40.0-lightgrey?style=flat-square" alt="Changelog"></a>
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/changelog-v1.41.0-lightgrey?style=flat-square" alt="Changelog"></a>
   <a href="https://www.npmjs.com/package/@jungherz-de/glasskit-elements"><img src="https://img.shields.io/badge/npm-%40jungherz--de%2Fglasskit--elements-cb3837?style=flat-square&logo=npm" alt="npm"></a>
 </p>
 
 <p align="center">
   <strong>Drop-in Web Components for <a href="https://github.com/JUNGHERZ/GlassKit">GlassKit CSS</a></strong><br>
-  46 vanilla JavaScript custom elements wrapping GlassKit's glassmorphism components.<br>
+  47 vanilla JavaScript custom elements wrapping GlassKit's glassmorphism components.<br>
   Shadow DOM &middot; Native form participation &middot; Zero dependencies.
 </p>
 
@@ -26,7 +26,7 @@
 
 ## ✨ What is GlassKit Elements?
 
-GlassKit Elements is a companion library to [GlassKit CSS](https://github.com/JUNGHERZ/GlassKit). It provides **46 Web Components** (incl. the iOS 26-style floating Tab-Bar + Accessory) that encapsulate the verbose HTML markup required by GlassKit into simple, declarative custom elements.
+GlassKit Elements is a companion library to [GlassKit CSS](https://github.com/JUNGHERZ/GlassKit). It provides **47 Web Components** (incl. the iOS 26-style floating Tab-Bar + Accessory) that encapsulate the verbose HTML markup required by GlassKit into simple, declarative custom elements.
 
 It is the **app layer** of the GlassKit family — three layers, one design language: [GlassKit](https://glasskit.jungherz.com) is the pure-CSS foundation, GlassKit Elements wraps it into web components for application UIs, and [GlassKit Web](https://glasskit-web.jungherz.com) is the official Astro template for complete websites on top of the same foundation.
 
@@ -51,7 +51,7 @@ It is the **app layer** of the GlassKit family — three layers, one design lang
 | Feature | Details |
 |---|---|
 | 🔌 **Shadow DOM** | Style encapsulation via `adoptedStyleSheets` — no CSS leaking |
-| 🧩 **46 Components** | Buttons, cards, toggles, modals, accordions, lists, popovers, tab bars (incl. floating + accessory), tooltips, menus, trees, breadcrumbs, tables, and more |
+| 🧩 **47 Components** | Buttons, cards, toggles, modals, accordions, lists, popovers, tab bars (incl. floating + accessory), tooltips, menus, trees, breadcrumbs, tables, and more |
 | 🪶 **Lightweight** | 273 KB minified / 52 KB gzipped (IIFE bundle, GlassKit's component rules included), no external dependencies |
 | 📦 **Three bundle formats** | IIFE for `<script>`, minified IIFE for production, ESM for bundlers & tree-shaking |
 | 🎛️ **Form Participation** | Input, toggle, checkbox, radio, select — all work natively with `<form>` via `ElementInternals`: value, reset and, since 1.20.0, validity; `<glk-button type="submit">` submits |
@@ -69,7 +69,7 @@ It is the **app layer** of the GlassKit family — three layers, one design lang
 
 ```html
 <!-- 1. GlassKit CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.40/glasskit.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.41/glasskit.min.css">
 
 <!-- 2. GlassKit Elements -->
 <script src="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"></script>
@@ -107,7 +107,7 @@ The per-component files leave `@jungherz-de/glasskit/glasskit-styles.js` as an e
 <!DOCTYPE html>
 <html data-theme="dark">
 <head>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.40/glasskit.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.41/glasskit.min.css">
   <script src="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"></script>
 </head>
 <body>
@@ -153,6 +153,7 @@ The per-component files leave `@jungherz-de/glasskit/glasskit-styles.js` as an e
 
 | Component | Description | Key Attributes |
 |---|---|---|
+| `<glk-theme-toggle>` | Round button for light, dark and auto: the moon, the sun and the sun with an A; auto follows the system, the choice is kept and every toggle of the page shows it (since 1.41.0) | `mode`, `label`, `light-label`, `dark-label`, `auto-label`, `storage-key`, `disabled` |
 | `<glk-button>` | Glass-styled button; `type="submit"` / `"reset"` act on its form, `focus()` reaches it (since 1.33.2); `aria-label`, `aria-labelledby` and `aria-describedby` name and describe its native button (since 1.36.0) | `variant` (primary, secondary, tertiary), `size` (sm, md, lg, auto; `sm auto` since 1.31.0), `disabled`, `type` (button, submit, reset) |
 
 ### Form Elements
@@ -213,6 +214,30 @@ Set `data-theme` on the `<html>` element — all components sync automatically:
 const html = document.documentElement;
 const current = html.getAttribute('data-theme');
 html.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+```
+
+**Light, dark and auto (since 1.41.0).** `<glk-theme-toggle>` does the switching: a round button, GlassKit's `.glass-theme-toggle`, with the moon, the sun and, for auto, the sun with an A. Auto follows the system's colour scheme, also while the page is open. The choice goes on `<html>` as `data-theme-mode`, next to `data-theme`, so every toggle of the page shows the same state, and it is kept in `localStorage` under `storage-key` (`glk-theme`). Each press moves on from auto to the theme the system does not show, then to the other one, and back to auto.
+
+```html
+<glk-theme-toggle></glk-theme-toggle>
+```
+
+The element loads after the page has started to draw, so a script in `<head>` sets the stored choice before that, and the page does not show the other theme first:
+
+```html
+<head>
+  <script>
+    // The stored choice, set before the page is drawn
+    try {
+      const mode = localStorage.getItem('glk-theme');
+      if (['light', 'dark', 'auto'].includes(mode)) {
+        document.documentElement.dataset.themeMode = mode;
+        document.documentElement.dataset.theme = mode === 'auto' ? (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark') : mode;
+      }
+    } catch {}
+  </script>
+  …
+</head>
 ```
 
 ### Density
@@ -530,7 +555,7 @@ One refinement does not fall back quietly: GlassKit's `--gl-label-hidden` (since
 
 ## 🤖 AI / LLM Reference
 
-[`SKILL.md`](SKILL.md) is a tag-based, machine-readable reference for LLMs and AI copilots. It contains copy-paste-ready HTML for all 46 elements, attribute / slot / event tables, composition patterns, and a common-mistakes section. It is the companion to the class-based `SKILL.md` in [GlassKit CSS](https://github.com/JUNGHERZ/GlassKit) — use both together for complete coverage of the glass stack.
+[`SKILL.md`](SKILL.md) is a tag-based, machine-readable reference for LLMs and AI copilots. It contains copy-paste-ready HTML for all 47 elements, attribute / slot / event tables, composition patterns, and a common-mistakes section. It is the companion to the class-based `SKILL.md` in [GlassKit CSS](https://github.com/JUNGHERZ/GlassKit) — use both together for complete coverage of the glass stack.
 
 ---
 

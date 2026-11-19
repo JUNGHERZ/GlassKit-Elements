@@ -3,8 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>
+    // The stored choice of <glk-theme-toggle>, set before the page is drawn
+    try {
+      const mode = localStorage.getItem('glk-theme');
+      if (['light', 'dark', 'auto'].includes(mode)) {
+        document.documentElement.dataset.themeMode = mode;
+        document.documentElement.dataset.theme = mode === 'auto' ? (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark') : mode;
+      }
+    } catch {}
+  </script>
   <title>GlassKit Elements — Documentation</title>
-  <meta name="description" content="Complete documentation for all 46 GlassKit Elements web components. Installation, API reference, attributes, events, and live examples.">
+  <meta name="description" content="Complete documentation for all 47 GlassKit Elements web components. Installation, API reference, attributes, events, and live examples.">
   <meta name="keywords" content="glasskit elements, documentation, web components, api reference, glassmorphism, custom elements">
   <meta name="author" content="Jungherz GmbH">
   <meta name="robots" content="index, follow">
@@ -13,14 +23,14 @@
   <link rel="alternate" hreflang="de" href="https://glasskit-elements.jungherz.com/de/docs.html">
   <meta property="og:type" content="website">
   <meta property="og:title" content="GlassKit Elements — Documentation">
-  <meta property="og:description" content="Complete documentation for all 46 GlassKit Elements web components with live examples.">
+  <meta property="og:description" content="Complete documentation for all 47 GlassKit Elements web components with live examples.">
   <meta property="og:url" content="https://glasskit-elements.jungherz.com/docs.html">
   <meta property="og:site_name" content="GlassKit Elements">
   <meta property="og:locale" content="en_US">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="GlassKit Elements — Documentation">
-  <meta name="twitter:description" content="Complete documentation for all 46 GlassKit Elements web components with live examples.">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.40/glasskit.min.css">
+  <meta name="twitter:description" content="Complete documentation for all 47 GlassKit Elements web components with live examples.">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.41/glasskit.min.css">
   <script src="/dist/glasskit-elements.min.js"></script>
   <style>
     html { scroll-behavior: smooth; }
@@ -108,21 +118,8 @@
       color: var(--gl-color-primary); background: var(--gl-surface-5);
       transform: scale(1.05);
     }
-    .docs-theme-btn {
-      position: fixed; top: 16px; right: 16px; width: 40px; height: 40px;
-      border-radius: 50%; display: flex; align-items: center; justify-content: center;
-      background: var(--gl-surface-3); backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px); border: 1px solid var(--gl-border-medium);
-      cursor: pointer; z-index: 200; transition: all 0.2s; color: var(--gl-color-text);
-    }
-    .docs-theme-btn:hover { background: var(--gl-surface-5); transform: scale(1.05); }
-    .docs-theme-btn svg {
-      width: 18px; height: 18px; fill: none; stroke: currentColor;
-      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
-    }
-    .docs-theme-btn .icon-sun { display: none; }
-    [data-theme="light"] .docs-theme-btn .icon-sun { display: block; }
-    [data-theme="light"] .docs-theme-btn .icon-moon { display: none; }
+    .docs-theme-btn { position: fixed; top: 16px; right: 16px; z-index: 200; }
+    .docs-theme-btn::part(button) { width: 40px; height: 40px; }
 
     /* ── Main Content ── */
     .docs-main {
@@ -258,10 +255,7 @@
 
   <!-- Language Switch & Theme Toggle -->
   <a href="de/docs.html" class="docs-lang-switch" title="Deutsche Version">&#127465;&#127466; DE</a>
-  <button class="docs-theme-btn" onclick="toggleTheme()" aria-label="Toggle theme">
-    <svg class="icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-    <svg class="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-  </button>
+  <glk-theme-toggle class="docs-theme-btn"></glk-theme-toggle>
 
   <div class="docs-wrapper">
 
@@ -269,7 +263,7 @@
     <aside class="docs-sidebar">
       <div class="docs-sidebar__title">&#129482; <a href="/">GlassKit Elements</a></div>
       <div class="docs-sidebar__subtitle">Web Components for GlassKit CSS.</div>
-      <div class="docs-sidebar__version">v1.40.0 &ndash; Jungherz GmbH</div>
+      <div class="docs-sidebar__version">v1.41.0 &ndash; Jungherz GmbH</div>
 
       <div class="docs-sidebar__group">
         <div class="docs-sidebar__group-title">Basics</div>
@@ -293,6 +287,7 @@
         <div class="docs-sidebar__group-title">Buttons</div>
         <a class="docs-sidebar__link" href="#glk-button">glk-button</a>
         <a class="docs-sidebar__link" href="#glk-pill">glk-pill</a>
+        <a class="docs-sidebar__link" href="#glk-theme-toggle">glk-theme-toggle</a>
       </div>
 
       <div class="docs-sidebar__group">
@@ -359,11 +354,11 @@
       <!-- Hero -->
       <div class="docs-hero">
         <h1>GlassKit Elements</h1>
-        <p>Complete reference for all 46 web components &ndash; built by Jungherz GmbH. Vanilla JS, Shadow DOM, native form participation.</p>
+        <p>Complete reference for all 47 web components &ndash; built by Jungherz GmbH. Vanilla JS, Shadow DOM, native form participation.</p>
         <div class="docs-hero__badges">
-          <span class="docs-hero__badge">v1.40.0</span>
+          <span class="docs-hero__badge">v1.41.0</span>
           <span class="docs-hero__badge">Shadow DOM</span>
-          <span class="docs-hero__badge">46 Components</span>
+          <span class="docs-hero__badge">47 Components</span>
           <span class="docs-hero__badge">Vanilla JS</span>
         </div>
       </div>
@@ -374,7 +369,7 @@
 
         <h3>CDN (quickest)</h3>
         <div class="docs-code"><span class="cmt">&lt;!-- 1. GlassKit CSS --&gt;</span>
-<span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span> <span class="attr">href</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.40/glasskit.min.css"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span> <span class="attr">href</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.41/glasskit.min.css"</span><span class="tag">&gt;</span>
 
 <span class="cmt">&lt;!-- 2. GlassKit Elements --&gt;</span>
 <span class="tag">&lt;script</span> <span class="attr">src</span>=<span class="val">"https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit-elements/dist/glasskit-elements.min.js"</span><span class="tag">&gt;&lt;/script&gt;</span></div>
@@ -652,6 +647,38 @@ addEventListener(<span class="val">'afterprint'</span>, () =&gt; {
             <tr><td><code>disabled</code></td><td>Boolean</td><td>Disables the button</td></tr>
           </table>
           <p><code>aria-expanded</code>, <code>aria-haspopup</code> and <code>aria-pressed</code> are handed on to the native button inside (since 1.20.0) &mdash; <code>&lt;glk-popover&gt;</code> sets <code>aria-expanded</code> on its trigger.</p>
+        </div>
+
+        <div class="docs-component" id="glk-theme-toggle">
+          <h3><code>&lt;glk-theme-toggle&gt;</code></h3>
+          <p>A round button that switches the page between light, dark and auto (since 1.41.0) &mdash; GlassKit&rsquo;s <code>.glass-theme-toggle</code>, with the moon, the sun and, for auto, the sun with an A. Auto follows the system&rsquo;s colour scheme, also when it changes while the page is open. Each press moves on from auto to the theme the system does not show, then to the other one, and back to auto, so the first press always changes what one sees. This one switches the whole page, as the one at the top right does.</p>
+          <div class="docs-preview" style="display:flex;gap:16px;align-items:center;">
+            <glk-theme-toggle></glk-theme-toggle>
+          </div>
+          <div class="docs-code"><span class="tag">&lt;glk-theme-toggle&gt;&lt;/glk-theme-toggle&gt;</span>
+<span class="tag">&lt;glk-theme-toggle</span> <span class="attr">label</span>=<span class="val">"Darstellung"</span> <span class="attr">light-label</span>=<span class="val">"Hell"</span> <span class="attr">dark-label</span>=<span class="val">"Dunkel"</span> <span class="attr">auto-label</span>=<span class="val">"Automatisch"</span><span class="tag">&gt;&lt;/glk-theme-toggle&gt;</span></div>
+          <table class="docs-table">
+            <tr><th>Attribute</th><th>Type</th><th>Description</th></tr>
+            <tr><td><code>mode</code></td><td>light | dark | auto</td><td>The start, until a choice was made; set later, it sets the mode. The property reads the page&rsquo;s mode and sets it</td></tr>
+            <tr><td><code>label</code></td><td>String</td><td>The button&rsquo;s name with the state, &ldquo;Theme: Auto&rdquo; (default &ldquo;Theme&rdquo;)</td></tr>
+            <tr><td><code>light-label</code>, <code>dark-label</code>, <code>auto-label</code></td><td>String</td><td>The states&rsquo; words (default &ldquo;Light&rdquo;, &ldquo;Dark&rdquo;, &ldquo;Auto&rdquo;)</td></tr>
+            <tr><td><code>storage-key</code></td><td>String</td><td>The <code>localStorage</code> key of the choice (default <code>glk-theme</code>); empty, the choice holds for the page alone</td></tr>
+            <tr><td><code>disabled</code></td><td>Boolean</td><td>Disables the button</td></tr>
+          </table>
+          <p>The choice goes on <code>&lt;html&gt;</code>: <code>data-theme</code> names the theme that is on, and <code>data-theme-mode</code> the choice itself, <code>auto</code> included, so every toggle of the page shows the same state, GlassKit&rsquo;s plain <code>.glass-theme-toggle</code> too. A choice already on <code>&lt;html&gt;</code> stands; else the stored one; else <code>mode</code>; else the page&rsquo;s <code>data-theme</code> as it is. <code>glk-change</code> <code>{ mode, theme }</code> follows a press. <strong>Part:</strong> <code>button</code>.</p>
+          <p>The element loads after the page has started to draw. A script in <code>&lt;head&gt;</code> sets the stored choice before that, so the page does not show the other theme first:</p>
+          <div class="docs-code"><span class="tag">&lt;script&gt;</span>
+  <span class="cmt">// The stored choice, set before the page is drawn</span>
+  try {
+    const mode = localStorage.getItem(<span class="val">'glk-theme'</span>);
+    if ([<span class="val">'light'</span>, <span class="val">'dark'</span>, <span class="val">'auto'</span>].includes(mode)) {
+      document.documentElement.dataset.themeMode = mode;
+      document.documentElement.dataset.theme = mode === <span class="val">'auto'</span>
+        ? (matchMedia(<span class="val">'(prefers-color-scheme: light)'</span>).matches ? <span class="val">'light'</span> : <span class="val">'dark'</span>) : mode;
+    }
+  } catch {}
+<span class="tag">&lt;/script&gt;</span></div>
+          <p>A page script that switches only <code>data-theme</code> removes <code>data-theme-mode</code> too, or the toggles keep showing auto.</p>
         </div>
       </section>
 
@@ -2172,11 +2199,6 @@ customElements.define(<span class="val">'demo-counter'</span>, DemoCounter);</di
   </div>
 
   <script>
-    function toggleTheme() {
-      const html = document.documentElement;
-      const current = html.getAttribute('data-theme');
-      html.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
-    }
 
     // Scroll Spy
     const links = document.querySelectorAll('.docs-sidebar__link');

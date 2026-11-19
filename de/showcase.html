@@ -3,8 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>
+    // The stored choice of <glk-theme-toggle>, set before the page is drawn
+    try {
+      const mode = localStorage.getItem('glk-theme');
+      if (['light', 'dark', 'auto'].includes(mode)) {
+        document.documentElement.dataset.themeMode = mode;
+        document.documentElement.dataset.theme = mode === 'auto' ? (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark') : mode;
+      }
+    } catch {}
+  </script>
   <title>GlassKit Elements — Showcase</title>
-  <meta name="description" content="Interaktive Vorschau aller 46 GlassKit Elements Web Components. Buttons, Toggles, Karten, Modals und mehr im Glassmorphism-Stil.">
+  <meta name="description" content="Interaktive Vorschau aller 47 GlassKit Elements Web Components. Buttons, Toggles, Karten, Modals und mehr im Glassmorphism-Stil.">
   <meta name="author" content="Jungherz GmbH">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://glasskit-elements.jungherz.com/de/showcase.html">
@@ -12,14 +22,14 @@
   <link rel="alternate" hreflang="en" href="https://glasskit-elements.jungherz.com/showcase.html">
   <meta property="og:type" content="website">
   <meta property="og:title" content="GlassKit Elements — Showcase">
-  <meta property="og:description" content="Interaktive Vorschau aller 46 GlassKit Elements Web Components im Glassmorphism-Stil.">
+  <meta property="og:description" content="Interaktive Vorschau aller 47 GlassKit Elements Web Components im Glassmorphism-Stil.">
   <meta property="og:url" content="https://glasskit-elements.jungherz.com/de/showcase.html">
   <meta property="og:site_name" content="GlassKit Elements">
   <meta property="og:locale" content="de_DE">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="GlassKit Elements — Showcase">
-  <meta name="twitter:description" content="Interaktive Vorschau aller 46 GlassKit Elements Web Components im Glassmorphism-Stil.">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.40/glasskit.min.css">
+  <meta name="twitter:description" content="Interaktive Vorschau aller 47 GlassKit Elements Web Components im Glassmorphism-Stil.">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jungherz-de/glasskit@1.41/glasskit.min.css">
   <script src="/dist/glasskit-elements.min.js"></script>
   <style>
     body {
@@ -51,9 +61,6 @@
       width: 20px; height: 20px; fill: none; stroke: currentColor;
       stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
     }
-    .icon-sun { display: none; }
-    [data-theme="light"] .icon-sun { display: block; }
-    [data-theme="light"] .icon-moon { display: none; }
     .demo-section h2 {
       color: rgba(255,255,255,0.6);
       font-size: 13px;
@@ -91,13 +98,10 @@
       <glk-pill label="Zurück" onclick="history.back()">
         <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
       </glk-pill>
-      <glk-pill label="Theme wechseln" onclick="toggleTheme()">
-        <svg class="icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-        <svg class="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-      </glk-pill>
+      <glk-theme-toggle label="Darstellung" light-label="Hell" dark-label="Dunkel" auto-label="Automatisch"></glk-theme-toggle>
     </glk-nav>
 
-    <glk-title>Component Showcase v1.40.0</glk-title>
+    <glk-title>Component Showcase v1.41.0</glk-title>
   </div>
 
   <div class="demo-section">
@@ -574,11 +578,6 @@
   </div>
 
   <script>
-    function toggleTheme() {
-      const html = document.documentElement;
-      const current = html.getAttribute('data-theme') || 'dark';
-      html.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
-    }
   </script>
 </body>
 </html>
